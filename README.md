@@ -1,5 +1,5 @@
 # Personalized federated learning simulation platform
-With **Non-IID (Not Independent and Identically Distributed)** issue existing in the federated learning setting, a myriad of approaches have been proposed to crack this hard nut. The origin of the Non-IID phenomenon is the personalization of users, who generate the Non-IID data. In contrast, the Personalized federated learning may take the advantages of the Non-IID data to learn the Personalized model for each user. 
+With **Non-IID (Not Independent and Identically Distributed)** issue existing in the federated learning setting, a myriad of approaches have been proposed to crack this hard nut. The origin of the Non-IID phenomenon is the personalization of users, who generate the Non-IID data. In contrast, the personalized federated learning may take the advantages of the Non-IID data to learn the personalized model for each user. 
 
 ## Environments
 With the installed [conda](https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh), we can run this platform in a conda virtual environment called *fl_torch*.
@@ -582,4 +582,4 @@ Client 2         Samples of labels:  [(0, 75), (1, 107), (3, 130), (7, 291), (8,
 - If you have your own optimizer while training, please add it into `./system/flcore/optimizers/fedoptimizer.py`
 
 ## Issues 
-If there are some issues of this Personalized federated learning simulation platform, please contact me by Github. 
+If there are some issues of this personalized federated learning simulation platform, please contact me by Github. 
