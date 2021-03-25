@@ -15,7 +15,7 @@ torch.manual_seed(0)
 
 def run(goal, dataset, device, algorithm, model, local_batch_size, local_learning_rate, global_rounds, local_steps, num_clients, 
         total_clients, beta, lamda, K, personalized_learning_rate, times, drop_ratio, train_slow_ratio, send_slow_ratio, 
-        time_select, time_threthold):
+        time_select, time_threthold, mu):
 
     time_list = []
 
@@ -72,6 +72,11 @@ def run(goal, dataset, device, algorithm, model, local_batch_size, local_learnin
                             local_steps, num_clients, total_clients, i, drop_ratio, train_slow_ratio, send_slow_ratio, 
                             time_select, goal, time_threthold, beta, lamda, K, personalized_learning_rate)
 
+        elif algorithm == "FedProx":
+            server = FedProx(device, dataset, algorithm, model, local_batch_size, local_learning_rate, global_rounds,
+                            local_steps, num_clients, total_clients, i, drop_ratio, train_slow_ratio, send_slow_ratio, 
+                            time_select, goal, time_threthold, mu)
+
         server.train()
 
         time_list.append(time.time()-start)
@@ -107,7 +112,7 @@ if __name__ == "__main__":
     parser.add_argument('-gr', "--global_rounds", type=int, default=2400)
     parser.add_argument('-ls', "--local_steps", type=int, default=20)
     parser.add_argument('-algo', "--algorithm", type=str, default="FedAvg",
-                        choices=["pFedMe", "PerAvg", "FedAvg"])
+                        choices=["pFedMe", "PerAvg", "FedAvg", "FedProx"])
     parser.add_argument('-nc', "--num_clients", type=int, default=20,
                         help="Number of clients per round")
     parser.add_argument('-tc', "--total_clients", type=int, default=50,
@@ -130,6 +135,8 @@ if __name__ == "__main__":
                         help="Average moving parameter for pFedMe, or Second learning rate of Per-FedAvg")
     parser.add_argument('-lam', "--lamda", type=int, default=15,
                         help="Regularization term")
+    parser.add_argument('-mu', "--mu", type=int, default=0,
+                        help="Proximal rate for FedProx")
     parser.add_argument('-k', "--K", type=int, default=5,
                         help="Number of personalized training steps")
     parser.add_argument('-lrp', "--personalized_learning_rate", type=float, default=0.01,
@@ -168,6 +175,8 @@ if __name__ == "__main__":
         print("Persionalized learning rate to caculate theta: {}".format(config.personalized_learning_rate))
     elif config.algorithm == "PerAvg":
         print("Second learning rate beta: {}".format(config.beta))
+    elif config.algorithm == "FedProx":
+        print("Proximal rate: {}".format(config.mu))
 
     print("=" * 50)
 
@@ -193,4 +202,5 @@ if __name__ == "__main__":
         send_slow_ratio=config.send_slow_ratio,
         time_select=config.time_select, 
         time_threthold=config.time_threthold,
+        mu=config.mu, 
     )

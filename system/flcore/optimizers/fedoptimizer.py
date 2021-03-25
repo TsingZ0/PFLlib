@@ -50,11 +50,44 @@ class pFedMeOptimizer(Optimizer):
             for p, localweight in zip(group['params'], local_model):
                 localweight = localweight.to(device)
                 # approximate local model
-                p.data.add_(- group['lr'] * (p.grad.data + group['lamda'] * \
-                    (p.data - localweight.data) + group['mu'] * p.data))
+                p.data.add_(p.grad.data + group['lamda'] * (p.data - localweight.data)\
+                     + group['mu'] * p.data, alpha=-group['lr'])
 
         return group['params']
-        
+
+
+# class pFedMeOptimizer(Optimizer):
+#     def __init__(self, params, lr=0.01, lamda=0.1 , mu = 0.001):
+#         #self.local_weight_updated = local_weight # w_i,K
+#         if lr < 0.0:
+#             raise ValueError("Invalid learning rate: {}".format(lr))
+#         defaults = dict(lr=lr, lamda=lamda, mu = mu)
+#         super(pFedMeOptimizer, self).__init__(params, defaults)
+    
+#     def step(self, local_weight_updated, closure=None):
+#         loss = None
+#         if closure is not None:
+#             loss = closure
+#         weight_update = local_weight_updated.copy()
+#         # pg = self.param_groups
+#         for group in self.param_groups:
+#             # g = group['params']
+#             for p, localweight in zip( group['params'], weight_update):
+#                 p.data = p.data - group['lr'] * (p.grad.data + group['lamda'] * (p.data - localweight.data) + group['mu']*p.data)
+#         #     print('::::::::::::::::::', g==group['params'])
+#         # print('=================', pg==self.param_groups)
+#         return  group['params']
+    
+#     def update_param(self, local_weight_updated, closure=None):
+#         loss = None
+#         if closure is not None:
+#             loss = closure
+#         weight_update = local_weight_updated.copy()
+#         for group in self.param_groups:
+#             for p, localweight in zip( group['params'], weight_update):
+#                 p.data = localweight.data
+#         #return  p.data
+#         return  group['params']
 
 class APFLOptimizer(Optimizer):
     def __init__(self, params, lr):
@@ -71,38 +104,18 @@ class APFLOptimizer(Optimizer):
 
 
 class PerturbedGradientDescent(Optimizer):
-    def __init__(self, params, lr=0.01, lamda=0.0):
+    def __init__(self, params, lr=0.01, mu=0.0):
         if lr < 0.0:
             raise ValueError(f'Invalid learning rate: {lr}')
 
-        default = dict(lr=lr, lamda=lamda)
+        default = dict(lr=lr, mu=mu)
 
         super().__init__(params, default)
 
-    def __setstate__(self, state):
-        super().__setstate__(state)
-
-        for group in self.param_groups:
-            group.setdefault('params_old', group['params'])
-
     @torch.no_grad()
-    def step(self):
+    def step(self, global_params, device):
         for group in self.param_groups:
-            lr = group['lr']
-            lamda = group['lamda']
-
-            # group.setdefault('params_old', group['params'])
-
-            for p in group['params']:
-                if p.grad is None:
-                    continue
-
-                p_t = p
-                param_state = self.state[p]
-                if 'param_old' not in param_state:
-                    param_state['param_old'] = torch.clone(p).detach()
-                else:
-                    p_t = param_state['param_old']
-
-                d_p = p.grad.data + lamda*(p-p_t)
-                p.add_(d_p, alpha=-lr)
+            for p, g in zip(group['params'], global_params):
+                g = g.to(device)
+                d_p = p.grad.data + group['mu'] * (p.data - g.data)
+                p.data.add_(d_p, alpha=-group['lr'])
