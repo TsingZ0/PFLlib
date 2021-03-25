@@ -29,7 +29,7 @@ def check(config_path, train_path, test_path, num_clients, num_labels, niid=Fals
 
     return False
 
-def seperete_data(data, num_clients, num_labels, niid=False, real=True, class_per_client=1):
+def seperete_data(data, num_clients, num_labels, niid=False, real=True, class_per_client=2):
     print("\nOriginal number of samples of each label: ", [len(v) for v in data])
     print()
 
