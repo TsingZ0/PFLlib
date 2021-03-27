@@ -553,6 +553,7 @@ Client 2         Samples of labels:  [(0, 75), (1, 107), (3, 130), (7, 291), (8,
 - FedAvg — [Communication-Efficient Learning of Deep Networks from Decentralized Data](https://arxiv.org/abs/1602.05629) *AISTATS*
 - Per-FadAvg — [Personalized Federated Learning with Theoretical Guarantees: A Model-Agnostic Meta-Learning Approach](https://proceedings.neurips.cc/paper/2020/file/24389bfe4fe2eba8bf9aa9203a44cdad-Paper.pdf) *NeurIPS*
 - pFedMe — [Personalized Federated Learning with Moreau Envelopes](https://proceedings.neurips.cc/paper/2020/file/f4f1f13c8289ac1b1ee0ff176b56fc60-Paper.pdf) *NeurIPS*
+- FedProx — [Federated Optimization for Heterogeneous Networks](https://openreview.net/pdf?id=SkgwE5Ss3N) *ICLR*
 
 ## How to start simulating 
 - Build dataset: [Datasets](##Datasets)
