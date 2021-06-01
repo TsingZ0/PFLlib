@@ -3,9 +3,9 @@ import numpy as np
 import os
 
 
-def average_data(algorithm="", dataset="", goal="", times=10, global_rounds=800):
+def average_data(algorithm="", dataset="", goal="", times=10, length=800):
     test_acc, train_acc, train_loss = get_all_results_for_one_algo(
-        algorithm, dataset, goal, times, global_rounds)
+        algorithm, dataset, goal, times, int(length))
     test_acc_data = np.average(test_acc, axis=0)
     train_acc_data = np.average(train_acc, axis=0)
     train_loss_data = np.average(train_loss, axis=0)
@@ -26,16 +26,16 @@ def average_data(algorithm="", dataset="", goal="", times=10, global_rounds=800)
             hf.create_dataset('rs_train_loss', data=train_loss_data)
 
 
-def get_all_results_for_one_algo(algorithm="", dataset="", goal="", times=10, global_rounds=800):
-    train_acc = np.zeros((times, global_rounds))
-    train_loss = np.zeros((times, global_rounds))
-    test_acc = np.zeros((times, global_rounds))
+def get_all_results_for_one_algo(algorithm="", dataset="", goal="", times=10, length=800):
+    train_acc = np.zeros((times, length))
+    train_loss = np.zeros((times, length))
+    test_acc = np.zeros((times, length))
     algorithms_list = [algorithm] * times
     for i in range(times):
         file_name = dataset + "_" + \
             algorithms_list[i] + "_" + goal + "_" + str(i)
         train_acc[i, :], train_loss[i, :], test_acc[i, :] = np.array(
-            read_data_then_delete(file_name, delete=True))[:, :global_rounds]
+            read_data_then_delete(file_name, delete=True))[:, :length]
 
     return test_acc, train_acc, train_loss
 

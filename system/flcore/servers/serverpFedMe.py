@@ -1,21 +1,19 @@
 import os
+import copy
 import h5py
 from flcore.clients.clientpFedMe import clientpFedMe
 from flcore.servers.serverbase import Server
 from utils.data_utils import read_data, read_client_data
 from threading import Thread
-import copy
 
 
 class pFedMe(Server):
     def __init__(self, device, dataset, algorithm, model, batch_size, learning_rate, global_rounds, local_steps, num_clients,
-                 total_clients, times, drop_ratio, train_slow_ratio, send_slow_ratio, time_select, goal, time_threthold, beta, 
-                 lamda, K, personalized_learning_rate):
+                 total_clients, times, eval_gap, client_drop_rate, train_slow_rate, send_slow_rate, time_select, goal, time_threthold, 
+                 beta, lamda, K, personalized_learning_rate):
         super().__init__(dataset, algorithm, model, batch_size, learning_rate, global_rounds, local_steps, num_clients,
-                         total_clients, times, drop_ratio, train_slow_ratio, send_slow_ratio, time_select, goal, time_threthold)
-
-        # initialize data for all clients
-        data = read_data(dataset)
+                         total_clients, times, eval_gap, client_drop_rate, train_slow_rate, send_slow_rate, time_select, goal, 
+                         time_threthold)
         self.beta = beta
         self.rs_train_acc_per = []
         self.rs_train_loss_per = []
@@ -25,7 +23,7 @@ class pFedMe(Server):
         self.set_slow_clients()
 
         for i, train_slow, send_slow in zip(range(self.total_clients), self.train_slow_clients, self.send_slow_clients):
-            id, train, test = read_client_data(i, data, dataset)
+            train, test = read_client_data(dataset, i)
             client = clientpFedMe(device, i, train_slow, send_slow, train, test, model, batch_size,
                                   learning_rate, local_steps, beta, lamda, K, personalized_learning_rate)
             self.clients.append(client)
@@ -35,13 +33,13 @@ class pFedMe(Server):
         print("Finished creating server and clients.")
 
     def train(self):
-        for i in range(self.global_rounds):
-            print(f"\n-------------Round number: {i}-------------")
-            self.send_parameters()
+        for i in range(self.global_rounds+1):
+            self.send_models()
 
-            # Evaluate gloal model on client for each interation
-            print("\nEvaluate global model")
-            self.evaluate()
+            if i%self.eval_gap == 0:
+                print(f"\n-------------Round number: {i}-------------")
+                print("\nEvaluate global model")
+                self.evaluate()
 
             self.selected_clients = self.select_clients()
             for client in self.selected_clients:
@@ -52,11 +50,12 @@ class pFedMe(Server):
             # [t.start() for t in threads]
             # [t.join() for t in threads]
 
-            # Evaluate personal model on client for each interation
-            print("\nEvaluate personalized model")
-            self.evaluate_personalized_model()
+            if i%self.eval_gap == 0:
+                print("\nEvaluate personalized model")
+                self.evaluate_personalized_model()
 
             self.previous_global_model = copy.deepcopy(list(self.global_model.parameters()))
+            self.receive_models()
             self.aggregate_parameters()
             self.beta_aggregate_parameters()
 
@@ -69,7 +68,7 @@ class pFedMe(Server):
             self.rs_train_acc_per), min(self.rs_train_loss_per))
 
         self.save_results()
-        self.save_model()
+        self.save_global_model()
 
 
     def beta_aggregate_parameters(self):
@@ -77,23 +76,23 @@ class pFedMe(Server):
         for pre_param, param in zip(self.previous_global_model, self.global_model.parameters()):
             param.data = (1 - self.beta)*pre_param.data + self.beta*param.data
 
-    def test_accuracy_persionalized_model(self):
+    def test_accuracy_personalized(self):
         num_samples = []
         tot_correct = []
         for c in self.clients:
-            ct, ns = c.test_accuracy_persionalized_model()
+            ct, ns = c.test_accuracy_personalized()
             tot_correct.append(ct*1.0)
             num_samples.append(ns)
         ids = [c.id for c in self.clients]
 
         return ids, num_samples, tot_correct
 
-    def train_accuracy_and_loss_persionalized_model(self):
+    def train_accuracy_and_loss_personalized(self):
         num_samples = []
         tot_correct = []
         losses = []
         for c in self.clients:
-            ct, cl, ns = c.train_accuracy_and_loss_persionalized_model()
+            ct, cl, ns = c.train_accuracy_and_loss_personalized()
             tot_correct.append(ct*1.0)
             num_samples.append(ns)
             losses.append(cl*1.0)
@@ -103,8 +102,8 @@ class pFedMe(Server):
         return ids, num_samples, tot_correct, losses
 
     def evaluate_personalized_model(self):
-        stats = self.test_accuracy_persionalized_model()
-        stats_train = self.train_accuracy_and_loss_persionalized_model()
+        stats = self.test_accuracy_personalized()
+        stats_train = self.train_accuracy_and_loss_personalized()
 
         test_acc = sum(stats[2])*1.0 / sum(stats[1])
         train_acc = sum(stats_train[2])*1.0 / sum(stats_train[1])

@@ -9,8 +9,8 @@ import random
 
 class Server(object):
     def __init__(self, dataset, algorithm, model, batch_size, learning_rate, global_rounds, local_steps, num_clients,
-                 total_clients, times, drop_ratio, train_slow_ratio, send_slow_ratio, time_select, goal, time_threthold):
-
+                 total_clients, times, eval_gap, client_drop_rate, train_slow_rate, send_slow_rate, time_select, goal, 
+                 time_threthold):
         # Set up the main attributes
         self.dataset = dataset
         self.global_rounds = global_rounds
@@ -25,26 +25,29 @@ class Server(object):
         self.goal = goal
         self.time_threthold = time_threthold
 
-        self.weight_coefs = np.ones(self.total_clients)
-
         self.clients = []
         self.selected_clients = []
         self.train_slow_clients = []
         self.send_slow_clients = []
+
+        self.uploaded_weights = []
+        self.uploaded_models = []
+
         self.rs_train_acc = []
         self.rs_train_loss = []
         self.rs_test_acc = []
 
         self.times = times
-        self.drop_ratio = drop_ratio
-        self.train_slow_ratio = train_slow_ratio
-        self.send_slow_ratio = send_slow_ratio
+        self.eval_gap = eval_gap
+        self.client_drop_rate = client_drop_rate
+        self.train_slow_rate = train_slow_rate
+        self.send_slow_rate = send_slow_rate
 
     # random select slow clients
-    def select_slow_clients(self, slow_ratio):
+    def select_slow_clients(self, slow_rate):
         slow_clients = [False for i in range(self.total_clients)]
         idx = [i for i in range(self.total_clients)]
-        idx_ = np.random.choice(idx, int(slow_ratio * self.total_clients))
+        idx_ = np.random.choice(idx, int(slow_rate * self.total_clients))
         for i in idx_:
             slow_clients[i] = True
 
@@ -52,9 +55,9 @@ class Server(object):
 
     def set_slow_clients(self):
         self.train_slow_clients = self.select_slow_clients(
-            self.train_slow_ratio)
+            self.train_slow_rate)
         self.send_slow_clients = self.select_slow_clients(
-            self.send_slow_ratio)
+            self.send_slow_rate)
 
     def select_clients(self):
         selected_clients = []
@@ -73,43 +76,51 @@ class Server(object):
 
         return selected_clients
 
-    def send_parameters(self):
+    def send_models(self):
         assert (len(self.clients) > 0)
+
         for client in self.clients:
             start_time = time.time()
 
             if client.send_slow:
                 time.sleep(0.1 * np.abs(np.random.rand()))
 
-            client.set_parameters(self.global_model)
+            client.set_parameters(copy.deepcopy(self.global_model))
 
             client.send_time_cost['num_rounds'] += 1
-            client.send_time_cost['total_cost'] += time.time() - start_time
+            client.send_time_cost['total_cost'] += 2 * (time.time() - start_time)
 
-    def add_parameters(self, client, weighted):
-        for server_param, client_param in zip(self.global_model.parameters(), client.model.parameters()):
-            server_param.data += client_param.data.clone() * weighted
-
-    def aggregate_parameters(self):
+    def receive_models(self):
         assert (len(self.selected_clients) > 0)
 
-        for param in self.global_model.parameters():
-            param.data = torch.zeros_like(param.data)
-
         active_clients = random.sample(
-            self.selected_clients, int((1-self.drop_ratio) * self.num_clients))
+            self.selected_clients, int((1-self.client_drop_rate) * self.num_clients))
 
-        selected_train_samples = 0
+        active_train_samples = 0
         for client in active_clients:
-            selected_train_samples += client.train_samples
+            active_train_samples += client.train_samples
 
+        self.uploaded_weights = []
+        self.uploaded_models = []
         for client in active_clients:
             client_time_cost = client.train_time_cost['total_cost'] / client.train_time_cost['num_rounds'] + \
                     client.send_time_cost['total_cost'] / client.send_time_cost['num_rounds']
             if client_time_cost <= self.time_threthold:
-                coef = self.weight_coefs[client.id]
-                self.add_parameters(
-                    client, client.train_samples / selected_train_samples * coef)
+                self.uploaded_weights.append(client.train_samples / active_train_samples)
+                self.uploaded_models.append(copy.deepcopy(client.model))
+
+    def add_parameters(self, w, client_model):
+        for server_param, client_param in zip(self.global_model.parameters(), client_model.parameters()):
+            server_param.data += client_param.data.clone() * w
+
+    def aggregate_parameters(self):
+        assert (len(self.uploaded_models) > 0)
+
+        for param in self.global_model.parameters():
+            param.data = torch.zeros_like(param.data)
+            
+        for w, client_model in zip(self.uploaded_weights, self.uploaded_models):
+            self.add_parameters(w, client_model)
         
 
     # def aggregate_parameters(self):
@@ -117,20 +128,19 @@ class Server(object):
     #     for param in self.global_model.parameters():
     #         param.data = torch.zeros_like(param.data)
 
-    #     selected_train_samples = 0
+    #     active_train_samples = 0
     #     for client in self.selected_clients:
-    #         selected_train_samples += client.train_samples
+    #         active_train_samples += client.train_samples
 
     #     for client in self.selected_clients:
-    #         self.add_parameters(client, client.train_samples / selected_train_samples)
+    #         self.add_parameters(client, client.train_samples / active_train_samples)
 
 
-    def save_model(self):
+    def save_global_model(self):
         model_path = os.path.join("models", self.dataset)
         if not os.path.exists(model_path):
             os.makedirs(model_path)
-        torch.save(self.global_model, os.path.join(
-            model_path, "server" + ".pt"))
+        torch.save(self.global_model, os.path.join(model_path, self.algorithm + "_server" + ".pt"))
 
     # def load_model(self):
     #     model_path = os.path.join("models", self.dataset, "server" + ".pt")

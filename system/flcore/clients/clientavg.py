@@ -12,13 +12,12 @@ class clientAVG(client):
                          local_steps)
 
         self.loss = nn.CrossEntropyLoss()
-        self.optimizer = torch.optim.SGD(
-            self.model.parameters(), lr=self.learning_rate)
+        self.optimizer = torch.optim.SGD(self.model.parameters(), lr=self.learning_rate)
 
     def train(self):
         start_time = time.time()
 
-        self.model.to(self.device)
+        # self.model.to(self.device)
         self.model.train()
         
         max_local_steps = self.local_steps
@@ -35,7 +34,7 @@ class clientAVG(client):
             loss.backward()
             self.optimizer.step()
 
-        self.model.cpu()
+        # self.model.cpu()
 
         self.train_time_cost['num_rounds'] += 1
         self.train_time_cost['total_cost'] += time.time() - start_time

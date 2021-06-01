@@ -6,17 +6,19 @@ import os
 import re
 plt.rcParams.update({'font.size': 14})
 
+result_dir = "results/"
 
-def plot_summary_one_figure_Compare(save_path, algorithms_list, dataset, goal, global_rounds, 
-                    accuracy_lim, loss_lim, window, window_len, isconvex=True):
-    num_algo = len(algorithms_list)
+def plot_summary_one_figure_Compare(save_path, alist, dataset, b, global_rounds, gap, 
+                    accuracy_lim, loss_lim, window, window_len, isconvex=True, compare=True):
+    num = len(alist)
     if not os.path.exists(save_path):
         os.makedirs(save_path)
 
     test_acc_, train_acc_, train_loss_ = get_results(
-        algorithms_list, dataset, goal, global_rounds)
-    for i in range(num_algo):
-        print(f"max accurancy of {algorithms_list[i]}: ", test_acc_[i].max())
+        alist, dataset, b, int(global_rounds/gap)+1, compare)
+
+    for i in range(num):
+        print(f"max accurancy of {alist[i]}: ", test_acc_[i].max())
     test_acc = average_smooth(test_acc_, window=window, window_len=window_len)
     train_loss = average_smooth(train_loss_, window=window, window_len=window_len)
     # train_acc = average_smooth(train_acc_, window=window, window_len=window_len)
@@ -33,9 +35,12 @@ def plot_summary_one_figure_Compare(save_path, algorithms_list, dataset, goal, g
         plt.title("Nonconvex")
     plt.grid(True)
 
-    for i in range(num_algo):
-        label = get_label_name(algorithms_list[i])
-        plt.plot(train_loss[i, 1:], linestyle=linestyles[i], label=label, linewidth=1,
+    X = list(range(0, global_rounds, gap)).append(global_rounds)
+
+    for i in range(num):
+        label = alist[i]
+        # label = get_label_name(alist[i])
+        plt.plot(X, train_loss[i, :], linestyle=linestyles[i], label=label, linewidth=1,
                  color=colors[i], marker=markers[i], markevery=0.2, markersize=5)
     plt.legend(loc='upper right')
     plt.ylabel('Training Loss')
@@ -43,9 +48,12 @@ def plot_summary_one_figure_Compare(save_path, algorithms_list, dataset, goal, g
     plt.ylim([loss_lim[0],  loss_lim[1]])
 
     if isconvex:
-        plt.savefig(save_path + goal + '_' + dataset + "_convex_train.pdf", bbox_inches="tight")
+        plt.savefig(save_path + b + '_' + dataset + "_convex_train.pdf", bbox_inches="tight")
     else:
-        plt.savefig(save_path + goal + '_' + dataset + "_non-convex_train.pdf", bbox_inches="tight")
+        try:
+            plt.savefig(save_path + b + '_' + dataset + "_non-convex_train.pdf", bbox_inches="tight")
+        except:
+            print("It is not convex for all!")
 
     # Global accurancy
     plt.figure(2, figsize=(5, 5))
@@ -56,9 +64,10 @@ def plot_summary_one_figure_Compare(save_path, algorithms_list, dataset, goal, g
         plt.title("Non-convex")
     plt.grid(True)
 
-    for i in range(num_algo):
-        label = get_label_name(algorithms_list[i])
-        plt.plot(test_acc[i, 1:], linestyle=linestyles[i], label=label, linewidth=1,
+    for i in range(num):
+        label = alist[i]
+        # label = get_label_name(alist[i])
+        plt.plot(X, test_acc[i, :], linestyle=linestyles[i], label=label, linewidth=1,
                  color=colors[i], marker=markers[i], markevery=0.2, markersize=5)
     plt.legend(loc='lower right')
     plt.ylabel('Test Accuracy')
@@ -66,22 +75,30 @@ def plot_summary_one_figure_Compare(save_path, algorithms_list, dataset, goal, g
     plt.ylim([accuracy_lim[0],  accuracy_lim[1]])
 
     if isconvex:
-        plt.savefig(save_path + goal + '_' + dataset + "_convex_test.pdf", bbox_inches="tight")
+        plt.savefig(save_path + b + '_' + dataset + "_convex_test.pdf", bbox_inches="tight")
     else:
-        plt.savefig(save_path + goal + '_' + dataset + "_non-convex_test.pdf", bbox_inches="tight")
+        plt.savefig(save_path + b + '_' + dataset + "_non-convex_test.pdf", bbox_inches="tight")
 
     plt.close()
 
 
-def get_results(algorithms_list=[], dataset="", goal="", global_rounds=100):
-    num_algo = len(algorithms_list)
-    train_acc = np.zeros((num_algo, global_rounds))
-    train_loss = np.zeros((num_algo, global_rounds))
-    test_acc = np.zeros((num_algo, global_rounds))
-    for i in range(num_algo):
-        file_name = dataset + "_" + algorithms_list[i] + "_" + goal + "_avg"
+def get_results(alist=[], dataset="", b="", epochs=100, compare=True):
+    num = len(alist)
+    train_acc = np.zeros((num, epochs))
+    train_loss = np.zeros((num, epochs))
+    test_acc = np.zeros((num, epochs))
+
+    for i in range(num):
+        file_name = None
+        if compare:
+            file_name = dataset + "_" + alist[i] + "_" + b + "_avg"
+        else:
+            file_name = dataset + "_" + b + "_" + alist[i] + "_avg"
         res = np.array(read_data_then_delete(file_name, delete=False))
-        train_acc[i, :], train_loss[i, :], test_acc[i, :] = res[:, :global_rounds]
+        train_acc[i, :], train_loss[i, :], test_acc[i, :] = res[:, :epochs]
+        print("\tTrain accuracy list (last 10): ", train_acc[i][-10:])
+        print("\tTrain loss list (last 10): ", train_loss[i][-10:])
+        print("\tTest accuracy list (last 10): ", test_acc[i][-10:])
     return test_acc, train_acc, train_loss
 
 
@@ -119,7 +136,7 @@ def get_label_name(name):
 
 
 def read_data_then_delete(file_name, delete=False):
-    file_path = "../results/" + file_name + ".h5"
+    file_path = result_dir + file_name + ".h5"
     print("File path: " + file_path)
 
     with h5py.File(file_path, 'r') as hf:
@@ -134,34 +151,53 @@ def read_data_then_delete(file_name, delete=False):
 
 
 if __name__ == '__main__':
-    save_path = "../figures/"
-    algorithms = ["FedAvg", "PerAvg", "pFedMe", "pFedMe_p"]
+    save_path = "figures/"
+    # alist = ["FedAvg", "PerAvg", "pFedMe", "pFedMe_p", "FedTransfer"]
+    alist = ["10drop=0.0", "10drop=0.1", "10drop=0.3", "10drop=0.5", "10drop=0.7"]
+    # alist_t = []
+    # for st in alist:
+    #     alist_t.append("extra01"+st)
+    # # alist.extend(alist_t)
+    # import copy
+    # alist = copy.deepcopy(alist_t)
+    alist_t = []
+    for st in alist:
+        alist_t.append("tuned_"+st)
+    alist.extend(alist_t)
+
+    # alist = ["gk=0", "gk=0.1", "gk=0.01","gk=1.0", "gk=10.0"]
     dataset = "Cifar10"
-    goal = "cnn"
-    global_rounds = 2400
+    # b = "resnet" #stable
+    b = "FedTransfer"
+    compare = False
+    global_rounds = 2000
+    gap = 100
     window = 'flat'
-    window_len = 20
-    isconvex = True
+    window_len = 1
+    isconvex = False if b == "dnn" else True
+
 
     if dataset == "mnist":
-        accuracy_lim = [0.5, 1]
+        accuracy_lim = [0.9, 1]
         loss_lim = [0, 1]
     elif dataset == "Cifar10":
-        accuracy_lim = [0.1, 0.7]
-        loss_lim = [0.5, 2]
+        accuracy_lim = [0.1, 0.9]
+        loss_lim = [0, 3]
     else:
         accuracy_lim = [0.7, 1]
-        loss_lim = [0, 2] 
+        loss_lim = [0, 2]
 
     plot_summary_one_figure_Compare(
         save_path=save_path, 
-        algorithms_list=algorithms, 
+        alist=alist, 
         dataset=dataset, 
-        goal=goal, 
-        global_rounds=global_rounds,
+        b=b, 
+        global_rounds=global_rounds, 
+        gap=gap, 
         accuracy_lim=accuracy_lim, 
         loss_lim=loss_lim, 
         window=window, 
         window_len=window_len, 
-        isconvex=isconvex
+        isconvex=isconvex, 
+        compare=compare, 
     )

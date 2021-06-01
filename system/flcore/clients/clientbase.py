@@ -1,7 +1,7 @@
+import copy
 import torch
 import torch.nn as nn
 from torch.utils.data import DataLoader
-import copy
 
 
 class client(object):
@@ -36,16 +36,16 @@ class client(object):
         for new_param, old_param in zip(model.parameters(), self.model.parameters()):
             old_param.data = new_param.data.clone()
 
-    def clone_model_paramenters(self, model, clone_model):
-        for param, clone_param in zip(model.parameters(), clone_model.parameters()):
-            clone_param.data = param.data.clone()
+    def clone_paramenters(self, model, target):
+        for param, target_param in zip(model.parameters(), target.parameters()):
+            target_param.data = param.data.clone()
 
     def update_parameters(self, model, new_params):
         for param, new_param in zip(model.parameters(), new_params):
             param.data = new_param.data.clone()
 
     def test_accuracy(self):
-        self.model.to(self.device)
+        # self.model.to(self.device)
         self.model.eval()
 
         test_acc = 0
@@ -59,12 +59,12 @@ class client(object):
                 test_acc += (torch.sum(torch.argmax(output, dim=1) == y)).item()
                 test_num += y.shape[0]
 
-        self.model.cpu()
+        # self.model.cpu()
         
         return test_acc, test_num
 
     def train_accuracy_and_loss(self):
-        self.model.to(self.device)
+        # self.model.to(self.device)
         self.model.eval()
 
         train_acc = 0
@@ -78,7 +78,7 @@ class client(object):
             train_num += y.shape[0]
             loss += self.loss(output, y).item() * y.shape[0]
 
-        self.model.cpu()
+        # self.model.cpu()
 
         return train_acc, loss, train_num
 

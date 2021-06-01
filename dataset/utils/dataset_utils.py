@@ -30,8 +30,7 @@ def check(config_path, train_path, test_path, num_clients, num_labels, niid=Fals
     return False
 
 def seperete_data(data, num_clients, num_labels, niid=False, real=True, class_per_client=2):
-    print("\nOriginal number of samples of each label: ", [len(v) for v in data])
-    print()
+    print("\nOriginal number of samples of each label:\n", [len(v) for v in data])
 
     X = [[] for _ in range(num_clients)]
     y = [[] for _ in range(num_clients)]
@@ -80,12 +79,10 @@ def seperete_data(data, num_clients, num_labels, niid=False, real=True, class_pe
 
 def split_data(X, y, num_clients, train_size=train_size):
     # Split dataset
-    train_data = {'clients': [], 'client_data': {}, 'num_samples': []}
-    test_data = {'clients': [], 'client_data': {}, 'num_samples': []}
+    train_data, test_data = [], []
+    num_samples = {'train':[], 'test':[]}
 
     for i in range(num_clients):
-        uname = 'f_{0:05d}'.format(i)
-
         unique, count = np.unique(y[i], return_counts=True)
         if min(count) > 1:
             X_train, X_test, y_train, y_test = train_test_split(
@@ -94,16 +91,14 @@ def split_data(X, y, num_clients, train_size=train_size):
             X_train, X_test, y_train, y_test = train_test_split(
                 X[i], y[i], train_size=train_size, shuffle=True, stratify=None)
 
-        train_data["client_data"][uname] = {'x': X_train, 'y': y_train}
-        train_data['clients'].append(uname)
-        train_data['num_samples'].append(len(y_train))
-        test_data['clients'].append(uname)
-        test_data["client_data"][uname] = {'x': X_test, 'y': y_test}
-        test_data['num_samples'].append(len(y_test))
+        train_data.append({'x': X_train, 'y': y_train})
+        num_samples['train'].append(len(y_train))
+        test_data.append({'x': X_test, 'y': y_test})
+        num_samples['test'].append(len(y_test))
 
-    print("Total number of samples:", sum(train_data['num_samples'] + test_data['num_samples']))
-    print("The number of train samples:", train_data['num_samples'])
-    print("The number of test samples:", test_data['num_samples'])
+    print("Total number of samples:", sum(num_samples['train'] + num_samples['test']))
+    print("The number of train samples:", num_samples['train'])
+    print("The number of test samples:", num_samples['test'])
     print()
     del X, y
     gc.collect()
@@ -116,20 +111,17 @@ def save_file(config_path, train_path, test_path, train_data, test_data, num_cli
         'num_labels': num_labels, 
         'non_iid': niid, 
         'real_world': real, 
-    }
-    config.update({
-        'train_samples_of_each_label': train_data['num_samples'], 
-        'test_samples_of_each_label': test_data['num_samples'], 
-        'total_samples': sum(train_data['num_samples'] + test_data['num_samples']),
         'Size of samples for labels in clients': statistic, 
-    })
+    }
 
     gc.collect()
 
-    with open(train_path, 'w') as f:
-        ujson.dump(train_data, f)
-    with open(test_path, 'w') as f:
-        ujson.dump(test_data, f)
+    for idx, train_dict in enumerate(train_data):
+        with open(train_path[:-5]+str(idx)+train_path[-5:], 'w') as f:
+            ujson.dump(train_dict, f)
+    for idx, test_dict in enumerate(test_data):
+        with open(test_path[:-5]+str(idx)+test_path[-5:], 'w') as f:
+            ujson.dump(test_dict, f)
     with open(config_path, 'w') as f:
         ujson.dump(config, f)
 

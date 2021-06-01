@@ -84,8 +84,8 @@ class CifarNet(nn.Module):
         x = F.relu(self.fc1(x))
         x = F.relu(self.fc2(x))
         x = self.fc3(x)
-        return F.log_softmax(x, dim=1)
-
+        x = F.log_softmax(x, dim=1)
+        return x
 
 
 cfg = {
@@ -197,4 +197,25 @@ class CNNCifar(nn.Module):
         x = F.relu(self.fc1(x))
         x = F.relu(self.fc2(x))
         x = self.fc3(x)
-        return F.log_softmax(x, dim=1)
+        x = F.log_softmax(x, dim=1)
+        return x
+
+
+class ResNetClassifier(nn.Module):
+    def __init__(self, input_dim=512, num_classes=10):
+        super(ResNetClassifier, self).__init__()
+        self.fc = nn.Linear(input_dim, num_classes)
+
+    def forward(self, x):
+        x = self.fc(x)
+        x = F.log_softmax(x, dim=1)
+        return x
+
+# class linear(Function):
+#   @staticmethod
+#   def forward(ctx, input):
+#     return input
+  
+#   @staticmethod
+#   def backward(ctx, grad_output):
+#     return grad_output

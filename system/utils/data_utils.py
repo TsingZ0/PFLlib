@@ -3,12 +3,12 @@ import numpy as np
 import os
 import torch
 
-IMAGE_SIZE = 28
-IMAGE_PIXELS = IMAGE_SIZE * IMAGE_SIZE
-NUM_CHANNELS = 1
+# IMAGE_SIZE = 28
+# IMAGE_PIXELS = IMAGE_SIZE * IMAGE_SIZE
+# NUM_CHANNELS = 1
 
-IMAGE_SIZE_CIFAR = 32
-NUM_CHANNELS_CIFAR = 3
+# IMAGE_SIZE_CIFAR = 32
+# NUM_CHANNELS_CIFAR = 3
 
 
 def batch_data(data, batch_size):
@@ -60,7 +60,7 @@ def get_batch_sample(data, batch_size):
     return (batched_x, batched_y)
 
 
-def read_data(dataset):
+def read_data(dataset, idx):
     '''parses data in given train and test data directories
 
     assumes:
@@ -74,43 +74,27 @@ def read_data(dataset):
         test_data: dictionary of test data
     '''
 
-    train_data_dir = os.path.join('../dataset', dataset, 'train')
-    test_data_dir = os.path.join('../dataset', dataset, 'test')
+    train_data_dir = os.path.join('../dataset', dataset, 'train/')
+    test_data_dir = os.path.join('../dataset', dataset, 'test/')
 
-    train_file = os.listdir(train_data_dir)[0]
-    train_path = os.path.join(train_data_dir, train_file)
-    with open(train_path, 'r') as f:
+    train_file = train_data_dir + 'train' + str(idx) + '.json'
+    with open(train_file, 'r') as f:
         train_data = ujson.load(f)
 
-    test_file = os.listdir(test_data_dir)[0]
-    test_path = os.path.join(test_data_dir, test_file)
-    with open(test_path, 'r') as f:
+    test_file = test_data_dir + 'test' + str(idx) + '.json'
+    with open(test_file, 'r') as f:
         test_data = ujson.load(f)
 
-    return train_data['clients'], train_data['client_data'], test_data['client_data']
+    return train_data, test_data
 
 
-def read_client_data(index, data, dataset):
-    idx = data[0][index]
-    train_data = data[1][idx]
-    test_data = data[2][idx]
-    X_train, y_train, X_test, y_test = train_data['x'], train_data['y'], test_data['x'], test_data['y']
-    if(dataset == "mnist"):
-        X_train = torch.Tensor(X_train).view(-1, NUM_CHANNELS, IMAGE_SIZE, IMAGE_SIZE).type(torch.float32)
-        y_train = torch.Tensor(y_train).type(torch.int64)
-        X_test = torch.Tensor(X_test).view(-1, NUM_CHANNELS, IMAGE_SIZE, IMAGE_SIZE).type(torch.float32)
-        y_test = torch.Tensor(y_test).type(torch.int64)
-    elif(dataset == "Cifar10"):
-        X_train = torch.Tensor(X_train).view(-1, NUM_CHANNELS_CIFAR, IMAGE_SIZE_CIFAR, IMAGE_SIZE_CIFAR).type(torch.float32)
-        y_train = torch.Tensor(y_train).type(torch.int64)
-        X_test = torch.Tensor(X_test).view(-1, NUM_CHANNELS_CIFAR, IMAGE_SIZE_CIFAR, IMAGE_SIZE_CIFAR).type(torch.float32)
-        y_test = torch.Tensor(y_test).type(torch.int64)
-    else:
-        X_train = torch.Tensor(X_train).type(torch.float32)
-        y_train = torch.Tensor(y_train).type(torch.int64)
-        X_test = torch.Tensor(X_test).type(torch.float32)
-        y_test = torch.Tensor(y_test).type(torch.int64)
+def read_client_data(dataset, idx):
+    train_data, test_data = read_data(dataset, idx)
+    X_train = torch.Tensor(train_data['x']).type(torch.float32)
+    y_train = torch.Tensor(train_data['y']).type(torch.int64)
+    X_test = torch.Tensor(test_data['x']).type(torch.float32)
+    y_test = torch.Tensor(test_data['y']).type(torch.int64)
 
     train_data = [(x, y) for x, y in zip(X_train, y_train)]
     test_data = [(x, y) for x, y in zip(X_test, y_test)]
-    return idx, train_data, test_data
+    return train_data, test_data

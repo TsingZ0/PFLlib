@@ -1,10 +1,10 @@
+import numpy as np
 import torch
+import time
+import copy
 import torch.nn as nn
 from flcore.optimizers.fedoptimizer import PerAvgOptimizer
 from flcore.clients.clientbase import client
-import numpy as np
-import time
-import copy
 
 
 class clientPerAvg(client):
@@ -15,7 +15,7 @@ class clientPerAvg(client):
 
         self.beta = beta
 
-        # parameters for persionalized federated learing.
+        # parameters for personalized federated learing.
         self.local_model = copy.deepcopy(self.model)
 
         self.loss = nn.CrossEntropyLoss()
@@ -24,7 +24,7 @@ class clientPerAvg(client):
     def train(self):
         start_time = time.time()
 
-        self.model.to(self.device)
+        # self.model.to(self.device)
         self.model.train()
 
         max_local_steps = self.local_steps
@@ -48,10 +48,10 @@ class clientPerAvg(client):
             loss.backward()
             self.optimizer.step(beta=self.beta)
 
-            # clone model to local model
-            self.clone_model_paramenters(self.model, self.local_model)
+        # clone model to local model
+        self.clone_paramenters(self.model, self.local_model)
 
-        self.model.cpu()
+        # self.model.cpu()
 
         self.train_time_cost['num_rounds'] += 1
         self.train_time_cost['total_cost'] += time.time() - start_time
@@ -64,7 +64,7 @@ class clientPerAvg(client):
 
 
     def train_one_step(self):
-        self.model.to(self.device)
+        # self.model.to(self.device)
         self.model.train()
 
         # step 1
@@ -83,7 +83,7 @@ class clientPerAvg(client):
         loss.backward()
         self.optimizer.step(beta=self.beta)
 
-        self.model.cpu()
+        # self.model.cpu()
 
     
     def get_next_test_batch(self):

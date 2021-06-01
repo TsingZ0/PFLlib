@@ -6,18 +6,15 @@ from threading import Thread
 
 class FedAvg(Server):
     def __init__(self, device, dataset, algorithm, model, batch_size, learning_rate, global_rounds, local_steps, num_clients,
-                 total_clients, times, drop_ratio, train_slow_ratio, send_slow_ratio, time_select, goal, time_threthold):
+                 total_clients, times, eval_gap, client_drop_rate, train_slow_rate, send_slow_rate, time_select, goal, time_threthold):
         super().__init__(dataset, algorithm, model, batch_size, learning_rate, global_rounds, local_steps, num_clients,
-                         total_clients, times, drop_ratio, train_slow_ratio, send_slow_ratio, time_select, goal, time_threthold)
-
-        # initialize data for all clients
-        data = read_data(dataset)
-
+                         total_clients, times, eval_gap, client_drop_rate, train_slow_rate, send_slow_rate, time_select, goal, 
+                         time_threthold)
         # select slow clients
         self.set_slow_clients()
 
         for i, train_slow, send_slow in zip(range(self.total_clients), self.train_slow_clients, self.send_slow_clients):
-            id, train, test = read_client_data(i, data, dataset)
+            train, test = read_client_data(dataset, i)
             client = clientAVG(device, i, train_slow, send_slow, train, 
                                test, model, batch_size, learning_rate, local_steps)
             self.clients.append(client)
@@ -27,13 +24,13 @@ class FedAvg(Server):
         print("Finished creating server and clients.")
 
     def train(self):
-        for i in range(self.global_rounds):
-            print(f"\n-------------Round number: {i}-------------")
-            self.send_parameters()
+        for i in range(self.global_rounds+1):
+            self.send_models()
 
-            # Evaluate model each interation
-            print("\nEvaluate global model")
-            self.evaluate()
+            if i%self.eval_gap == 0:
+                print(f"\n-------------Round number: {i}-------------")
+                print("\nEvaluate global model")
+                self.evaluate()
 
             self.selected_clients = self.select_clients()
             for client in self.selected_clients:
@@ -44,6 +41,7 @@ class FedAvg(Server):
             # [t.start() for t in threads]
             # [t.join() for t in threads]
 
+            self.receive_models()
             self.aggregate_parameters()
 
         print("\nBest global results.")
@@ -51,4 +49,4 @@ class FedAvg(Server):
             self.rs_train_acc), min(self.rs_train_loss))
 
         self.save_results()
-        self.save_model()
+        self.save_global_model()

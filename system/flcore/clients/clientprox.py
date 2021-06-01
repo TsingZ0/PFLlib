@@ -1,10 +1,10 @@
 import torch
-import torch.nn as nn
-from flcore.optimizers.fedoptimizer import PerturbedGradientDescent
-from flcore.clients.clientbase import client
 import numpy as np
 import time
 import copy
+import torch.nn as nn
+from flcore.optimizers.fedoptimizer import PerturbedGradientDescent
+from flcore.clients.clientbase import client
 
 
 class clientProx(client):
@@ -24,7 +24,7 @@ class clientProx(client):
     def train(self):
         start_time = time.time()
 
-        self.model.to(self.device)
+        # self.model.to(self.device)
         self.model.train()
 
         max_local_steps = self.local_steps
@@ -41,7 +41,7 @@ class clientProx(client):
             loss.backward()
             self.optimizer.step(self.global_params, self.device)
 
-        self.model.cpu()
+        # self.model.cpu()
 
         self.train_time_cost['num_rounds'] += 1
         self.train_time_cost['total_cost'] += time.time() - start_time

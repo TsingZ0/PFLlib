@@ -1,10 +1,10 @@
+import numpy as np
+import time
+import copy
 import torch
 import torch.nn as nn
 from flcore.optimizers.fedoptimizer import pFedMeOptimizer
 from flcore.clients.clientbase import client
-import numpy as np
-import time
-import copy
 
 
 class clientpFedMe(client):
@@ -18,9 +18,9 @@ class clientpFedMe(client):
         self.K = K
         self.personalized_learning_rate = personalized_learning_rate
 
-        # these parameters are for persionalized federated learing.
-        self.local_model = copy.deepcopy(list(self.model.parameters()))
-        self.persionalized_model = copy.deepcopy(list(self.model.parameters()))
+        # these parameters are for personalized federated learing.
+        self.local_params = copy.deepcopy(list(self.model.parameters()))
+        self.personalized_params = copy.deepcopy(list(self.model.parameters()))
 
         self.loss = nn.CrossEntropyLoss()
         self.optimizer = pFedMeOptimizer(
@@ -29,7 +29,7 @@ class clientpFedMe(client):
     def train(self):
         start_time = time.time()
 
-        self.model.to(self.device)
+        # self.model.to(self.device)
         self.model.train()
 
         max_local_steps = self.local_steps
@@ -46,16 +46,16 @@ class clientpFedMe(client):
                 loss = self.loss(output, y)
                 loss.backward()
                 # finding aproximate theta
-                self.persionalized_model = self.optimizer.step(self.local_model, self.device)
+                self.personalized_params = self.optimizer.step(self.local_params, self.device)
 
             # update local weight after finding aproximate theta
-            for new_param, local_param in zip(self.persionalized_model, self.local_model):
-                new_param = new_param.cpu()
+            for new_param, local_param in zip(self.personalized_params, self.local_params):
+                local_param = local_param.to(self.device)
                 local_param.data.add_(- self.lamda * self.learning_rate * (local_param.data - new_param.data))
 
-        self.model.cpu()
+        # self.model.cpu()
 
-        self.update_parameters(self.model, self.local_model)
+        self.update_parameters(self.model, self.local_params)
 
         self.train_time_cost['num_rounds'] += 1
         self.train_time_cost['total_cost'] += time.time() - start_time
@@ -66,19 +66,19 @@ class clientpFedMe(client):
     #         tensor = tensor.to(device)
     #         print('////////////', device) # cuda
     #         print('============', tensor.device) # cuda:0
-    #     for tensor in self.local_model:
-    #         print('local_model+++++++++++++++', tensor.device) # cpu
+    #     for tensor in self.local_params:
+    #         print('local_params+++++++++++++++', tensor.device) # cpu
     #     for tensor in list_of_tensors:
     #         print('list_of_tensors+++++++++++++++', tensor.device) # cpu
 
     def set_parameters(self, model):
-        for new_param, old_param, local_param in zip(model.parameters(), self.model.parameters(), self.local_model):
+        for new_param, old_param, local_param in zip(model.parameters(), self.model.parameters(), self.local_params):
             old_param.data = new_param.data.clone()
             local_param.data = new_param.data.clone()
 
-    def test_accuracy_persionalized_model(self):
-        self.update_parameters(self.model, self.persionalized_model)
-        self.model.to(self.device)
+    def test_accuracy_personalized(self):
+        self.update_parameters(self.model, self.personalized_params)
+        # self.model.to(self.device)
         self.model.eval()
 
         test_acc = 0
@@ -92,13 +92,13 @@ class clientpFedMe(client):
                 test_acc += (torch.sum(torch.argmax(output, dim=1) == y)).item()
                 test_num += y.shape[0]
 
-        self.model.cpu()
+        # self.model.cpu()
         
         return test_acc, test_num
 
-    def train_accuracy_and_loss_persionalized_model(self):
-        self.update_parameters(self.model, self.persionalized_model)
-        self.model.to(self.device)
+    def train_accuracy_and_loss_personalized(self):
+        self.update_parameters(self.model, self.personalized_params)
+        # self.model.to(self.device)
         self.model.eval()
 
         train_acc = 0
@@ -112,6 +112,6 @@ class clientpFedMe(client):
             train_num += y.shape[0]
             loss += self.loss(output, y).item() * y.shape[0]
 
-        self.model.cpu()
+        # self.model.cpu()
         
         return train_acc, loss, train_num
