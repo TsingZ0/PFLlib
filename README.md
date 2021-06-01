@@ -552,11 +552,11 @@ Client 2         Samples of labels:  [(0, 75), (1, 107), (3, 130), (7, 291), (8,
     2. DNN(60, 20) # non-convex
 
 ## Algorithms (updating)
-- FedAvg — [Communication-Efficient Learning of Deep Networks from Decentralized Data](https://arxiv.org/abs/1602.05629) *AISTATS 2017*
-- Per-FadAvg — [Personalized Federated Learning with Theoretical Guarantees: A Model-Agnostic Meta-Learning Approach](https://proceedings.neurips.cc/paper/2020/file/24389bfe4fe2eba8bf9aa9203a44cdad-Paper.pdf) *NeurIPS 2020*
-- pFedMe — [Personalized Federated Learning with Moreau Envelopes](https://proceedings.neurips.cc/paper/2020/file/f4f1f13c8289ac1b1ee0ff176b56fc60-Paper.pdf) *NeurIPS 2020*
-- FedProx — [Federated Optimization for Heterogeneous Networks](https://openreview.net/pdf?id=SkgwE5Ss3N) *ICLR 2020*
-- FedFomo — [Personalized Federated Learning with First Order Model Optimization](https://openreview.net/pdf?id=ehJqJQk9cw) *ICLR 2021*
+- **FedAvg** — [Communication-Efficient Learning of Deep Networks from Decentralized Data](https://arxiv.org/abs/1602.05629) *AISTATS 2017*
+- **Per-FadAvg** — [Personalized Federated Learning with Theoretical Guarantees: A Model-Agnostic Meta-Learning Approach](https://proceedings.neurips.cc/paper/2020/file/24389bfe4fe2eba8bf9aa9203a44cdad-Paper.pdf) *NeurIPS 2020*
+- **pFedMe** — [Personalized Federated Learning with Moreau Envelopes](https://proceedings.neurips.cc/paper/2020/file/f4f1f13c8289ac1b1ee0ff176b56fc60-Paper.pdf) *NeurIPS 2020*
+- **FedProx** — [Federated Optimization for Heterogeneous Networks](https://openreview.net/pdf?id=SkgwE5Ss3N) *ICLR 2020*
+- **FedFomo** — [Personalized Federated Learning with First Order Model Optimization](https://openreview.net/pdf?id=ehJqJQk9cw) *ICLR 2021*
 
 ## How to start simulating 
 - Build dataset: [Datasets](##Datasets)
@@ -574,8 +574,15 @@ Client 2         Samples of labels:  [(0, 75), (1, 107), (3, 130), (7, 291), (8,
     ```
     Then check the figures in `./figures`.
 
+## Practical setting
+If you need to simulate FL in a practical setting, which include **client dropout**, **slow trainers**, **slow senders** and **network TTL**, you can set the following parameters to realize it.
+
+- `-cdr`: The dropout rate for total clients. The selected clients will randomly drop at each training round.
+- `-tsr` and `-ssr`: The rates for slow trainers and slow senders among all clients. Once a client was selected as "slow trainers", for example, it will always trains slower than original one. So does "slow senders". 
+- `-tth`: The threthold for network TTL (ms). 
+
 ## Easy to extend
-- This platform is easy to extend both dataset and algorithm. 
+This platform is easy to extend both dataset and algorithm. 
 
 - To add a new dataset into this platform, all you need to do is writing the download code and using the utils the same as `./dataset/generate_mnist.py` (you can also consider it as the template). 
 
