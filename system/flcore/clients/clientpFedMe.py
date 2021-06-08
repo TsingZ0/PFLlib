@@ -22,7 +22,7 @@ class clientpFedMe(client):
         self.local_params = copy.deepcopy(list(self.model.parameters()))
         self.personalized_params = copy.deepcopy(list(self.model.parameters()))
 
-        self.loss = nn.CrossEntropyLoss()
+        self.loss = nn.NLLLoss()
         self.optimizer = pFedMeOptimizer(
             self.model.parameters(), lr=self.personalized_learning_rate, lamda=self.lamda)
 
@@ -49,9 +49,9 @@ class clientpFedMe(client):
                 self.personalized_params = self.optimizer.step(self.local_params, self.device)
 
             # update local weight after finding aproximate theta
-            for new_param, local_param in zip(self.personalized_params, self.local_params):
-                local_param = local_param.to(self.device)
-                local_param.data.add_(- self.lamda * self.learning_rate * (local_param.data - new_param.data))
+            for new_param, localweight in zip(self.personalized_params, self.local_params):
+                localweight = localweight.to(self.device)
+                localweight.data = localweight.data - self.lamda* self.learning_rate * (localweight.data - new_param.data)
 
         # self.model.cpu()
 
@@ -60,16 +60,6 @@ class clientpFedMe(client):
         self.train_time_cost['num_rounds'] += 1
         self.train_time_cost['total_cost'] += time.time() - start_time
 
-
-    # def to_device(self, list_of_tensors, device):
-    #     for tensor in list_of_tensors:
-    #         tensor = tensor.to(device)
-    #         print('////////////', device) # cuda
-    #         print('============', tensor.device) # cuda:0
-    #     for tensor in self.local_params:
-    #         print('local_params+++++++++++++++', tensor.device) # cpu
-    #     for tensor in list_of_tensors:
-    #         print('list_of_tensors+++++++++++++++', tensor.device) # cpu
 
     def set_parameters(self, model):
         for new_param, old_param, local_param in zip(model.parameters(), self.model.parameters(), self.local_params):

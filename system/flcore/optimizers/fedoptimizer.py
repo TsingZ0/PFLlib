@@ -46,12 +46,12 @@ class pFedMeOptimizer(Optimizer):
 
     def step(self, local_model, device):
         group = None
+        weight_update = local_model.copy()
         for group in self.param_groups:
-            for p, localweight in zip(group['params'], local_model):
+            for p, localweight in zip(group['params'], weight_update):
                 localweight = localweight.to(device)
                 # approximate local model
-                p.data.add_(p.grad.data + group['lamda'] * (p.data - localweight.data)\
-                     + group['mu'] * p.data, alpha=-group['lr'])
+                p.data = p.data - group['lr'] * (p.grad.data + group['lamda'] * (p.data - localweight.data) + group['mu'] * p.data)
 
         return group['params']
 
@@ -69,14 +69,10 @@ class pFedMeOptimizer(Optimizer):
 #         if closure is not None:
 #             loss = closure
 #         weight_update = local_weight_updated.copy()
-#         # pg = self.param_groups
 #         for group in self.param_groups:
-#             # g = group['params']
 #             for p, localweight in zip( group['params'], weight_update):
 #                 p.data = p.data - group['lr'] * (p.grad.data + group['lamda'] * (p.data - localweight.data) + group['mu']*p.data)
-#         #     print('::::::::::::::::::', g==group['params'])
-#         # print('=================', pg==self.param_groups)
-#         return  group['params']
+#         return  group['params'], loss
     
 #     def update_param(self, local_weight_updated, closure=None):
 #         loss = None
@@ -88,6 +84,7 @@ class pFedMeOptimizer(Optimizer):
 #                 p.data = localweight.data
 #         #return  p.data
 #         return  group['params']
+
 
 class APFLOptimizer(Optimizer):
     def __init__(self, params, lr):

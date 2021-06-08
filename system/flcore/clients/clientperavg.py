@@ -32,6 +32,8 @@ class clientPerAvg(client):
             max_local_steps = np.random.randint(1, max_local_steps // 2)
 
         for step in range(max_local_steps):  # local update
+            temp_model = copy.deepcopy(list(self.model.parameters()))
+
             # step 1
             x, y = self.get_next_train_batch()
             self.optimizer.zero_grad()
@@ -46,6 +48,11 @@ class clientPerAvg(client):
             output = self.model(x)
             loss = self.loss(output, y)
             loss.backward()
+
+            # restore the model parameters to the one before first update
+            for old_param, new_param in zip(self.model.parameters(), temp_model):
+                old_param.data = new_param.data.clone()
+
             self.optimizer.step(beta=self.beta)
 
         # clone model to local model
@@ -76,7 +83,7 @@ class clientPerAvg(client):
         self.optimizer.step()
 
         # step 2
-        x, y = self.get_next_train_batch()
+        x, y = self.get_next_test_batch()
         self.optimizer.zero_grad()
         output = self.model(x)
         loss = self.loss(output, y)
