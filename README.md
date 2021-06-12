@@ -1,4 +1,4 @@
-# Personalized federated learning simulation platform
+# Personalized federated learning simulation platform with Non-IID dataset
 With **Non-IID (Not Independent and Identically Distributed)** issue existing in the federated learning setting, a myriad of approaches have been proposed to crack this hard nut. The origin of the Non-IID phenomenon is the personalization of users, who generate the Non-IID data. In contrast, the personalized federated learning may take the advantage of the Non-IID data to learn the personalized model for each user. 
 
 ## Environments
