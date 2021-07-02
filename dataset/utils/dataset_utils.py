@@ -68,7 +68,7 @@ def seperete_data(data, num_clients, num_labels, niid=False, real=True, class_pe
             class_num_client[client] -= 1
 
     del data
-    gc.collect()
+    # gc.collect()
 
     for client in range(num_clients):
         print(f"Client {client}\t Size of data: {len(X[client])}\t Labels: ", np.unique(y[client]))
@@ -101,7 +101,7 @@ def split_data(X, y, num_clients, train_size=train_size):
     print("The number of test samples:", num_samples['test'])
     print()
     del X, y
-    gc.collect()
+    # gc.collect()
 
     return train_data, test_data
 
@@ -114,7 +114,7 @@ def save_file(config_path, train_path, test_path, train_data, test_data, num_cli
         'Size of samples for labels in clients': statistic, 
     }
 
-    gc.collect()
+    # gc.collect()
 
     for idx, train_dict in enumerate(train_data):
         with open(train_path[:-5]+str(idx)+train_path[-5:], 'w') as f:

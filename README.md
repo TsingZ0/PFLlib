@@ -1,5 +1,5 @@
 # Personalized federated learning simulation platform with Non-IID dataset
-With **Non-IID (Not Independent and Identically Distributed)** issue existing in the federated learning setting, a myriad of approaches have been proposed to crack this hard nut. The origin of the Non-IID phenomenon is the personalization of users, who generate the Non-IID data. In contrast, the personalized federated learning may take the advantage of the Non-IID data to learn the personalized model for each user. 
+With **Non-IID (Not Independent and Identically Distributed)** issue existing in the federated learning setting, a myriad of approaches have been proposed to crack this hard nut. The origin of the Non-IID phenomenon is the personalization of users, who generate the Non-IID data. In contrast, the personalized federated learning may take the advantage of the Non-IID data to learn the personalized model for each user. Thanks to [@Stonesjtu](https://github.com/Stonesjtu/pytorch_memlab/blob/d590c489236ee25d157ff60ecd18433e8f9acbe3/pytorch_memlab/mem_reporter.py#L185), this platform can also record the model size on GPU. 
 
 ## Environments
 With the installed [conda](https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh), we can run this platform in a conda virtual environment called *fl_torch*.
@@ -9,8 +9,8 @@ conda env create -f env_linux.yml # for linux
 # conda env create -f env_win.yml # for windows
 ```
 
-## Datasets 
-Except for the **Synthetic** dataset, I currently using two famous datasets: **MNIST** and **Cifar10**, both can be easy split into **IID** and **Non-IID** version. Since some codes for generating dataset such as splitting are the same for all datasets, I move these codes into `./utils/dataset_utils.py`. Now it is easy to add other datasets into this FL platform. *If you need another data set, just write another code to download it and then using the utils.*
+## Datasets (updating)
+Except for the **Synthetic** dataset, I currently using **three** famous datasets: **MNIST**, **Cifar10** and **Fashion-MNIST**, they can be easy split into **IID** and **Non-IID** version. Since some codes for generating dataset such as splitting are the same for all datasets, I move these codes into `./utils/dataset_utils.py`. Now it is easy to add other datasets into this FL platform. *If you need another data set, just write another code to download it and then using the utils.*
 
 In **Non-IID** setting, there are two situations exist. One is the extreme **Non-IID** setting and the other is real-world **Non-IID** setting. In the extreme **Non-IID** setting, for example, the data on each client only contains the specific number of labels (maybe only two labels), though the data on all clients contains 10 labels such as MNIST dataset. 
 - MNIST
@@ -26,6 +26,13 @@ In **Non-IID** setting, there are two situations exist. One is the extreme **Non
     python generate_cifar.py iid - # for iid setting
     # python generate_cifar.py noniid - # for extreme noniid setting
     # python generate_cifar.py noniid realworld # for real-world noniid setting
+    ```
+- Fashion-MNIST
+    ```
+    cd ./dataset
+    python generate_fmnist.py iid - # for iid setting
+    # python generate_fmnist.py noniid - # for extreme noniid setting
+    # python generate_fmnist.py noniid realworld # for real-world noniid setting
     ```
 - Synthetic
     ```
@@ -533,7 +540,7 @@ Client 2         Samples of labels:  [(0, 75), (1, 107), (3, 130), (7, 291), (8,
 </details>
 
 ## Models
-- for MNIST
+- for MNIST and Fashion-MNIST
 
     1. Mclr_Logistic(1\*28\*28)
     2. LeNet()
@@ -557,6 +564,10 @@ Client 2         Samples of labels:  [(0, 75), (1, 107), (3, 130), (7, 291), (8,
 - **pFedMe** — [Personalized Federated Learning with Moreau Envelopes](https://proceedings.neurips.cc/paper/2020/file/f4f1f13c8289ac1b1ee0ff176b56fc60-Paper.pdf) *NeurIPS 2020*
 - **FedProx** — [Federated Optimization for Heterogeneous Networks](https://openreview.net/pdf?id=SkgwE5Ss3N) *ICLR 2020*
 - **FedFomo** — [Personalized Federated Learning with First Order Model Optimization](https://openreview.net/pdf?id=ehJqJQk9cw) *ICLR 2021*
+- **MOCHA** — [Federated multi-task learning](https://arxiv.org/abs/1705.10467) *NIPS 2017*
+- **FedPlayer** — [Federatedlearning with personalization layers](https://arxiv.org/abs/1912.00818)
+- **FedFomo** — [Personalized Cross-Silo Federated Learning on Non-IID Data](https://www.aaai.org/AAAI21Papers/AAAI-5802.HuangY.pdf) *AAAI 2021*
+
 
 ## How to start simulating 
 - Build dataset: [Datasets](##Datasets)
@@ -566,13 +577,19 @@ Client 2         Samples of labels:  [(0, 75), (1, 107), (3, 130), (7, 291), (8,
     cd ./system
     python main.py -data mnist -m cnn -algo FedAvg -gr 2500 -did 0 -go cnn # for FedAvg and MNIST
     ```
+    Or you can uncomment the lines you need in `./system/auto_train.sh` and run:
+    ```
+    cd ./system
+    sh auto_train.sh
+    ```
 
 - Plot the result test accuracy and training loss curves and save to figures:
     ```
-    cd ./system
     python plot.py 
     ```
     Then check the figures in `./figures`.
+
+Note: All the hyper-parameters have been tuned for all the algorithms, which are recorded in `./system/auto_train.sh`
 
 ## Practical setting
 If you need to simulate FL in a practical setting, which include **client dropout**, **slow trainers**, **slow senders** and **network TTL**, you can set the following parameters to realize it.
@@ -591,6 +608,3 @@ This platform is easy to extend both dataset and algorithm.
 - To add a new model, just add it into `./system/flcore/trainmodel/models.py`.
 
 - If you have your own optimizer while training, please add it into `./system/flcore/optimizers/fedoptimizer.py`
-
-## Issues 
-If there are some issues of this personalized federated learning simulation platform, please contact me :-). 

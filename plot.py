@@ -152,7 +152,7 @@ def read_data_then_delete(file_name, delete=False):
 
 if __name__ == '__main__':
     save_path = "figures/"
-    # alist = ["FedAvg", "PerAvg", "pFedMe", "pFedMe_p", "FedTransfer"]
+    # alist = ["FedAvg", "PerAvg", "pFedMe", "pFedMe_p"]
     alist = ["10drop=0.0", "10drop=0.1", "10drop=0.3", "10drop=0.5", "10drop=0.7"]
     # alist_t = []
     # for st in alist:
@@ -167,8 +167,7 @@ if __name__ == '__main__':
 
     # alist = ["gk=0", "gk=0.1", "gk=0.01","gk=1.0", "gk=10.0"]
     dataset = "Cifar10"
-    # b = "resnet" #stable
-    b = "FedTransfer"
+    b = "resnet" #stable
     compare = False
     global_rounds = 2000
     gap = 100
