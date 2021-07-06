@@ -58,47 +58,47 @@
 
 # rm ../dataset/Cifar10/config.json
 # cd ../dataset/
-# nohup python generate_cifar.py noniid realworld > cifar_dataset.out 2>&1
+# nohup python generate_cifar10.py noniid realworld > cifar10_dataset.out 2>&1
 # cd ../system/
 
-# nohup python main.py -data Cifar10 -m dnn -algo FedAvg -gr 5000 -did 0 -go dnn > cifar_fedavg.out 2>&1 &
-# nohup python main.py -data Cifar10 -m cnn -algo FedAvg -gr 5000 -did 0 -go cnn > cifar_fedavg1.out 2>&1 &
-# nohup python main.py -data Cifar10 -m resnet18 -algo FedAvg -gr 2000 -did 0 -go resnet > cifar_fedavg2.out 2>&1 &
-# # nohup python main.py -data Cifar10 -m dnn -algo FedAvg -gr 5000 -did 0 -cdr 0.5 -go unstable > cifar_fedavg1.out 2>&1 &
+# nohup python main.py -data Cifar10 -m dnn -algo FedAvg -gr 5000 -did 0 -go dnn > cifar10_fedavg.out 2>&1 &
+# nohup python main.py -data Cifar10 -m cnn -algo FedAvg -gr 5000 -did 0 -go cnn > cifar10_fedavg1.out 2>&1 &
+# nohup python main.py -data Cifar10 -m resnet18 -algo FedAvg -gr 2000 -did 0 -go resnet > cifar10_fedavg2.out 2>&1 &
+# # nohup python main.py -data Cifar10 -m dnn -algo FedAvg -gr 5000 -did 0 -cdr 0.5 -go unstable > cifar10_fedavg1.out 2>&1 &
 
-# nohup python main.py -data Cifar10 -m dnn -algo FedProx -gr 5000 -did 0 -mu 1 -go dnn > cifar_fedprox.out 2>&1 &
-# nohup python main.py -data Cifar10 -m cnn -algo FedProx -gr 5000 -did 0 -mu 1 -go cnn > cifar_fedprox1.out 2>&1 &
-# nohup python main.py -data Cifar10 -m resnet18 -algo FedProx -gr 2000 -did 0 -mu 1 -go resnet > cifar_fedprox2.out 2>&1 &
+# nohup python main.py -data Cifar10 -m dnn -algo FedProx -gr 5000 -did 0 -mu 1 -go dnn > cifar10_fedprox.out 2>&1 &
+# nohup python main.py -data Cifar10 -m cnn -algo FedProx -gr 5000 -did 0 -mu 1 -go cnn > cifar10_fedprox1.out 2>&1 &
+# nohup python main.py -data Cifar10 -m resnet18 -algo FedProx -gr 2000 -did 0 -mu 1 -go resnet > cifar10_fedprox2.out 2>&1 &
 
-# nohup python main.py -data Cifar10 -m dnn -algo pFedMe -gr 5000 -did 0 -lr 0.01 -lrp 0.01 -bt 1 -lam 15 -go dnn > cifar_pfedme.out 2>&1 &
-# nohup python main.py -data Cifar10 -m cnn -algo pFedMe -gr 5000 -did 0 -lr 0.01 -lrp 0.01 -bt 1 -lam 15 -go cnn > cifar_pfedme1.out 2>&1 &
-# nohup python main.py -data Cifar10 -m resnet18 -algo pFedMe -gr 2000 -did 0 -lr 0.01 -lrp 0.01 -bt 1 -lam 15 -go resnet > cifar_pfedme2.out 2>&1 &
-# # nohup python main.py -data Cifar10 -m dnn -algo pFedMe -gr 5000 -did 0 -lr 0.01 -lrp 0.01 -bt 1 -lam 15 -cdr 0.5 -go unstable > cifar_pfedme1.out 2>&1 &
+# nohup python main.py -data Cifar10 -m dnn -algo pFedMe -gr 5000 -did 0 -lr 0.01 -lrp 0.01 -bt 1 -lam 15 -go dnn > cifar10_pfedme.out 2>&1 &
+# nohup python main.py -data Cifar10 -m cnn -algo pFedMe -gr 5000 -did 0 -lr 0.01 -lrp 0.01 -bt 1 -lam 15 -go cnn > cifar10_pfedme1.out 2>&1 &
+# nohup python main.py -data Cifar10 -m resnet18 -algo pFedMe -gr 2000 -did 0 -lr 0.01 -lrp 0.01 -bt 1 -lam 15 -go resnet > cifar10_pfedme2.out 2>&1 &
+# # nohup python main.py -data Cifar10 -m dnn -algo pFedMe -gr 5000 -did 0 -lr 0.01 -lrp 0.01 -bt 1 -lam 15 -cdr 0.5 -go unstable > cifar10_pfedme1.out 2>&1 &
 
-# nohup python main.py -data Cifar10 -m dnn -algo PerAvg -gr 5000 -did 0 -bt 0.001 -go dnn > cifar_peravg.out 2>&1 &
-# nohup python main.py -data Cifar10 -m cnn -algo PerAvg -gr 5000 -did 0 -bt 0.001 -go cnn > cifar_peravg1.out 2>&1 &
-# nohup python main.py -data Cifar10 -m resnet18 -algo PerAvg -gr 2000 -did 0 -bt 0.001 -go resnet > cifar_peravg2.out 2>&1 &
-# # nohup python main.py -data Cifar10 -m dnn -algo PerAvg -gr 5000 -did 0 -bt 0.001 -cdr 0.5 -go unstable > cifar_peravg1.out 2>&1 &
+# nohup python main.py -data Cifar10 -m dnn -algo PerAvg -gr 5000 -did 0 -bt 0.001 -go dnn > cifar10_peravg.out 2>&1 &
+# nohup python main.py -data Cifar10 -m cnn -algo PerAvg -gr 5000 -did 0 -bt 0.001 -go cnn > cifar10_peravg1.out 2>&1 &
+# nohup python main.py -data Cifar10 -m resnet18 -algo PerAvg -gr 2000 -did 0 -bt 0.001 -go resnet > cifar10_peravg2.out 2>&1 &
+# # nohup python main.py -data Cifar10 -m dnn -algo PerAvg -gr 5000 -did 0 -bt 0.001 -cdr 0.5 -go unstable > cifar10_peravg1.out 2>&1 &
 
-# nohup python main.py -data Cifar10 -m dnn -algo FedFomo -gr 5000 -M 5 -did 1 -go dnn > cifar_fedfomo.out 2>&1 &
-# nohup python main.py -data Cifar10 -m cnn -algo FedFomo -gr 5000 -M 5 -did 1 -go cnn > cifar_fedfomo1.out 2>&1 &
-# nohup python main.py -data Cifar10 -m resnet18 -algo FedFomo -gr 2000 -M 5 -did 1 -go resnet > cifar_fedfomo2.out 2>&1 &
+# nohup python main.py -data Cifar10 -m dnn -algo FedFomo -gr 5000 -M 5 -did 1 -go dnn > cifar10_fedfomo.out 2>&1 &
+# nohup python main.py -data Cifar10 -m cnn -algo FedFomo -gr 5000 -M 5 -did 1 -go cnn > cifar10_fedfomo1.out 2>&1 &
+# nohup python main.py -data Cifar10 -m resnet18 -algo FedFomo -gr 2000 -M 5 -did 1 -go resnet > cifar10_fedfomo2.out 2>&1 &
 
-# nohup python main.py -data Cifar10 -m dnn -algo MOCHA -gr 5000 -itk 4000 -did 1 -go dnn > cifar_mocha.out 2>&1 &
-# nohup python main.py -data Cifar10 -m cnn -algo MOCHA -gr 5000 -itk 4000 -did 1 -go cnn > cifar_mocha1.out 2>&1 &
-# nohup python main.py -data Cifar10 -m resnet18 -algo MOCHA -gr 2000 -itk 4000 -did 1 -go resnet > cifar_mocha2.out 2>&1 &
+# nohup python main.py -data Cifar10 -m dnn -algo MOCHA -gr 5000 -itk 4000 -did 1 -go dnn > cifar10_mocha.out 2>&1 &
+# nohup python main.py -data Cifar10 -m cnn -algo MOCHA -gr 5000 -itk 4000 -did 1 -go cnn > cifar10_mocha1.out 2>&1 &
+# nohup python main.py -data Cifar10 -m resnet18 -algo MOCHA -gr 2000 -itk 4000 -did 1 -go resnet > cifar10_mocha2.out 2>&1 &
 
-# nohup python main.py -data Cifar10 -m sep_dnn -algo FedPlayer -gr 5000 -did 1 -go dnn > cifar_fedplayer.out 2>&1 &
-# nohup python main.py -data Cifar10 -m sep_cnn -algo FedPlayer -gr 5000 -did 1 -go cnn > cifar_fedplayer1.out 2>&1 &
-# nohup python main.py -data Cifar10 -m sep_resnet18 -algo FedPlayer -gr 2000 -did 1 -go resnet > cifar_fedplayer2.out 2>&1 &
+# nohup python main.py -data Cifar10 -m sep_dnn -algo FedPlayer -gr 5000 -did 1 -go dnn > cifar10_fedplayer.out 2>&1 &
+# nohup python main.py -data Cifar10 -m sep_cnn -algo FedPlayer -gr 5000 -did 1 -go cnn > cifar10_fedplayer1.out 2>&1 &
+# nohup python main.py -data Cifar10 -m sep_resnet18 -algo FedPlayer -gr 2000 -did 1 -go resnet > cifar10_fedplayer2.out 2>&1 &
 
-# nohup python main.py -data Cifar10 -m dnn -algo FedAMP -gr 5000 -alk 0.002 -lam 1.0 -sg 0.01 -did 0 -go dnn > cifar_fedamp.out 2>&1 &
-# nohup python main.py -data Cifar10 -m cnn -algo FedAMP -gr 5000 -alk 0.002 -lam 1.0 -sg 0.01 -did 0 -go cnn > cifar_fedamp1.out 2>&1 &
-# nohup python main.py -data Cifar10 -m resnet18 -algo FedAMP -gr 2000 -alk 0.002 -lam 1.0 -sg 0.01 -did 0 -go resnet > cifar_fedamp2.out 2>&1 &
+# nohup python main.py -data Cifar10 -m dnn -algo FedAMP -gr 5000 -alk 0.002 -lam 1.0 -sg 0.01 -did 0 -go dnn > cifar10_fedamp.out 2>&1 &
+# nohup python main.py -data Cifar10 -m cnn -algo FedAMP -gr 5000 -alk 0.002 -lam 1.0 -sg 0.01 -did 0 -go cnn > cifar10_fedamp1.out 2>&1 &
+# nohup python main.py -data Cifar10 -m resnet18 -algo FedAMP -gr 2000 -alk 0.002 -lam 1.0 -sg 0.01 -did 0 -go resnet > cifar10_fedamp2.out 2>&1 &
 
-# nohup python main.py -data Cifar10 -m dnn -algo HeurFedAMP -gr 5000 -alk 0.002 -lam 1.0 -sg 0.1 -xi 0.1 -did 1 -go dnn > cifar_heurfedamp.out 2>&1 &
-# nohup python main.py -data Cifar10 -m cnn -algo HeurFedAMP -gr 5000 -alk 0.002 -lam 1.0 -sg 0.1 -xi 0.1 -did 1 -go cnn > cifar_heurfedamp1.out 2>&1 &
-# nohup python main.py -data Cifar10 -m resnet18 -algo HeurFedAMP -gr 2000 -alk 0.002 -lam 1.0 -sg 0.1 -xi 0.1 -did 1 -go resnet > cifar_heurfedamp2.out 2>&1 &
+# nohup python main.py -data Cifar10 -m dnn -algo HeurFedAMP -gr 5000 -alk 0.002 -lam 1.0 -sg 0.1 -xi 0.1 -did 1 -go dnn > cifar10_heurfedamp.out 2>&1 &
+# nohup python main.py -data Cifar10 -m cnn -algo HeurFedAMP -gr 5000 -alk 0.002 -lam 1.0 -sg 0.1 -xi 0.1 -did 1 -go cnn > cifar10_heurfedamp1.out 2>&1 &
+# nohup python main.py -data Cifar10 -m resnet18 -algo HeurFedAMP -gr 2000 -alk 0.002 -lam 1.0 -sg 0.1 -xi 0.1 -did 1 -go resnet > cifar10_heurfedamp2.out 2>&1 &
 
 
 # ===============================================================(fmnist)======================================================================  

@@ -4,35 +4,64 @@ With **Non-IID (Not Independent and Identically Distributed)** issue existing in
 ## Environments
 With the installed [conda](https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh), we can run this platform in a conda virtual environment called *fl_torch*.
 ```
+# current version
+conda env create -f env.yml # for linux
+
+# old version
 cd ./system
 conda env create -f env_linux.yml # for linux
 # conda env create -f env_win.yml # for windows
 ```
 
 ## Datasets (updating)
-Except for the **Synthetic** dataset, I currently using **three** famous datasets: **MNIST**, **Cifar10** and **Fashion-MNIST**, they can be easy split into **IID** and **Non-IID** version. Since some codes for generating dataset such as splitting are the same for all datasets, I move these codes into `./utils/dataset_utils.py`. Now it is easy to add other datasets into this FL platform. *If you need another data set, just write another code to download it and then using the utils.*
+Except for the **Synthetic** dataset, I currently using **six** famous datasets: **MNIST**, **Cifar10**, **Fashion-MNIST**, **Cifar10**, **AG_News** and **Sogou_News**, they can be easy split into **IID** and **Non-IID** version. Since some codes for generating dataset such as splitting are the same for all datasets, I move these codes into `./utils/dataset_utils.py`. Now it is easy to add other datasets into this FL platform. *If you need another data set, just write another code to download it and then using the utils.*
 
-In **Non-IID** setting, there are two situations exist. One is the extreme **Non-IID** setting and the other is real-world **Non-IID** setting. In the extreme **Non-IID** setting, for example, the data on each client only contains the specific number of labels (maybe only two labels), though the data on all clients contains 10 labels such as MNIST dataset. 
+In **Non-IID** setting, there are three situations exist. The first one is the **extreme Non-IID** setting and the second one is **real-world Non-IID** setting and the third one is **feature skew Non-IID**. In the **extreme Non-IID** setting, for example, the data on each client only contains the specific number of labels (maybe only two labels), though the data on all clients contains 10 labels such as MNIST dataset. In the **feature skew Non-IID**, I add specific Gaussian noise  to each clients according to their IDs.  
 - MNIST
     ```
     cd ./dataset
-    python generate_mnist.py iid - # for iid setting
-    # python generate_mnist.py noniid - # for extreme noniid setting
-    # python generate_mnist.py noniid realworld # for real-world noniid setting
+    python generate_mnist.py iid - - # for iid setting
+    # python generate_mnist.py noniid - - # for extreme noniid setting
+    # python generate_mnist.py noniid realworld - # for real-world noniid setting
+    # python generate_mnist.py noniid realworld noise # for feature skew noniid setting
     ```
 - Cifar10
     ```
     cd ./dataset
-    python generate_cifar.py iid - # for iid setting
-    # python generate_cifar.py noniid - # for extreme noniid setting
-    # python generate_cifar.py noniid realworld # for real-world noniid setting
+    python generate_cifar10.py iid - - # for iid setting
+    # python generate_cifar10.py noniid - - # for extreme noniid setting
+    # python generate_cifar10.py noniid realworld - # for real-world noniid setting
+    # python generate_cifar10.py noniid realworld noise # for feature skew noniid setting
+    ```
+- Cifar100
+    ```
+    cd ./dataset
+    python generate_cifar100py iid - - # for iid setting
+    # python generate_cifar100.py noniid - - # for extreme noniid setting
+    # python generate_cifar100.py noniid realworld - # for real-world noniid setting
+    # python generate_cifar100.py noniid realworld noise # for feature skew noniid setting
     ```
 - Fashion-MNIST
     ```
     cd ./dataset
-    python generate_fmnist.py iid - # for iid setting
-    # python generate_fmnist.py noniid - # for extreme noniid setting
-    # python generate_fmnist.py noniid realworld # for real-world noniid setting
+    python generate_fmnist.py iid - - # for iid setting
+    # python generate_fmnist.py noniid - - # for extreme noniid setting
+    # python generate_fmnist.py noniid realworld - # for real-world noniid setting
+    # python generate_fmnist.py noniid realworld noise # for feature skew noniid setting
+    ```
+- AG_News
+    ```
+    cd ./dataset
+    python generate_agnews.py iid - - # for iid setting
+    # python generate_agnews.py noniid - - # for extreme noniid setting
+    # python generate_agnews.py noniid realworld - # for real-world noniid setting
+    ```
+- Sogou_News
+    ```
+    cd ./dataset
+    python generate_sogounews.py iid - - # for iid setting
+    # python generate_sogounews.py noniid - - # for extreme noniid setting
+    # python generate_sogounews.py noniid realworld - # for real-world noniid setting
     ```
 - Synthetic
     ```
@@ -546,12 +575,18 @@ Client 2         Samples of labels:  [(0, 75), (1, 107), (3, 130), (7, 291), (8,
     2. LeNet()
     3. DNN(1\*28\*28, 100) # non-convex
 
-- for Cifar10
+- for Cifar10 and Cifar100
 
     1. Mclr_Logistic(3\*32\*32)
     2. CifarNet()
     3. DNN(3\*32\*32, 100) # non-convex
     4. ResNet18, Resnet50 and Resnet152
+
+- for AG_News and Sogou_News
+
+    1. LSTM()
+    2. fastText() in [Bag of Tricks for Efficient Text Classification](https://arxiv.org/abs/1607.01759)
+    3. TextCNN() in [Convolutional Neural Networks for Sentence Classification](https://arxiv.org/abs/1408.5882)
 
 - for Synthetic
 

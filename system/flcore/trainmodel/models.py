@@ -32,7 +32,7 @@ batch_size = 16
 #         output = F.log_softmax(x, dim=1)
 #         return output
 
-# ==========================================================
+# ====================================================================================================================
 
 class Mclr_Logistic(nn.Module):
     def __init__(self, input_dim=1*28*28, num_labels=10):
@@ -56,7 +56,7 @@ class Mclr_CrossEntropy(nn.Module):
         outputs = self.linear(x)
         return outputs
 
-# ==========================================================
+# ====================================================================================================================
 
 class DNN(nn.Module):
     def __init__(self, input_dim=1*28*28, mid_dim=100, num_labels=10):
@@ -91,7 +91,7 @@ class DNNClassifier(nn.Module):
         x = F.log_softmax(x, dim=1)
         return x
 
-# ==========================================================
+# ====================================================================================================================
 
 class CifarNet(nn.Module):
     def __init__(self, num_labels=10):
@@ -165,7 +165,7 @@ class CifarNetClassifier(nn.Module):
         x = F.log_softmax(x, dim=1)
         return x
 
-# ==========================================================
+# ====================================================================================================================
 
 # cfg = {
 #     'VGG11': [64, 'M', 128, 'M', 256, 256, 'M', 512, 512, 'M', 512, 512, 'M'],
@@ -207,7 +207,7 @@ class CifarNetClassifier(nn.Module):
 #         layers += [nn.AvgPool2d(kernel_size=1, stride=1)]
 #         return nn.Sequential(*layers)
 
-# ==========================================================
+# ====================================================================================================================
 
 def init_weights(m):
     classname = m.__class__.__name__
@@ -324,7 +324,7 @@ class LeNetClassifier(nn.Module):
 #             x = self.dropout(x)
 #         return x
 
-# ==========================================================
+# ====================================================================================================================
 
 # class CNNCifar(nn.Module):
 #     def __init__(self, num_labels=10):
@@ -353,7 +353,7 @@ class LeNetClassifier(nn.Module):
 #         x = F.log_softmax(x, dim=1)
 #         return x
 
-# ==========================================================
+# ====================================================================================================================
 
 class ResNetClassifier(nn.Module):
     def __init__(self, input_dim=512, num_labels=10):
@@ -366,10 +366,10 @@ class ResNetClassifier(nn.Module):
         return x
 
 
-# ==========================================================
+# ====================================================================================================================
 
 class LSTMNet(nn.Module):
-    def __init__(self, hidden_dim, num_layers, bidirectional=True, dropout=0.5, 
+    def __init__(self, hidden_dim, num_layers=2, bidirectional=False, dropout=0.2, 
                 padding_idx=0, vocab_size=98635, num_labels=10):
         super().__init__()
 
@@ -381,8 +381,8 @@ class LSTMNet(nn.Module):
                             bidirectional=bidirectional, 
                             dropout=dropout, 
                             batch_first=True)
-        self.fc1 = nn.Linear(in_features=hidden_dim, out_features=hidden_dim*2)
-        self.fc2 = nn.Linear(hidden_dim*2, num_labels)
+        dims = hidden_dim*2 if bidirectional else hidden_dim
+        self.fc = nn.Linear(dims, num_labels)
 
     def forward(self, x):
         text, text_lengths = x
@@ -390,35 +390,21 @@ class LSTMNet(nn.Module):
         embedded = self.embedding(text)
         
         #pack sequence
-        packed_embedded = nn.utils.rnn.pack_padded_sequence(embedded, text_lengths, batch_first=True, enforce_sorted = False)
+        packed_embedded = nn.utils.rnn.pack_padded_sequence(embedded, text_lengths, batch_first=True, enforce_sorted=False)
         packed_output, (hidden, cell) = self.lstm(packed_embedded)
 
         #unpack sequence
         out, out_lengths = nn.utils.rnn.pad_packed_sequence(packed_output, batch_first=True)
-        
-        # hidden = torch.cat((hidden[-2,:,:], hidden[-1,:,:]), dim = 1)
-        # output = self.fc1(hidden)
-        # output = self.dropout(self.fc2(output))
-                
-        #hidden = [batch size, hid dim * num directions]
 
-        # # Each sequence "x" is passed through an embedding layer
-        # out = self.embedding(x) 
-
-        # Feed LSTMs
-        # out, (hidden, cell) = self.lstm(out)
+        out = torch.relu_(out[:,-1,:])
         out = self.dropout(out)
-
-        # The last hidden state is taken
-        out = torch.relu_(self.fc1(out[:,-1,:]))
-        out = self.dropout(out)
-        out = torch.sigmoid(self.fc2(out))
+        out = torch.sigmoid(self.fc(out))
             
         return out
 
 class LSTMNetBase(nn.Module):
-    def __init__(self, hidden_dim, num_layers, bidirectional, dropout=0.5, 
-                padding_idx=0, vocab_size=98635, num_labels=10):
+    def __init__(self, hidden_dim, num_layers=2, bidirectional=False, dropout=0.2, 
+                padding_idx=0, vocab_size=98635):
         super().__init__()
 
         self.dropout = nn.Dropout(dropout)
@@ -429,7 +415,6 @@ class LSTMNetBase(nn.Module):
                             bidirectional=bidirectional, 
                             dropout=dropout, 
                             batch_first=True)
-        self.fc1 = nn.Linear(in_features=hidden_dim, out_features=hidden_dim*2)
 
     def forward(self, x):
         text, text_lengths = x
@@ -437,39 +422,109 @@ class LSTMNetBase(nn.Module):
         embedded = self.embedding(text)
         
         #pack sequence
-        packed_embedded = nn.utils.rnn.pack_padded_sequence(embedded, text_lengths)
-        out, (hidden, cell) = self.lstm(packed_embedded)
-        
-        # hidden = self.dropout(torch.cat((hidden[-2,:,:], hidden[-1,:,:]), dim = 1))
-        # output = self.fc1(hidden)
-        # output = self.dropout(self.fc2(output))
-                
-        #hidden = [batch size, hid dim * num directions]
+        packed_embedded = nn.utils.rnn.pack_padded_sequence(embedded, text_lengths, batch_first=True, enforce_sorted=False)
+        packed_output, (hidden, cell) = self.lstm(packed_embedded)
 
-        # # Each sequence "x" is passed through an embedding layer
-        # out = self.embedding(x)
+        #unpack sequence
+        out, out_lengths = nn.utils.rnn.pad_packed_sequence(packed_output, batch_first=True)
 
-        # Feed LSTMs
-        # out, (hidden, cell) = self.lstm(out)
+        out = torch.relu_(out[:,-1,:])
         out = self.dropout(out)
-
-        # The last hidden state is taken
-        out = torch.relu_(self.fc1(out[:,-1,:]))
-        out = self.dropout(out)
-        out = torch.sigmoid(self.fc2(out))
             
         return out
 
 class LSTMNetClassifier(nn.Module):
-    def __init__(self, hidden_dim, num_labels=10):
-        self.fc2 = nn.Linear(hidden_dim*2, num_labels)
+    def __init__(self, hidden_dim, bidirectional=False, num_labels=10):
+        super().__init__()
+
+        dims = hidden_dim*2 if bidirectional else hidden_dim
+        self.fc = nn.Linear(dims, num_labels)
 
     def forward(self, out):
-        out = torch.sigmoid(self.fc2(out))
+        out = torch.sigmoid(self.fc(out))
 
         return out
 
-# ==========================================================
+# ====================================================================================================================
+
+class fastText(nn.Module):
+    def __init__(self, hidden_dim, padding_idx=0, vocab_size=98635, num_labels=10):
+        super(fastText, self).__init__()
+        
+        # Embedding Layer
+        self.embedding = nn.Embedding(vocab_size, hidden_dim, padding_idx)
+        
+        # Hidden Layer
+        self.fc1 = nn.Linear(hidden_dim, hidden_dim)
+        
+        # Output Layer
+        self.fc2 = nn.Linear(hidden_dim, num_labels)
+        
+        # Softmax non-linearity
+        self.softmax = nn.Softmax()
+        
+    def forward(self, x):
+        text, text_lengths = x
+
+        embedded_sent = self.embedding(text)
+        h = self.fc1(embedded_sent.mean(1))
+        z = self.fc2(h)
+
+        return self.softmax(z)
+
+# ====================================================================================================================
+
+class TextCNN(nn.Module):
+    def __init__(self, hidden_dim, num_channels=100, kernel_size=[3,4,5], max_len=200, dropout=0.8, 
+                padding_idx=0, vocab_size=98635, num_labels=10):
+        super(TextCNN, self).__init__()
+        
+        # Embedding Layer
+        self.embedding = nn.Embedding(vocab_size, hidden_dim, padding_idx)
+        
+        # This stackoverflow thread clarifies how conv1d works
+        # https://stackoverflow.com/questions/46503816/keras-conv1d-layer-parameters-filters-and-kernel-size/46504997
+        self.conv1 = nn.Sequential(
+            nn.Conv1d(in_channels=hidden_dim, out_channels=num_channels, kernel_size=kernel_size[0]),
+            nn.ReLU(),
+            nn.MaxPool1d(max_len - kernel_size[0]+1)
+        )
+        self.conv2 = nn.Sequential(
+            nn.Conv1d(in_channels=hidden_dim, out_channels=num_channels, kernel_size=kernel_size[1]),
+            nn.ReLU(),
+            nn.MaxPool1d(max_len - kernel_size[1]+1)
+        )
+        self.conv3 = nn.Sequential(
+            nn.Conv1d(in_channels=hidden_dim, out_channels=num_channels, kernel_size=kernel_size[2]),
+            nn.ReLU(),
+            nn.MaxPool1d(max_len - kernel_size[2]+1)
+        )
+        
+        self.dropout = nn.Dropout(dropout)
+        
+        # Fully-Connected Layer
+        self.fc = nn.Linear(num_channels*len(kernel_size), num_labels)
+        
+        # Softmax non-linearity
+        self.softmax = nn.Softmax()
+        
+    def forward(self, x):
+        text, text_lengths = x
+
+        embedded_sent = self.embedding(text).permute(0,2,1)
+        
+        conv_out1 = self.conv1(embedded_sent).squeeze(2)
+        conv_out2 = self.conv2(embedded_sent).squeeze(2)
+        conv_out3 = self.conv3(embedded_sent).squeeze(2)
+        
+        all_out = torch.cat((conv_out1, conv_out2, conv_out3), 1)
+        final_feature_map = self.dropout(all_out)
+        final_out = self.fc(final_feature_map)
+
+        return self.softmax(final_out)
+
+# ====================================================================================================================
+
 
 # class linear(Function):
 #   @staticmethod

@@ -16,7 +16,8 @@ dir_path = "fmnist/"
 
 
 # Allocate data to users
-def generate_fmnist(dir_path=dir_path, num_clients=num_clients, num_labels=num_labels, niid=False, real=True):
+def generate_fmnist(dir_path=dir_path, num_clients=num_clients, num_labels=num_labels, niid=False, 
+                    real=True, partition=None):
     if not os.path.exists(dir_path):
         os.makedirs(dir_path)
         
@@ -25,7 +26,7 @@ def generate_fmnist(dir_path=dir_path, num_clients=num_clients, num_labels=num_l
     train_path = dir_path + "train/train.json"
     test_path = dir_path + "test/test.json"
 
-    if check(config_path, train_path, test_path, num_clients, num_labels, niid, real):
+    if check(config_path, train_path, test_path, num_clients, num_labels, niid, real, partition):
         return
 
     # Get FashionMNIST data
@@ -55,19 +56,22 @@ def generate_fmnist(dir_path=dir_path, num_clients=num_clients, num_labels=num_l
     dataset_image = np.array(dataset_image)
     dataset_label = np.array(dataset_label)
 
-    dataset = []
-    for i in range(num_labels):
-        idx = dataset_label == i
-        dataset.append(dataset_image[idx])
+    # dataset = []
+    # for i in range(num_labels):
+    #     idx = dataset_label == i
+    #     dataset.append(dataset_image[idx])
 
-
-    X, y, statistic = seperete_data(dataset, num_clients, num_labels, niid, real)
-    train_data, test_data = split_data(X, y, num_clients)
-    save_file(config_path, train_path, test_path, train_data, test_data, num_clients, num_labels, statistic, niid, real)
+    X, y, statistic = seperete_data((dataset_image, dataset_label), num_clients, num_labels, 
+                                    niid, real, partition)
+    train_data, test_data = split_data(X, y)
+    save_file(config_path, train_path, test_path, train_data, test_data, num_clients, num_labels, 
+        statistic, niid, real, partition)
 
 
 if __name__ == "__main__":
     niid = True if sys.argv[1] == "noniid" else False
     real = True if sys.argv[2] == "realworld" else False
+    partition = sys.argv[3] if sys.argv[3] != "-" else None
 
-    generate_fmnist(dir_path=dir_path, num_clients=num_clients, num_labels=num_labels, niid=niid, real=real)
+    generate_fmnist(dir_path=dir_path, num_clients=num_clients, num_labels=num_labels, niid=niid, 
+                    real=real, partition=partition)

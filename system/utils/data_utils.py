@@ -61,19 +61,6 @@ def get_batch_sample(data, batch_size):
 
 
 def read_data(dataset, idx):
-    '''parses data in given train and test data directories
-
-    assumes:
-    - the data in the input directories are .ujson files with 
-        keys 'clients' and 'client_data'
-    - the set of train set clients is the same as the set of test set clients
-
-    Return:
-        clients: list of client ids
-        train_data: dictionary of train data
-        test_data: dictionary of test data
-    '''
-
     train_data_dir = os.path.join('../dataset', dataset, 'train/')
     test_data_dir = os.path.join('../dataset', dataset, 'test/')
 
@@ -89,6 +76,9 @@ def read_data(dataset, idx):
 
 
 def read_client_data(dataset, idx):
+    if dataset[-4:] == "news":
+        return read_client_data_text(dataset, idx)
+
     train_data, test_data = read_data(dataset, idx)
     X_train = torch.Tensor(train_data['x']).type(torch.float32)
     y_train = torch.Tensor(train_data['y']).type(torch.int64)
@@ -97,4 +87,23 @@ def read_client_data(dataset, idx):
 
     train_data = [(x, y) for x, y in zip(X_train, y_train)]
     test_data = [(x, y) for x, y in zip(X_test, y_test)]
+    return train_data, test_data
+
+
+def read_client_data_text(dataset, idx):
+    train_data, test_data = read_data(dataset, idx)
+    X_train, X_train_lens = list(zip(*train_data['x']))
+    X_test, X_test_lens = list(zip(*test_data['x']))
+    y_train = train_data['y']
+    y_test = test_data['y']
+
+    X_train = torch.Tensor(X_train).type(torch.int64)
+    X_train_lens = torch.Tensor(X_train_lens).type(torch.int64)
+    y_train = torch.Tensor(train_data['y']).type(torch.int64)
+    X_test = torch.Tensor(X_test).type(torch.int64)
+    X_test_lens = torch.Tensor(X_test_lens).type(torch.int64)
+    y_test = torch.Tensor(test_data['y']).type(torch.int64)
+
+    train_data = [((x, lens), y) for x, lens, y in zip(X_train, X_train_lens, y_train)]
+    test_data = [((x, lens), y) for x, lens, y in zip(X_test, X_test_lens, y_test)]
     return train_data, test_data

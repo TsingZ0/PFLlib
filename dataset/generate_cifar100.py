@@ -11,12 +11,12 @@ from utils.dataset_utils import check, seperete_data, split_data, save_file
 random.seed(1)
 np.random.seed(1)
 num_clients = 20
-num_labels = 10
-dir_path = "mnist/"
+num_labels = 100
+dir_path = "Cifar100/"
 
 
 # Allocate data to users
-def generate_mnist(dir_path=dir_path, num_clients=num_clients, num_labels=num_labels, niid=False, 
+def generate_cifar100(dir_path=dir_path, num_clients=num_clients, num_labels=num_labels, niid=False, 
                     real=True, partition=None):
     if not os.path.exists(dir_path):
         os.makedirs(dir_path)
@@ -28,19 +28,14 @@ def generate_mnist(dir_path=dir_path, num_clients=num_clients, num_labels=num_la
 
     if check(config_path, train_path, test_path, num_clients, num_labels, niid, real, partition):
         return
+        
+    # Get Cifar100 data
+    transform = transforms.Compose(
+        [transforms.ToTensor(), transforms.Normalize((0.5, 0.5, 0.5), (0.5, 0.5, 0.5))])
 
-    # FIX HTTP Error 403: Forbidden
-    from six.moves import urllib
-    opener = urllib.request.build_opener()
-    opener.addheaders = [('User-agent', 'Mozilla/5.0')]
-    urllib.request.install_opener(opener)
-
-    # Get MNIST data
-    transform = transforms.Compose([transforms.ToTensor(), transforms.Normalize([0.5], [0.5])])
-
-    trainset = torchvision.datasets.MNIST(
+    trainset = torchvision.datasets.CIFAR100(
         root=dir_path+"rawdata", train=True, download=True, transform=transform)
-    testset = torchvision.datasets.MNIST(
+    testset = torchvision.datasets.CIFAR100(
         root=dir_path+"rawdata", train=False, download=True, transform=transform)
     trainloader = torch.utils.data.DataLoader(
         trainset, batch_size=len(trainset.data), shuffle=False)
@@ -79,5 +74,5 @@ if __name__ == "__main__":
     real = True if sys.argv[2] == "realworld" else False
     partition = sys.argv[3] if sys.argv[3] != "-" else None
 
-    generate_mnist(dir_path=dir_path, num_clients=num_clients, num_labels=num_labels, niid=niid, 
+    generate_cifar100(dir_path=dir_path, num_clients=num_clients, num_labels=num_labels, niid=niid, 
                     real=real, partition=partition)

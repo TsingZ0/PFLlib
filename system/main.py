@@ -41,7 +41,7 @@ def run(goal, dataset, num_labels, device, algorithm, model, local_batch_size, l
                 if dataset == "mnist" or dataset == "fmnist":
                     Model = LeNetBase().to(device)
                     Classifier = LeNetClassifier(num_labels=num_labels).to(device)
-                elif dataset == "Cifar10":
+                elif dataset == "Cifar10" or dataset == "Cifar100":
                     Model = CifarNetBase().to(device)
                     Classifier = CifarNetClassifier(num_labels=num_labels).to(device)
                 else:
@@ -51,7 +51,7 @@ def run(goal, dataset, num_labels, device, algorithm, model, local_batch_size, l
             #     pass
 
             elif model[:10] == "sep_resnet":
-                if dataset == "Cifar10":
+                if dataset == "Cifar10" or dataset == "Cifar100":
                     Model = torch.hub.load('pytorch/vision:v0.6.0', model[4:], pretrained=True)
                     Classifier = ResNetClassifier(input_dim=list(Model.fc.weight.size())[1], num_labels=num_labels).to(device)
                     Model.fc = nn.Identity()
@@ -63,7 +63,7 @@ def run(goal, dataset, num_labels, device, algorithm, model, local_batch_size, l
                 if dataset == "mnist" or dataset == "fmnist":
                     Model = DNNbase(1*28*28, 100).to(device)
                     Classifier = DNNClassifier(100, num_labels=num_labels).to(device)
-                elif dataset == "Cifar10":
+                elif dataset == "Cifar10" or dataset == "Cifar100":
                     Model = DNNbase(3*32*32, 100).to(device)
                     Classifier = DNNClassifier(100, num_labels=num_labels).to(device)
                 else:
@@ -72,16 +72,15 @@ def run(goal, dataset, num_labels, device, algorithm, model, local_batch_size, l
             
             elif model == "sep_lstm":
                 if dataset == "agnews":
-                    Model = LSTMNetBase(hidden_dim=256, num_layers=2, bidirectional=True, dropout=0.2, 
-                                    vocab_size=98635).to(device)
-                    Classifier = LSTMNetClassifier(hidden_dim=256, num_labels=num_labels).to(device)
+                    Model = LSTMNetBase(hidden_dim=32, bidirectional=True, vocab_size=98635).to(device)
+                    Classifier = LSTMNetClassifier(hidden_dim=32, bidirectional=True, num_labels=num_labels).to(device)
                 else:
                     raise NotImplementedError
 
         elif model == "mclr":
             if dataset == "mnist" or dataset == "fmnist":
                 Model = Mclr_Logistic(1*28*28, num_labels=num_labels).to(device)
-            elif dataset == "Cifar10":
+            elif dataset == "Cifar10" or dataset == "Cifar100":
                 Model = Mclr_Logistic(3*32*32, num_labels=num_labels).to(device)
             else:
                 Model = Mclr_Logistic(60, num_labels=num_labels).to(device)
@@ -89,7 +88,7 @@ def run(goal, dataset, num_labels, device, algorithm, model, local_batch_size, l
         elif model == "cnn":
             if dataset == "mnist" or dataset == "fmnist":
                 Model = LeNet(num_labels=num_labels).to(device)
-            elif dataset == "Cifar10":
+            elif dataset == "Cifar10" or dataset == "Cifar100":
                 Model = CifarNet(num_labels=num_labels).to(device)
             else:
                 raise NotImplementedError
@@ -97,7 +96,7 @@ def run(goal, dataset, num_labels, device, algorithm, model, local_batch_size, l
         elif model == "dnn": # non-convex
             if dataset == "mnist" or dataset == "fmnist":
                 Model = DNN(1*28*28, 100, num_labels=num_labels).to(device)
-            elif dataset == "Cifar10":
+            elif dataset == "Cifar10" or dataset == "Cifar100":
                 Model = DNN(3*32*32, 100, num_labels=num_labels).to(device)
             else:
                 Model = DNN(60, 20, num_labels=num_labels).to(device)
@@ -106,7 +105,7 @@ def run(goal, dataset, num_labels, device, algorithm, model, local_batch_size, l
         #     pass
         
         elif model[:6] == "resnet":
-            if dataset == "Cifar10":
+            if dataset == "Cifar10" or dataset == "Cifar100":
                 Model = torch.hub.load('pytorch/vision:v0.6.0', model, pretrained=True)
                 Model.fc = ResNetClassifier(input_dim=list(Model.fc.weight.size())[1], num_labels=num_labels)
                 Model.to(device)
@@ -114,11 +113,15 @@ def run(goal, dataset, num_labels, device, algorithm, model, local_batch_size, l
                 raise NotImplementedError
 
         elif model == "lstm":
-            if dataset == "agnews":
-                Model = LSTMNet(hidden_dim=256, num_layers=2, bidirectional=True, dropout=0.2, vocab_size=98635, 
-                                num_labels=num_labels).to(device)
-            else:
-                raise NotImplementedError
+            Model = LSTMNet(hidden_dim=hidden_dim, bidirectional=True, vocab_size=vocab_size, 
+                            num_labels=num_labels).to(device)
+
+        elif model == "fastText":
+            Model = fastText(hidden_dim=hidden_dim, vocab_size=vocab_size, num_labels=num_labels).to(device)
+
+        elif model == "TextCNN":
+            Model = TextCNN(hidden_dim=hidden_dim, max_len=max_len, vocab_size=vocab_size, 
+                            num_labels=num_labels).to(device)
                 
 
         # select algorithm
@@ -197,7 +200,8 @@ if __name__ == "__main__":
                         choices=["cpu", "cuda"])
     parser.add_argument('-did', "--device_id", type=str, default="0")
     parser.add_argument('-data', "--dataset", type=str, default="mnist",
-                        choices=["mnist", "synthetic", "Cifar10", "agnews", "fmnist"])
+                        choices=["mnist", "synthetic", "Cifar10", "agnews", "fmnist", "Cifar100", \
+                        "sogounews"])
     parser.add_argument('-nb', "--num_labels", type=int, default=10)
     parser.add_argument('-niid', "--noniid", type=bool, default=True)
     parser.add_argument('-m', "--model", type=str, default="cnn")

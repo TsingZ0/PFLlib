@@ -16,7 +16,7 @@ dir_path = "Cifar10/"
 
 
 # Allocate data to users
-def generate_cifar(dir_path=dir_path, num_clients=num_clients, num_labels=num_labels, niid=False, real=True):
+def generate_cifar10(dir_path=dir_path, num_clients=num_clients, num_labels=num_labels, niid=False, real=True):
     if not os.path.exists(dir_path):
         os.makedirs(dir_path)
         
@@ -71,4 +71,4 @@ if __name__ == "__main__":
     niid = True if sys.argv[1] == "noniid" else False
     real = True if sys.argv[2] == "realworld" else False
 
-    generate_cifar(dir_path=dir_path, num_clients=num_clients, num_labels=num_labels, niid=niid, real=real)
+    generate_cifar10(dir_path=dir_path, num_clients=num_clients, num_labels=num_labels, niid=niid, real=real)
