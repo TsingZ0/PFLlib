@@ -605,7 +605,7 @@ Client 2         Samples of labels:  [(0, 75), (1, 107), (3, 130), (7, 291), (8,
 
 
 ## How to start simulating 
-- Build dataset: [Datasets](##Datasets)
+- Build dataset: [Datasets](#datasets)
 
 - Train and evaluate the model:
     ```
