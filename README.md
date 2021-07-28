@@ -16,7 +16,7 @@ conda env create -f env_linux.yml # for linux
 ## Datasets (updating)
 Except for the **Synthetic** dataset, I currently using **six** famous datasets: **MNIST**, **Cifar10**, **Fashion-MNIST**, **Cifar10**, **AG_News** and **Sogou_News**, they can be easy split into **IID** and **Non-IID** version. Since some codes for generating dataset such as splitting are the same for all datasets, I move these codes into `./utils/dataset_utils.py`. Now it is easy to add other datasets into this FL platform. *If you need another data set, just write another code to download it and then using the utils.*
 
-In **Non-IID** setting, there are three situations exist. The first one is the **extreme Non-IID** setting and the second one is **real-world Non-IID** setting and the third one is **feature skew Non-IID**. In the **extreme Non-IID** setting, for example, the data on each client only contains the specific number of labels (maybe only two labels), though the data on all clients contains 10 labels such as MNIST dataset. In the **feature skew Non-IID**, I add specific Gaussian noise  to each clients according to their IDs.  
+In **Non-IID** setting, there are three situations exist. The first one is the **extreme Non-IID** setting, the second one is **real-world Non-IID** setting and the third one is **feature skew Non-IID**. In the **extreme Non-IID** setting, for example, the data on each client only contains the specific number of labels (maybe only two labels), though the data on all clients contains 10 labels such as MNIST dataset. In the **real-world Non-IID** setting, the number of labels for each client is randomly chosen. In the **feature skew Non-IID**, specific Gaussian noise is added to each clients according to their IDs. 
 - MNIST
     ```
     cd ./dataset
@@ -630,8 +630,8 @@ Note: All the hyper-parameters have been tuned for all the algorithms, which are
 If you need to simulate FL in a practical setting, which include **client dropout**, **slow trainers**, **slow senders** and **network TTL**, you can set the following parameters to realize it.
 
 - `-cdr`: The dropout rate for total clients. The selected clients will randomly drop at each training round.
-- `-tsr` and `-ssr`: The rates for slow trainers and slow senders among all clients. Once a client was selected as "slow trainers", for example, it will always trains slower than original one. So does "slow senders". 
-- `-tth`: The threthold for network TTL (ms). 
+- `-tsr` and `-ssr`: The rates for slow trainers and slow senders among all clients. Once a client was selected as "slow trainers", for example, it will always train slower than original one. So does "slow senders". 
+- `-tth`: The threshold for network TTL (ms). 
 
 ## Easy to extend
 This platform is easy to extend both dataset and algorithm. 
