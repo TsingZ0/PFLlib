@@ -4,7 +4,7 @@ import torch.nn as nn
 from torch.utils.data import DataLoader
 
 
-class client(object):
+class Client(object):
     """
     Base class for clients in federated learning.
     """
@@ -36,9 +36,10 @@ class client(object):
         for new_param, old_param in zip(model.parameters(), self.model.parameters()):
             old_param.data = new_param.data.clone()
 
-    def clone_paramenters(self, model, target):
+    def clone_model(self, model, target):
         for param, target_param in zip(model.parameters(), target.parameters()):
             target_param.data = param.data.clone()
+            # target_param.grad = param.grad.clone()
 
     def update_parameters(self, model, new_params):
         for param, new_param in zip(model.parameters(), new_params):
@@ -53,7 +54,10 @@ class client(object):
         
         with torch.no_grad():
             for x, y in self.testloaderfull:
-                x = x.to(self.device)
+                if type(x) == type([]):
+                    x[0] = x[0].to(self.device)
+                else:
+                    x = x.to(self.device)
                 y = y.to(self.device)
                 output = self.model(x)
                 test_acc += (torch.sum(torch.argmax(output, dim=1) == y)).item()
@@ -71,7 +75,10 @@ class client(object):
         train_num = 0
         loss = 0
         for x, y in self.trainloaderfull:
-            x = x.to(self.device)
+            if type(x) == type([]):
+                x[0] = x[0].to(self.device)
+            else:
+                x = x.to(self.device)
             y = y.to(self.device)
             output = self.model(x)
             train_acc += (torch.sum(torch.argmax(output, dim=1) == y)).item()
@@ -91,7 +98,13 @@ class client(object):
             self.iter_trainloader = iter(self.trainloader)
             (x, y) = next(self.iter_trainloader)
 
-        return (x.to(self.device), y.to(self.device))
+        if type(x) == type([]):
+            x[0] = x[0].to(self.device)
+        else:
+            x = x.to(self.device)
+        y = y.to(self.device)
+
+        return x, y
 
 
     # def save_model(self):

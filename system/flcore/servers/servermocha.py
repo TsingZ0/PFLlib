@@ -7,32 +7,31 @@ import torch
 
 
 class MOCHA(Server):
-    def __init__(self, device, dataset, algorithm, model, batch_size, learning_rate, global_rounds, local_steps, num_clients,
-                 total_clients, times, eval_gap, client_drop_rate, train_slow_rate, send_slow_rate, time_select, goal, time_threthold, 
+    def __init__(self, device, dataset, algorithm, model, batch_size, learning_rate, global_rounds, local_steps, join_clients,
+                 num_clients, times, eval_gap, client_drop_rate, train_slow_rate, send_slow_rate, time_select, goal, time_threthold, 
                  itk):
-        super().__init__(dataset, algorithm, model, batch_size, learning_rate, global_rounds, local_steps, num_clients,
-                         total_clients, times, eval_gap, client_drop_rate, train_slow_rate, send_slow_rate, time_select, goal, 
+        super().__init__(dataset, algorithm, model, batch_size, learning_rate, global_rounds, local_steps, join_clients,
+                         num_clients, times, eval_gap, client_drop_rate, train_slow_rate, send_slow_rate, time_select, goal, 
                          time_threthold)
         self.dim = len(self.flatten(self.global_model))
-        self.W_glob = torch.zeros((self.dim, num_clients), device=device)
+        self.W_glob = torch.zeros((self.dim, join_clients), device=device)
         self.device = device
 
-        I = torch.ones((num_clients, num_clients))
-        i = torch.ones((num_clients, 1))
-        omega = (I - 1 / num_clients * i.mm(i.T)) ** 2
+        I = torch.ones((join_clients, join_clients))
+        i = torch.ones((join_clients, 1))
+        omega = (I - 1 / join_clients * i.mm(i.T)) ** 2
         omega = omega.to(device)
 
         # select slow clients
         self.set_slow_clients()
 
-        for i, train_slow, send_slow in zip(range(self.total_clients), self.train_slow_clients, self.send_slow_clients):
+        for i, train_slow, send_slow in zip(range(self.num_clients), self.train_slow_clients, self.send_slow_clients):
             train, test = read_client_data(dataset, i)
             client = clientMOCHA(device, i, train_slow, send_slow, train, test, model, batch_size, learning_rate, 
                                 local_steps, omega, itk)
             self.clients.append(client)
-
-        print(
-            f"Number of clients / total clients: {self.num_clients} / {self.total_clients}")
+            
+        print(f"\nJoin clients / total clients: {self.join_clients} / {self.num_clients}")
         print("Finished creating server and clients.")
 
     def train(self):
@@ -69,7 +68,7 @@ class MOCHA(Server):
         return torch.cat(W)
 
     def send_values(self):
-        self.W_glob = torch.zeros((self.dim, self.num_clients), device=self.device)
+        self.W_glob = torch.zeros((self.dim, self.join_clients), device=self.device)
         for idx, client in enumerate(self.selected_clients):
             self.W_glob[:, idx] = self.flatten(client.model)
             client.receive_values(self.W_glob, idx)

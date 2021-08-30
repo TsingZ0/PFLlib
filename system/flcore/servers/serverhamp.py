@@ -10,11 +10,11 @@ import math
 
 
 class HeurFedAMP(Server):
-    def __init__(self, device, dataset, algorithm, model, batch_size, learning_rate, global_rounds, local_steps, num_clients,
-                 total_clients, times, eval_gap, client_drop_rate, train_slow_rate, send_slow_rate, time_select, goal, time_threthold, 
+    def __init__(self, device, dataset, algorithm, model, batch_size, learning_rate, global_rounds, local_steps, join_clients,
+                 num_clients, times, eval_gap, client_drop_rate, train_slow_rate, send_slow_rate, time_select, goal, time_threthold, 
                  alphaK, lamda, sigma, xi):
-        super().__init__(dataset, algorithm, model, batch_size, learning_rate, global_rounds, local_steps, num_clients,
-                         total_clients, times, eval_gap, client_drop_rate, train_slow_rate, send_slow_rate, time_select, goal, 
+        super().__init__(dataset, algorithm, model, batch_size, learning_rate, global_rounds, local_steps, join_clients,
+                         num_clients, times, eval_gap, client_drop_rate, train_slow_rate, send_slow_rate, time_select, goal, 
                          time_threthold)
         # select slow clients
         self.set_slow_clients()
@@ -23,19 +23,18 @@ class HeurFedAMP(Server):
         self.sigma = sigma
         self.xi = xi
 
-        self.cos = torch.nn.CosineSimilarity()
+        self.cos = torch.nn.CosineSimilarity(dim=0)
 
-        self.client_ws = [model for i in range(total_clients)]
-        self.client_us = [model for i in range(total_clients)]
+        self.client_ws = [model for i in range(num_clients)]
+        self.client_us = [model for i in range(num_clients)]
 
-        for i, train_slow, send_slow in zip(range(self.total_clients), self.train_slow_clients, self.send_slow_clients):
+        for i, train_slow, send_slow in zip(range(self.num_clients), self.train_slow_clients, self.send_slow_clients):
             train, test = read_client_data(dataset, i)
             client = clientAMP(device, i, train_slow, send_slow, train, test, model, batch_size, learning_rate, 
                                 local_steps, alphaK, lamda)
             self.clients.append(client)
 
-        print(
-            f"Number of clients / total clients: {self.num_clients} / {self.total_clients}")
+        print(f"\nJoin clients / total clients: {self.join_clients} / {self.num_clients}")
         print("Finished creating server and clients.")
 
     def train(self):
@@ -91,26 +90,25 @@ class HeurFedAMP(Server):
 
     def update_client_temp(self):
         weights = [weight_flatten(mw) for mw in self.client_ws]
-        
-        w_params = []
-        for mw in self.client_ws:
-            w_params.append(list(mw.parameters()))
-        w_params = list(zip(*w_params))
 
         for i, mu in enumerate(self.client_us):
+            for param in mu.parameters():
+                param.data = torch.zeros_like(param.data)
+
             sumE = 0
             for mw in weights:
                 sumE += self.e(weights[i], mw)
             sumE -= self.e(weights[i], weights[i])
 
-            for param, params in zip(mu.parameters(), w_params):
-                param = 0
-                for j, wj in enumerate(params):
-                    if i != j:
-                        coef = (1 - self.xi) * self.e(weights[i], weights[j]) / sumE
-                        param += coef * wj
-                    else:
-                        param += self.xi * wj
+            coef = torch.zeros(self.num_clients)
+            for j, mw in enumerate(self.client_ws):
+                if i != j:
+                    coef[j] = (1 - self.xi) * self.e(weights[i], weights[j]) / sumE
+            coef[i] = self.xi
+
+            for j, mw in enumerate(self.client_ws):
+                for param, param_j in zip(mu.parameters(), mw.parameters()):
+                    param.data += coef[j] * param_j
 
     def e(self, x, y):
-        return math.exp(self.sigma * self.cos(x.unsqueeze(0), y.unsqueeze(0)))
+        return math.exp(self.sigma * self.cos(x, y))

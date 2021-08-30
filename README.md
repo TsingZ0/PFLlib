@@ -2,7 +2,7 @@
 The origin of the Non-IID phenomenon is the personalization of users, who generate the Non-IID data. With **Non-IID (Not Independent and Identically Distributed)** issue existing in the federated learning setting, a myriad of approaches have been proposed to crack this hard nut. In contrast, the personalized federated learning may take the advantage of the Non-IID data to learn the personalized model for each user. Thanks to [@Stonesjtu](https://github.com/Stonesjtu/pytorch_memlab/blob/d590c489236ee25d157ff60ecd18433e8f9acbe3/pytorch_memlab/mem_reporter.py#L185), this platform can also record the model size on GPU. 
 
 ## Environments
-With the installed [conda](https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh), we can run this platform in a conda virtual environment called *fl_torch*.
+With the installed [conda](https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh), we can run this platform in a conda virtual environment called *fl_torch*. Note: due to the code updates, some modules are required to install based on the given `*.yml`. 
 ```
 # current version
 conda env create -f env.yml # for linux
@@ -58,6 +58,7 @@ In **Non-IID** setting, there are three situations exist. The first one is the *
     ```
 - Sogou_News
     ```
+    # If ConnectionError raises, please use the given downloaded file in './dataset'. 
     cd ./dataset
     python generate_sogounews.py iid - - # for iid setting
     # python generate_sogounews.py noniid - - # for extreme noniid setting

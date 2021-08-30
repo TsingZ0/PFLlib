@@ -3,25 +3,36 @@ import torch.nn as nn
 import numpy as np
 import time
 import copy
-from flcore.clients.clientbase import client
+from flcore.clients.clientbase import Client
+from torch.utils.data import DataLoader
 
 
-class clientFomo(client):
+class clientFomo(Client):
     def __init__(self, device, numeric_id, train_slow, send_slow, train_data, test_data, model, batch_size, learning_rate,
-                 local_steps, total_clients):
+                 local_steps, num_clients):
         super().__init__(device, numeric_id, train_slow, send_slow, train_data, test_data, model, batch_size, learning_rate,
                          local_steps)
-        self.total_clients = total_clients
+        self.num_clients = num_clients
         self.L, self.L_ = 10, 10
         self.old_model = copy.deepcopy(model)
-        self.X, self.Y = [], []
         self.received_ids = []
         self.received_models = []
-        self.received_weights = []
-        self.weight_vector = torch.zeros(self.total_clients, device=self.device)
+        self.weight_vector = torch.zeros(self.num_clients, device=self.device)
 
         self.loss = nn.CrossEntropyLoss()
         self.optimizer = torch.optim.SGD(self.model.parameters(), lr=self.learning_rate)
+
+        self.val_ratio = 0.2
+        val_idx = -int(self.val_ratio*len(train_data))
+        val_data = train_data[val_idx:]
+        train_data = train_data[:val_idx]
+
+        self.train_samples = len(train_data)
+        self.trainloader = DataLoader(train_data, self.batch_size, drop_last=True)
+        self.trainloaderfull = DataLoader(train_data, self.batch_size, drop_last=False)
+        self.iter_trainloader = iter(self.trainloader)
+
+        self.val_loader = DataLoader(val_data, self.batch_size, drop_last=True)
 
     def train(self):
         start_time = time.time()
@@ -37,13 +48,10 @@ class clientFomo(client):
 
         self.L_ = self.L
         self.L = 0
-        self.X, self.Y = [], []
         for step in range(max_local_steps):
             if self.train_slow:
                 time.sleep(0.1 * np.abs(np.random.rand()))
             x, y = self.get_next_train_batch()
-            self.X.append(x)
-            self.Y.append(y)
             self.optimizer.zero_grad()
             output = self.model(x)
             loss = self.loss(output, y)
@@ -53,16 +61,15 @@ class clientFomo(client):
 
         self.L /= max_local_steps
         # self.model.cpu()
-        self.clone_paramenters(self.model, self.old_model)
+        self.clone_model(self.model, self.old_model)
 
         self.train_time_cost['num_rounds'] += 1
         self.train_time_cost['total_cost'] += time.time() - start_time
 
     
-    def receive_models(self, ids, models, weights):
+    def receive_models(self, ids, models):
         self.received_ids = copy.deepcopy(ids)
         self.received_models = copy.deepcopy(models)
-        self.received_weights = copy.deepcopy(weights)
 
     def weight_cal(self):
         weight_list = []
@@ -78,38 +85,45 @@ class clientFomo(client):
         # with profiler.profile(profile_memory=True, record_shapes=True) as prof:
         #     self.weight_vector_update(weight_list)
         # print(prof.key_averages().table(sort_by="cuda_memory_usage", row_limit=10))
+        
+        # from pytorch_memlab import LineProfiler
+        # with LineProfiler(self.weight_vector_update(weight_list)) as prof:
+        #     self.weight_vector_update(weight_list)
+        # prof.display()
+
         self.weight_vector_update(weight_list)
 
         return torch.tensor(weight_list)
-
+        
+    # from pytorch_memlab import profile
+    # @profile
     def weight_vector_update(self, weight_list):
-        # self.weight_vector = torch.zeros(self.total_clients, device=self.device)
+        # self.weight_vector = torch.zeros(self.num_clients, device=self.device)
         # for w, id in zip(weight_list, self.received_ids):
         #     self.weight_vector[id] += w.clone()
     
-        self.weight_vector = np.zeros(self.total_clients)
+        self.weight_vector = np.zeros(self.num_clients)
         for w, id in zip(weight_list, self.received_ids):
             self.weight_vector[id] += w.item()
         self.weight_vector = torch.tensor(self.weight_vector).to(self.device)
 
     def recalculate_loss(self, new_model):
         L = 0
-        for x, y in zip(self.X, self.Y):
+        for x, y in self.val_loader:
+            x = x.to(self.device)
+            y = y.to(self.device)
             output = new_model(x)
             loss = self.loss(output, y)
             L += loss
         
-        return L / len(self.X)
+        return L / len(self.val_loader)
 
     def add_parameters(self, w, received_model):
         for param, received_param in zip(self.model.parameters(), received_model.parameters()):
             param.data += received_param.data.clone() * w
         
     def aggregate_parameters(self):
-        if len(self.X) > 0:
-            weights = self.weight_scale(self.weight_cal())
-        else:
-            weights = self.received_weights
+        weights = self.weight_scale(self.weight_cal())
 
         if len(weights) > 0:
             for param in self.model.parameters():

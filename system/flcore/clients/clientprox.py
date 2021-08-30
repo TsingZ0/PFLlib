@@ -4,10 +4,10 @@ import time
 import copy
 import torch.nn as nn
 from flcore.optimizers.fedoptimizer import PerturbedGradientDescent
-from flcore.clients.clientbase import client
+from flcore.clients.clientbase import Client
 
 
-class clientProx(client):
+class clientProx(Client):
     def __init__(self, device, numeric_id, train_slow, send_slow, train_data, test_data, model, batch_size, learning_rate,
                  local_steps, mu):
         super().__init__(device, numeric_id, train_slow, send_slow, train_data, test_data, model, batch_size, learning_rate,
@@ -47,6 +47,6 @@ class clientProx(client):
         self.train_time_cost['total_cost'] += time.time() - start_time
 
     def set_parameters(self, model):
-        for new_param, old_param, global_param in zip(model.parameters(), self.model.parameters(), self.global_params):
-            old_param.data = new_param.data.clone()
+        for new_param, global_param, param in zip(model.parameters(), self.global_params, self.model.parameters()):
             global_param.data = new_param.data.clone()
+            param.data = new_param.data.clone()

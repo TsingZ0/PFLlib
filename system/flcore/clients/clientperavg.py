@@ -4,10 +4,10 @@ import time
 import copy
 import torch.nn as nn
 from flcore.optimizers.fedoptimizer import PerAvgOptimizer
-from flcore.clients.clientbase import client
+from flcore.clients.clientbase import Client
 
 
-class clientPerAvg(client):
+class clientPerAvg(Client):
     def __init__(self, device, numeric_id, train_slow, send_slow, train_data, test_data, model, batch_size, learning_rate,
                  local_steps, beta):
         super().__init__(device, numeric_id, train_slow, send_slow, train_data, test_data, model, batch_size, learning_rate,
@@ -55,19 +55,10 @@ class clientPerAvg(client):
 
             self.optimizer.step(beta=self.beta)
 
-        # clone model to local model
-        self.clone_paramenters(self.model, self.local_model)
-
         # self.model.cpu()
 
         self.train_time_cost['num_rounds'] += 1
         self.train_time_cost['total_cost'] += time.time() - start_time
-
-
-    def set_parameters(self, model):
-        for new_param, old_param, local_param in zip(model.parameters(), self.model.parameters(), self.local_model.parameters()):
-            old_param.data = new_param.data.clone()
-            local_param.data = new_param.data.clone()
 
 
     def train_one_step(self):
@@ -102,4 +93,10 @@ class clientPerAvg(client):
             self.iter_testloader = iter(self.testloader)
             (x, y) = next(self.iter_testloader)
             
-        return (x.to(self.device), y.to(self.device))
+        if type(x) == type([]):
+            x[0] = x[0].to(self.device)
+        else:
+            x = x.to(self.device)
+        y = y.to(self.device)
+
+        return x, y

@@ -33,7 +33,7 @@ def check(config_path, train_path, test_path, num_clients, num_labels, niid=Fals
 
     return False
 
-def seperete_data(data, num_clients, num_labels, niid=False, real=True, partition=None, 
+def separate_data(data, num_clients, num_labels, niid=False, real=True, partition=None, 
                 class_per_client=2):
     X = [[] for _ in range(num_clients)]
     y = [[] for _ in range(num_clients)]
@@ -180,10 +180,10 @@ def save_file(config_path, train_path, test_path, train_data, test_data, num_cli
     # gc.collect()
 
     for idx, train_dict in enumerate(train_data):
-        with open(train_path[:-5]+str(idx)+train_path[-5:], 'w') as f:
+        with open(train_path[:-5] + str(idx)  + '_' + '.json', 'w') as f:
             ujson.dump(train_dict, f)
     for idx, test_dict in enumerate(test_data):
-        with open(test_path[:-5]+str(idx)+test_path[-5:], 'w') as f:
+        with open(test_path[:-5] + str(idx)  + '_' + '.json', 'w') as f:
             ujson.dump(test_dict, f)
     with open(config_path, 'w') as f:
         ujson.dump(config, f)

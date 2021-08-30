@@ -8,8 +8,8 @@ import random
 
 
 class Server(object):
-    def __init__(self, dataset, algorithm, model, batch_size, learning_rate, global_rounds, local_steps, num_clients,
-                 total_clients, times, eval_gap, client_drop_rate, train_slow_rate, send_slow_rate, time_select, goal, 
+    def __init__(self, dataset, algorithm, model, batch_size, learning_rate, global_rounds, local_steps, join_clients,
+                 num_clients, times, eval_gap, client_drop_rate, train_slow_rate, send_slow_rate, time_select, goal, 
                  time_threthold):
         # Set up the main attributes
         self.dataset = dataset
@@ -18,8 +18,8 @@ class Server(object):
         self.batch_size = batch_size
         self.learning_rate = learning_rate
         self.global_model = copy.deepcopy(model)
+        self.join_clients = join_clients
         self.num_clients = num_clients
-        self.total_clients = total_clients
         self.algorithm = algorithm
         self.time_select = time_select
         self.goal = goal
@@ -45,9 +45,9 @@ class Server(object):
 
     # random select slow clients
     def select_slow_clients(self, slow_rate):
-        slow_clients = [False for i in range(self.total_clients)]
-        idx = [i for i in range(self.total_clients)]
-        idx_ = np.random.choice(idx, int(slow_rate * self.total_clients))
+        slow_clients = [False for i in range(self.num_clients)]
+        idx = [i for i in range(self.num_clients)]
+        idx_ = np.random.choice(idx, int(slow_rate * self.num_clients))
         for i in idx_:
             slow_clients[i] = True
 
@@ -68,11 +68,11 @@ class Server(object):
                     (i, client.train_time_cost['total_cost'] + client.send_time_cost['total_cost']))
             clients_info = sorted(clients_info, key=lambda x: x[1])
             left_idx = np.random.randint(
-                0, self.total_clients - self.num_clients)
+                0, self.num_clients - self.join_clients)
             selected_clients = [self.clients[clients_info[i][0]]
-                                for i in range(left_idx, left_idx + self.num_clients)]
+                                for i in range(left_idx, left_idx + self.join_clients)]
         else:
-            selected_clients = list(np.random.choice(self.clients, self.num_clients, replace=False))
+            selected_clients = list(np.random.choice(self.clients, self.join_clients, replace=False))
 
         return selected_clients
 
@@ -94,7 +94,7 @@ class Server(object):
         assert (len(self.selected_clients) > 0)
 
         active_clients = random.sample(
-            self.selected_clients, int((1-self.client_drop_rate) * self.num_clients))
+            self.selected_clients, int((1-self.client_drop_rate) * self.join_clients))
 
         active_train_samples = 0
         for client in active_clients:
@@ -111,7 +111,7 @@ class Server(object):
 
     def add_parameters(self, w, client_model):
         for server_param, client_param in zip(self.global_model.parameters(), client_model.parameters()):
-            server_param.data += client_param.data.clone() * w
+            server_param.data += client_param.data.clone() / self.join_clients
 
     def aggregate_parameters(self):
         assert (len(self.uploaded_models) > 0)

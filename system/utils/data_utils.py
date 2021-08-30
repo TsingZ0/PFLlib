@@ -64,11 +64,11 @@ def read_data(dataset, idx):
     train_data_dir = os.path.join('../dataset', dataset, 'train/')
     test_data_dir = os.path.join('../dataset', dataset, 'test/')
 
-    train_file = train_data_dir + 'train' + str(idx) + '.json'
+    train_file = train_data_dir + 'train' + str(idx) + '_' + '.json'
     with open(train_file, 'r') as f:
         train_data = ujson.load(f)
 
-    test_file = test_data_dir + 'test' + str(idx) + '.json'
+    test_file = test_data_dir + 'test' + str(idx) + '_' + '.json'
     with open(test_file, 'r') as f:
         test_data = ujson.load(f)
 

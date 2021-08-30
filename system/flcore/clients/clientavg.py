@@ -1,11 +1,11 @@
 import torch
 import torch.nn as nn
-from flcore.clients.clientbase import client
+from flcore.clients.clientbase import Client
 import numpy as np
 import time
 
 
-class clientAVG(client):
+class clientAVG(Client):
     def __init__(self, device, numeric_id, train_slow, send_slow, train_data, test_data, model, batch_size, learning_rate,
                  local_steps):
         super().__init__(device, numeric_id, train_slow, send_slow, train_data, test_data, model, batch_size, learning_rate,

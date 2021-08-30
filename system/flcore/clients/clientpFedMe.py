@@ -4,16 +4,15 @@ import copy
 import torch
 import torch.nn as nn
 from flcore.optimizers.fedoptimizer import pFedMeOptimizer
-from flcore.clients.clientbase import client
+from flcore.clients.clientbase import Client
 
 
-class clientpFedMe(client):
+class clientpFedMe(Client):
     def __init__(self, device, numeric_id, train_slow, send_slow, train_data, test_data, model, batch_size, learning_rate,
-                 local_steps, beta, lamda, K, personalized_learning_rate):
+                 local_steps, lamda, K, personalized_learning_rate):
         super().__init__(device, numeric_id, train_slow, send_slow, train_data, test_data, model, batch_size, learning_rate,
                          local_steps)
 
-        self.beta = beta
         self.lamda = lamda
         self.K = K
         self.personalized_learning_rate = personalized_learning_rate
@@ -22,7 +21,7 @@ class clientpFedMe(client):
         self.local_params = copy.deepcopy(list(self.model.parameters()))
         self.personalized_params = copy.deepcopy(list(self.model.parameters()))
 
-        self.loss = nn.NLLLoss()
+        self.loss = nn.CrossEntropyLoss()
         self.optimizer = pFedMeOptimizer(
             self.model.parameters(), lr=self.personalized_learning_rate, lamda=self.lamda)
 
@@ -51,7 +50,7 @@ class clientpFedMe(client):
             # update local weight after finding aproximate theta
             for new_param, localweight in zip(self.personalized_params, self.local_params):
                 localweight = localweight.to(self.device)
-                localweight.data = localweight.data - self.lamda* self.learning_rate * (localweight.data - new_param.data)
+                localweight.data = localweight.data - self.lamda * self.learning_rate * (localweight.data - new_param.data)
 
         # self.model.cpu()
 

@@ -16,14 +16,20 @@ from flcore.servers.serverplayer import FedPlayer
 from flcore.servers.serveramp import FedAMP
 from flcore.servers.serverhamp import HeurFedAMP
 from flcore.trainmodel.models import *
+from flcore.trainmodel.resnet import resnet18 as resnet
 from utils.result_utils import average_data
 from utils.mem_utils import MemReporter
 
 warnings.simplefilter("ignore")
 torch.manual_seed(0)
 
-def run(goal, dataset, num_labels, device, algorithm, model, local_batch_size, local_learning_rate, global_rounds, local_steps, num_clients, 
-        total_clients, beta, lamda, K, personalized_learning_rate, times, eval_gap, client_drop_rate, train_slow_rate, send_slow_rate, 
+# hyper-params for Text tasks
+vocab_size = 98635
+max_len=200
+hidden_dim=32
+
+def run(goal, dataset, num_labels, device, algorithm, model, local_batch_size, local_learning_rate, global_rounds, local_steps, join_clients, 
+        num_clients, beta, lamda, K, p_learning_rate, times, eval_gap, client_drop_rate, train_slow_rate, send_slow_rate, 
         time_select, time_threthold, M, mu, itk, alphaK, sigma, xi):
 
     time_list = []
@@ -33,51 +39,10 @@ def run(goal, dataset, num_labels, device, algorithm, model, local_batch_size, l
         print(f"\n============= Running time: {i}th =============")
         print("Creating server and clients ...")
         start = time.time()
-        server, Head, Model, Classifier = None, None, None, None
+        Model = None
 
         # Generate Model
-        if model[:3] == "sep":
-            if model == "sep_cnn":
-                if dataset == "mnist" or dataset == "fmnist":
-                    Model = LeNetBase().to(device)
-                    Classifier = LeNetClassifier(num_labels=num_labels).to(device)
-                elif dataset == "Cifar10" or dataset == "Cifar100":
-                    Model = CifarNetBase().to(device)
-                    Classifier = CifarNetClassifier(num_labels=num_labels).to(device)
-                else:
-                    raise NotImplementedError
-
-            # elif model[:7] == "sep_vgg":
-            #     pass
-
-            elif model[:10] == "sep_resnet":
-                if dataset == "Cifar10" or dataset == "Cifar100":
-                    Model = torch.hub.load('pytorch/vision:v0.6.0', model[4:], pretrained=True)
-                    Classifier = ResNetClassifier(input_dim=list(Model.fc.weight.size())[1], num_labels=num_labels).to(device)
-                    Model.fc = nn.Identity()
-                    Model.to(device)
-                else:
-                    raise NotImplementedError
-
-            elif model == "sep_dnn": # non-convex
-                if dataset == "mnist" or dataset == "fmnist":
-                    Model = DNNbase(1*28*28, 100).to(device)
-                    Classifier = DNNClassifier(100, num_labels=num_labels).to(device)
-                elif dataset == "Cifar10" or dataset == "Cifar100":
-                    Model = DNNbase(3*32*32, 100).to(device)
-                    Classifier = DNNClassifier(100, num_labels=num_labels).to(device)
-                else:
-                    Model = DNNbase(60, 20).to(device)
-                    Classifier = DNNClassifier(20, num_labels=num_labels).to(device)
-            
-            elif model == "sep_lstm":
-                if dataset == "agnews":
-                    Model = LSTMNetBase(hidden_dim=32, bidirectional=True, vocab_size=98635).to(device)
-                    Classifier = LSTMNetClassifier(hidden_dim=32, bidirectional=True, num_labels=num_labels).to(device)
-                else:
-                    raise NotImplementedError
-
-        elif model == "mclr":
+        if model == "mclr":
             if dataset == "mnist" or dataset == "fmnist":
                 Model = Mclr_Logistic(1*28*28, num_labels=num_labels).to(device)
             elif dataset == "Cifar10" or dataset == "Cifar100":
@@ -106,9 +71,10 @@ def run(goal, dataset, num_labels, device, algorithm, model, local_batch_size, l
         
         elif model[:6] == "resnet":
             if dataset == "Cifar10" or dataset == "Cifar100":
-                Model = torch.hub.load('pytorch/vision:v0.6.0', model, pretrained=True)
-                Model.fc = ResNetClassifier(input_dim=list(Model.fc.weight.size())[1], num_labels=num_labels)
-                Model.to(device)
+                # Model = torch.hub.load('pytorch/vision:v0.6.0', model, pretrained=True)
+                # Model.fc = ResNetClassifier(input_dim=list(Model.fc.weight.size())[1], num_labels=num_labels)
+                # Model.to(device)
+                Model = resnet(num_labels=num_labels).to(device)
             else:
                 raise NotImplementedError
 
@@ -127,47 +93,42 @@ def run(goal, dataset, num_labels, device, algorithm, model, local_batch_size, l
         # select algorithm
         if algorithm == "FedAvg":
             server = FedAvg(device, dataset, algorithm, Model, local_batch_size, local_learning_rate, global_rounds,
-                            local_steps, num_clients, total_clients, i, eval_gap, client_drop_rate, train_slow_rate, 
+                            local_steps, join_clients, num_clients, i, eval_gap, client_drop_rate, train_slow_rate, 
                             send_slow_rate, time_select, goal, time_threthold)
 
         elif algorithm == "PerAvg":
             server = PerAvg(device, dataset, algorithm, Model, local_batch_size, local_learning_rate, global_rounds,
-                            local_steps, num_clients, total_clients, i, eval_gap, client_drop_rate, train_slow_rate, 
+                            local_steps, join_clients, num_clients, i, eval_gap, client_drop_rate, train_slow_rate, 
                             send_slow_rate, time_select, goal, time_threthold, beta)
 
         elif algorithm == "pFedMe":
             server = pFedMe(device, dataset, algorithm, Model, local_batch_size, local_learning_rate, global_rounds,
-                            local_steps, num_clients, total_clients, i, eval_gap, client_drop_rate, train_slow_rate, 
-                            send_slow_rate, time_select, goal, time_threthold, beta, lamda, K, personalized_learning_rate)
+                            local_steps, join_clients, num_clients, i, eval_gap, client_drop_rate, train_slow_rate, 
+                            send_slow_rate, time_select, goal, time_threthold, beta, lamda, K, p_learning_rate)
 
         elif algorithm == "FedProx":
             server = FedProx(device, dataset, algorithm, Model, local_batch_size, local_learning_rate, global_rounds,
-                            local_steps, num_clients, total_clients, i, eval_gap, client_drop_rate, train_slow_rate, 
+                            local_steps, join_clients, num_clients, i, eval_gap, client_drop_rate, train_slow_rate, 
                             send_slow_rate, time_select, goal, time_threthold, mu)
 
         elif algorithm == "FedFomo":
             server = FedFomo(device, dataset, algorithm, Model, local_batch_size, local_learning_rate, global_rounds,
-                            local_steps, num_clients, total_clients, i, eval_gap, client_drop_rate, train_slow_rate, 
+                            local_steps, join_clients, num_clients, i, eval_gap, client_drop_rate, train_slow_rate, 
                             send_slow_rate, time_select, goal, time_threthold, M)
 
         elif algorithm == "MOCHA":
             server = MOCHA(device, dataset, algorithm, Model, local_batch_size, local_learning_rate, global_rounds,
-                            local_steps, num_clients, total_clients, i, eval_gap, client_drop_rate, train_slow_rate, 
+                            local_steps, join_clients, num_clients, i, eval_gap, client_drop_rate, train_slow_rate, 
                             send_slow_rate, time_select, goal, time_threthold, itk)
-
-        elif algorithm == "FedPlayer":
-            server = FedPlayer(device, dataset, algorithm, Model, local_batch_size, local_learning_rate, global_rounds,
-                            local_steps, num_clients, total_clients, i, eval_gap, client_drop_rate, train_slow_rate, 
-                            send_slow_rate, time_select, goal, time_threthold, Classifier)
 
         elif algorithm == "FedAMP":
             server = FedAMP(device, dataset, algorithm, Model, local_batch_size, local_learning_rate, global_rounds,
-                            local_steps, num_clients, total_clients, i, eval_gap, client_drop_rate, train_slow_rate, 
+                            local_steps, join_clients, num_clients, i, eval_gap, client_drop_rate, train_slow_rate, 
                             send_slow_rate, time_select, goal, time_threthold, alphaK, lamda, sigma)
         
         elif algorithm == "HeurFedAMP":
             server = HeurFedAMP(device, dataset, algorithm, Model, local_batch_size, local_learning_rate, global_rounds,
-                            local_steps, num_clients, total_clients, i, eval_gap, client_drop_rate, train_slow_rate, 
+                            local_steps, join_clients, num_clients, i, eval_gap, client_drop_rate, train_slow_rate, 
                             send_slow_rate, time_select, goal, time_threthold, alphaK, lamda, sigma, xi)
 
         server.train()
@@ -203,7 +164,6 @@ if __name__ == "__main__":
                         choices=["mnist", "synthetic", "Cifar10", "agnews", "fmnist", "Cifar100", \
                         "sogounews"])
     parser.add_argument('-nb', "--num_labels", type=int, default=10)
-    parser.add_argument('-niid', "--noniid", type=bool, default=True)
     parser.add_argument('-m', "--model", type=str, default="cnn")
     parser.add_argument('-lbs', "--local_batch_size", type=int, default=16)
     parser.add_argument('-lr', "--local_learning_rate", type=float, default=0.005,
@@ -213,9 +173,9 @@ if __name__ == "__main__":
     parser.add_argument('-algo', "--algorithm", type=str, default="FedAvg",
                         choices=["pFedMe", "PerAvg", "FedAvg", "FedProx", \
                         "FedFomo", "MOCHA", "FedPlayer", "FedAMP", "HeurFedAMP"])
-    parser.add_argument('-nc', "--num_clients", type=int, default=5,
+    parser.add_argument('-jc', "--join_clients", type=int, default=5,
                         help="Number of clients per round")
-    parser.add_argument('-tc', "--total_clients", type=int, default=20,
+    parser.add_argument('-nc', "--num_clients", type=int, default=20,
                         help="Total number of clients")
     parser.add_argument('-t', "--times", type=int, default=1,
                         help="Running times")
@@ -241,7 +201,7 @@ if __name__ == "__main__":
                         help="Proximal rate for FedProx")
     parser.add_argument('-K', "--K", type=int, default=5,
                         help="Number of personalized training steps for pFedMe")
-    parser.add_argument('-lrp', "--personalized_learning_rate", type=float, default=0.01,
+    parser.add_argument('-lrp', "--p_learning_rate", type=float, default=0.01,
                         help="personalized learning rate to caculate theta aproximately using K steps")
     # FedFomo
     parser.add_argument('-M', "--M", type=int, default=5,
@@ -255,7 +215,7 @@ if __name__ == "__main__":
     parser.add_argument('-sg', "--sigma", type=float, default=1.0)
     # HeurFedAMP
     parser.add_argument('-xi', "--xi", type=float, default=1.0)
-    
+
     config = parser.parse_args()
 
     os.environ["CUDA_VISIBLE_DEVICES"] = config.device_id
@@ -270,11 +230,11 @@ if __name__ == "__main__":
     print("Local batch size: {}".format(config.local_batch_size))
     print("Local steps: {}".format(config.local_steps))
     print("Local learing rate: {}".format(config.local_learning_rate))
-    print("Total clients: {}".format(config.total_clients))
+    print("Total number of clients: {}".format(config.num_clients))
+    print("Clients join in each round: {}".format(config.join_clients))
     print("Client drop rate: {}".format(config.client_drop_rate))
     print("Time select: {}".format(config.time_select))
     print("Time threthold: {}".format(config.time_threthold))
-    print("Subset of clients: {}".format(config.num_clients))
     print("Global rounds: {}".format(config.global_rounds))
     print("Running times: {}".format(config.times))
     print("Dataset: {}".format(config.dataset))
@@ -287,7 +247,7 @@ if __name__ == "__main__":
         print("Average moving parameter beta: {}".format(config.beta))
         print("Regularization rate: {}".format(config.lamda))
         print("Number of personalized training steps: {}".format(config.K))
-        print("personalized learning rate to caculate theta: {}".format(config.personalized_learning_rate))
+        print("personalized learning rate to caculate theta: {}".format(config.p_learning_rate))
     elif config.algorithm == "PerAvg":
         print("Second learning rate beta: {}".format(config.beta))
     elif config.algorithm == "FedProx":
@@ -308,6 +268,14 @@ if __name__ == "__main__":
 
     print("=" * 50)
 
+    # with torch.profiler.profile(
+    #     activities=[
+    #         torch.profiler.ProfilerActivity.CPU,
+    #         torch.profiler.ProfilerActivity.CUDA],
+    #     profile_memory=True, 
+    #     on_trace_ready=torch.profiler.tensorboard_trace_handler('./log')
+    #     ) as prof:
+    # with torch.autograd.profiler.profile(profile_memory=True) as prof:
     run(
         goal=config.goal,
         dataset=config.dataset,
@@ -319,12 +287,12 @@ if __name__ == "__main__":
         local_learning_rate=config.local_learning_rate,
         global_rounds=config.global_rounds,
         local_steps=config.local_steps,
+        join_clients=config.join_clients,
         num_clients=config.num_clients,
-        total_clients=config.total_clients,
         beta=config.beta,
         lamda=config.lamda,
         K=config.K,
-        personalized_learning_rate=config.personalized_learning_rate,
+        p_learning_rate=config.p_learning_rate,
         times=config.times,
         eval_gap=config.eval_gap,
         client_drop_rate=config.client_drop_rate,
@@ -339,3 +307,7 @@ if __name__ == "__main__":
         sigma=config.sigma,
         xi=config.xi,
     )
+
+    
+    # print(prof.key_averages().table(sort_by="cpu_time_total", row_limit=20))
+    # print(f"\nTotal time cost: {round(time.time()-total_start, 2)}s.")

@@ -1,13 +1,13 @@
 import torch
 import torch.nn as nn
-from flcore.clients.clientbase import client
+from flcore.clients.clientbase import Client
 import numpy as np
 import time
 import math
 import copy
 
 
-class clientMOCHA(client):
+class clientMOCHA(Client):
     def __init__(self, device, numeric_id, train_slow, send_slow, train_data, test_data, model, batch_size, learning_rate,
                  local_steps, omega, itk):
         super().__init__(device, numeric_id, train_slow, send_slow, train_data, test_data, model, batch_size, learning_rate,
@@ -38,7 +38,7 @@ class clientMOCHA(client):
             output = self.model(x)
             loss = self.loss(output, y)
 
-            self.W_glob[:, self.idx] = self.flatten(self.model)
+            self.W_glob[:, self.idx] = flatten(self.model)
             loss_regularizer = 0
             loss_regularizer += self.W_glob.norm() ** 2
 
@@ -62,8 +62,9 @@ class clientMOCHA(client):
         self.W_glob = copy.deepcopy(W_glob)
         self.idx = idx
 
-    def flatten(self, model):
-        state_dict = model.state_dict()
-        keys = state_dict.keys()
-        W = [state_dict[key].flatten() for key in keys]
-        return torch.cat(W)
+
+def flatten(model):
+    state_dict = model.state_dict()
+    keys = state_dict.keys()
+    W = [state_dict[key].flatten() for key in keys]
+    return torch.cat(W)

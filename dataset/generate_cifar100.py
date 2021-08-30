@@ -5,7 +5,7 @@ import random
 import torch
 import torchvision
 import torchvision.transforms as transforms
-from utils.dataset_utils import check, seperete_data, split_data, save_file
+from utils.dataset_utils import check, separate_data, split_data, save_file
 
 
 random.seed(1)
@@ -16,8 +16,7 @@ dir_path = "Cifar100/"
 
 
 # Allocate data to users
-def generate_cifar100(dir_path=dir_path, num_clients=num_clients, num_labels=num_labels, niid=False, 
-                    real=True, partition=None):
+def generate_cifar100(dir_path, num_clients, num_labels, niid=False, real=True, partition=None):
     if not os.path.exists(dir_path):
         os.makedirs(dir_path)
         
@@ -62,8 +61,8 @@ def generate_cifar100(dir_path=dir_path, num_clients=num_clients, num_labels=num
     #     idx = dataset_label == i
     #     dataset.append(dataset_image[idx])
 
-    X, y, statistic = seperete_data((dataset_image, dataset_label), num_clients, num_labels, 
-                                    niid, real, partition)
+    X, y, statistic = separate_data((dataset_image, dataset_label), num_clients, num_labels, 
+                                    niid, real, partition, class_per_client=20)
     train_data, test_data = split_data(X, y)
     save_file(config_path, train_path, test_path, train_data, test_data, num_clients, num_labels, 
         statistic, niid, real, partition)
@@ -74,5 +73,4 @@ if __name__ == "__main__":
     real = True if sys.argv[2] == "realworld" else False
     partition = sys.argv[3] if sys.argv[3] != "-" else None
 
-    generate_cifar100(dir_path=dir_path, num_clients=num_clients, num_labels=num_labels, niid=niid, 
-                    real=real, partition=partition)
+    generate_cifar100(dir_path, num_clients, num_labels, niid, real, partition)

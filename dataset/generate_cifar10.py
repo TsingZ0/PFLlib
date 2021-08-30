@@ -5,18 +5,18 @@ import random
 import torch
 import torchvision
 import torchvision.transforms as transforms
-from utils.dataset_utils import check, seperete_data, split_data, save_file
+from utils.dataset_utils import check, separate_data, split_data, save_file
 
 
 random.seed(1)
 np.random.seed(1)
-num_clients = 50
+num_clients = 20
 num_labels = 10
 dir_path = "Cifar10/"
 
 
 # Allocate data to users
-def generate_cifar10(dir_path=dir_path, num_clients=num_clients, num_labels=num_labels, niid=False, real=True):
+def generate_cifar10(dir_path, num_clients, num_labels, niid=False, real=True, partition=None):
     if not os.path.exists(dir_path):
         os.makedirs(dir_path)
         
@@ -25,7 +25,7 @@ def generate_cifar10(dir_path=dir_path, num_clients=num_clients, num_labels=num_
     train_path = dir_path + "train/train.json"
     test_path = dir_path + "test/test.json"
 
-    if check(config_path, train_path, test_path, num_clients, num_labels, niid, real):
+    if check(config_path, train_path, test_path, num_clients, num_labels, niid, real, partition):
         return
         
     # Get Cifar10 data
@@ -56,19 +56,21 @@ def generate_cifar10(dir_path=dir_path, num_clients=num_clients, num_labels=num_
     dataset_image = np.array(dataset_image)
     dataset_label = np.array(dataset_label)
 
-    dataset = []
-    for i in range(10):
-        idx = dataset_label == i
-        dataset.append(dataset_image[idx])
+    # dataset = []
+    # for i in range(num_labels):
+    #     idx = dataset_label == i
+    #     dataset.append(dataset_image[idx])
 
-    
-    X, y, statistic = seperete_data(dataset, num_clients, num_labels, niid, real)
-    train_data, test_data = split_data(X, y, num_clients)
-    save_file(config_path, train_path, test_path, train_data, test_data, num_clients, num_labels, statistic, niid, real)
+    X, y, statistic = separate_data((dataset_image, dataset_label), num_clients, num_labels, 
+                                    niid, real, partition)
+    train_data, test_data = split_data(X, y)
+    save_file(config_path, train_path, test_path, train_data, test_data, num_clients, num_labels, 
+        statistic, niid, real, partition)
 
 
 if __name__ == "__main__":
     niid = True if sys.argv[1] == "noniid" else False
     real = True if sys.argv[2] == "realworld" else False
+    partition = sys.argv[3] if sys.argv[3] != "-" else None
 
-    generate_cifar10(dir_path=dir_path, num_clients=num_clients, num_labels=num_labels, niid=niid, real=real)
+    generate_cifar10(dir_path, num_clients, num_labels, niid, real, partition)

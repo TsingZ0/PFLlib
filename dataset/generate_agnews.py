@@ -3,7 +3,7 @@ import os
 import sys
 import random
 import torchtext
-from utils.dataset_utils import check, seperete_data, split_data, save_file
+from utils.dataset_utils import check, separate_data, split_data, save_file
 from torchtext.data.utils import get_tokenizer
 from torchtext.vocab import build_vocab_from_iterator
 
@@ -17,8 +17,7 @@ dir_path = "agnews/"
 
 
 # Allocate data to users
-def generate_agnews(dir_path=dir_path, num_clients=num_clients, num_labels=num_labels, niid=False, 
-                    real=True, partition=None):
+def generate_agnews(dir_path, num_clients, num_labels, niid=False, real=True, partition=None):
     if not os.path.exists(dir_path):
         os.makedirs(dir_path)
         
@@ -77,7 +76,7 @@ def generate_agnews(dir_path=dir_path, num_clients=num_clients, num_labels=num_l
     #     idx = label_list == i
     #     dataset.append(text_list[idx])
 
-    X, y, statistic = seperete_data((text_list, label_list), num_clients, num_labels, niid, real, partition)
+    X, y, statistic = separate_data((text_list, label_list), num_clients, num_labels, niid, real, partition)
     train_data, test_data = split_data(X, y)
     save_file(config_path, train_path, test_path, train_data, test_data, num_clients, num_labels, 
             statistic, niid, real, partition)
@@ -90,5 +89,4 @@ if __name__ == "__main__":
     real = True if sys.argv[2] == "realworld" else False
     partition = sys.argv[3] if sys.argv[3] != "-" else None
 
-    generate_agnews(dir_path=dir_path, num_clients=num_clients, num_labels=num_labels, niid=niid, 
-                    real=real, partition=partition)
+    generate_agnews(dir_path, num_clients, num_labels, niid, real, partition)
