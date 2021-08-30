@@ -601,7 +601,6 @@ Client 2         Samples of labels:  [(0, 75), (1, 107), (3, 130), (7, 291), (8,
 - **FedProx** — [Federated Optimization for Heterogeneous Networks](https://openreview.net/pdf?id=SkgwE5Ss3N) *ICLR 2020*
 - **FedFomo** — [Personalized Federated Learning with First Order Model Optimization](https://openreview.net/pdf?id=ehJqJQk9cw) *ICLR 2021*
 - **MOCHA** — [Federated multi-task learning](https://arxiv.org/abs/1705.10467) *NIPS 2017*
-- **FedPlayer** — [Federatedlearning with personalization layers](https://arxiv.org/abs/1912.00818)
 - **FedAMP & HeurFedAMP** — [Personalized Cross-Silo Federated Learning on Non-IID Data](https://www.aaai.org/AAAI21Papers/AAAI-5802.HuangY.pdf) *AAAI 2021*
 
 
