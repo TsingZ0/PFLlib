@@ -238,7 +238,7 @@ Client 2     Samples of labels:  [(0, 136), (1, 89), (2, 84), (3, 88), (4, 78), 
 </details>
 <br/>
 
-Output of `generate_mnist.py noniid -`
+Output of `generate_mnist.py noniid - -`
 ```
 Original number of samples of each label: [6903, 7877, 6990, 7141, 6824, 6313, 6876, 7293, 6825, 6958]
 
@@ -404,7 +404,7 @@ Client 2     Samples of labels:  [(0, 3903), (1, 746)]
 </details>
 <br/>
 
-The output of `generate_mnist.py noniid realworld`
+The output of `generate_mnist.py noniid realworld -`
 ```
 Original number of samples of each label: [6903, 7877, 6990, 7141, 6824, 6313, 6876, 7293, 6825, 6958]
 
