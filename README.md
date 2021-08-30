@@ -55,16 +55,18 @@ In **Non-IID** setting, three situations exist. The first one is the **extreme N
     python generate_agnews.py iid - - # for iid setting
     # python generate_agnews.py noniid - - # for extreme noniid setting
     # python generate_agnews.py noniid realworld - # for real-world noniid setting
+    # python generate_agnews.py noniid realworld noise # for feature skew noniid setting
     ```
-- Sogou_News
+- Sogou_News (remains to be tested)
     ```
     # If ConnectionError raises, please use the given downloaded file in './dataset'. 
     cd ./dataset
     python generate_sogounews.py iid - - # for iid setting
     # python generate_sogounews.py noniid - - # for extreme noniid setting
     # python generate_sogounews.py noniid realworld - # for real-world noniid setting
+    # python generate_sogounews.py noniid realworld noise # for feature skew noniid setting
     ```
-- Synthetic
+- Synthetic (outdated version)
     ```
     cd ./dataset
     python generate_synthetic.py iid # for iid setting
@@ -72,7 +74,7 @@ In **Non-IID** setting, three situations exist. The first one is the **extreme N
     ```
 
 ### Dataset generating examples
-The output of `generate_mnist.py iid -`
+The output of `generate_mnist.py iid - -`
 ```
 Original number of samples of each label: [6903, 7877, 6990, 7141, 6824, 6313, 6876, 7293, 6825, 6958]
 
@@ -238,7 +240,7 @@ Client 2     Samples of labels:  [(0, 136), (1, 89), (2, 84), (3, 88), (4, 78), 
 </details>
 <br/>
 
-Output of `generate_mnist.py noniid - -`
+The output of `generate_mnist.py noniid - -`
 ```
 Original number of samples of each label: [6903, 7877, 6990, 7141, 6824, 6313, 6876, 7293, 6825, 6958]
 
