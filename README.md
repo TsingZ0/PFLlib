@@ -1,11 +1,11 @@
 # Personalized federated learning simulation platform with Non-IID dataset
-The origin of the Non-IID phenomenon is the personalization of users, who generate the Non-IID data. With **Non-IID (Not Independent and Identically Distributed)** issue existing in the federated learning setting, a myriad of approaches have been proposed to crack this hard nut. In contrast, the personalized federated learning may take the advantage of the Non-IID data to learn the personalized model for each user. Thanks to [@Stonesjtu](https://github.com/Stonesjtu/pytorch_memlab/blob/d590c489236ee25d157ff60ecd18433e8f9acbe3/pytorch_memlab/mem_reporter.py#L185), this platform can also record the model size on GPU. 
+The origin of the Non-IID phenomenon is the personalization of users, who generate the Non-IID data. With **Non-IID (Not Independent and Identically Distributed)** issue existing in the federated learning setting, a myriad of approaches has been proposed to crack this hard nut. In contrast, the personalized federated learning may take the advantage of the Non-IID data to learn the personalized model for each user. Thanks to [@Stonesjtu](https://github.com/Stonesjtu/pytorch_memlab/blob/d590c489236ee25d157ff60ecd18433e8f9acbe3/pytorch_memlab/mem_reporter.py#L185), this platform can also record the GPU memory usage for the model. 
 
 ## Environments
 With the installed [conda](https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh), we can run this platform in a conda virtual environment called *fl_torch*. Note: due to the code updates, some modules are required to install based on the given `*.yml`. 
 ```
 # current version
-conda env create -f env.yml # for linux
+conda env create -f env.yml # for Linux
 
 # old version
 cd ./system
@@ -14,9 +14,9 @@ conda env create -f env_linux.yml # for linux
 ```
 
 ## Datasets (updating)
-Except for the **Synthetic** dataset (without update anymore), I currently using **six** famous datasets: **MNIST**, **Cifar10**, **Fashion-MNIST**, **Cifar10**, **AG_News** and **Sogou_News**, they can be easy split into **IID** and **Non-IID** version. Since some codes for generating dataset such as splitting are the same for all datasets, I move these codes into `./utils/dataset_utils.py`. Now it is easy to add other datasets into this FL platform. *If you need another data set, just write another code to download it and then using the utils.*
+Except for the **Synthetic** dataset (without update anymore), I currently using **six** famous datasets: **MNIST**, **Cifar10**, **Fashion-MNIST**, **Cifar10**, **AG_News** and **Sogou_News**, they can be easy split into **IID** and **Non-IID** version. Since some codes for generating datasets such as splitting are the same for all datasets, I move these codes into `./utils/dataset_utils.py`. Now it is easy to add other datasets to this FL platform. *If you need another data set, just write another code to download it and then using the utils.*
 
-In **Non-IID** setting, there are three situations exist. The first one is the **extreme Non-IID** setting, the second one is **real-world Non-IID** setting and the third one is **feature skew Non-IID**. In the **extreme Non-IID** setting, for example, the data on each client only contains the specific number of labels (maybe only two labels), though the data on all clients contains 10 labels such as MNIST dataset. In the **real-world Non-IID** setting, the number of labels for each client is randomly chosen. In the **feature skew Non-IID**, specific Gaussian noise is added to each clients according to their IDs. 
+In **Non-IID** setting, three situations exist. The first one is the **extreme Non-IID** setting, the second one is **real-world Non-IID** setting and the third one is **feature skew Non-IID**. In the **extreme Non-IID** setting, for example, the data on each client only contains the specific number of labels (maybe only two labels), though the data on all clients contains 10 labels such as MNIST dataset. In the **real-world Non-IID** setting, the number of labels for each client is randomly chosen. In the **feature skew Non-IID**, specific Gaussian noise is added to each client according to their IDs. 
 - MNIST
     ```
     cd ./dataset
@@ -72,163 +72,163 @@ In **Non-IID** setting, there are three situations exist. The first one is the *
     ```
 
 ### Dataset generating examples
-Output of `generate_mnist.py iid -`
+The output of `generate_mnist.py iid -`
 ```
 Original number of samples of each label: [6903, 7877, 6990, 7141, 6824, 6313, 6876, 7293, 6825, 6958]
 
-Client 0	 Size of data: 1064	 Labels:  [0. 1. 2. 3. 4. 5. 6. 7. 8. 9.]
-Client 0	 Samples of labels:  [(0, 101), (1, 128), (2, 136), (3, 123), (4, 79), (5, 85), (6, 107), (7, 127), (8, 74), (9, 104)]
+Client 0     Size of data: 1064  Labels:  [0. 1. 2. 3. 4. 5. 6. 7. 8. 9.]
+Client 0     Samples of labels:  [(0, 101), (1, 128), (2, 136), (3, 123), (4, 79), (5, 85), (6, 107), (7, 127), (8, 74), (9, 104)]
 --------------------------------------------------
-Client 1	 Size of data: 1023	 Labels:  [0. 1. 2. 3. 4. 5. 6. 7. 8. 9.]
-Client 1	 Samples of labels:  [(0, 76), (1, 132), (2, 107), (3, 79), (4, 94), (5, 110), (6, 90), (7, 110), (8, 92), (9, 133)]
+Client 1     Size of data: 1023  Labels:  [0. 1. 2. 3. 4. 5. 6. 7. 8. 9.]
+Client 1     Samples of labels:  [(0, 76), (1, 132), (2, 107), (3, 79), (4, 94), (5, 110), (6, 90), (7, 110), (8, 92), (9, 133)]
 --------------------------------------------------
-Client 2	 Size of data: 923	 Labels:  [0. 1. 2. 3. 4. 5. 6. 7. 8. 9.]
-Client 2	 Samples of labels:  [(0, 136), (1, 89), (2, 84), (3, 88), (4, 78), (5, 124), (6, 120), (7, 66), (8, 69), (9, 69)]
+Client 2     Size of data: 923   Labels:  [0. 1. 2. 3. 4. 5. 6. 7. 8. 9.]
+Client 2     Samples of labels:  [(0, 136), (1, 89), (2, 84), (3, 88), (4, 78), (5, 124), (6, 120), (7, 66), (8, 69), (9, 69)]
 --------------------------------------------------
 ```
 <details>
     <summary>Show more</summary>
 
-    Client 3	 Size of data: 906	 Labels:  [0. 1. 2. 3. 4. 5. 6. 7. 8. 9.]
-    Client 3	 Samples of labels:  [(0, 73), (1, 151), (2, 94), (3, 73), (4, 83), (5, 67), (6, 133), (7, 92), (8, 69), (9, 71)]
+    Client 3     Size of data: 906   Labels:  [0. 1. 2. 3. 4. 5. 6. 7. 8. 9.]
+    Client 3     Samples of labels:  [(0, 73), (1, 151), (2, 94), (3, 73), (4, 83), (5, 67), (6, 133), (7, 92), (8, 69), (9, 71)]
     --------------------------------------------------
-    Client 4	 Size of data: 1045	 Labels:  [0. 1. 2. 3. 4. 5. 6. 7. 8. 9.]
-    Client 4	 Samples of labels:  [(0, 69), (1, 71), (2, 100), (3, 130), (4, 90), (5, 120), (6, 116), (7, 142), (8, 106), (9, 101)]
+    Client 4     Size of data: 1045  Labels:  [0. 1. 2. 3. 4. 5. 6. 7. 8. 9.]
+    Client 4     Samples of labels:  [(0, 69), (1, 71), (2, 100), (3, 130), (4, 90), (5, 120), (6, 116), (7, 142), (8, 106), (9, 101)]
     --------------------------------------------------
-    Client 5	 Size of data: 1026	 Labels:  [0. 1. 2. 3. 4. 5. 6. 7. 8. 9.]
-    Client 5	 Samples of labels:  [(0, 128), (1, 90), (2, 71), (3, 135), (4, 71), (5, 88), (6, 91), (7, 139), (8, 116), (9, 97)]
+    Client 5     Size of data: 1026  Labels:  [0. 1. 2. 3. 4. 5. 6. 7. 8. 9.]
+    Client 5     Samples of labels:  [(0, 128), (1, 90), (2, 71), (3, 135), (4, 71), (5, 88), (6, 91), (7, 139), (8, 116), (9, 97)]
     --------------------------------------------------
-    Client 6	 Size of data: 1033	 Labels:  [0. 1. 2. 3. 4. 5. 6. 7. 8. 9.]
-    Client 6	 Samples of labels:  [(0, 80), (1, 89), (2, 109), (3, 117), (4, 117), (5, 80), (6, 107), (7, 122), (8, 121), (9, 91)]
+    Client 6     Size of data: 1033  Labels:  [0. 1. 2. 3. 4. 5. 6. 7. 8. 9.]
+    Client 6     Samples of labels:  [(0, 80), (1, 89), (2, 109), (3, 117), (4, 117), (5, 80), (6, 107), (7, 122), (8, 121), (9, 91)]
     --------------------------------------------------
-    Client 7	 Size of data: 1043	 Labels:  [0. 1. 2. 3. 4. 5. 6. 7. 8. 9.]
-    Client 7	 Samples of labels:  [(0, 65), (1, 86), (2, 132), (3, 133), (4, 111), (5, 110), (6, 65), (7, 106), (8, 120), (9, 115)]
+    Client 7     Size of data: 1043  Labels:  [0. 1. 2. 3. 4. 5. 6. 7. 8. 9.]
+    Client 7     Samples of labels:  [(0, 65), (1, 86), (2, 132), (3, 133), (4, 111), (5, 110), (6, 65), (7, 106), (8, 120), (9, 115)]
     --------------------------------------------------
-    Client 8	 Size of data: 1019	 Labels:  [0. 1. 2. 3. 4. 5. 6. 7. 8. 9.]
-    Client 8	 Samples of labels:  [(0, 135), (1, 73), (2, 121), (3, 100), (4, 124), (5, 118), (6, 90), (7, 90), (8, 74), (9, 94)]
+    Client 8     Size of data: 1019  Labels:  [0. 1. 2. 3. 4. 5. 6. 7. 8. 9.]
+    Client 8     Samples of labels:  [(0, 135), (1, 73), (2, 121), (3, 100), (4, 124), (5, 118), (6, 90), (7, 90), (8, 74), (9, 94)]
     --------------------------------------------------
-    Client 9	 Size of data: 938	 Labels:  [0. 1. 2. 3. 4. 5. 6. 7. 8. 9.]
-    Client 9	 Samples of labels:  [(0, 70), (1, 131), (2, 77), (3, 85), (4, 98), (5, 79), (6, 94), (7, 85), (8, 112), (9, 107)]
+    Client 9     Size of data: 938   Labels:  [0. 1. 2. 3. 4. 5. 6. 7. 8. 9.]
+    Client 9     Samples of labels:  [(0, 70), (1, 131), (2, 77), (3, 85), (4, 98), (5, 79), (6, 94), (7, 85), (8, 112), (9, 107)]
     --------------------------------------------------
-    Client 10	 Size of data: 964	 Labels:  [0. 1. 2. 3. 4. 5. 6. 7. 8. 9.]
-    Client 10	 Samples of labels:  [(0, 89), (1, 87), (2, 74), (3, 104), (4, 96), (5, 71), (6, 128), (7, 122), (8, 83), (9, 110)]
+    Client 10    Size of data: 964   Labels:  [0. 1. 2. 3. 4. 5. 6. 7. 8. 9.]
+    Client 10    Samples of labels:  [(0, 89), (1, 87), (2, 74), (3, 104), (4, 96), (5, 71), (6, 128), (7, 122), (8, 83), (9, 110)]
     --------------------------------------------------
-    Client 11	 Size of data: 955	 Labels:  [0. 1. 2. 3. 4. 5. 6. 7. 8. 9.]
-    Client 11	 Samples of labels:  [(0, 114), (1, 91), (2, 87), (3, 141), (4, 83), (5, 124), (6, 86), (7, 80), (8, 76), (9, 73)]
+    Client 11    Size of data: 955   Labels:  [0. 1. 2. 3. 4. 5. 6. 7. 8. 9.]
+    Client 11    Samples of labels:  [(0, 114), (1, 91), (2, 87), (3, 141), (4, 83), (5, 124), (6, 86), (7, 80), (8, 76), (9, 73)]
     --------------------------------------------------
-    Client 12	 Size of data: 1015	 Labels:  [0. 1. 2. 3. 4. 5. 6. 7. 8. 9.]
-    Client 12	 Samples of labels:  [(0, 84), (1, 101), (2, 71), (3, 113), (4, 131), (5, 78), (6, 116), (7, 101), (8, 89), (9, 131)]
+    Client 12    Size of data: 1015  Labels:  [0. 1. 2. 3. 4. 5. 6. 7. 8. 9.]
+    Client 12    Samples of labels:  [(0, 84), (1, 101), (2, 71), (3, 113), (4, 131), (5, 78), (6, 116), (7, 101), (8, 89), (9, 131)]
     --------------------------------------------------
-    Client 13	 Size of data: 856	 Labels:  [0. 1. 2. 3. 4. 5. 6. 7. 8. 9.]
-    Client 13	 Samples of labels:  [(0, 82), (1, 121), (2, 88), (3, 111), (4, 88), (5, 77), (6, 67), (7, 75), (8, 80), (9, 67)]
+    Client 13    Size of data: 856   Labels:  [0. 1. 2. 3. 4. 5. 6. 7. 8. 9.]
+    Client 13    Samples of labels:  [(0, 82), (1, 121), (2, 88), (3, 111), (4, 88), (5, 77), (6, 67), (7, 75), (8, 80), (9, 67)]
     --------------------------------------------------
-    Client 14	 Size of data: 1101	 Labels:  [0. 1. 2. 3. 4. 5. 6. 7. 8. 9.]
-    Client 14	 Samples of labels:  [(0, 75), (1, 147), (2, 138), (3, 141), (4, 102), (5, 79), (6, 134), (7, 86), (8, 68), (9, 131)]
+    Client 14    Size of data: 1101  Labels:  [0. 1. 2. 3. 4. 5. 6. 7. 8. 9.]
+    Client 14    Samples of labels:  [(0, 75), (1, 147), (2, 138), (3, 141), (4, 102), (5, 79), (6, 134), (7, 86), (8, 68), (9, 131)]
     --------------------------------------------------
-    Client 15	 Size of data: 937	 Labels:  [0. 1. 2. 3. 4. 5. 6. 7. 8. 9.]
-    Client 15	 Samples of labels:  [(0, 92), (1, 102), (2, 84), (3, 104), (4, 111), (5, 89), (6, 76), (7, 70), (8, 91), (9, 118)]
+    Client 15    Size of data: 937   Labels:  [0. 1. 2. 3. 4. 5. 6. 7. 8. 9.]
+    Client 15    Samples of labels:  [(0, 92), (1, 102), (2, 84), (3, 104), (4, 111), (5, 89), (6, 76), (7, 70), (8, 91), (9, 118)]
     --------------------------------------------------
-    Client 16	 Size of data: 978	 Labels:  [0. 1. 2. 3. 4. 5. 6. 7. 8. 9.]
-    Client 16	 Samples of labels:  [(0, 93), (1, 72), (2, 96), (3, 109), (4, 69), (5, 117), (6, 103), (7, 78), (8, 114), (9, 127)]
+    Client 16    Size of data: 978   Labels:  [0. 1. 2. 3. 4. 5. 6. 7. 8. 9.]
+    Client 16    Samples of labels:  [(0, 93), (1, 72), (2, 96), (3, 109), (4, 69), (5, 117), (6, 103), (7, 78), (8, 114), (9, 127)]
     --------------------------------------------------
-    Client 17	 Size of data: 1016	 Labels:  [0. 1. 2. 3. 4. 5. 6. 7. 8. 9.]
-    Client 17	 Samples of labels:  [(0, 78), (1, 96), (2, 76), (3, 80), (4, 127), (5, 84), (6, 112), (7, 139), (8, 132), (9, 92)]
+    Client 17    Size of data: 1016  Labels:  [0. 1. 2. 3. 4. 5. 6. 7. 8. 9.]
+    Client 17    Samples of labels:  [(0, 78), (1, 96), (2, 76), (3, 80), (4, 127), (5, 84), (6, 112), (7, 139), (8, 132), (9, 92)]
     --------------------------------------------------
-    Client 18	 Size of data: 1042	 Labels:  [0. 1. 2. 3. 4. 5. 6. 7. 8. 9.]
-    Client 18	 Samples of labels:  [(0, 114), (1, 98), (2, 129), (3, 92), (4, 96), (5, 121), (6, 125), (7, 99), (8, 67), (9, 101)]
+    Client 18    Size of data: 1042  Labels:  [0. 1. 2. 3. 4. 5. 6. 7. 8. 9.]
+    Client 18    Samples of labels:  [(0, 114), (1, 98), (2, 129), (3, 92), (4, 96), (5, 121), (6, 125), (7, 99), (8, 67), (9, 101)]
     --------------------------------------------------
-    Client 19	 Size of data: 1178	 Labels:  [0. 1. 2. 3. 4. 5. 6. 7. 8. 9.]
-    Client 19	 Samples of labels:  [(0, 132), (1, 74), (2, 124), (3, 109), (4, 106), (5, 122), (6, 134), (7, 127), (8, 122), (9, 128)]
+    Client 19    Size of data: 1178  Labels:  [0. 1. 2. 3. 4. 5. 6. 7. 8. 9.]
+    Client 19    Samples of labels:  [(0, 132), (1, 74), (2, 124), (3, 109), (4, 106), (5, 122), (6, 134), (7, 127), (8, 122), (9, 128)]
     --------------------------------------------------
-    Client 20	 Size of data: 948	 Labels:  [0. 1. 2. 3. 4. 5. 6. 7. 8. 9.]
-    Client 20	 Samples of labels:  [(0, 77), (1, 87), (2, 88), (3, 131), (4, 130), (5, 85), (6, 77), (7, 96), (8, 76), (9, 101)]
+    Client 20    Size of data: 948   Labels:  [0. 1. 2. 3. 4. 5. 6. 7. 8. 9.]
+    Client 20    Samples of labels:  [(0, 77), (1, 87), (2, 88), (3, 131), (4, 130), (5, 85), (6, 77), (7, 96), (8, 76), (9, 101)]
     --------------------------------------------------
-    Client 21	 Size of data: 917	 Labels:  [0. 1. 2. 3. 4. 5. 6. 7. 8. 9.]
-    Client 21	 Samples of labels:  [(0, 73), (1, 79), (2, 66), (3, 130), (4, 94), (5, 114), (6, 100), (7, 113), (8, 66), (9, 82)]
+    Client 21    Size of data: 917   Labels:  [0. 1. 2. 3. 4. 5. 6. 7. 8. 9.]
+    Client 21    Samples of labels:  [(0, 73), (1, 79), (2, 66), (3, 130), (4, 94), (5, 114), (6, 100), (7, 113), (8, 66), (9, 82)]
     --------------------------------------------------
-    Client 22	 Size of data: 1007	 Labels:  [0. 1. 2. 3. 4. 5. 6. 7. 8. 9.]
-    Client 22	 Samples of labels:  [(0, 71), (1, 151), (2, 74), (3, 110), (4, 81), (5, 110), (6, 87), (7, 64), (8, 125), (9, 134)]
+    Client 22    Size of data: 1007  Labels:  [0. 1. 2. 3. 4. 5. 6. 7. 8. 9.]
+    Client 22    Samples of labels:  [(0, 71), (1, 151), (2, 74), (3, 110), (4, 81), (5, 110), (6, 87), (7, 64), (8, 125), (9, 134)]
     --------------------------------------------------
-    Client 23	 Size of data: 990	 Labels:  [0. 1. 2. 3. 4. 5. 6. 7. 8. 9.]
-    Client 23	 Samples of labels:  [(0, 127), (1, 89), (2, 118), (3, 64), (4, 132), (5, 93), (6, 86), (7, 86), (8, 79), (9, 116)]
+    Client 23    Size of data: 990   Labels:  [0. 1. 2. 3. 4. 5. 6. 7. 8. 9.]
+    Client 23    Samples of labels:  [(0, 127), (1, 89), (2, 118), (3, 64), (4, 132), (5, 93), (6, 86), (7, 86), (8, 79), (9, 116)]
     --------------------------------------------------
-    Client 24	 Size of data: 1137	 Labels:  [0. 1. 2. 3. 4. 5. 6. 7. 8. 9.]
-    Client 24	 Samples of labels:  [(0, 125), (1, 135), (2, 134), (3, 93), (4, 128), (5, 108), (6, 130), (7, 134), (8, 76), (9, 74)]
+    Client 24    Size of data: 1137  Labels:  [0. 1. 2. 3. 4. 5. 6. 7. 8. 9.]
+    Client 24    Samples of labels:  [(0, 125), (1, 135), (2, 134), (3, 93), (4, 128), (5, 108), (6, 130), (7, 134), (8, 76), (9, 74)]
     --------------------------------------------------
-    Client 25	 Size of data: 1119	 Labels:  [0. 1. 2. 3. 4. 5. 6. 7. 8. 9.]
-    Client 25	 Samples of labels:  [(0, 86), (1, 156), (2, 130), (3, 127), (4, 124), (5, 101), (6, 117), (7, 100), (8, 82), (9, 96)]
+    Client 25    Size of data: 1119  Labels:  [0. 1. 2. 3. 4. 5. 6. 7. 8. 9.]
+    Client 25    Samples of labels:  [(0, 86), (1, 156), (2, 130), (3, 127), (4, 124), (5, 101), (6, 117), (7, 100), (8, 82), (9, 96)]
     --------------------------------------------------
-    Client 26	 Size of data: 1059	 Labels:  [0. 1. 2. 3. 4. 5. 6. 7. 8. 9.]
-    Client 26	 Samples of labels:  [(0, 121), (1, 138), (2, 135), (3, 139), (4, 81), (5, 86), (6, 73), (7, 82), (8, 94), (9, 110)]
+    Client 26    Size of data: 1059  Labels:  [0. 1. 2. 3. 4. 5. 6. 7. 8. 9.]
+    Client 26    Samples of labels:  [(0, 121), (1, 138), (2, 135), (3, 139), (4, 81), (5, 86), (6, 73), (7, 82), (8, 94), (9, 110)]
     --------------------------------------------------
-    Client 27	 Size of data: 1042	 Labels:  [0. 1. 2. 3. 4. 5. 6. 7. 8. 9.]
-    Client 27	 Samples of labels:  [(0, 65), (1, 126), (2, 112), (3, 99), (4, 103), (5, 91), (6, 105), (7, 91), (8, 123), (9, 127)]
+    Client 27    Size of data: 1042  Labels:  [0. 1. 2. 3. 4. 5. 6. 7. 8. 9.]
+    Client 27    Samples of labels:  [(0, 65), (1, 126), (2, 112), (3, 99), (4, 103), (5, 91), (6, 105), (7, 91), (8, 123), (9, 127)]
     --------------------------------------------------
-    Client 28	 Size of data: 990	 Labels:  [0. 1. 2. 3. 4. 5. 6. 7. 8. 9.]
-    Client 28	 Samples of labels:  [(0, 64), (1, 110), (2, 118), (3, 117), (4, 99), (5, 118), (6, 121), (7, 92), (8, 69), (9, 82)]
+    Client 28    Size of data: 990   Labels:  [0. 1. 2. 3. 4. 5. 6. 7. 8. 9.]
+    Client 28    Samples of labels:  [(0, 64), (1, 110), (2, 118), (3, 117), (4, 99), (5, 118), (6, 121), (7, 92), (8, 69), (9, 82)]
     --------------------------------------------------
-    Client 29	 Size of data: 935	 Labels:  [0. 1. 2. 3. 4. 5. 6. 7. 8. 9.]
-    Client 29	 Samples of labels:  [(0, 124), (1, 96), (2, 79), (3, 97), (4, 92), (5, 76), (6, 75), (7, 116), (8, 80), (9, 100)]
+    Client 29    Size of data: 935   Labels:  [0. 1. 2. 3. 4. 5. 6. 7. 8. 9.]
+    Client 29    Samples of labels:  [(0, 124), (1, 96), (2, 79), (3, 97), (4, 92), (5, 76), (6, 75), (7, 116), (8, 80), (9, 100)]
     --------------------------------------------------
-    Client 30	 Size of data: 952	 Labels:  [0. 1. 2. 3. 4. 5. 6. 7. 8. 9.]
-    Client 30	 Samples of labels:  [(0, 72), (1, 152), (2, 69), (3, 66), (4, 86), (5, 76), (6, 100), (7, 114), (8, 124), (9, 93)]
+    Client 30    Size of data: 952   Labels:  [0. 1. 2. 3. 4. 5. 6. 7. 8. 9.]
+    Client 30    Samples of labels:  [(0, 72), (1, 152), (2, 69), (3, 66), (4, 86), (5, 76), (6, 100), (7, 114), (8, 124), (9, 93)]
     --------------------------------------------------
-    Client 31	 Size of data: 979	 Labels:  [0. 1. 2. 3. 4. 5. 6. 7. 8. 9.]
-    Client 31	 Samples of labels:  [(0, 77), (1, 87), (2, 81), (3, 112), (4, 102), (5, 120), (6, 80), (7, 110), (8, 107), (9, 103)]
+    Client 31    Size of data: 979   Labels:  [0. 1. 2. 3. 4. 5. 6. 7. 8. 9.]
+    Client 31    Samples of labels:  [(0, 77), (1, 87), (2, 81), (3, 112), (4, 102), (5, 120), (6, 80), (7, 110), (8, 107), (9, 103)]
     --------------------------------------------------
-    Client 32	 Size of data: 1034	 Labels:  [0. 1. 2. 3. 4. 5. 6. 7. 8. 9.]
-    Client 32	 Samples of labels:  [(0, 111), (1, 119), (2, 106), (3, 118), (4, 105), (5, 123), (6, 94), (7, 71), (8, 95), (9, 92)]
+    Client 32    Size of data: 1034  Labels:  [0. 1. 2. 3. 4. 5. 6. 7. 8. 9.]
+    Client 32    Samples of labels:  [(0, 111), (1, 119), (2, 106), (3, 118), (4, 105), (5, 123), (6, 94), (7, 71), (8, 95), (9, 92)]
     --------------------------------------------------
-    Client 33	 Size of data: 1096	 Labels:  [0. 1. 2. 3. 4. 5. 6. 7. 8. 9.]
-    Client 33	 Samples of labels:  [(0, 136), (1, 129), (2, 84), (3, 96), (4, 134), (5, 90), (6, 121), (7, 80), (8, 108), (9, 118)]
+    Client 33    Size of data: 1096  Labels:  [0. 1. 2. 3. 4. 5. 6. 7. 8. 9.]
+    Client 33    Samples of labels:  [(0, 136), (1, 129), (2, 84), (3, 96), (4, 134), (5, 90), (6, 121), (7, 80), (8, 108), (9, 118)]
     --------------------------------------------------
-    Client 34	 Size of data: 977	 Labels:  [0. 1. 2. 3. 4. 5. 6. 7. 8. 9.]
-    Client 34	 Samples of labels:  [(0, 94), (1, 141), (2, 112), (3, 92), (4, 89), (5, 76), (6, 99), (7, 93), (8, 88), (9, 93)]
+    Client 34    Size of data: 977   Labels:  [0. 1. 2. 3. 4. 5. 6. 7. 8. 9.]
+    Client 34    Samples of labels:  [(0, 94), (1, 141), (2, 112), (3, 92), (4, 89), (5, 76), (6, 99), (7, 93), (8, 88), (9, 93)]
     --------------------------------------------------
-    Client 35	 Size of data: 1015	 Labels:  [0. 1. 2. 3. 4. 5. 6. 7. 8. 9.]
-    Client 35	 Samples of labels:  [(0, 135), (1, 67), (2, 86), (3, 119), (4, 112), (5, 71), (6, 105), (7, 75), (8, 126), (9, 119)]
+    Client 35    Size of data: 1015  Labels:  [0. 1. 2. 3. 4. 5. 6. 7. 8. 9.]
+    Client 35    Samples of labels:  [(0, 135), (1, 67), (2, 86), (3, 119), (4, 112), (5, 71), (6, 105), (7, 75), (8, 126), (9, 119)]
     --------------------------------------------------
-    Client 36	 Size of data: 871	 Labels:  [0. 1. 2. 3. 4. 5. 6. 7. 8. 9.]
-    Client 36	 Samples of labels:  [(0, 67), (1, 64), (2, 77), (3, 95), (4, 114), (5, 87), (6, 66), (7, 125), (8, 85), (9, 91)]
+    Client 36    Size of data: 871   Labels:  [0. 1. 2. 3. 4. 5. 6. 7. 8. 9.]
+    Client 36    Samples of labels:  [(0, 67), (1, 64), (2, 77), (3, 95), (4, 114), (5, 87), (6, 66), (7, 125), (8, 85), (9, 91)]
     --------------------------------------------------
-    Client 37	 Size of data: 1098	 Labels:  [0. 1. 2. 3. 4. 5. 6. 7. 8. 9.]
-    Client 37	 Samples of labels:  [(0, 134), (1, 141), (2, 117), (3, 92), (4, 126), (5, 103), (6, 100), (7, 78), (8, 83), (9, 124)]
+    Client 37    Size of data: 1098  Labels:  [0. 1. 2. 3. 4. 5. 6. 7. 8. 9.]
+    Client 37    Samples of labels:  [(0, 134), (1, 141), (2, 117), (3, 92), (4, 126), (5, 103), (6, 100), (7, 78), (8, 83), (9, 124)]
     --------------------------------------------------
-    Client 38	 Size of data: 977	 Labels:  [0. 1. 2. 3. 4. 5. 6. 7. 8. 9.]
-    Client 38	 Samples of labels:  [(0, 85), (1, 70), (2, 74), (3, 138), (4, 108), (5, 125), (6, 110), (7, 94), (8, 97), (9, 76)]
+    Client 38    Size of data: 977   Labels:  [0. 1. 2. 3. 4. 5. 6. 7. 8. 9.]
+    Client 38    Samples of labels:  [(0, 85), (1, 70), (2, 74), (3, 138), (4, 108), (5, 125), (6, 110), (7, 94), (8, 97), (9, 76)]
     --------------------------------------------------
-    Client 39	 Size of data: 957	 Labels:  [0. 1. 2. 3. 4. 5. 6. 7. 8. 9.]
-    Client 39	 Samples of labels:  [(0, 113), (1, 116), (2, 119), (3, 72), (4, 118), (5, 107), (6, 91), (7, 72), (8, 68), (9, 81)]
+    Client 39    Size of data: 957   Labels:  [0. 1. 2. 3. 4. 5. 6. 7. 8. 9.]
+    Client 39    Samples of labels:  [(0, 113), (1, 116), (2, 119), (3, 72), (4, 118), (5, 107), (6, 91), (7, 72), (8, 68), (9, 81)]
     --------------------------------------------------
-    Client 40	 Size of data: 1109	 Labels:  [0. 1. 2. 3. 4. 5. 6. 7. 8. 9.]
-    Client 40	 Samples of labels:  [(0, 121), (1, 149), (2, 125), (3, 96), (4, 64), (5, 76), (6, 136), (7, 104), (8, 103), (9, 135)]
+    Client 40    Size of data: 1109  Labels:  [0. 1. 2. 3. 4. 5. 6. 7. 8. 9.]
+    Client 40    Samples of labels:  [(0, 121), (1, 149), (2, 125), (3, 96), (4, 64), (5, 76), (6, 136), (7, 104), (8, 103), (9, 135)]
     --------------------------------------------------
-    Client 41	 Size of data: 993	 Labels:  [0. 1. 2. 3. 4. 5. 6. 7. 8. 9.]
-    Client 41	 Samples of labels:  [(0, 67), (1, 134), (2, 120), (3, 72), (4, 80), (5, 114), (6, 92), (7, 112), (8, 131), (9, 71)]
+    Client 41    Size of data: 993   Labels:  [0. 1. 2. 3. 4. 5. 6. 7. 8. 9.]
+    Client 41    Samples of labels:  [(0, 67), (1, 134), (2, 120), (3, 72), (4, 80), (5, 114), (6, 92), (7, 112), (8, 131), (9, 71)]
     --------------------------------------------------
-    Client 42	 Size of data: 987	 Labels:  [0. 1. 2. 3. 4. 5. 6. 7. 8. 9.]
-    Client 42	 Samples of labels:  [(0, 132), (1, 66), (2, 85), (3, 141), (4, 83), (5, 102), (6, 66), (7, 94), (8, 98), (9, 120)]
+    Client 42    Size of data: 987   Labels:  [0. 1. 2. 3. 4. 5. 6. 7. 8. 9.]
+    Client 42    Samples of labels:  [(0, 132), (1, 66), (2, 85), (3, 141), (4, 83), (5, 102), (6, 66), (7, 94), (8, 98), (9, 120)]
     --------------------------------------------------
-    Client 43	 Size of data: 972	 Labels:  [0. 1. 2. 3. 4. 5. 6. 7. 8. 9.]
-    Client 43	 Samples of labels:  [(0, 88), (1, 140), (2, 89), (3, 114), (4, 73), (5, 91), (6, 77), (7, 87), (8, 98), (9, 115)]
+    Client 43    Size of data: 972   Labels:  [0. 1. 2. 3. 4. 5. 6. 7. 8. 9.]
+    Client 43    Samples of labels:  [(0, 88), (1, 140), (2, 89), (3, 114), (4, 73), (5, 91), (6, 77), (7, 87), (8, 98), (9, 115)]
     --------------------------------------------------
-    Client 44	 Size of data: 1109	 Labels:  [0. 1. 2. 3. 4. 5. 6. 7. 8. 9.]
-    Client 44	 Samples of labels:  [(0, 107), (1, 155), (2, 78), (3, 105), (4, 115), (5, 112), (6, 105), (7, 130), (8, 106), (9, 96)]
+    Client 44    Size of data: 1109  Labels:  [0. 1. 2. 3. 4. 5. 6. 7. 8. 9.]
+    Client 44    Samples of labels:  [(0, 107), (1, 155), (2, 78), (3, 105), (4, 115), (5, 112), (6, 105), (7, 130), (8, 106), (9, 96)]
     --------------------------------------------------
-    Client 45	 Size of data: 1035	 Labels:  [0. 1. 2. 3. 4. 5. 6. 7. 8. 9.]
-    Client 45	 Samples of labels:  [(0, 90), (1, 85), (2, 77), (3, 128), (4, 74), (5, 125), (6, 100), (7, 128), (8, 102), (9, 126)]
+    Client 45    Size of data: 1035  Labels:  [0. 1. 2. 3. 4. 5. 6. 7. 8. 9.]
+    Client 45    Samples of labels:  [(0, 90), (1, 85), (2, 77), (3, 128), (4, 74), (5, 125), (6, 100), (7, 128), (8, 102), (9, 126)]
     --------------------------------------------------
-    Client 46	 Size of data: 1058	 Labels:  [0. 1. 2. 3. 4. 5. 6. 7. 8. 9.]
-    Client 46	 Samples of labels:  [(0, 116), (1, 139), (2, 107), (3, 88), (4, 132), (5, 69), (6, 104), (7, 76), (8, 112), (9, 115)]
+    Client 46    Size of data: 1058  Labels:  [0. 1. 2. 3. 4. 5. 6. 7. 8. 9.]
+    Client 46    Samples of labels:  [(0, 116), (1, 139), (2, 107), (3, 88), (4, 132), (5, 69), (6, 104), (7, 76), (8, 112), (9, 115)]
     --------------------------------------------------
-    Client 47	 Size of data: 841	 Labels:  [0. 1. 2. 3. 4. 5. 6. 7. 8. 9.]
-    Client 47	 Samples of labels:  [(0, 105), (1, 71), (2, 70), (3, 84), (4, 87), (5, 98), (6, 82), (7, 81), (8, 69), (9, 94)]
+    Client 47    Size of data: 841   Labels:  [0. 1. 2. 3. 4. 5. 6. 7. 8. 9.]
+    Client 47    Samples of labels:  [(0, 105), (1, 71), (2, 70), (3, 84), (4, 87), (5, 98), (6, 82), (7, 81), (8, 69), (9, 94)]
     --------------------------------------------------
-    Client 48	 Size of data: 980	 Labels:  [0. 1. 2. 3. 4. 5. 6. 7. 8. 9.]
-    Client 48	 Samples of labels:  [(0, 79), (1, 141), (2, 120), (3, 108), (4, 78), (5, 97), (6, 102), (7, 97), (8, 72), (9, 86)]
+    Client 48    Size of data: 980   Labels:  [0. 1. 2. 3. 4. 5. 6. 7. 8. 9.]
+    Client 48    Samples of labels:  [(0, 79), (1, 141), (2, 120), (3, 108), (4, 78), (5, 97), (6, 102), (7, 97), (8, 72), (9, 86)]
     --------------------------------------------------
-    Client 49	 Size of data: 20754	 Labels:  [0. 1. 2. 3. 4. 5. 6. 7. 8. 9.]
-    Client 49	 Samples of labels:  [(0, 2155), (1, 2515), (2, 2142), (3, 1931), (4, 1926), (5, 1526), (6, 1981), (7, 2442), (8, 2208), (9, 1928)]
+    Client 49    Size of data: 20754     Labels:  [0. 1. 2. 3. 4. 5. 6. 7. 8. 9.]
+    Client 49    Samples of labels:  [(0, 2155), (1, 2515), (2, 2142), (3, 1931), (4, 1926), (5, 1526), (6, 1981), (7, 2442), (8, 2208), (9, 1928)]
     --------------------------------------------------
     Total number of samples: 70000
     The number of train samples: [798, 767, 692, 679, 783, 769, 774, 782, 764, 703, 723, 716, 761, 642, 825, 702, 733, 762, 781, 883, 711, 687, 755, 742, 852, 839, 794, 781, 742, 701, 714, 734, 775, 822, 732, 761, 653, 823, 732, 717, 831, 744, 740, 729, 831, 776, 793, 630, 735, 15565]
@@ -242,159 +242,159 @@ Output of `generate_mnist.py noniid -`
 ```
 Original number of samples of each label: [6903, 7877, 6990, 7141, 6824, 6313, 6876, 7293, 6825, 6958]
 
-Client 0	 Size of data: 799	 Labels:  [0. 1.]
-Client 0	 Samples of labels:  [(0, 141), (1, 658)]
+Client 0     Size of data: 799   Labels:  [0. 1.]
+Client 0     Samples of labels:  [(0, 141), (1, 658)]
 --------------------------------------------------
-Client 1	 Size of data: 687	 Labels:  [0. 1.]
-Client 1	 Samples of labels:  [(0, 106), (1, 581)]
+Client 1     Size of data: 687   Labels:  [0. 1.]
+Client 1     Samples of labels:  [(0, 106), (1, 581)]
 --------------------------------------------------
-Client 2	 Size of data: 4649	 Labels:  [0. 1.]
-Client 2	 Samples of labels:  [(0, 3903), (1, 746)]
+Client 2     Size of data: 4649  Labels:  [0. 1.]
+Client 2     Samples of labels:  [(0, 3903), (1, 746)]
 --------------------------------------------------
 ```
 <details>
     <summary>Show more</summary>
 
-    Client 3	 Size of data: 853	 Labels:  [0. 1.]
-    Client 3	 Samples of labels:  [(0, 213), (1, 640)]
+    Client 3     Size of data: 853   Labels:  [0. 1.]
+    Client 3     Samples of labels:  [(0, 213), (1, 640)]
     --------------------------------------------------
-    Client 4	 Size of data: 826	 Labels:  [0. 1.]
-    Client 4	 Samples of labels:  [(0, 350), (1, 476)]
+    Client 4     Size of data: 826   Labels:  [0. 1.]
+    Client 4     Samples of labels:  [(0, 350), (1, 476)]
     --------------------------------------------------
-    Client 5	 Size of data: 1133	 Labels:  [0. 1.]
-    Client 5	 Samples of labels:  [(0, 577), (1, 556)]
+    Client 5     Size of data: 1133  Labels:  [0. 1.]
+    Client 5     Samples of labels:  [(0, 577), (1, 556)]
     --------------------------------------------------
-    Client 6	 Size of data: 752	 Labels:  [0. 1.]
-    Client 6	 Samples of labels:  [(0, 459), (1, 293)]
+    Client 6     Size of data: 752   Labels:  [0. 1.]
+    Client 6     Samples of labels:  [(0, 459), (1, 293)]
     --------------------------------------------------
-    Client 7	 Size of data: 523	 Labels:  [0. 1.]
-    Client 7	 Samples of labels:  [(0, 304), (1, 219)]
+    Client 7     Size of data: 523   Labels:  [0. 1.]
+    Client 7     Samples of labels:  [(0, 304), (1, 219)]
     --------------------------------------------------
-    Client 8	 Size of data: 362	 Labels:  [0. 1.]
-    Client 8	 Samples of labels:  [(0, 198), (1, 164)]
+    Client 8     Size of data: 362   Labels:  [0. 1.]
+    Client 8     Samples of labels:  [(0, 198), (1, 164)]
     --------------------------------------------------
-    Client 9	 Size of data: 4196	 Labels:  [0. 1.]
-    Client 9	 Samples of labels:  [(0, 652), (1, 3544)]
+    Client 9     Size of data: 4196  Labels:  [0. 1.]
+    Client 9     Samples of labels:  [(0, 652), (1, 3544)]
     --------------------------------------------------
-    Client 10	 Size of data: 542	 Labels:  [2. 3.]
-    Client 10	 Samples of labels:  [(2, 456), (3, 86)]
+    Client 10    Size of data: 542   Labels:  [2. 3.]
+    Client 10    Samples of labels:  [(2, 456), (3, 86)]
     --------------------------------------------------
-    Client 11	 Size of data: 275	 Labels:  [2. 3.]
-    Client 11	 Samples of labels:  [(2, 140), (3, 135)]
+    Client 11    Size of data: 275   Labels:  [2. 3.]
+    Client 11    Samples of labels:  [(2, 140), (3, 135)]
     --------------------------------------------------
-    Client 12	 Size of data: 4615	 Labels:  [2. 3.]
-    Client 12	 Samples of labels:  [(2, 500), (3, 4115)]
+    Client 12    Size of data: 4615  Labels:  [2. 3.]
+    Client 12    Samples of labels:  [(2, 500), (3, 4115)]
     --------------------------------------------------
-    Client 13	 Size of data: 1322	 Labels:  [2. 3.]
-    Client 13	 Samples of labels:  [(2, 630), (3, 692)]
+    Client 13    Size of data: 1322  Labels:  [2. 3.]
+    Client 13    Samples of labels:  [(2, 630), (3, 692)]
     --------------------------------------------------
-    Client 14	 Size of data: 930	 Labels:  [2. 3.]
-    Client 14	 Samples of labels:  [(2, 523), (3, 407)]
+    Client 14    Size of data: 930   Labels:  [2. 3.]
+    Client 14    Samples of labels:  [(2, 523), (3, 407)]
     --------------------------------------------------
-    Client 15	 Size of data: 701	 Labels:  [2. 3.]
-    Client 15	 Samples of labels:  [(2, 333), (3, 368)]
+    Client 15    Size of data: 701   Labels:  [2. 3.]
+    Client 15    Samples of labels:  [(2, 333), (3, 368)]
     --------------------------------------------------
-    Client 16	 Size of data: 1062	 Labels:  [2. 3.]
-    Client 16	 Samples of labels:  [(2, 525), (3, 537)]
+    Client 16    Size of data: 1062  Labels:  [2. 3.]
+    Client 16    Samples of labels:  [(2, 525), (3, 537)]
     --------------------------------------------------
-    Client 17	 Size of data: 1134	 Labels:  [2. 3.]
-    Client 17	 Samples of labels:  [(2, 696), (3, 438)]
+    Client 17    Size of data: 1134  Labels:  [2. 3.]
+    Client 17    Samples of labels:  [(2, 696), (3, 438)]
     --------------------------------------------------
-    Client 18	 Size of data: 707	 Labels:  [2. 3.]
-    Client 18	 Samples of labels:  [(2, 611), (3, 96)]
+    Client 18    Size of data: 707   Labels:  [2. 3.]
+    Client 18    Samples of labels:  [(2, 611), (3, 96)]
     --------------------------------------------------
-    Client 19	 Size of data: 2843	 Labels:  [2. 3.]
-    Client 19	 Samples of labels:  [(2, 2576), (3, 267)]
+    Client 19    Size of data: 2843  Labels:  [2. 3.]
+    Client 19    Samples of labels:  [(2, 2576), (3, 267)]
     --------------------------------------------------
-    Client 20	 Size of data: 880	 Labels:  [4. 5.]
-    Client 20	 Samples of labels:  [(4, 347), (5, 533)]
+    Client 20    Size of data: 880   Labels:  [4. 5.]
+    Client 20    Samples of labels:  [(4, 347), (5, 533)]
     --------------------------------------------------
-    Client 21	 Size of data: 878	 Labels:  [4. 5.]
-    Client 21	 Samples of labels:  [(4, 663), (5, 215)]
+    Client 21    Size of data: 878   Labels:  [4. 5.]
+    Client 21    Samples of labels:  [(4, 663), (5, 215)]
     --------------------------------------------------
-    Client 22	 Size of data: 3938	 Labels:  [4. 5.]
-    Client 22	 Samples of labels:  [(4, 3553), (5, 385)]
+    Client 22    Size of data: 3938  Labels:  [4. 5.]
+    Client 22    Samples of labels:  [(4, 3553), (5, 385)]
     --------------------------------------------------
-    Client 23	 Size of data: 1009	 Labels:  [4. 5.]
-    Client 23	 Samples of labels:  [(4, 381), (5, 628)]
+    Client 23    Size of data: 1009  Labels:  [4. 5.]
+    Client 23    Samples of labels:  [(4, 381), (5, 628)]
     --------------------------------------------------
-    Client 24	 Size of data: 748	 Labels:  [4. 5.]
-    Client 24	 Samples of labels:  [(4, 223), (5, 525)]
+    Client 24    Size of data: 748   Labels:  [4. 5.]
+    Client 24    Samples of labels:  [(4, 223), (5, 525)]
     --------------------------------------------------
-    Client 25	 Size of data: 2630	 Labels:  [4. 5.]
-    Client 25	 Samples of labels:  [(4, 449), (5, 2181)]
+    Client 25    Size of data: 2630  Labels:  [4. 5.]
+    Client 25    Samples of labels:  [(4, 449), (5, 2181)]
     --------------------------------------------------
-    Client 26	 Size of data: 627	 Labels:  [4. 5.]
-    Client 26	 Samples of labels:  [(4, 194), (5, 433)]
+    Client 26    Size of data: 627   Labels:  [4. 5.]
+    Client 26    Samples of labels:  [(4, 194), (5, 433)]
     --------------------------------------------------
-    Client 27	 Size of data: 934	 Labels:  [4. 5.]
-    Client 27	 Samples of labels:  [(4, 356), (5, 578)]
+    Client 27    Size of data: 934   Labels:  [4. 5.]
+    Client 27    Samples of labels:  [(4, 356), (5, 578)]
     --------------------------------------------------
-    Client 28	 Size of data: 551	 Labels:  [4. 5.]
-    Client 28	 Samples of labels:  [(4, 234), (5, 317)]
+    Client 28    Size of data: 551   Labels:  [4. 5.]
+    Client 28    Samples of labels:  [(4, 234), (5, 317)]
     --------------------------------------------------
-    Client 29	 Size of data: 942	 Labels:  [4. 5.]
-    Client 29	 Samples of labels:  [(4, 424), (5, 518)]
+    Client 29    Size of data: 942   Labels:  [4. 5.]
+    Client 29    Samples of labels:  [(4, 424), (5, 518)]
     --------------------------------------------------
-    Client 30	 Size of data: 781	 Labels:  [6. 7.]
-    Client 30	 Samples of labels:  [(6, 220), (7, 561)]
+    Client 30    Size of data: 781   Labels:  [6. 7.]
+    Client 30    Samples of labels:  [(6, 220), (7, 561)]
     --------------------------------------------------
-    Client 31	 Size of data: 477	 Labels:  [6. 7.]
-    Client 31	 Samples of labels:  [(6, 78), (7, 399)]
+    Client 31    Size of data: 477   Labels:  [6. 7.]
+    Client 31    Samples of labels:  [(6, 78), (7, 399)]
     --------------------------------------------------
-    Client 32	 Size of data: 846	 Labels:  [6. 7.]
-    Client 32	 Samples of labels:  [(6, 576), (7, 270)]
+    Client 32    Size of data: 846   Labels:  [6. 7.]
+    Client 32    Samples of labels:  [(6, 576), (7, 270)]
     --------------------------------------------------
-    Client 33	 Size of data: 1180	 Labels:  [6. 7.]
-    Client 33	 Samples of labels:  [(6, 616), (7, 564)]
+    Client 33    Size of data: 1180  Labels:  [6. 7.]
+    Client 33    Samples of labels:  [(6, 616), (7, 564)]
     --------------------------------------------------
-    Client 34	 Size of data: 4165	 Labels:  [6. 7.]
-    Client 34	 Samples of labels:  [(6, 3623), (7, 542)]
+    Client 34    Size of data: 4165  Labels:  [6. 7.]
+    Client 34    Samples of labels:  [(6, 3623), (7, 542)]
     --------------------------------------------------
-    Client 35	 Size of data: 885	 Labels:  [6. 7.]
-    Client 35	 Samples of labels:  [(6, 637), (7, 248)]
+    Client 35    Size of data: 885   Labels:  [6. 7.]
+    Client 35    Samples of labels:  [(6, 637), (7, 248)]
     --------------------------------------------------
-    Client 36	 Size of data: 3646	 Labels:  [6. 7.]
-    Client 36	 Samples of labels:  [(6, 164), (7, 3482)]
+    Client 36    Size of data: 3646  Labels:  [6. 7.]
+    Client 36    Samples of labels:  [(6, 164), (7, 3482)]
     --------------------------------------------------
-    Client 37	 Size of data: 1024	 Labels:  [6. 7.]
-    Client 37	 Samples of labels:  [(6, 337), (7, 687)]
+    Client 37    Size of data: 1024  Labels:  [6. 7.]
+    Client 37    Samples of labels:  [(6, 337), (7, 687)]
     --------------------------------------------------
-    Client 38	 Size of data: 480	 Labels:  [6. 7.]
-    Client 38	 Samples of labels:  [(6, 278), (7, 202)]
+    Client 38    Size of data: 480   Labels:  [6. 7.]
+    Client 38    Samples of labels:  [(6, 278), (7, 202)]
     --------------------------------------------------
-    Client 39	 Size of data: 685	 Labels:  [6. 7.]
-    Client 39	 Samples of labels:  [(6, 347), (7, 338)]
+    Client 39    Size of data: 685   Labels:  [6. 7.]
+    Client 39    Samples of labels:  [(6, 347), (7, 338)]
     --------------------------------------------------
-    Client 40	 Size of data: 740	 Labels:  [8. 9.]
-    Client 40	 Samples of labels:  [(8, 251), (9, 489)]
+    Client 40    Size of data: 740   Labels:  [8. 9.]
+    Client 40    Samples of labels:  [(8, 251), (9, 489)]
     --------------------------------------------------
-    Client 41	 Size of data: 4175	 Labels:  [8. 9.]
-    Client 41	 Samples of labels:  [(8, 299), (9, 3876)]
+    Client 41    Size of data: 4175  Labels:  [8. 9.]
+    Client 41    Samples of labels:  [(8, 299), (9, 3876)]
     --------------------------------------------------
-    Client 42	 Size of data: 683	 Labels:  [8. 9.]
-    Client 42	 Samples of labels:  [(8, 164), (9, 519)]
+    Client 42    Size of data: 683   Labels:  [8. 9.]
+    Client 42    Samples of labels:  [(8, 164), (9, 519)]
     --------------------------------------------------
-    Client 43	 Size of data: 769	 Labels:  [8. 9.]
-    Client 43	 Samples of labels:  [(8, 164), (9, 605)]
+    Client 43    Size of data: 769   Labels:  [8. 9.]
+    Client 43    Samples of labels:  [(8, 164), (9, 605)]
     --------------------------------------------------
-    Client 44	 Size of data: 653	 Labels:  [8. 9.]
-    Client 44	 Samples of labels:  [(8, 385), (9, 268)]
+    Client 44    Size of data: 653   Labels:  [8. 9.]
+    Client 44    Samples of labels:  [(8, 385), (9, 268)]
     --------------------------------------------------
-    Client 45	 Size of data: 726	 Labels:  [8. 9.]
-    Client 45	 Samples of labels:  [(8, 636), (9, 90)]
+    Client 45    Size of data: 726   Labels:  [8. 9.]
+    Client 45    Samples of labels:  [(8, 636), (9, 90)]
     --------------------------------------------------
-    Client 46	 Size of data: 472	 Labels:  [8. 9.]
-    Client 46	 Samples of labels:  [(8, 78), (9, 394)]
+    Client 46    Size of data: 472   Labels:  [8. 9.]
+    Client 46    Samples of labels:  [(8, 78), (9, 394)]
     --------------------------------------------------
-    Client 47	 Size of data: 838	 Labels:  [8. 9.]
-    Client 47	 Samples of labels:  [(8, 473), (9, 365)]
+    Client 47    Size of data: 838   Labels:  [8. 9.]
+    Client 47    Samples of labels:  [(8, 473), (9, 365)]
     --------------------------------------------------
-    Client 48	 Size of data: 883	 Labels:  [8. 9.]
-    Client 48	 Samples of labels:  [(8, 677), (9, 206)]
+    Client 48    Size of data: 883   Labels:  [8. 9.]
+    Client 48    Samples of labels:  [(8, 677), (9, 206)]
     --------------------------------------------------
-    Client 49	 Size of data: 3844	 Labels:  [8. 9.]
-    Client 49	 Samples of labels:  [(8, 3698), (9, 146)]
+    Client 49    Size of data: 3844  Labels:  [8. 9.]
+    Client 49    Samples of labels:  [(8, 3698), (9, 146)]
     --------------------------------------------------
     Total number of samples: 70000
     The number of train samples: [599, 515, 3486, 639, 619, 849, 564, 392, 271, 3147, 406, 206, 3461, 991, 697, 525, 796, 850, 530, 2132, 660, 658, 2953, 756, 561, 1972, 470, 700, 413, 706, 585, 357, 634, 885, 3123, 663, 2734, 768, 360, 513, 555, 3131, 512, 576, 489, 544, 354, 628, 662, 2883]
@@ -404,7 +404,7 @@ Client 2	 Samples of labels:  [(0, 3903), (1, 746)]
 </details>
 <br/>
 
-Output of `generate_mnist.py noniid realworld`
+The output of `generate_mnist.py noniid realworld`
 ```
 Original number of samples of each label: [6903, 7877, 6990, 7141, 6824, 6313, 6876, 7293, 6825, 6958]
 
@@ -619,7 +619,7 @@ Client 2         Samples of labels:  [(0, 75), (1, 107), (3, 130), (7, 291), (8,
     sh auto_train.sh
     ```
 
-- Plot the result test accuracy and training loss curves and save to figures:
+- Plot the result test accuracy and training loss curves and save them to figures:
     ```
     python plot.py 
     ```
@@ -628,10 +628,10 @@ Client 2         Samples of labels:  [(0, 75), (1, 107), (3, 130), (7, 291), (8,
 Note: All the hyper-parameters have been tuned for all the algorithms, which are recorded in `./system/auto_train.sh`
 
 ## Practical setting
-If you need to simulate FL in a practical setting, which include **client dropout**, **slow trainers**, **slow senders** and **network TTL**, you can set the following parameters to realize it.
+If you need to simulate FL in a practical setting, which includes **client dropout**, **slow trainers**, **slow senders**, and **network TTL**, you can set the following parameters to realize it.
 
 - `-cdr`: The dropout rate for total clients. The selected clients will randomly drop at each training round.
-- `-tsr` and `-ssr`: The rates for slow trainers and slow senders among all clients. Once a client was selected as "slow trainers", for example, it will always train slower than original one. So does "slow senders". 
+- `-tsr` and `-ssr`: The rates for slow trainers and slow senders among all clients. Once a client was selected as "slow trainers", for example, it will always train slower than the original one. So does "slow senders". 
 - `-tth`: The threshold for network TTL (ms). 
 
 ## Easy to extend
@@ -643,4 +643,4 @@ This platform is easy to extend both dataset and algorithm.
 
 - To add a new model, just add it into `./system/flcore/trainmodel/models.py`.
 
-- If you have your own optimizer while training, please add it into `./system/flcore/optimizers/fedoptimizer.py`
+- If you have an individual optimizer while training, please add it into `./system/flcore/optimizers/fedoptimizer.py`
