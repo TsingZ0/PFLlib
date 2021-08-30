@@ -12,7 +12,6 @@ from flcore.servers.serverperavg import PerAvg
 from flcore.servers.serverprox import FedProx
 from flcore.servers.serverfomo import FedFomo
 from flcore.servers.servermocha import MOCHA
-from flcore.servers.serverplayer import FedPlayer
 from flcore.servers.serveramp import FedAMP
 from flcore.servers.serverhamp import HeurFedAMP
 from flcore.trainmodel.models import *
