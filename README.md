@@ -14,7 +14,7 @@ conda env create -f env_linux.yml # for linux
 ```
 
 ## Datasets (updating)
-Except for the **Synthetic** dataset, I currently using **six** famous datasets: **MNIST**, **Cifar10**, **Fashion-MNIST**, **Cifar10**, **AG_News** and **Sogou_News**, they can be easy split into **IID** and **Non-IID** version. Since some codes for generating dataset such as splitting are the same for all datasets, I move these codes into `./utils/dataset_utils.py`. Now it is easy to add other datasets into this FL platform. *If you need another data set, just write another code to download it and then using the utils.*
+Except for the **Synthetic** dataset (without update anymore), I currently using **six** famous datasets: **MNIST**, **Cifar10**, **Fashion-MNIST**, **Cifar10**, **AG_News** and **Sogou_News**, they can be easy split into **IID** and **Non-IID** version. Since some codes for generating dataset such as splitting are the same for all datasets, I move these codes into `./utils/dataset_utils.py`. Now it is easy to add other datasets into this FL platform. *If you need another data set, just write another code to download it and then using the utils.*
 
 In **Non-IID** setting, there are three situations exist. The first one is the **extreme Non-IID** setting, the second one is **real-world Non-IID** setting and the third one is **feature skew Non-IID**. In the **extreme Non-IID** setting, for example, the data on each client only contains the specific number of labels (maybe only two labels), though the data on all clients contains 10 labels such as MNIST dataset. In the **real-world Non-IID** setting, the number of labels for each client is randomly chosen. In the **feature skew Non-IID**, specific Gaussian noise is added to each clients according to their IDs. 
 - MNIST
@@ -589,7 +589,7 @@ Client 2         Samples of labels:  [(0, 75), (1, 107), (3, 130), (7, 291), (8,
     2. fastText() in [Bag of Tricks for Efficient Text Classification](https://arxiv.org/abs/1607.01759)
     3. TextCNN() in [Convolutional Neural Networks for Sentence Classification](https://arxiv.org/abs/1408.5882)
 
-- for Synthetic
+- for Synthetic (old version)
 
     1. Mclr_Logistic(60)
     2. DNN(60, 20) # non-convex
