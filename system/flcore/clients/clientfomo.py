@@ -13,7 +13,6 @@ class clientFomo(Client):
         super().__init__(device, numeric_id, train_slow, send_slow, train_data, test_data, model, batch_size, learning_rate,
                          local_steps)
         self.num_clients = num_clients
-        self.L, self.L_ = 10, 10
         self.old_model = copy.deepcopy(model)
         self.received_ids = []
         self.received_models = []
@@ -32,7 +31,7 @@ class clientFomo(Client):
         self.trainloaderfull = DataLoader(train_data, self.batch_size, drop_last=False)
         self.iter_trainloader = iter(self.trainloader)
 
-        self.val_loader = DataLoader(val_data, self.batch_size, drop_last=True)
+        self.val_loader = DataLoader(val_data, self.batch_size, drop_last=False)
 
     def train(self):
         start_time = time.time()
@@ -46,8 +45,6 @@ class clientFomo(Client):
         if self.train_slow:
             max_local_steps = np.random.randint(1, max_local_steps // 2)
 
-        self.L_ = self.L
-        self.L = 0
         for step in range(max_local_steps):
             if self.train_slow:
                 time.sleep(0.1 * np.abs(np.random.rand()))
@@ -55,11 +52,9 @@ class clientFomo(Client):
             self.optimizer.zero_grad()
             output = self.model(x)
             loss = self.loss(output, y)
-            self.L += loss.item()
             loss.backward()
             self.optimizer.step()
 
-        self.L /= max_local_steps
         # self.model.cpu()
         self.clone_model(self.model, self.old_model)
 
@@ -73,13 +68,14 @@ class clientFomo(Client):
 
     def weight_cal(self):
         weight_list = []
+        L = self.recalculate_loss(self.old_model)
         for received_model in self.received_models:
             params_dif = []
             for param_n, param_i in zip(received_model.parameters(), self.old_model.parameters()):
                 params_dif.append((param_n - param_i).view(-1))
             params_dif = torch.cat(params_dif)
 
-            weight_list.append((self.L_ - self.recalculate_loss(received_model)) / (torch.norm(params_dif) + 1e-5))
+            weight_list.append((L - self.recalculate_loss(received_model)) / (torch.norm(params_dif) + 1e-5))
 
         # import torch.autograd.profiler as profiler
         # with profiler.profile(profile_memory=True, record_shapes=True) as prof:
