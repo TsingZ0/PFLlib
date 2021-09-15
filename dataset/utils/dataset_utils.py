@@ -5,8 +5,8 @@ import gc
 from sklearn.model_selection import train_test_split
 
 batch_size = 4
-train_size = 0.75
-least_samples = batch_size / (1-train_size)
+train_ratio = 0.75
+least_samples = batch_size / (1-train_ratio)
 sigma = 0.1
 beta = 0.5
 
@@ -138,7 +138,7 @@ def separate_data(data, num_clients, num_labels, niid=False, real=True, partitio
     return X, y, statistic
 
 
-def split_data(X, y, train_size=train_size):
+def split_data(X, y, train_ratio=train_ratio):
     # Split dataset
     train_data, test_data = [], []
     num_samples = {'train':[], 'test':[]}
@@ -147,10 +147,10 @@ def split_data(X, y, train_size=train_size):
         unique, count = np.unique(y[i], return_counts=True)
         if min(count) > 1:
             X_train, X_test, y_train, y_test = train_test_split(
-                X[i], y[i], train_size=train_size, shuffle=True, stratify=y[i])
+                X[i], y[i], train_ratio=train_ratio, shuffle=True, stratify=y[i])
         else:
             X_train, X_test, y_train, y_test = train_test_split(
-                X[i], y[i], train_size=train_size, shuffle=True, stratify=None)
+                X[i], y[i], train_ratio=train_ratio, shuffle=True, stratify=None)
 
         train_data.append({'x': X_train, 'y': y_train})
         num_samples['train'].append(len(y_train))
