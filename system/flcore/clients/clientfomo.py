@@ -37,6 +37,7 @@ class clientFomo(Client):
         start_time = time.time()
 
         self.aggregate_parameters()
+        self.clone_model(self.model, self.old_model)
 
         # self.model.to(self.device)
         self.model.train()
@@ -56,7 +57,6 @@ class clientFomo(Client):
             self.optimizer.step()
 
         # self.model.cpu()
-        self.clone_model(self.model, self.old_model)
 
         self.train_time_cost['num_rounds'] += 1
         self.train_time_cost['total_cost'] += time.time() - start_time
