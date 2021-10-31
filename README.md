@@ -16,12 +16,12 @@ conda env create -f env_linux.yml # for linux
 ## Datasets (updating)
 Except for the **Synthetic** dataset (without update anymore), I currently using **six** famous datasets: **MNIST**, **Cifar10**, **Fashion-MNIST**, **Cifar10**, **AG_News** and **Sogou_News**, they can be easy split into **IID** and **Non-IID** version. Since some codes for generating datasets such as splitting are the same for all datasets, I move these codes into `./utils/dataset_utils.py`. Now it is easy to add other datasets to this FL platform. *If you need another data set, just write another code to download it and then using the utils.*
 
-In **Non-IID** setting, three situations exist. The first one is the **extreme Non-IID** setting, the second one is **real-world Non-IID** setting and the third one is **feature skew Non-IID**. In the **extreme Non-IID** setting, for example, the data on each client only contains the specific number of labels (maybe only two labels), though the data on all clients contains 10 labels such as MNIST dataset. In the **real-world Non-IID** setting, the number of labels for each client is randomly chosen. In the **feature skew Non-IID**, specific Gaussian noise is added to each client according to their IDs. 
+In **Non-IID** setting, three situations exist. The first one is the **pathological Non-IID** setting, the second one is **real-world Non-IID** setting and the third one is **feature skew Non-IID**. In the **pathological Non-IID** setting, for example, the data on each client only contains the specific number of labels (maybe only two labels), though the data on all clients contains 10 labels such as MNIST dataset. In the **real-world Non-IID** setting, the number of labels for each client is randomly chosen. In the **feature skew Non-IID**, specific Gaussian noise is added to each client according to their IDs. 
 - MNIST
     ```
     cd ./dataset
     python generate_mnist.py iid - - # for iid setting
-    # python generate_mnist.py noniid - - # for extreme noniid setting
+    # python generate_mnist.py noniid - - # for pathological noniid setting
     # python generate_mnist.py noniid realworld - # for real-world noniid setting
     # python generate_mnist.py noniid realworld noise # for feature skew noniid setting
     ```
@@ -29,7 +29,7 @@ In **Non-IID** setting, three situations exist. The first one is the **extreme N
     ```
     cd ./dataset
     python generate_cifar10.py iid - - # for iid setting
-    # python generate_cifar10.py noniid - - # for extreme noniid setting
+    # python generate_cifar10.py noniid - - # for pathological noniid setting
     # python generate_cifar10.py noniid realworld - # for real-world noniid setting
     # python generate_cifar10.py noniid realworld noise # for feature skew noniid setting
     ```
@@ -37,7 +37,7 @@ In **Non-IID** setting, three situations exist. The first one is the **extreme N
     ```
     cd ./dataset
     python generate_cifar100py iid - - # for iid setting
-    # python generate_cifar100.py noniid - - # for extreme noniid setting
+    # python generate_cifar100.py noniid - - # for pathological noniid setting
     # python generate_cifar100.py noniid realworld - # for real-world noniid setting
     # python generate_cifar100.py noniid realworld noise # for feature skew noniid setting
     ```
@@ -45,7 +45,7 @@ In **Non-IID** setting, three situations exist. The first one is the **extreme N
     ```
     cd ./dataset
     python generate_fmnist.py iid - - # for iid setting
-    # python generate_fmnist.py noniid - - # for extreme noniid setting
+    # python generate_fmnist.py noniid - - # for pathological noniid setting
     # python generate_fmnist.py noniid realworld - # for real-world noniid setting
     # python generate_fmnist.py noniid realworld noise # for feature skew noniid setting
     ```
@@ -53,7 +53,7 @@ In **Non-IID** setting, three situations exist. The first one is the **extreme N
     ```
     cd ./dataset
     python generate_agnews.py iid - - # for iid setting
-    # python generate_agnews.py noniid - - # for extreme noniid setting
+    # python generate_agnews.py noniid - - # for pathological noniid setting
     # python generate_agnews.py noniid realworld - # for real-world noniid setting
     # python generate_agnews.py noniid realworld noise # for feature skew noniid setting
     ```
@@ -62,7 +62,7 @@ In **Non-IID** setting, three situations exist. The first one is the **extreme N
     # If ConnectionError raises, please use the given downloaded file in './dataset'. 
     cd ./dataset
     python generate_sogounews.py iid - - # for iid setting
-    # python generate_sogounews.py noniid - - # for extreme noniid setting
+    # python generate_sogounews.py noniid - - # for pathological noniid setting
     # python generate_sogounews.py noniid realworld - # for real-world noniid setting
     # python generate_sogounews.py noniid realworld noise # for feature skew noniid setting
     ```
@@ -70,7 +70,7 @@ In **Non-IID** setting, three situations exist. The first one is the **extreme N
     ```
     cd ./dataset
     python generate_synthetic.py iid # for iid setting
-    # python generate_synthetic.py noniid # for extreme noniid setting
+    # python generate_synthetic.py noniid # for pathological noniid setting
     ```
 
 ### Dataset generating examples
