@@ -1,31 +1,24 @@
 import copy
+import torch
 from flcore.clients.clientperavg import clientPerAvg
 from flcore.servers.serverbase import Server
-from utils.data_utils import read_client_data
 from threading import Thread
 
 
 class PerAvg(Server):
-    def __init__(self, device, dataset, algorithm, model, batch_size, learning_rate, global_rounds, local_steps, join_clients,
-                 num_clients, times, eval_gap, client_drop_rate, train_slow_rate, send_slow_rate, time_select, goal, time_threthold, 
-                 beta):
-        super().__init__(dataset, algorithm, model, batch_size, learning_rate, global_rounds, local_steps, join_clients,
-                         num_clients, times, eval_gap, client_drop_rate, train_slow_rate, send_slow_rate, time_select, goal, 
-                         time_threthold)
+    def __init__(self, args, times):
+        super().__init__(args, times)
+
         # select slow clients
         self.set_slow_clients()
+        self.set_clients(args, clientPerAvg)
 
-        for i, train_slow, send_slow in zip(range(self.num_clients), self.train_slow_clients, self.send_slow_clients):
-            train, test = read_client_data(dataset, i)
-            client = clientPerAvg(device, i, train_slow, send_slow, train, test, model, batch_size,
-                                  learning_rate, local_steps, beta)
-            self.clients.append(client)
-
-        print(f"\nJoin clients / total clients: {self.join_clients} / {self.num_clients}")
+        print(f"\nJoin ratio / total clients: {self.join_ratio} / {self.num_clients}")
         print("Finished creating server and clients.")
 
     def train(self):
         for i in range(self.global_rounds+1):
+            self.selected_clients = self.select_clients()
             # send all parameter for clients
             self.send_models()
 
@@ -35,8 +28,8 @@ class PerAvg(Server):
                 self.evaluate_one_step()
 
             # choose several clients to send back upated model to server
-            self.selected_clients = self.select_clients()
             for client in self.selected_clients:
+                client.train()
                 client.train()
 
             # threads = [Thread(target=client.train)
@@ -47,9 +40,10 @@ class PerAvg(Server):
             self.receive_models()
             self.aggregate_parameters()
 
-        print("\nBest personalized results.")
-        self.print_(max(self.rs_test_acc), max(
-            self.rs_train_acc), min(self.rs_train_loss))
+        print("\nBest global accuracy.")
+        # self.print_(max(self.rs_test_acc), max(
+        #     self.rs_train_acc), min(self.rs_train_loss))
+        print(max(self.rs_test_acc))
 
         self.save_results()
         self.save_global_model()
@@ -57,22 +51,17 @@ class PerAvg(Server):
 
     def evaluate_one_step(self):
         models_temp = []
-        for c in self.clients:
+        for c in self.selected_clients:
             models_temp.append(copy.deepcopy(c.model))
             c.train_one_step()
 
-        stats = self.test_accuracy()
-        stats_train = self.train_accuracy_and_loss()
+        stats = self.test_metrics()
 
         # set local model back to client for training process
-        for i, c in enumerate(self.clients):
+        for i, c in enumerate(self.selected_clients):
             c.clone_model(models_temp[i], c.model)
 
         test_acc = sum(stats[2])*1.0 / sum(stats[1])
-        train_acc = sum(stats_train[2])*1.0 / sum(stats_train[1])
-        train_loss = sum(stats_train[3])*1.0 / sum(stats_train[1])
         
         self.rs_test_acc.append(test_acc)
-        self.rs_train_acc.append(train_acc)
-        self.rs_train_loss.append(train_loss)
-        self.print_(test_acc, train_acc, train_loss)
+        print("Average Test Accurancy: {:.4f}".format(test_acc))

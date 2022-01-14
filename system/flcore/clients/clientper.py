@@ -1,26 +1,21 @@
+import copy
 import torch
+import torch.nn as nn
 import numpy as np
 import time
-import copy
-import torch.nn as nn
-from flcore.optimizers.fedoptimizer import PerturbedGradientDescent
 from flcore.clients.clientbase import Client
 
 
-class clientProx(Client):
+class clientPer(Client):
     def __init__(self, args, id, train_samples, test_samples, **kwargs):
         super().__init__(args, id, train_samples, test_samples, **kwargs)
-
-        self.mu = args.mu
-
-        self.global_params = copy.deepcopy(list(self.model.parameters()))
-
+        
         self.loss = nn.CrossEntropyLoss()
-        self.optimizer = PerturbedGradientDescent(
-            self.model.parameters(), lr=self.learning_rate, mu=self.mu)
+        self.optimizer = torch.optim.SGD(self.model.parameters(), lr=self.learning_rate)
 
     def train(self):
         trainloader = self.load_train_data()
+        
         start_time = time.time()
 
         # self.model.to(self.device)
@@ -31,7 +26,7 @@ class clientProx(Client):
             max_local_steps = np.random.randint(1, max_local_steps // 2)
 
         for step in range(max_local_steps):
-            for x, y in trainloader:
+            for i, (x, y) in enumerate(trainloader):
                 if type(x) == type([]):
                     x[0] = x[0].to(self.device)
                 else:
@@ -43,7 +38,7 @@ class clientProx(Client):
                 output = self.model(x)
                 loss = self.loss(output, y)
                 loss.backward()
-                self.optimizer.step(self.global_params, self.device)
+                self.optimizer.step()
 
         # self.model.cpu()
 
@@ -51,6 +46,5 @@ class clientProx(Client):
         self.train_time_cost['total_cost'] += time.time() - start_time
 
     def set_parameters(self, model):
-        for new_param, global_param, param in zip(model.parameters(), self.global_params, self.model.parameters()):
-            global_param.data = new_param.data.clone()
-            param.data = new_param.data.clone()
+        for new_param, old_param in zip(model.parameters(), self.model.base.parameters()):
+            old_param.data = new_param.data.clone()

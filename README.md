@@ -1,5 +1,5 @@
 # Personalized federated learning simulation platform with Non-IID dataset
-The origin of the Non-IID phenomenon is the personalization of users, who generate the Non-IID data. With **Non-IID (Not Independent and Identically Distributed)** issue existing in the federated learning setting, a myriad of approaches has been proposed to crack this hard nut. In contrast, the personalized federated learning may take the advantage of the Non-IID data to learn the personalized model for each user. Thanks to [@Stonesjtu](https://github.com/Stonesjtu/pytorch_memlab/blob/d590c489236ee25d157ff60ecd18433e8f9acbe3/pytorch_memlab/mem_reporter.py#L185), this platform can also record the GPU memory usage for the model. 
+The origin of the Non-IID phenomenon is the personalization of users, who generate the Non-IID data. With **Non-IID (Not Independent and Identically Distributed)** issue existing in the federated learning setting, a myriad of approaches has been proposed to crack this hard nut. In contrast, the personalized federated learning may take the advantage of the Non-IID data to learn the personalized model for each user. Thanks to [@Stonesjtu](https://github.com/Stonesjtu/pytorch_memlab/blob/d590c489236ee25d157ff60ecd18433e8f9acbe3/pytorch_memlab/mem_reporter.py#L185), this platform can also record the GPU memory usage for the model. By using the package [opacus](https://opacus.ai/), I introduce differential privacy into this platform (please refer to `./system/flcore/clients/clientavg.py` for details). 
 
 ## Environments
 With the installed [conda](https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh), we can run this platform in a conda virtual environment called *fl_torch*. Note: due to the code updates, some modules are required to install based on the given `*.yml`. 
@@ -16,61 +16,66 @@ conda env create -f env_linux.yml # for linux
 ## Datasets (updating)
 Except for the **Synthetic** dataset (without update anymore), I currently using **six** famous datasets: **MNIST**, **Fashion-MNIST**, **Cifar10**, **Cifar100**, **AG_News** and **Sogou_News**, they can be easy split into **IID** and **Non-IID** version. Since some codes for generating datasets such as splitting are the same for all datasets, I move these codes into `./utils/dataset_utils.py`. Now it is easy to add other datasets to this FL platform. *If you need another data set, just write another code to download it and then using the utils.*
 
-In **Non-IID** setting, three situations exist. The first one is the **pathological Non-IID** setting, the second one is **real-world Non-IID** setting and the third one is **feature skew Non-IID**. In the **pathological Non-IID** setting, for example, the data on each client only contains the specific number of labels (maybe only two labels), though the data on all clients contains 10 labels such as MNIST dataset. In the **real-world Non-IID** setting, the number of labels for each client is randomly chosen. In the **feature skew Non-IID**, specific Gaussian noise is added to each client according to their IDs. 
+In **Non-IID** setting, three situations exist. The first one is the **pathological Non-IID** setting, the second one is **practical Non-IID** setting and the third one is **feature skew Non-IID**. In the **pathological Non-IID** setting, for example, the data on each client only contains the specific number of labels (maybe only two labels), though the data on all clients contains 10 labels such as MNIST dataset. In the **practical Non-IID** setting, Dirichlet distribution is utilized (please refer this [paper](https://proceedings.neurips.cc/paper/2020/hash/18df51b97ccd68128e994804f3eccc87-Abstract.html) for details). In the **feature skew Non-IID**, specific Gaussian noise is added to each client according to their IDs. We can input *balance* for the iid setting, where the data are uniformly distributed. 
 - MNIST
     ```
     cd ./dataset
-    python generate_mnist.py iid - - # for iid setting
+    python generate_mnist.py iid - - # for iid and unbalanced setting
     # python generate_mnist.py noniid - - # for pathological noniid setting
-    # python generate_mnist.py noniid realworld - # for real-world noniid setting
-    # python generate_mnist.py noniid realworld noise # for feature skew noniid setting
+    # python generate_mnist.py noniid dir - # for practical noniid setting
+    # python generate_mnist.py noniid dir noise # for feature skew noniid setting
     ```
 - Cifar10
     ```
     cd ./dataset
-    python generate_cifar10.py iid - - # for iid setting
+    python generate_cifar10.py iid - - # for iid and unbalanced setting
     # python generate_cifar10.py noniid - - # for pathological noniid setting
-    # python generate_cifar10.py noniid realworld - # for real-world noniid setting
-    # python generate_cifar10.py noniid realworld noise # for feature skew noniid setting
+    # python generate_cifar10.py noniid dir - # for practical noniid setting
+    # python generate_cifar10.py noniid dir noise # for feature skew noniid setting
     ```
 - Cifar100
     ```
     cd ./dataset
-    python generate_cifar100py iid - - # for iid setting
+    python generate_cifar100py iid - - # for iid and unbalanced setting
     # python generate_cifar100.py noniid - - # for pathological noniid setting
-    # python generate_cifar100.py noniid realworld - # for real-world noniid setting
-    # python generate_cifar100.py noniid realworld noise # for feature skew noniid setting
+    # python generate_cifar100.py noniid dir - # for practical noniid setting
+    # python generate_cifar100.py noniid dir noise # for feature skew noniid setting
     ```
 - Fashion-MNIST
     ```
     cd ./dataset
-    python generate_fmnist.py iid - - # for iid setting
+    python generate_fmnist.py iid - - # for iid and unbalanced setting
     # python generate_fmnist.py noniid - - # for pathological noniid setting
-    # python generate_fmnist.py noniid realworld - # for real-world noniid setting
-    # python generate_fmnist.py noniid realworld noise # for feature skew noniid setting
+    # python generate_fmnist.py noniid dir - # for practical noniid setting
+    # python generate_fmnist.py noniid dir noise # for feature skew noniid setting
     ```
 - AG_News
     ```
     cd ./dataset
-    python generate_agnews.py iid - - # for iid setting
+    python generate_agnews.py iid - - # for iid and unbalanced setting
     # python generate_agnews.py noniid - - # for pathological noniid setting
-    # python generate_agnews.py noniid realworld - # for real-world noniid setting
-    # python generate_agnews.py noniid realworld noise # for feature skew noniid setting
+    # python generate_agnews.py noniid dir - # for practical noniid setting
+    # python generate_agnews.py noniid dir noise # for feature skew noniid setting
     ```
 - Sogou_News (remains to be tested)
     ```
     # If ConnectionError raises, please use the given downloaded file in './dataset'. 
     cd ./dataset
-    python generate_sogounews.py iid - - # for iid setting
+    python generate_sogounews.py iid - - # for iid and unbalanced setting
     # python generate_sogounews.py noniid - - # for pathological noniid setting
-    # python generate_sogounews.py noniid realworld - # for real-world noniid setting
-    # python generate_sogounews.py noniid realworld noise # for feature skew noniid setting
+    # python generate_sogounews.py noniid dir - # for practical noniid setting
+    # python generate_sogounews.py noniid dir noise # for feature skew noniid setting
     ```
-- Synthetic (outdated version)
+- Tiny-ImageNet
     ```
+    # Please download the original data from http://cs231n.stanford.edu/tiny-imagenet-200.zip. 
     cd ./dataset
-    python generate_synthetic.py iid # for iid setting
-    # python generate_synthetic.py noniid # for pathological noniid setting
+    python generate_tiny_imagenet.py iid - - - # for iid and unbalanced setting
+    # python generate_tiny_imagenet.py iid - - balance # for iid and balanced setting
+    # python generate_tiny_imagenet.py noniid - - - # for pathological noniid setting
+    # python generate_tiny_imagenet.py noniid dir - - # for practical noniid setting
+    # python generate_tiny_imagenet.py noniid dir - - # for practical noniid setting
+    # python generate_tiny_imagenet.py noniid dir noise - # for feature skew noniid setting
     ```
 
 ### Dataset generating examples
@@ -406,7 +411,7 @@ Client 2     Samples of labels:  [(0, 3903), (1, 746)]
 </details>
 <br/>
 
-The output of `generate_mnist.py noniid realworld -`
+The output of `generate_mnist.py noniid dir -`
 ```
 Original number of samples of each label: [6903, 7877, 6990, 7141, 6824, 6313, 6876, 7293, 6825, 6958]
 
@@ -578,10 +583,10 @@ Client 2         Samples of labels:  [(0, 75), (1, 107), (3, 130), (7, 291), (8,
     2. LeNet()
     3. DNN(1\*28\*28, 100) # non-convex
 
-- for Cifar10 and Cifar100
+- for Cifar10, Cifar100 and Tiny-ImageNet
 
     1. Mclr_Logistic(3\*32\*32)
-    2. CifarNet()
+    2. FedAvgCNN()
     3. DNN(3\*32\*32, 100) # non-convex
     4. ResNet18, Resnet50 and Resnet152
 
@@ -591,19 +596,17 @@ Client 2         Samples of labels:  [(0, 75), (1, 107), (3, 130), (7, 291), (8,
     2. fastText() in [Bag of Tricks for Efficient Text Classification](https://arxiv.org/abs/1607.01759)
     3. TextCNN() in [Convolutional Neural Networks for Sentence Classification](https://arxiv.org/abs/1408.5882)
 
-- for Synthetic (old version)
-
-    1. Mclr_Logistic(60)
-    2. DNN(60, 20) # non-convex
 
 ## Algorithms (updating)
 - **FedAvg** — [Communication-Efficient Learning of Deep Networks from Decentralized Data](https://arxiv.org/abs/1602.05629) *AISTATS 2017*
+- **FedPer** — [Federated Learning with Personalization Layers](https://arxiv.org/pdf/1912.00818.pdf)
 - **Per-FadAvg** — [Personalized Federated Learning with Theoretical Guarantees: A Model-Agnostic Meta-Learning Approach](https://proceedings.neurips.cc/paper/2020/file/24389bfe4fe2eba8bf9aa9203a44cdad-Paper.pdf) *NeurIPS 2020*
 - **pFedMe** — [Personalized Federated Learning with Moreau Envelopes](https://proceedings.neurips.cc/paper/2020/file/f4f1f13c8289ac1b1ee0ff176b56fc60-Paper.pdf) *NeurIPS 2020*
 - **FedProx** — [Federated Optimization for Heterogeneous Networks](https://openreview.net/pdf?id=SkgwE5Ss3N) *ICLR 2020*
+- **APFL** — [Adaptive Personalized Federated Learning](https://arxiv.org/pdf/2003.13461.pdf)
 - **FedFomo** — [Personalized Federated Learning with First Order Model Optimization](https://openreview.net/pdf?id=ehJqJQk9cw) *ICLR 2021*
-- **MOCHA** — [Federated multi-task learning](https://arxiv.org/abs/1705.10467) *NIPS 2017*
-- **FedAMP & HeurFedAMP** — [Personalized Cross-Silo Federated Learning on Non-IID Data](https://www.aaai.org/AAAI21Papers/AAAI-5802.HuangY.pdf) *AAAI 2021*
+- **FedMTL** — [Federated multi-task learning](https://arxiv.org/abs/1705.10467) *NIPS 2017*
+- **FedAMP** — [Personalized Cross-Silo Federated Learning on Non-IID Data](https://www.aaai.org/AAAI21Papers/AAAI-5802.HuangY.pdf) *AAAI 2021*
 
 
 ## How to start simulating 

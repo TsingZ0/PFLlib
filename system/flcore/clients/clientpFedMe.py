@@ -8,14 +8,12 @@ from flcore.clients.clientbase import Client
 
 
 class clientpFedMe(Client):
-    def __init__(self, device, numeric_id, train_slow, send_slow, train_data, test_data, model, batch_size, learning_rate,
-                 local_steps, lamda, K, personalized_learning_rate):
-        super().__init__(device, numeric_id, train_slow, send_slow, train_data, test_data, model, batch_size, learning_rate,
-                         local_steps)
+    def __init__(self, args, id, train_samples, test_samples, **kwargs):
+        super().__init__(args, id, train_samples, test_samples, **kwargs)
 
-        self.lamda = lamda
-        self.K = K
-        self.personalized_learning_rate = personalized_learning_rate
+        self.lamda = args.lamda
+        self.K = args.K
+        self.personalized_learning_rate = args.p_learning_rate
 
         # these parameters are for personalized federated learing.
         self.local_params = copy.deepcopy(list(self.model.parameters()))
@@ -26,6 +24,7 @@ class clientpFedMe(Client):
             self.model.parameters(), lr=self.personalized_learning_rate, lamda=self.lamda)
 
     def train(self):
+        trainloader = self.load_train_data()
         start_time = time.time()
 
         # self.model.to(self.device)
@@ -36,21 +35,28 @@ class clientpFedMe(Client):
             max_local_steps = np.random.randint(1, max_local_steps // 2)
 
         for step in range(max_local_steps):  # local update
-            x, y = self.get_next_train_batch()
+            for x, y in trainloader:
+                if type(x) == type([]):
+                    x[0] = x[0].to(self.device)
+                else:
+                    x = x.to(self.device)
+                y = y.to(self.device)
+                if self.train_slow:
+                    time.sleep(0.1 * np.abs(np.random.rand()))
 
-            # K is number of personalized steps
-            for i in range(self.K):
-                self.optimizer.zero_grad()
-                output = self.model(x)
-                loss = self.loss(output, y)
-                loss.backward()
-                # finding aproximate theta
-                self.personalized_params = self.optimizer.step(self.local_params, self.device)
+                # K is number of personalized steps
+                for i in range(self.K):
+                    self.optimizer.zero_grad()
+                    output = self.model(x)
+                    loss = self.loss(output, y)
+                    loss.backward()
+                    # finding aproximate theta
+                    self.personalized_params = self.optimizer.step(self.local_params, self.device)
 
-            # update local weight after finding aproximate theta
-            for new_param, localweight in zip(self.personalized_params, self.local_params):
-                localweight = localweight.to(self.device)
-                localweight.data = localweight.data - self.lamda * self.learning_rate * (localweight.data - new_param.data)
+                # update local weight after finding aproximate theta
+                for new_param, localweight in zip(self.personalized_params, self.local_params):
+                    localweight = localweight.to(self.device)
+                    localweight.data = localweight.data - self.lamda * self.learning_rate * (localweight.data - new_param.data)
 
         # self.model.cpu()
 
@@ -65,7 +71,8 @@ class clientpFedMe(Client):
             old_param.data = new_param.data.clone()
             local_param.data = new_param.data.clone()
 
-    def test_accuracy_personalized(self):
+    def test_metrics_personalized(self):
+        testloaderfull = self.load_test_data()
         self.update_parameters(self.model, self.personalized_params)
         # self.model.to(self.device)
         self.model.eval()
@@ -74,8 +81,11 @@ class clientpFedMe(Client):
         test_num = 0
         
         with torch.no_grad():
-            for x, y in self.testloaderfull:
-                x = x.to(self.device)
+            for x, y in testloaderfull:
+                if type(x) == type([]):
+                    x[0] = x[0].to(self.device)
+                else:
+                    x = x.to(self.device)
                 y = y.to(self.device)
                 output = self.model(x)
                 test_acc += (torch.sum(torch.argmax(output, dim=1) == y)).item()
@@ -85,22 +95,25 @@ class clientpFedMe(Client):
         
         return test_acc, test_num
 
-    def train_accuracy_and_loss_personalized(self):
-        self.update_parameters(self.model, self.personalized_params)
-        # self.model.to(self.device)
-        self.model.eval()
+    # def train_accuracy_and_loss_personalized(self):
+    #     self.update_parameters(self.model, self.personalized_params)
+    #     # self.model.to(self.device)
+    #     self.model.eval()
 
-        train_acc = 0
-        train_num = 0
-        loss = 0
-        for x, y in self.trainloaderfull:
-            x = x.to(self.device)
-            y = y.to(self.device)
-            output = self.model(x)
-            train_acc += (torch.sum(torch.argmax(output, dim=1) == y)).item()
-            train_num += y.shape[0]
-            loss += self.loss(output, y).item() * y.shape[0]
+    #     train_acc = 0
+    #     train_num = 0
+    #     loss = 0
+    #     for x, y in trainloaderfull:
+    #         if type(x) == type([]):
+    #             x[0] = x[0].to(self.device)
+    #         else:
+    #             x = x.to(self.device)
+    #         y = y.to(self.device)
+    #         output = self.model(x)
+    #         train_acc += (torch.sum(torch.argmax(output, dim=1) == y)).item()
+    #         train_num += y.shape[0]
+    #         loss += self.loss(output, y).item() * y.shape[0]
 
-        # self.model.cpu()
+    #     # self.model.cpu()
         
-        return train_acc, loss, train_num
+    #     return train_acc, loss, train_num

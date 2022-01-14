@@ -31,17 +31,13 @@
 # nohup python -u main.py -lbs 16 -nc 20 -jc 20 -nb 10 -data mnist -m cnn -algo FedFomo -gr 2000 -M 5 -did 1 -go cnn > mnist_fedfomo1.out 2>&1 &
 # nohup python -u main.py -lbs 16 -nc 20 -jc 20 -nb 10 -data mnist -m resnet -algo FedFomo -gr 2000 -M 5 -did 1 -go resnet > mnist_fedfomo2.out 2>&1 &
 
-# nohup python -u main.py -lbs 16 -nc 20 -jc 20 -nb 10 -data mnist -m dnn -algo MOCHA -gr 2000 -itk 4000 -did 1 -go dnn > mnist_mocha.out 2>&1 &
-# nohup python -u main.py -lbs 16 -nc 20 -jc 20 -nb 10 -data mnist -m cnn -algo MOCHA -gr 2000 -itk 4000 -did 1 -go cnn > mnist_mocha1.out 2>&1 &
-# nohup python -u main.py -lbs 16 -nc 20 -jc 20 -nb 10 -data mnist -m resnet -algo MOCHA -gr 2000 -itk 4000 -did 1 -go resnet > mnist_mocha2.out 2>&1 &
+# nohup python -u main.py -lbs 16 -nc 20 -jc 20 -nb 10 -data mnist -m dnn -algo FedMTL -gr 2000 -itk 4000 -did 1 -go dnn > mnist_FedMTL.out 2>&1 &
+# nohup python -u main.py -lbs 16 -nc 20 -jc 20 -nb 10 -data mnist -m cnn -algo FedMTL -gr 2000 -itk 4000 -did 1 -go cnn > mnist_FedMTL1.out 2>&1 &
+# nohup python -u main.py -lbs 16 -nc 20 -jc 20 -nb 10 -data mnist -m resnet -algo FedMTL -gr 2000 -itk 4000 -did 1 -go resnet > mnist_FedMTL2.out 2>&1 &
 
 # nohup python -u main.py -lbs 16 -nc 20 -jc 20 -nb 10 -data mnist -m dnn -algo FedAMP -gr 2000 -alk 5e-3 -lam 5e-7 -sg 1e-1 -did 0 -go dnn > mnist_fedamp.out 2>&1 &
 # nohup python -u main.py -lbs 16 -nc 20 -jc 20 -nb 10 -data mnist -m cnn -algo FedAMP -gr 2000 -alk 5e-3 -lam 5e-7 -sg 1e-1 -did 0 -go cnn > mnist_fedamp1.out 2>&1 &
 # nohup python -u main.py -lbs 16 -nc 20 -jc 20 -nb 10 -data mnist -m resnet -algo FedAMP -gr 2000 -alk 5e-3 -lam 5e-7 -sg 1e-1 -did 0 -go resnet > mnist_fedamp2.out 2>&1 &
-
-# nohup python -u main.py -lbs 16 -nc 20 -jc 20 -nb 10 -data mnist -m dnn -algo HeurFedAMP -gr 2000 -alk 2.5e-1 -lam 2.5e-5 -sg 10 -xi 0.998 -did 1 -go dnn > mnist_heurfedamp.out 2>&1 &
-# nohup python -u main.py -lbs 16 -nc 20 -jc 20 -nb 10 -data mnist -m cnn -algo HeurFedAMP -gr 2000 -alk 2.5e-1 -lam 2.5e-5 -sg 10 -xi 0.998 -did 1 -go cnn > mnist_heurfedamp1.out 2>&1 &
-# nohup python -u main.py -lbs 16 -nc 20 -jc 20 -nb 10 -data mnist -m resnet -algo HeurFedAMP -gr 2000 -alk 2.5e-1 -lam 2.5e-5 -sg 10 -xi 0.998 -did 1 -go resnet > mnist_heurfedamp2.out 2>&1 &
 
 
 # ===============================================================horizontal(Cifar10)======================================================================
@@ -75,17 +71,13 @@
 # nohup python -u main.py -lbs 16 -nc 20 -jc 20 -nb 10 -data Cifar10 -m cnn -algo FedFomo -gr 2000 -M 5 -did 1 -go cnn > cifar10_fedfomo1.out 2>&1 &
 # nohup python -u main.py -lbs 16 -nc 20 -jc 20 -nb 10 -data Cifar10 -m resnet -algo FedFomo -gr 2000 -M 5 -did 1 -go resnet > cifar10_fedfomo2.out 2>&1 &
 
-# nohup python -u main.py -lbs 16 -nc 20 -jc 20 -nb 10 -data Cifar10 -m dnn -algo MOCHA -gr 2000 -itk 4000 -did 1 -go dnn > cifar10_mocha.out 2>&1 &
-# nohup python -u main.py -lbs 16 -nc 20 -jc 20 -nb 10 -data Cifar10 -m cnn -algo MOCHA -gr 2000 -itk 4000 -did 1 -go cnn > cifar10_mocha1.out 2>&1 &
-# nohup python -u main.py -lbs 16 -nc 20 -jc 20 -nb 10 -data Cifar10 -m resnet -algo MOCHA -gr 2000 -itk 4000 -did 1 -go resnet > cifar10_mocha2.out 2>&1 &
+# nohup python -u main.py -lbs 16 -nc 20 -jc 20 -nb 10 -data Cifar10 -m dnn -algo FedMTL -gr 2000 -itk 4000 -did 1 -go dnn > cifar10_FedMTL.out 2>&1 &
+# nohup python -u main.py -lbs 16 -nc 20 -jc 20 -nb 10 -data Cifar10 -m cnn -algo FedMTL -gr 2000 -itk 4000 -did 1 -go cnn > cifar10_FedMTL1.out 2>&1 &
+# nohup python -u main.py -lbs 16 -nc 20 -jc 20 -nb 10 -data Cifar10 -m resnet -algo FedMTL -gr 2000 -itk 4000 -did 1 -go resnet > cifar10_FedMTL2.out 2>&1 &
 
 # nohup python -u main.py -lbs 16 -nc 20 -jc 20 -nb 10 -data Cifar10 -m dnn -algo FedAMP -gr 2000 -alk 5e-3 -lam 5e-7 -sg 1e-1 -did 0 -go dnn > cifar10_fedamp.out 2>&1 &
 # nohup python -u main.py -lbs 16 -nc 20 -jc 20 -nb 10 -data Cifar10 -m cnn -algo FedAMP -gr 2000 -alk 5e-3 -lam 5e-7 -sg 1e-1 -did 0 -go cnn > cifar10_fedamp1.out 2>&1 &
 # nohup python -u main.py -lbs 16 -nc 20 -jc 20 -nb 10 -data Cifar10 -m resnet -algo FedAMP -gr 2000 -alk 5e-3 -lam 5e-7 -sg 1e-1 -did 0 -go resnet > cifar10_fedamp2.out 2>&1 &
-
-# nohup python -u main.py -lbs 16 -nc 20 -jc 20 -nb 10 -data Cifar10 -m dnn -algo HeurFedAMP -gr 2000 -alk 2.5e-1 -lam 2.5e-5 -sg 10 -xi 0.998 -did 1 -go dnn > cifar10_heurfedamp.out 2>&1 &
-# nohup python -u main.py -lbs 16 -nc 20 -jc 20 -nb 10 -data Cifar10 -m cnn -algo HeurFedAMP -gr 2000 -alk 2.5e-1 -lam 2.5e-5 -sg 10 -xi 0.998 -did 1 -go cnn > cifar10_heurfedamp1.out 2>&1 &
-# nohup python -u main.py -lbs 16 -nc 20 -jc 20 -nb 10 -data Cifar10 -m resnet -algo HeurFedAMP -gr 2000 -alk 2.5e-1 -lam 2.5e-5 -sg 10 -xi 0.998 -did 1 -go resnet > cifar10_heurfedamp2.out 2>&1 &
 
 
 # ===============================================================horizontal(Cifar100)======================================================================
@@ -116,17 +108,13 @@
 # nohup python -u main.py -lbs 4 -nc 20 -jc 20 -nb 100 -data Cifar100 -m cnn -algo FedFomo -gr 2000 -M 5 -did 1 -go cnn > cifar100_fedfomo1.out 2>&1 &
 # nohup python -u main.py -lbs 4 -nc 20 -jc 20 -nb 100 -data Cifar100 -m resnet -algo FedFomo -gr 2000 -M 5 -did 1 -go resnet > cifar100_fedfomo2.out 2>&1 &
 
-# nohup python -u main.py -lbs 4 -nc 20 -jc 20 -nb 100 -data Cifar100 -m dnn -algo MOCHA -gr 2000 -itk 4000 -did 1 -go dnn > cifar100_mocha.out 2>&1 &
-# nohup python -u main.py -lbs 4 -nc 20 -jc 20 -nb 100 -data Cifar100 -m cnn -algo MOCHA -gr 2000 -itk 4000 -did 1 -go cnn > cifar100_mocha1.out 2>&1 &
-# nohup python -u main.py -lbs 4 -nc 20 -jc 20 -nb 100 -data Cifar100 -m resnet -algo MOCHA -gr 2000 -itk 4000 -did 1 -go resnet > cifar100_mocha2.out 2>&1 &
+# nohup python -u main.py -lbs 4 -nc 20 -jc 20 -nb 100 -data Cifar100 -m dnn -algo FedMTL -gr 2000 -itk 4000 -did 1 -go dnn > cifar100_FedMTL.out 2>&1 &
+# nohup python -u main.py -lbs 4 -nc 20 -jc 20 -nb 100 -data Cifar100 -m cnn -algo FedMTL -gr 2000 -itk 4000 -did 1 -go cnn > cifar100_FedMTL1.out 2>&1 &
+# nohup python -u main.py -lbs 4 -nc 20 -jc 20 -nb 100 -data Cifar100 -m resnet -algo FedMTL -gr 2000 -itk 4000 -did 1 -go resnet > cifar100_FedMTL2.out 2>&1 &
 
 # nohup python -u main.py -lbs 4 -nc 20 -jc 20 -nb 100 -data Cifar100 -m dnn -algo FedAMP -gr 2000 -alk 5e-3 -lam 5e-7 -sg 1e-1 -did 0 -go dnn > cifar100_fedamp.out 2>&1 &
 # nohup python -u main.py -lbs 4 -nc 20 -jc 20 -nb 100 -data Cifar100 -m cnn -algo FedAMP -gr 2000 -alk 5e-3 -lam 5e-7 -sg 1e-1 -did 0 -go cnn > cifar100_fedamp1.out 2>&1 &
 # nohup python -u main.py -lbs 4 -nc 20 -jc 20 -nb 100 -data Cifar100 -m resnet -algo FedAMP -gr 2000 -alk 5e-3 -lam 5e-7 -sg 1e-1 -did 0 -go resnet > cifar100_fedamp2.out 2>&1 &
-
-# nohup python -u main.py -lbs 4 -nc 20 -jc 20 -nb 100 -data Cifar100 -m dnn -algo HeurFedAMP -gr 2000 -alk 2.5e-1 -lam 2.5e-5 -sg 10 -xi 0.998 -did 1 -go dnn > cifar100_heurfedamp.out 2>&1 &
-# nohup python -u main.py -lbs 4 -nc 20 -jc 20 -nb 100 -data Cifar100 -m cnn -algo HeurFedAMP -gr 2000 -alk 2.5e-1 -lam 2.5e-5 -sg 10 -xi 0.998 -did 1 -go cnn > cifar100_heurfedamp1.out 2>&1 &
-# nohup python -u main.py -lbs 4 -nc 20 -jc 20 -nb 100 -data Cifar100 -m resnet -algo HeurFedAMP -gr 2000 -alk 2.5e-1 -lam 2.5e-5 -sg 10 -xi 0.998 -did 1 -go resnet > cifar100_heurfedamp2.out 2>&1 &
 
 
 # ===============================================================horizontal(fmnist)======================================================================  
@@ -151,14 +139,11 @@
 # nohup python -u main.py -lbs 16 -nc 20 -jc 20 -nb 10 -data fmnist -m dnn -algo FedFomo -gr 2000 -M 5 -did 1 -go dnn > fmnist_fedfomo.out 2>&1 &
 # nohup python -u main.py -lbs 16 -nc 20 -jc 20 -nb 10 -data fmnist -m cnn -algo FedFomo -gr 2000 -M 5 -did 1 -go cnn > fmnist_fedfomo1.out 2>&1 &
 
-# nohup python -u main.py -lbs 16 -nc 20 -jc 20 -nb 10 -data fmnist -m dnn -algo MOCHA -gr 2000 -itk 4000 -did 1 -go dnn > fmnist_mocha.out 2>&1 &
-# nohup python -u main.py -lbs 16 -nc 20 -jc 20 -nb 10 -data fmnist -m cnn -algo MOCHA -gr 2000 -itk 4000 -did 1 -go cnn > fmnist_mocha1.out 2>&1 &
+# nohup python -u main.py -lbs 16 -nc 20 -jc 20 -nb 10 -data fmnist -m dnn -algo FedMTL -gr 2000 -itk 4000 -did 1 -go dnn > fmnist_FedMTL.out 2>&1 &
+# nohup python -u main.py -lbs 16 -nc 20 -jc 20 -nb 10 -data fmnist -m cnn -algo FedMTL -gr 2000 -itk 4000 -did 1 -go cnn > fmnist_FedMTL1.out 2>&1 &
 
 # nohup python -u main.py -lbs 16 -nc 20 -jc 20 -nb 10 -data fmnist -m dnn -algo FedAMP -gr 2000 -alk 5e-3 -lam 5e-7 -sg 1e-1 -did 1 -go dnn > fmnist_fedamp.out 2>&1 &
 # nohup python -u main.py -lbs 16 -nc 20 -jc 20 -nb 10 -data fmnist -m cnn -algo FedAMP -gr 2000 -alk 5e-3 -lam 5e-7 -sg 1e-1 -did 1 -go cnn > fmnist_fedamp1.out 2>&1 &
-
-# nohup python -u main.py -lbs 16 -nc 20 -jc 20 -nb 10 -data fmnist -m dnn -algo HeurFedAMP -gr 2000 -alk 2.5e-1 -lam 2.5e-5 -sg 10 -xi 0.998 -did 1 -go dnn > fmnist_heurfedamp.out 2>&1 &
-# nohup python -u main.py -lbs 16 -nc 20 -jc 20 -nb 10 -data fmnist -m cnn -algo HeurFedAMP -gr 2000 -alk 2.5e-1 -lam 2.5e-5 -sg 10 -xi 0.998 -did 1 -go cnn > fmnist_heurfedamp1.out 2>&1 &
 
 # ===============================================================horizontal(agnews)======================================================================  
 
@@ -177,8 +162,6 @@
 
 # nohup python -u main.py -lbs 16 -nc 20 -jc 20 -nb 4 -data agnews -m lstm -algo FedFomo -gr 500 -M 5 -did 1 -go lstm > agnews_fedfomo.out 2>&1 &
 
-# nohup python -u main.py -lbs 16 -nc 20 -jc 20 -nb 4 -data agnews -m lstm -algo MOCHA -gr 500 -itk 4000 -did 1 -go lstm > agnews_mocha.out 2>&1 &
+# nohup python -u main.py -lbs 16 -nc 20 -jc 20 -nb 4 -data agnews -m lstm -algo FedMTL -gr 500 -itk 4000 -did 1 -go lstm > agnews_FedMTL.out 2>&1 &
 
 # nohup python -u main.py -lbs 16 -nc 20 -jc 20 -nb 4 -data agnews -m lstm -algo FedAMP -gr 500 -alk 5e-3 -lam 5e-7 -sg 1e-1 -did 0 -go lstm > agnews_fedamp.out 2>&1 &
-
-# nohup python -u main.py -lbs 16 -nc 20 -jc 20 -nb 4 -data agnews -m lstm -algo HeurFedAMP -gr 500 -alk 2.5e-1 -lam 2.5e-5 -sg 10 -xi 0.998 -did 1 -go lstm > agnews_heurfedamp.out 2>&1 &

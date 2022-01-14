@@ -8,20 +8,17 @@ from flcore.clients.clientbase import Client
 
 
 class clientPerAvg(Client):
-    def __init__(self, device, numeric_id, train_slow, send_slow, train_data, test_data, model, batch_size, learning_rate,
-                 local_steps, beta):
-        super().__init__(device, numeric_id, train_slow, send_slow, train_data, test_data, model, batch_size, learning_rate,
-                         local_steps)
+    def __init__(self, args, id, train_samples, test_samples, **kwargs):
+        super().__init__(args, id, train_samples, test_samples, **kwargs)
 
-        self.beta = beta
-
-        # parameters for personalized federated learing.
-        self.local_model = copy.deepcopy(self.model)
+        # self.beta = args.beta
+        self.beta = self.learning_rate
 
         self.loss = nn.CrossEntropyLoss()
         self.optimizer = PerAvgOptimizer(self.model.parameters(), lr=self.learning_rate)
 
     def train(self):
+        trainloader = self.load_train_data(self.batch_size*2)
         start_time = time.time()
 
         # self.model.to(self.device)
@@ -32,28 +29,45 @@ class clientPerAvg(Client):
             max_local_steps = np.random.randint(1, max_local_steps // 2)
 
         for step in range(max_local_steps):  # local update
-            temp_model = copy.deepcopy(list(self.model.parameters()))
+            for X, Y in trainloader:
+                temp_model = copy.deepcopy(list(self.model.parameters()))
 
-            # step 1
-            x, y = self.get_next_train_batch()
-            self.optimizer.zero_grad()
-            output = self.model(x)
-            loss = self.loss(output, y)
-            loss.backward()
-            self.optimizer.step()
+                # step 1
+                if type(X) == type([]):
+                    x = [None, None]
+                    x[0] = X[0][:self.batch_size].to(self.device)
+                    x[1] = X[1][:self.batch_size]
+                else:
+                    x = X[:self.batch_size].to(self.device)
+                y = Y[:self.batch_size].to(self.device)
+                if self.train_slow:
+                    time.sleep(0.1 * np.abs(np.random.rand()))
+                self.optimizer.zero_grad()
+                output = self.model(x)
+                loss = self.loss(output, y)
+                loss.backward()
+                self.optimizer.step()
 
-            # step 2
-            x, y = self.get_next_train_batch()
-            self.optimizer.zero_grad()
-            output = self.model(x)
-            loss = self.loss(output, y)
-            loss.backward()
+                # step 2
+                if type(X) == type([]):
+                    x = [None, None]
+                    x[0] = X[0][self.batch_size:].to(self.device)
+                    x[1] = X[1][self.batch_size:]
+                else:
+                    x = X[self.batch_size:].to(self.device)
+                y = Y[self.batch_size:].to(self.device)
+                if self.train_slow:
+                    time.sleep(0.1 * np.abs(np.random.rand()))
+                self.optimizer.zero_grad()
+                output = self.model(x)
+                loss = self.loss(output, y)
+                loss.backward()
 
-            # restore the model parameters to the one before first update
-            for old_param, new_param in zip(self.model.parameters(), temp_model):
-                old_param.data = new_param.data.clone()
+                # restore the model parameters to the one before first update
+                for old_param, new_param in zip(self.model.parameters(), temp_model):
+                    old_param.data = new_param.data.clone()
 
-            self.optimizer.step(beta=self.beta)
+                self.optimizer.step(beta=self.beta)
 
         # self.model.cpu()
 
@@ -62,11 +76,18 @@ class clientPerAvg(Client):
 
 
     def train_one_step(self):
+        testloader = self.load_test_data(self.batch_size)
+        iter_testloader = iter(testloader)
         # self.model.to(self.device)
         self.model.train()
 
         # step 1
-        x, y = self.get_next_test_batch()
+        (x, y) = next(iter_testloader)
+        if type(x) == type([]):
+            x[0] = x[0].to(self.device)
+        else:
+            x = x.to(self.device)
+        y = y.to(self.device)
         self.optimizer.zero_grad()
         output = self.model(x)
         loss = self.loss(output, y)
@@ -74,7 +95,12 @@ class clientPerAvg(Client):
         self.optimizer.step()
 
         # step 2
-        x, y = self.get_next_test_batch()
+        (x, y) = next(iter_testloader)
+        if type(x) == type([]):
+            x[0] = x[0].to(self.device)
+        else:
+            x = x.to(self.device)
+        y = y.to(self.device)
         self.optimizer.zero_grad()
         output = self.model(x)
         loss = self.loss(output, y)
@@ -82,21 +108,3 @@ class clientPerAvg(Client):
         self.optimizer.step(beta=self.beta)
 
         # self.model.cpu()
-
-    
-    def get_next_test_batch(self):
-        try:
-            # Samples a new batch for persionalizing
-            (x, y) = next(self.iter_testloader)
-        except StopIteration:
-            # restart the generator if the previous generator is exhausted.
-            self.iter_testloader = iter(self.testloader)
-            (x, y) = next(self.iter_testloader)
-            
-        if type(x) == type([]):
-            x[0] = x[0].to(self.device)
-        else:
-            x = x.to(self.device)
-        y = y.to(self.device)
-
-        return x, y

@@ -5,37 +5,26 @@ import numpy as np
 import math
 from flcore.clients.clientamp import clientAMP, weight_flatten
 from flcore.servers.serverbase import Server
-from utils.data_utils import read_client_data
 from threading import Thread
 
 
 class FedAMP(Server):
-    def __init__(self, device, dataset, algorithm, model, batch_size, learning_rate, global_rounds, local_steps, join_clients,
-                 num_clients, times, eval_gap, client_drop_rate, train_slow_rate, send_slow_rate, time_select, goal, time_threthold, 
-                 alphaK, lamda, sigma):
-        super().__init__(dataset, algorithm, model, batch_size, learning_rate, global_rounds, local_steps, join_clients,
-                         num_clients, times, eval_gap, client_drop_rate, train_slow_rate, send_slow_rate, time_select, goal, 
-                         time_threthold)
+    def __init__(self, args, times):
+        super().__init__(args, times)
+
         # select slow clients
         self.set_slow_clients()
+        self.set_clients(args, clientAMP)
 
-        self.alphaK = alphaK
-        self.sigma = sigma
+        self.alphaK = args.alphaK
+        self.sigma = args.sigma
 
-        self.client_ws = [model for i in range(num_clients)]
-        self.client_us = [model for i in range(num_clients)]
-
-        for i, train_slow, send_slow in zip(range(self.num_clients), self.train_slow_clients, self.send_slow_clients):
-            train, test = read_client_data(dataset, i)
-            client = clientAMP(device, i, train_slow, send_slow, train, test, model, batch_size, learning_rate, 
-                                local_steps, alphaK, lamda)
-            self.clients.append(client)
-
-        print(f"\nJoin clients / total clients: {self.join_clients} / {self.num_clients}")
+        print(f"\nJoin ratio / total clients: {self.join_ratio} / {self.num_clients}")
         print("Finished creating server and clients.")
 
     def train(self):
         for i in range(self.global_rounds+1):
+            self.selected_clients = self.select_clients()
             self.send_models()
 
             if i%self.eval_gap == 0:
@@ -43,7 +32,7 @@ class FedAMP(Server):
                 print("\nEvaluate global model")
                 self.evaluate()
 
-            for client in self.clients:
+            for client in self.selected_clients:
                 client.train()
 
             # threads = [Thread(target=client.train)
@@ -52,57 +41,51 @@ class FedAMP(Server):
             # [t.join() for t in threads]
 
             self.receive_models()
-            self.update_client_temp()
 
-        print("\nBest global results.")
-        self.print_(max(self.rs_test_acc), max(
-            self.rs_train_acc), min(self.rs_train_loss))
+        print("\nBest global accuracy.")
+        # self.print_(max(self.rs_test_acc), max(
+        #     self.rs_train_acc), min(self.rs_train_loss))
+        print(max(self.rs_test_acc))
 
         self.save_results()
         self.save_global_model()
 
 
     def send_models(self):
-        assert (len(self.clients) > 0)
+        assert (len(self.selected_clients) > 0)
 
-        for client in self.clients:
-            start_time = time.time()
+        if len(self.uploaded_models) > 0:
+            for c in self.selected_clients:
+                mu = copy.deepcopy(self.global_model)
+                for param in mu.parameters():
+                    param.data = torch.zeros_like(param.data)
 
-            if client.send_slow:
-                time.sleep(0.1 * np.abs(np.random.rand()))
+                coef = torch.zeros(self.join_clients)
+                for j, mw in enumerate(self.uploaded_models):
+                    if c.id != self.uploaded_ids[j]:
+                        weights_i = weight_flatten(c.model)
+                        weights_j = weight_flatten(mw)
+                        sub = (weights_i - weights_j).view(-1)
+                        sub = torch.dot(sub, sub)
+                        coef[j] = self.alphaK * self.e(sub)
+                    else:
+                        coef[j] = 0
+                coef_self = 1 - torch.sum(coef)
+                # print(i, coef)
 
-            client.set_parameters(copy.deepcopy(self.client_us[client.id]))
+                for j, mw in enumerate(self.uploaded_models):
+                    for param, param_j in zip(mu.parameters(), mw.parameters()):
+                        param.data += coef[j] * param_j
 
-            client.send_time_cost['num_rounds'] += 1
-            client.send_time_cost['total_cost'] += 2 * (time.time() - start_time)
+                start_time = time.time()
 
-    def receive_models(self):
-        assert (len(self.clients) > 0)
+                if c.send_slow:
+                    time.sleep(0.1 * np.abs(np.random.rand()))
 
-        for client in self.clients:
-            client_time_cost = client.train_time_cost['total_cost'] / client.train_time_cost['num_rounds'] + \
-                    client.send_time_cost['total_cost'] / client.send_time_cost['num_rounds']
-            if client_time_cost <= self.time_threthold:
-                self.client_ws[client.id] = copy.deepcopy(client.model)
+                c.set_parameters(mu, coef_self)
 
-    def update_client_temp(self):
-        weights = [weight_flatten(mw) for mw in self.client_ws]
-
-        for i, mu in enumerate(self.client_us):
-            for param in mu.parameters():
-                param.data = torch.zeros_like(param.data)
-
-            coef = torch.zeros(self.num_clients)
-            for j, mw in enumerate(self.client_ws):
-                if i != j:
-                    sub = (weights[i] - weights[j]).view(-1)
-                    sub = torch.dot(sub, sub)
-                    coef[j] = self.alphaK * self.e(sub)
-            coef[i] = 1 - torch.sum(coef)
-
-            for j, mw in enumerate(self.client_ws):
-                for param, param_j in zip(mu.parameters(), mw.parameters()):
-                    param.data += coef[j] * param_j
+                c.send_time_cost['num_rounds'] += 1
+                c.send_time_cost['total_cost'] += 2 * (time.time() - start_time)
 
     def e(self, x):
         return math.exp(-x/self.sigma)/self.sigma

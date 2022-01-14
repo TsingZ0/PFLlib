@@ -11,13 +11,13 @@ from torchtext.vocab import build_vocab_from_iterator
 random.seed(1)
 np.random.seed(1)
 num_clients = 20
-num_labels = 5
+num_classes = 5
 max_len = 200
 dir_path = "sogounews/"
 
 
 # Allocate data to users
-def generate_sogounews(dir_path, num_clients, num_labels, niid=False, real=True, partition=None):
+def generate_sogounews(dir_path, num_clients, num_classes, niid=False, real=True, partition=None):
     if not os.path.exists(dir_path):
         os.makedirs(dir_path)
         
@@ -26,7 +26,7 @@ def generate_sogounews(dir_path, num_clients, num_labels, niid=False, real=True,
     train_path = dir_path + "train/train.json"
     test_path = dir_path + "test/test.json"
 
-    if check(config_path, train_path, test_path, num_clients, num_labels, niid, real, partition):
+    if check(config_path, train_path, test_path, num_clients, num_classes, niid, real, partition):
         return
 
     # Get Sogou_News data
@@ -73,14 +73,14 @@ def generate_sogounews(dir_path, num_clients, num_labels, niid=False, real=True,
     label_list = np.array(label_list)
 
     # dataset = []
-    # for i in range(num_labels):
+    # for i in range(num_classes):
     #     idx = label_list == i
     #     dataset.append(text_list[idx])
 
-    X, y, statistic = separate_data((text_list, label_list), num_clients, num_labels, 
+    X, y, statistic = separate_data((text_list, label_list), num_clients, num_classes, 
                                     niid, real, partition)
     train_data, test_data = split_data(X, y)
-    save_file(config_path, train_path, test_path, train_data, test_data, num_clients, num_labels, 
+    save_file(config_path, train_path, test_path, train_data, test_data, num_clients, num_classes, 
         statistic, niid, real, partition)
 
     print("The size of vocabulary:", len(vocab))
@@ -91,4 +91,4 @@ if __name__ == "__main__":
     real = True if sys.argv[2] == "realworld" else False
     partition = sys.argv[3] if sys.argv[3] != "-" else None
 
-    generate_sogounews(dir_path, num_clients, num_labels, niid, real, partition)
+    generate_sogounews(dir_path, num_clients, num_classes, niid, real, partition)

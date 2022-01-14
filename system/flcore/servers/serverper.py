@@ -1,15 +1,15 @@
-from flcore.clients.clientavg import clientAVG
+from flcore.clients.clientper import clientPer
 from flcore.servers.serverbase import Server
 from threading import Thread
 
 
-class FedAvg(Server):
+class FedPer(Server):
     def __init__(self, args, times):
         super().__init__(args, times)
 
         # select slow clients
         self.set_slow_clients()
-        self.set_clients(args, clientAVG)
+        self.set_clients(args, clientPer)
 
         print(f"\nJoin ratio / total clients: {self.join_ratio} / {self.num_clients}")
         print("Finished creating server and clients.")
@@ -45,3 +45,19 @@ class FedAvg(Server):
 
         self.save_results()
         self.save_global_model()
+
+
+    def receive_models(self):
+        assert (len(self.selected_clients) > 0)
+
+        self.uploaded_weights = []
+        tot_samples = 0
+        self.uploaded_ids = []
+        self.uploaded_models = []
+        for client in self.selected_clients:
+            self.uploaded_weights.append(client.train_samples)
+            tot_samples += client.train_samples
+            self.uploaded_ids.append(client.id)
+            self.uploaded_models.append(client.model.base)
+        for i, w in enumerate(self.uploaded_weights):
+            self.uploaded_weights[i] = w / tot_samples

@@ -1,7 +1,13 @@
 import copy
 import torch
 import torch.nn as nn
+import numpy as np
+import os
+import torch.nn.functional as F
 from torch.utils.data import DataLoader
+from sklearn.preprocessing import label_binarize
+from sklearn import metrics
+from utils.data_utils import read_client_data
 
 
 class Client(object):
@@ -9,29 +15,49 @@ class Client(object):
     Base class for clients in federated learning.
     """
 
-    def __init__(self, device, id, train_slow, send_slow, train_data, test_data, model, batch_size, learning_rate, local_steps):
-        self.model = copy.deepcopy(model)
-        self.device = device
+    def __init__(self, args, id, train_samples, test_samples, **kwargs):
+        self.model = copy.deepcopy(args.model)
+        self.dataset = args.dataset
+        self.device = args.device
         self.id = id  # integer
-        self.train_slow = train_slow
-        self.send_slow = send_slow
+        self.save_folder_name = args.save_folder_name
+
+        self.num_classes = args.num_classes
+        self.train_samples = train_samples
+        self.test_samples = test_samples
+        self.batch_size = args.batch_size
+        self.learning_rate = args.local_learning_rate
+        self.local_steps = args.local_steps
+
+        # check BatchNorm
+        self.has_BatchNorm = False
+        for layer in self.model.children():
+            if isinstance(layer, nn.BatchNorm2d):
+                self.has_BatchNorm = True
+                break
+
+        self.train_slow = kwargs['train_slow']
+        self.send_slow = kwargs['send_slow']
         self.train_time_cost = {'num_rounds': 0, 'total_cost': 0.0}
         self.send_time_cost = {'num_rounds': 0, 'total_cost': 0.0}
 
-        self.train_samples = len(train_data)
-        self.test_samples = len(test_data)
-        self.batch_size = batch_size
-        self.learning_rate = learning_rate
-        self.local_steps = local_steps
-
-        self.trainloader = DataLoader(train_data, self.batch_size, drop_last=True)
-        self.testloader = DataLoader(test_data, self.batch_size, drop_last=True)
-        self.trainloaderfull = DataLoader(train_data, self.batch_size, drop_last=False)
-        self.testloaderfull = DataLoader(test_data, self.batch_size, drop_last=False)
-        self.iter_trainloader = iter(self.trainloader)
-        self.iter_testloader = iter(self.testloader)
+        self.privacy = args.privacy
+        self.dp_sigma = args.dp_sigma
+        self.sample_rate = self.batch_size / self.train_samples
 
 
+    def load_train_data(self, batch_size=None):
+        if batch_size == None:
+            batch_size = self.batch_size
+        train_data = read_client_data(self.dataset, self.id, is_train=True)
+        return DataLoader(train_data, batch_size, drop_last=True, shuffle=True)
+
+    def load_test_data(self, batch_size=None):
+        if batch_size == None:
+            batch_size = self.batch_size
+        test_data = read_client_data(self.dataset, self.id, is_train=False)
+        return DataLoader(test_data, batch_size, drop_last=True, shuffle=True)
+        
     def set_parameters(self, model):
         for new_param, old_param in zip(model.parameters(), self.model.parameters()):
             old_param.data = new_param.data.clone()
@@ -45,77 +71,90 @@ class Client(object):
         for param, new_param in zip(model.parameters(), new_params):
             param.data = new_param.data.clone()
 
-    def test_accuracy(self):
+    def test_metrics(self):
+        testloaderfull = self.load_test_data()
+        # self.model = self.load_model('model')
         # self.model.to(self.device)
         self.model.eval()
 
         test_acc = 0
         test_num = 0
+        y_prob = []
+        y_true = []
         
         with torch.no_grad():
-            for x, y in self.testloaderfull:
+            for x, y in testloaderfull:
                 if type(x) == type([]):
                     x[0] = x[0].to(self.device)
                 else:
                     x = x.to(self.device)
                 y = y.to(self.device)
                 output = self.model(x)
+
                 test_acc += (torch.sum(torch.argmax(output, dim=1) == y)).item()
                 test_num += y.shape[0]
 
+                y_prob.append(F.softmax(output).detach().cpu().numpy())
+                y_true.append(label_binarize(y.detach().cpu().numpy(), np.arange(self.num_classes)))
+
         # self.model.cpu()
+        # self.save_model(self.model, 'model')
+
+        y_prob = np.concatenate(y_prob, axis=0)
+        y_true = np.concatenate(y_true, axis=0)
+
+        auc = metrics.roc_auc_score(y_true, y_prob, average='micro')
         
-        return test_acc, test_num
+        return test_acc, test_num, auc
 
-    def train_accuracy_and_loss(self):
-        # self.model.to(self.device)
-        self.model.eval()
+    # def train_accuracy_and_loss(self):
+    #     # self.model = self.load_model('model')
+    #     # self.model.to(self.device)
+    #     self.model.eval()
 
-        train_acc = 0
-        train_num = 0
-        loss = 0
-        for x, y in self.trainloaderfull:
-            if type(x) == type([]):
-                x[0] = x[0].to(self.device)
-            else:
-                x = x.to(self.device)
-            y = y.to(self.device)
-            output = self.model(x)
-            train_acc += (torch.sum(torch.argmax(output, dim=1) == y)).item()
-            train_num += y.shape[0]
-            loss += self.loss(output, y).item() * y.shape[0]
+    #     train_num = 0
+    #     loss = 0
+    #     for x, y in trainloaderfull:
+    #         if type(x) == type([]):
+    #             x[0] = x[0].to(self.device)
+    #         else:
+    #             x = x.to(self.device)
+    #         y = y.to(self.device)
+    #         output = self.model(x)
+    #         train_num += y.shape[0]
+    #         loss += self.loss(output, y).item() * y.shape[0]
 
-        # self.model.cpu()
+    #     # self.model.cpu()
+    #     # self.save_model(self.model, 'model')
 
-        return train_acc, loss, train_num
+    #     return loss, train_num
 
-    def get_next_train_batch(self):
-        try:
-            # Samples a new batch for persionalizing
-            (x, y) = next(self.iter_trainloader)
-        except StopIteration:
-            # restart the generator if the previous generator is exhausted.
-            self.iter_trainloader = iter(self.trainloader)
-            (x, y) = next(self.iter_trainloader)
+    # def get_next_train_batch(self):
+    #     try:
+    #         # Samples a new batch for persionalizing
+    #         (x, y) = next(self.iter_trainloader)
+    #     except StopIteration:
+    #         # restart the generator if the previous generator is exhausted.
+    #         self.iter_trainloader = iter(self.trainloader)
+    #         (x, y) = next(self.iter_trainloader)
 
-        if type(x) == type([]):
-            x[0] = x[0].to(self.device)
-        else:
-            x = x.to(self.device)
-        y = y.to(self.device)
+    #     if type(x) == type([]):
+    #         x = x[0]
+    #     x = x.to(self.device)
+    #     y = y.to(self.device)
 
-        return x, y
+    #     return x, y
 
 
-    # def save_model(self):
-    #     model_path = os.path.join("models", self.dataset)
-    #     if not os.path.exists(model_path):
-    #         os.makedirs(model_path)
-    #     torch.save(self.model, os.path.join(model_path, "client_" + self.id + ".pt"))
+    def save_item(self, item, item_name):
+        item_path = os.path.join(self.save_folder_name, self.dataset)
+        if not os.path.exists(item_path):
+            os.makedirs(item_path)
+        torch.save(item, os.path.join(item_path, "client_" + str(self.id) + "_" + item_name + ".pt"))
 
-    # def load_model(self):
-    #     model_path = os.path.join("models", self.dataset)
-    #     self.model = torch.load(os.path.join(model_path, "server" + ".pt"))
+    def load_model(self, modle_name):
+        model_path = os.path.join("models", self.dataset)
+        return torch.load(os.path.join(model_path, "client_" + str(self.id) + "_" + modle_name + ".pt"))
 
     # @staticmethod
     # def model_exists():
