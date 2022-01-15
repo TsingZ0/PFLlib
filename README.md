@@ -22,40 +22,40 @@ In **Non-IID** setting, three situations exist. The first one is the **pathologi
     cd ./dataset
     python generate_mnist.py iid - - # for iid and unbalanced setting
     # python generate_mnist.py noniid - - # for pathological noniid setting
-    # python generate_mnist.py noniid dir - # for practical noniid setting
-    # python generate_mnist.py noniid dir noise # for feature skew noniid setting
+    # python generate_mnist.py noniid - dir # for practical noniid setting
+    # python generate_mnist.py noniid - noise # for feature skew noniid setting
     ```
 - Cifar10
     ```
     cd ./dataset
     python generate_cifar10.py iid - - # for iid and unbalanced setting
     # python generate_cifar10.py noniid - - # for pathological noniid setting
-    # python generate_cifar10.py noniid dir - # for practical noniid setting
-    # python generate_cifar10.py noniid dir noise # for feature skew noniid setting
+    # python generate_cifar10.py noniid - dir # for practical noniid setting
+    # python generate_cifar10.py noniid - noise # for feature skew noniid setting
     ```
 - Cifar100
     ```
     cd ./dataset
     python generate_cifar100py iid - - # for iid and unbalanced setting
     # python generate_cifar100.py noniid - - # for pathological noniid setting
-    # python generate_cifar100.py noniid dir - # for practical noniid setting
-    # python generate_cifar100.py noniid dir noise # for feature skew noniid setting
+    # python generate_cifar100.py noniid - dir # for practical noniid setting
+    # python generate_cifar100.py noniid - noise # for feature skew noniid setting
     ```
 - Fashion-MNIST
     ```
     cd ./dataset
     python generate_fmnist.py iid - - # for iid and unbalanced setting
     # python generate_fmnist.py noniid - - # for pathological noniid setting
-    # python generate_fmnist.py noniid dir - # for practical noniid setting
-    # python generate_fmnist.py noniid dir noise # for feature skew noniid setting
+    # python generate_fmnist.py noniid - dir # for practical noniid setting
+    # python generate_fmnist.py noniid - noise # for feature skew noniid setting
     ```
 - AG_News
     ```
     cd ./dataset
     python generate_agnews.py iid - - # for iid and unbalanced setting
     # python generate_agnews.py noniid - - # for pathological noniid setting
-    # python generate_agnews.py noniid dir - # for practical noniid setting
-    # python generate_agnews.py noniid dir noise # for feature skew noniid setting
+    # python generate_agnews.py noniid - dir # for practical noniid setting
+    # python generate_agnews.py noniid - noise # for feature skew noniid setting
     ```
 - Sogou_News (remains to be tested)
     ```
@@ -63,8 +63,8 @@ In **Non-IID** setting, three situations exist. The first one is the **pathologi
     cd ./dataset
     python generate_sogounews.py iid - - # for iid and unbalanced setting
     # python generate_sogounews.py noniid - - # for pathological noniid setting
-    # python generate_sogounews.py noniid dir - # for practical noniid setting
-    # python generate_sogounews.py noniid dir noise # for feature skew noniid setting
+    # python generate_sogounews.py noniid - dir # for practical noniid setting
+    # python generate_sogounews.py noniid - noise # for feature skew noniid setting
     ```
 - Tiny-ImageNet
     ```
@@ -73,9 +73,8 @@ In **Non-IID** setting, three situations exist. The first one is the **pathologi
     python generate_tiny_imagenet.py iid - - - # for iid and unbalanced setting
     # python generate_tiny_imagenet.py iid - - balance # for iid and balanced setting
     # python generate_tiny_imagenet.py noniid - - - # for pathological noniid setting
-    # python generate_tiny_imagenet.py noniid dir - - # for practical noniid setting
-    # python generate_tiny_imagenet.py noniid dir - - # for practical noniid setting
-    # python generate_tiny_imagenet.py noniid dir noise - # for feature skew noniid setting
+    # python generate_tiny_imagenet.py noniid - dir - # for practical noniid setting
+    # python generate_tiny_imagenet.py noniid - noise - # for feature skew noniid setting
     ```
 
 ### Dataset generating examples
@@ -411,7 +410,7 @@ Client 2     Samples of labels:  [(0, 3903), (1, 746)]
 </details>
 <br/>
 
-The output of `generate_mnist.py noniid dir -`
+The output of `generate_mnist.py noniid - -`
 ```
 Original number of samples of each label: [6903, 7877, 6990, 7141, 6824, 6313, 6876, 7293, 6825, 6958]
 
