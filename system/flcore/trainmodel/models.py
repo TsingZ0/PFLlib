@@ -11,13 +11,9 @@ class LocalModel(nn.Module):
 
         self.base = base
         self.predictor = predictor
-
-        self.gamma, self.beta = None, None
         
     def forward(self, x):
         out = self.base(x)
-        if self.gamma != None:
-            out = (1 + self.gamma) * out + self.beta
         out = self.predictor(out)
 
         return out

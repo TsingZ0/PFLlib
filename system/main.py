@@ -19,8 +19,9 @@ from flcore.servers.servermtl import FedMTL
 from flcore.servers.serverlocal import Local
 from flcore.servers.serverper import FedPer
 from flcore.servers.serverapfl import APFL
-from flcore.servers.serverks import FedKS
-from flcore.servers.servercon import FedCon
+from flcore.servers.serverditto import Ditto
+from flcore.servers.serverrep import FedRep
+from flcore.servers.serverphp import FedPHP
 from flcore.trainmodel.models import *
 
 from flcore.trainmodel.bilstm import BiLSTM_TextClassification
@@ -131,6 +132,23 @@ def run(args):
             args.model = LocalModel(args.model, args.predictor)
             server = FedPer(args, i)
 
+        elif args.algorithm == "Ditto":
+            server = Ditto(args, i)
+
+        elif args.algorithm == "FedRep":
+            if i == 0:
+                args.predictor = copy.deepcopy(args.model.fc)
+                args.model.fc = nn.Identity()
+                args.model = LocalModel(args.model, args.predictor)
+            server = FedRep(args, i)
+
+        elif args.algorithm == "FedPHP":
+            if i == 0:
+                args.predictor = copy.deepcopy(args.model.fc)
+                args.model.fc = nn.Identity()
+                args.model = LocalModel(args.model, args.predictor)
+            server = FedPHP(args, i)
+
 
         server.train()
 
@@ -196,7 +214,7 @@ if __name__ == "__main__":
                         help="Whether to group and select clients at each round according to time cost")
     parser.add_argument('-tth', "--time_threthold", type=float, default=10000,
                         help="The threthold for droping slow clients")
-    # pFedMe / PerAvg / FedProx / FedAMP
+    # pFedMe / PerAvg / FedProx / FedAMP / FedPHP
     parser.add_argument('-bt', "--beta", type=float, default=0.0,
                         help="Average moving parameter for pFedMe, Second learning rate of Per-FedAvg, \
                         or L1 regularization weight of FedTransfer")
@@ -220,6 +238,8 @@ if __name__ == "__main__":
     parser.add_argument('-sg', "--sigma", type=float, default=1.0)
     # APFL
     parser.add_argument('-al', "--alpha", type=float, default=1.0)
+    # Ditto / FedRep
+    parser.add_argument('-pls', "--plocal_steps", type=int, default=1)
 
     args = parser.parse_args()
 
@@ -267,6 +287,14 @@ if __name__ == "__main__":
         print("sigma: {}".format(args.sigma))
     elif args.algorithm == "APFL":
         print("alpha: {}".format(args.alpha))
+    elif args.algorithm == "Ditto":
+        print("plocal_steps: {}".format(args.plocal_steps))
+        print("mu: {}".format(args.mu))
+    elif args.algorithm == "FedRep":
+        print("plocal_steps: {}".format(args.plocal_steps))
+    elif args.algorithm == "FedPHP":
+        print("mu: {}".format(args.mu))
+        print("lamda: {}".format(args.lamda))
     print("=" * 50)
 
 
