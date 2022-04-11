@@ -113,20 +113,6 @@ class Server(object):
     def add_parameters(self, w, client_model):
         for server_param, client_param in zip(self.global_model.parameters(), client_model.parameters()):
             server_param.data += client_param.data.clone() * w
-        
-
-    # def aggregate_parameters(self):
-
-    #     for param in self.global_model.parameters():
-    #         param.data = torch.zeros_like(param.data)
-
-    #     active_train_samples = 0
-    #     for client in self.selected_clients:
-    #         active_train_samples += client.train_samples
-
-    #     for client in self.selected_clients:
-    #         self.add_parameters(client, client.train_samples / active_train_samples)
-
 
     def save_global_model(self):
         model_path = os.path.join("models", self.dataset)
