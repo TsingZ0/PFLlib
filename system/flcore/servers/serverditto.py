@@ -1,3 +1,4 @@
+import copy
 from flcore.clients.clientditto import clientDitto
 from flcore.servers.serverbase import Server
 from threading import Thread
@@ -18,12 +19,15 @@ class Ditto(Server):
         # self.load_model()
         self.Budget = []
 
+        # self.load_model()
+        self.Budget = []
+
 
     def train(self):
         for i in range(self.global_rounds+1):
             s_t = time.time()
             self.selected_clients = self.select_clients()
-            self.send_models(i)
+            self.send_models()
 
             if i%self.eval_gap == 0:
                 print(f"\n-------------Round number: {i}-------------")
@@ -31,6 +35,7 @@ class Ditto(Server):
                 self.evaluate()
 
             for client in self.selected_clients:
+                client.ptrain()
                 client.train()
 
             # threads = [Thread(target=client.train)
@@ -52,10 +57,3 @@ class Ditto(Server):
 
         self.save_results()
         self.save_global_model()
-
-
-    def send_models(self, R):
-        assert (len(self.selected_clients) > 0)
-
-        for client in self.selected_clients:
-            client.set_parameters(copy.deepcopy(self.global_model), R)

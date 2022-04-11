@@ -43,7 +43,7 @@ class clientDitto(Client):
             max_local_steps = np.random.randint(1, max_local_steps // 2)
 
         for step in range(max_local_steps):
-            for x, y in trainloader:
+            for i, (x, y) in enumerate(trainloader):
                 if type(x) == type([]):
                     x[0] = x[0].to(self.device)
                 else:
@@ -71,6 +71,8 @@ class clientDitto(Client):
             
         
     def ptrain(self):
+        trainloader = self.load_train_data()
+
         start_time = time.time()
 
         # self.model.to(self.device)
@@ -81,7 +83,7 @@ class clientDitto(Client):
             max_local_steps = np.random.randint(1, max_local_steps // 2)
 
         for step in range(max_local_steps):
-            for x, y in self.trainloader:
+            for x, y in trainloader:
                 if type(x) == type([]):
                     x[0] = x[0].to(self.device)
                 else:
@@ -100,6 +102,7 @@ class clientDitto(Client):
         self.train_time_cost['total_cost'] += time.time() - start_time
 
     def test_metrics(self):
+        testloaderfull = self.load_test_data()
         # self.model = self.load_model('model')
         # self.model.to(self.device)
         self.pmodel.eval()
@@ -110,7 +113,7 @@ class clientDitto(Client):
         y_true = []
         
         with torch.no_grad():
-            for x, y in self.testloaderfull:
+            for x, y in testloaderfull:
                 if type(x) == type([]):
                     x[0] = x[0].to(self.device)
                 else:

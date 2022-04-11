@@ -35,7 +35,7 @@ class clientRep(Client):
             param.requires_grad = True
 
         for step in range(self.plocal_steps):
-            for i, (x, y) in enumerate(self.trainloader):
+            for i, (x, y) in enumerate(trainloader):
                 if type(x) == type([]):
                     x[0] = x[0].to(self.device)
                 else:
@@ -59,7 +59,7 @@ class clientRep(Client):
             param.requires_grad = False
 
         for step in range(max_local_steps):
-            for i, (x, y) in enumerate(self.trainloader):
+            for i, (x, y) in enumerate(trainloader):
                 if type(x) == type([]):
                     x[0] = x[0].to(self.device)
                 else:

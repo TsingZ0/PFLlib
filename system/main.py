@@ -229,7 +229,7 @@ if __name__ == "__main__":
     # FedFomo
     parser.add_argument('-M', "--M", type=int, default=5,
                         help="Server only sends M client models to one client at each round")
-    # MOCHA
+    # FedMTL
     parser.add_argument('-itk', "--itk", type=int, default=4000,
                         help="The iterations for solving quadratic subproblems")
     # FedAMP
@@ -279,7 +279,7 @@ if __name__ == "__main__":
         print("Proximal rate: {}".format(args.mu))
     elif args.algorithm == "FedFomo":
         print("Server sends {} models to one client at each round".format(args.M))
-    elif args.algorithm == "MOCHA":
+    elif args.algorithm == "FedMTL":
         print("The iterations for solving quadratic subproblems: {}".format(args.itk))
     elif args.algorithm == "FedAMP":
         print("alphaK: {}".format(args.alphaK))
