@@ -16,11 +16,6 @@ class clientRep(Client):
 
         self.plocal_steps = args.plocal_steps
 
-        # differential privacy
-        if self.privacy:
-            check_dp(self.model)
-            initialize_dp(self.model, self.optimizer, self.sample_rate, self.dp_sigma)
-
     def train(self):
         trainloader = self.load_train_data()
         
@@ -71,19 +66,12 @@ class clientRep(Client):
                 output = self.model(x)
                 loss = self.loss(output, y)
                 loss.backward()
-                if self.privacy:
-                    dp_step(self.optimizer, i, len(trainloader))
-                else:
-                    self.optimizer.step()
+                self.optimizer.step()
 
         # self.model.cpu()
 
         self.train_time_cost['num_rounds'] += 1
         self.train_time_cost['total_cost'] += time.time() - start_time
-
-        if self.privacy:
-            res, DELTA = get_dp_params(self.optimizer)
-            print(f"Client {self.id}", f"(ε = {res[0]:.2f}, δ = {DELTA}) for α = {res[1]}")
             
     def set_parameters(self, base):
         for new_param, old_param in zip(base.parameters(), self.model.base.parameters()):
