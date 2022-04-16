@@ -17,13 +17,6 @@ The origin of the Non-IID phenomenon is the personalization of users, who genera
 - **FedPHP** — [FedPHP: Federated Personalization with Inherited Private Models](https://link.springer.com/chapter/10.1007/978-3-030-86486-6_36) *ECML PKDD 2021*
 
 
-## Environments
-With the installed [conda](https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh), we can run this platform in a conda virtual environment called *fl_torch*. Note: due to the code updates, some modules are required to install based on the given `*.yml`. 
-```
-# current version
-conda env create -f env.yml # for Linux
-```
-
 ## Datasets (updating)
 Except for the **Synthetic** dataset (without update anymore), I currently using **six** famous datasets: **MNIST**, **Fashion-MNIST**, **Cifar10**, **Cifar100**, **AG_News** and **Sogou_News**, they can be easy split into **IID** and **Non-IID** version. Since some codes for generating datasets such as splitting are the same for all datasets, I move these codes into `./utils/dataset_utils.py`. Now it is easy to add other datasets to this FL platform. *If you need another data set, just write another code to download it and then using the utils.*
 
@@ -606,6 +599,13 @@ Client 2         Samples of labels:  [(0, 75), (1, 107), (3, 130), (7, 291), (8,
     2. fastText() in [Bag of Tricks for Efficient Text Classification](https://arxiv.org/abs/1607.01759)
     3. TextCNN() in [Convolutional Neural Networks for Sentence Classification](https://arxiv.org/abs/1408.5882)
 
+
+## Environments
+With the installed [conda](https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh), we can run this platform in a conda virtual environment called *fl_torch*. Note: due to the code updates, some modules are required to install based on the given `*.yml`. 
+```
+# current version
+conda env create -f env.yml # for Linux
+```
 
 ## How to start simulating 
 - Build dataset: [Datasets](#datasets-updating)
