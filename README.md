@@ -8,6 +8,22 @@ With the installed [conda](https://repo.anaconda.com/miniconda/Miniconda3-latest
 conda env create -f env.yml # for Linux
 ```
 
+
+## Algorithms (updating)
+- **FedAvg** — [Communication-Efficient Learning of Deep Networks from Decentralized Data](https://arxiv.org/abs/1602.05629) *AISTATS 2017*
+- **FedPer** — [Federated Learning with Personalization Layers](https://arxiv.org/pdf/1912.00818.pdf)
+- **Per-FadAvg** — [Personalized Federated Learning with Theoretical Guarantees: A Model-Agnostic Meta-Learning Approach](https://proceedings.neurips.cc/paper/2020/file/24389bfe4fe2eba8bf9aa9203a44cdad-Paper.pdf) *NeurIPS 2020*
+- **pFedMe** — [Personalized Federated Learning with Moreau Envelopes](https://proceedings.neurips.cc/paper/2020/file/f4f1f13c8289ac1b1ee0ff176b56fc60-Paper.pdf) *NeurIPS 2020*
+- **FedProx** — [Federated Optimization for Heterogeneous Networks](https://openreview.net/pdf?id=SkgwE5Ss3N) *ICLR 2020*
+- **APFL** — [Adaptive Personalized Federated Learning](https://arxiv.org/pdf/2003.13461.pdf)
+- **FedFomo** — [Personalized Federated Learning with First Order Model Optimization](https://openreview.net/pdf?id=ehJqJQk9cw) *ICLR 2021*
+- **FedMTL** — [Federated multi-task learning](https://arxiv.org/abs/1705.10467) *NIPS 2017*
+- **FedAMP** — [Personalized Cross-Silo Federated Learning on Non-IID Data](https://www.aaai.org/AAAI21Papers/AAAI-5802.HuangY.pdf) *AAAI 2021*
+- **Ditto** — [Ditto: Fair and robust federated learning through personalization](http://proceedings.mlr.press/v139/li21h/li21h.pdf) *ICML 2021*
+- **FedRep** — [Exploiting Shared Representations for Personalized Federated Learning](http://proceedings.mlr.press/v139/collins21a/collins21a.pdf) *ICML 2021*
+- **FedPHP** — [FedPHP: Federated Personalization with Inherited Private Models](https://link.springer.com/chapter/10.1007/978-3-030-86486-6_36) *ECML PKDD 2021*
+
+
 ## Datasets (updating)
 Except for the **Synthetic** dataset (without update anymore), I currently using **six** famous datasets: **MNIST**, **Fashion-MNIST**, **Cifar10**, **Cifar100**, **AG_News** and **Sogou_News**, they can be easy split into **IID** and **Non-IID** version. Since some codes for generating datasets such as splitting are the same for all datasets, I move these codes into `./utils/dataset_utils.py`. Now it is easy to add other datasets to this FL platform. *If you need another data set, just write another code to download it and then using the utils.*
 
@@ -589,21 +605,6 @@ Client 2         Samples of labels:  [(0, 75), (1, 107), (3, 130), (7, 291), (8,
     1. LSTM()
     2. fastText() in [Bag of Tricks for Efficient Text Classification](https://arxiv.org/abs/1607.01759)
     3. TextCNN() in [Convolutional Neural Networks for Sentence Classification](https://arxiv.org/abs/1408.5882)
-
-
-## Algorithms (updating)
-- **FedAvg** — [Communication-Efficient Learning of Deep Networks from Decentralized Data](https://arxiv.org/abs/1602.05629) *AISTATS 2017*
-- **FedPer** — [Federated Learning with Personalization Layers](https://arxiv.org/pdf/1912.00818.pdf)
-- **Per-FadAvg** — [Personalized Federated Learning with Theoretical Guarantees: A Model-Agnostic Meta-Learning Approach](https://proceedings.neurips.cc/paper/2020/file/24389bfe4fe2eba8bf9aa9203a44cdad-Paper.pdf) *NeurIPS 2020*
-- **pFedMe** — [Personalized Federated Learning with Moreau Envelopes](https://proceedings.neurips.cc/paper/2020/file/f4f1f13c8289ac1b1ee0ff176b56fc60-Paper.pdf) *NeurIPS 2020*
-- **FedProx** — [Federated Optimization for Heterogeneous Networks](https://openreview.net/pdf?id=SkgwE5Ss3N) *ICLR 2020*
-- **APFL** — [Adaptive Personalized Federated Learning](https://arxiv.org/pdf/2003.13461.pdf)
-- **FedFomo** — [Personalized Federated Learning with First Order Model Optimization](https://openreview.net/pdf?id=ehJqJQk9cw) *ICLR 2021*
-- **FedMTL** — [Federated multi-task learning](https://arxiv.org/abs/1705.10467) *NIPS 2017*
-- **FedAMP** — [Personalized Cross-Silo Federated Learning on Non-IID Data](https://www.aaai.org/AAAI21Papers/AAAI-5802.HuangY.pdf) *AAAI 2021*
-- **Ditto** — [Ditto: Fair and robust federated learning through personalization](http://proceedings.mlr.press/v139/li21h/li21h.pdf) *ICML 2021*
-- **FedRep** — [Exploiting Shared Representations for Personalized Federated Learning](http://proceedings.mlr.press/v139/collins21a/collins21a.pdf) *ICML 2021*
-- **FedPHP** — [FedPHP: Federated Personalization with Inherited Private Models](https://link.springer.com/chapter/10.1007/978-3-030-86486-6_36) *ECML PKDD 2021*
 
 
 ## How to start simulating 
