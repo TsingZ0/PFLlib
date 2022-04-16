@@ -1,13 +1,6 @@
 # Personalized federated learning simulation platform with Non-IID dataset
 The origin of the Non-IID phenomenon is the personalization of users, who generate the Non-IID data. With **Non-IID (Not Independent and Identically Distributed)** issue existing in the federated learning setting, a myriad of approaches has been proposed to crack this hard nut. In contrast, the personalized federated learning may take the advantage of the Non-IID data to learn the personalized model for each user. Thanks to [@Stonesjtu](https://github.com/Stonesjtu/pytorch_memlab/blob/d590c489236ee25d157ff60ecd18433e8f9acbe3/pytorch_memlab/mem_reporter.py#L185), this platform can also record the GPU memory usage for the model. By using the package [opacus v0.15](https://github.com/pytorch/opacus/releases/tag/v0.15.0), I introduce **differential privacy** into this platform (please refer to `./system/flcore/clients/clientavg.py` for details). 
 
-## Environments
-With the installed [conda](https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh), we can run this platform in a conda virtual environment called *fl_torch*. Note: due to the code updates, some modules are required to install based on the given `*.yml`. 
-```
-# current version
-conda env create -f env.yml # for Linux
-```
-
 
 ## Algorithms (updating)
 - **FedAvg** — [Communication-Efficient Learning of Deep Networks from Decentralized Data](https://arxiv.org/abs/1602.05629) *AISTATS 2017*
@@ -23,6 +16,13 @@ conda env create -f env.yml # for Linux
 - **FedRep** — [Exploiting Shared Representations for Personalized Federated Learning](http://proceedings.mlr.press/v139/collins21a/collins21a.pdf) *ICML 2021*
 - **FedPHP** — [FedPHP: Federated Personalization with Inherited Private Models](https://link.springer.com/chapter/10.1007/978-3-030-86486-6_36) *ECML PKDD 2021*
 
+
+## Environments
+With the installed [conda](https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh), we can run this platform in a conda virtual environment called *fl_torch*. Note: due to the code updates, some modules are required to install based on the given `*.yml`. 
+```
+# current version
+conda env create -f env.yml # for Linux
+```
 
 ## Datasets (updating)
 Except for the **Synthetic** dataset (without update anymore), I currently using **six** famous datasets: **MNIST**, **Fashion-MNIST**, **Cifar10**, **Cifar100**, **AG_News** and **Sogou_News**, they can be easy split into **IID** and **Non-IID** version. Since some codes for generating datasets such as splitting are the same for all datasets, I move these codes into `./utils/dataset_utils.py`. Now it is easy to add other datasets to this FL platform. *If you need another data set, just write another code to download it and then using the utils.*
