@@ -6,10 +6,6 @@ With the installed [conda](https://repo.anaconda.com/miniconda/Miniconda3-latest
 ```
 # current version
 conda env create -f env.yml # for Linux
-
-# old version
-cd ./system
-conda env create -f env_linux.yml # for linux
 ```
 
 ## Datasets (updating)
