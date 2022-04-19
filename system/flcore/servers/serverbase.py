@@ -105,7 +105,7 @@ class Server(object):
 
         self.global_model = copy.deepcopy(self.uploaded_models[0])
         for param in self.global_model.parameters():
-            param.data = torch.zeros_like(param.data)
+            param.data.zero_()
             
         for w, client_model in zip(self.uploaded_weights, self.uploaded_models):
             self.add_parameters(w, client_model)

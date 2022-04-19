@@ -137,7 +137,7 @@ class clientFomo(Client):
 
         if len(weights) > 0:
             for param in self.model.parameters():
-                param.data = torch.zeros_like(param.data)
+                param.data.zero_()
 
             for w, received_model in zip(weights, self.received_models):
                 self.add_parameters(w, received_model)

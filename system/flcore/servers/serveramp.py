@@ -58,7 +58,7 @@ class FedAMP(Server):
             for c in self.selected_clients:
                 mu = copy.deepcopy(self.global_model)
                 for param in mu.parameters():
-                    param.data = torch.zeros_like(param.data)
+                    param.data.zero_()
 
                 coef = torch.zeros(self.join_clients)
                 for j, mw in enumerate(self.uploaded_models):

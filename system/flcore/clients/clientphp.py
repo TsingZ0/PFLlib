@@ -7,7 +7,7 @@ from flcore.clients.clientbase import Client
 from utils.privacy import *
 
 
-class clientAVG(Client):
+class clientPHP(Client):
     def __init__(self, args, id, train_samples, test_samples, **kwargs):
         super().__init__(args, id, train_samples, test_samples, **kwargs)
         
@@ -16,6 +16,11 @@ class clientAVG(Client):
 
         self.mu = args.mu / args.global_rounds
         self.lamda = args.lamda
+
+        self.model_s = copy.deepcopy(self.model)
+        for param in self.model_s.parameters():
+            param.requires_grad = False
+        # self.model_s.eval()
 
     def train(self):
         trainloader = self.load_train_data()
@@ -52,7 +57,9 @@ class clientAVG(Client):
 
     def set_parameters(self, model, R):
         mu = self.mu * R
-        self.model_s = copy.deepcopy(model)
+
+        for new_param, old_param in zip(model.parameters(), self.model_s.parameters()):
+            old_param.data = new_param.data.clone()
 
         for new_param, old_param in zip(model.parameters(), self.model.parameters()):
             old_param.data = new_param * (1 - mu) + old_param * mu

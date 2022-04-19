@@ -1,4 +1,4 @@
-from flcore.clients.clientrep import clientRep
+from flcore.clients.clientphp import clientPHP
 from flcore.servers.serverbase import Server
 from threading import Thread
 import time
@@ -11,7 +11,7 @@ class FedPHP(Server):
 
         # select slow clients
         self.set_slow_clients()
-        self.set_clients(args, clientRep)
+        self.set_clients(args, clientPHP)
 
         print(f"\nJoin ratio / total clients: {self.join_ratio} / {self.num_clients}")
         print("Finished creating server and clients.")
@@ -23,7 +23,7 @@ class FedPHP(Server):
     def train(self):
         for i in range(self.global_rounds+1):
             self.selected_clients = self.select_clients()
-            self.send_models()
+            self.send_models(i)
 
             if i%self.eval_gap == 0:
                 print(f"\n-------------Round number: {i}-------------")
@@ -48,3 +48,10 @@ class FedPHP(Server):
 
         self.save_results()
         self.save_global_model()
+
+
+    def send_models(self, R):
+        assert (len(self.selected_clients) > 0)
+
+        for client in self.selected_clients:
+            client.set_parameters(self.global_model, R)
