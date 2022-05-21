@@ -23,7 +23,6 @@ from flcore.servers.serverditto import Ditto
 from flcore.servers.serverrep import FedRep
 from flcore.servers.serverphp import FedPHP
 from flcore.servers.serverbn import FedBN
-from flcore.servers.serverpartial import Partial
 from flcore.servers.serverrod import FedROD
 
 from flcore.trainmodel.models import *
@@ -156,9 +155,6 @@ def run(args):
         elif args.algorithm == "FedBN":
             server = FedBN(args, i)
 
-        elif args.algorithm == "Partial":
-            server = Partial(args, i)
-
         elif args.algorithm == "FedROD":
             if i == 0:
                 args.predictor = copy.deepcopy(args.model.fc)
@@ -257,9 +253,6 @@ if __name__ == "__main__":
     parser.add_argument('-al', "--alpha", type=float, default=1.0)
     # Ditto / FedRep
     parser.add_argument('-pls', "--plocal_steps", type=int, default=1)
-    # Partial
-    parser.add_argument('-pr', "--policy_rounds", type=int, default=20)
-    parser.add_argument('-pp', "--policy_percent", type=float, default=0.8)
 
     args = parser.parse_args()
 
