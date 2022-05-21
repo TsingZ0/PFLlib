@@ -146,15 +146,17 @@ class Client(object):
     #     return x, y
 
 
-    def save_item(self, item, item_name):
-        item_path = os.path.join(self.save_folder_name, self.dataset)
+    def save_item(self, item, item_name, item_path=None):
+        if item_path == None:
+            item_path = self.save_folder_name
         if not os.path.exists(item_path):
             os.makedirs(item_path)
         torch.save(item, os.path.join(item_path, "client_" + str(self.id) + "_" + item_name + ".pt"))
 
-    def load_model(self, modle_name):
-        model_path = os.path.join("models", self.dataset)
-        return torch.load(os.path.join(model_path, "client_" + str(self.id) + "_" + modle_name + ".pt"))
+    def load_item(self, item_name, item_path=None):
+        if item_path == None:
+            item_path = self.save_folder_name
+        return torch.load(os.path.join(item_path, "client_" + str(self.id) + "_" + item_name + ".pt"))
 
     # @staticmethod
     # def model_exists():

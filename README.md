@@ -10,11 +10,14 @@ The origin of the Non-IID phenomenon is the personalization of users, who genera
 - **FedProx** — [Federated Optimization for Heterogeneous Networks](https://openreview.net/pdf?id=SkgwE5Ss3N) *ICLR 2020*
 - **APFL** — [Adaptive Personalized Federated Learning](https://arxiv.org/pdf/2003.13461.pdf)
 - **FedFomo** — [Personalized Federated Learning with First Order Model Optimization](https://openreview.net/pdf?id=ehJqJQk9cw) *ICLR 2021*
-- **FedMTL** — [Federated multi-task learning](https://arxiv.org/abs/1705.10467) *NIPS 2017*
+- **FedMTL** — [Federated multi-task learning](https://arxiv.org/abs/1705.10467) *NeurIPS 2017*
 - **FedAMP** — [Personalized Cross-Silo Federated Learning on Non-IID Data](https://www.aaai.org/AAAI21Papers/AAAI-5802.HuangY.pdf) *AAAI 2021*
 - **Ditto** — [Ditto: Fair and robust federated learning through personalization](http://proceedings.mlr.press/v139/li21h/li21h.pdf) *ICML 2021*
 - **FedRep** — [Exploiting Shared Representations for Personalized Federated Learning](http://proceedings.mlr.press/v139/collins21a/collins21a.pdf) *ICML 2021*
 - **FedPHP** — [FedPHP: Federated Personalization with Inherited Private Models](https://link.springer.com/chapter/10.1007/978-3-030-86486-6_36) *ECML PKDD 2021*
+- **FedBN** — [FedBN: Federated Learning on Non-IID Features via Local Batch Normalization](https://openreview.net/pdf?id=6YEQUn0QICG) *ICLR 2021*
+- **PartialFed** — [PartialFed: Cross-Domain Personalized Federated Learning via Partial Initialization](https://proceedings.neurips.cc/paper/2021/file/c429429bf1f2af051f2021dc92a8ebea-Paper.pdf) *NeurIPS 2021*
+- **FedRoD** — [On Bridging Generic and Personalized Federated Learning for Image Classification](https://openreview.net/pdf?id=I1hQbx10Kxn) *ICLR 2022*
 
 
 ## Datasets (updating)

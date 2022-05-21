@@ -22,6 +22,10 @@ from flcore.servers.serverapfl import APFL
 from flcore.servers.serverditto import Ditto
 from flcore.servers.serverrep import FedRep
 from flcore.servers.serverphp import FedPHP
+from flcore.servers.serverbn import FedBN
+from flcore.servers.serverpartial import Partial
+from flcore.servers.serverrod import FedROD
+
 from flcore.trainmodel.models import *
 
 from flcore.trainmodel.bilstm import BiLSTM_TextClassification
@@ -149,6 +153,19 @@ def run(args):
                 args.model = LocalModel(args.model, args.predictor)
             server = FedPHP(args, i)
 
+        elif args.algorithm == "FedBN":
+            server = FedBN(args, i)
+
+        elif args.algorithm == "Partial":
+            server = Partial(args, i)
+
+        elif args.algorithm == "FedROD":
+            if i == 0:
+                args.predictor = copy.deepcopy(args.model.fc)
+                args.model.fc = nn.Identity()
+                args.model = LocalModel(args.model, args.predictor)
+            server = FedROD(args, i)
+
 
         server.train()
 
@@ -240,6 +257,9 @@ if __name__ == "__main__":
     parser.add_argument('-al', "--alpha", type=float, default=1.0)
     # Ditto / FedRep
     parser.add_argument('-pls', "--plocal_steps", type=int, default=1)
+    # Partial
+    parser.add_argument('-pr', "--policy_rounds", type=int, default=20)
+    parser.add_argument('-pp', "--policy_percent", type=float, default=0.8)
 
     args = parser.parse_args()
 
@@ -268,33 +288,6 @@ if __name__ == "__main__":
 
     if args.device == "cuda":
         print("Cuda device id: {}".format(os.environ["CUDA_VISIBLE_DEVICES"]))
-    if args.algorithm == "pFedMe":
-        print("Average moving parameter beta: {}".format(args.beta))
-        print("Regularization rate: {}".format(args.lamda))
-        print("Number of personalized training steps: {}".format(args.K))
-        print("personalized learning rate to caculate theta: {}".format(args.p_learning_rate))
-    elif args.algorithm == "PerAvg":
-        print("Second learning rate beta: {}".format(args.beta))
-    elif args.algorithm == "FedProx":
-        print("Proximal rate: {}".format(args.mu))
-    elif args.algorithm == "FedFomo":
-        print("Server sends {} models to one client at each round".format(args.M))
-    elif args.algorithm == "FedMTL":
-        print("The iterations for solving quadratic subproblems: {}".format(args.itk))
-    elif args.algorithm == "FedAMP":
-        print("alphaK: {}".format(args.alphaK))
-        print("lamda: {}".format(args.lamda))
-        print("sigma: {}".format(args.sigma))
-    elif args.algorithm == "APFL":
-        print("alpha: {}".format(args.alpha))
-    elif args.algorithm == "Ditto":
-        print("plocal_steps: {}".format(args.plocal_steps))
-        print("mu: {}".format(args.mu))
-    elif args.algorithm == "FedRep":
-        print("plocal_steps: {}".format(args.plocal_steps))
-    elif args.algorithm == "FedPHP":
-        print("mu: {}".format(args.mu))
-        print("lamda: {}".format(args.lamda))
     print("=" * 50)
 
 

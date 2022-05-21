@@ -26,6 +26,8 @@ class Server(object):
         self.time_select = args.time_select
         self.goal = args.goal
         self.time_threthold = args.time_threthold
+        self.save_folder_name = args.save_folder_name
+        self.top_cnt = 100
 
         self.clients = []
         self.selected_clients = []
@@ -148,6 +150,14 @@ class Server(object):
                 hf.create_dataset('rs_test_auc', data=self.rs_test_auc)
                 hf.create_dataset('rs_train_loss', data=self.rs_train_loss)
 
+    def save_item(self, item, item_name):
+        if not os.path.exists(self.save_folder_name):
+            os.makedirs(self.save_folder_name)
+        torch.save(item, os.path.join(self.save_folder_name, "server_" + item_name + ".pt"))
+
+    def load_item(self, item_name):
+        return torch.load(os.path.join(self.save_folder_name, "server_" + item_name + ".pt"))
+
     def test_metrics(self):
         num_samples = []
         tot_correct = []
@@ -191,8 +201,32 @@ class Server(object):
         print("Average Test AUC: {:.4f}".format(test_auc))
         # self.print_(test_acc, train_acc, train_loss)
 
-
     def print_(self, test_acc, test_auc, train_loss):
         print("Average Test Accurancy: {:.4f}".format(test_acc))
         print("Average Test AUC: {:.4f}".format(test_auc))
         print("Average Train Loss: {:.4f}".format(train_loss))
+
+    def check_done(self, acc_lss, top_cnt=None, div_value=None):
+        for acc_ls in acc_lss:
+            if top_cnt != None and div_value != None:
+                find_top = len(acc_ls) - torch.topk(torch.tensor(acc_ls), 1).indices[0] > top_cnt
+                find_div = len(acc_ls) > 1 and np.std(acc_ls[-top_cnt:]) < div_value
+                if find_top and find_div:
+                    pass
+                else:
+                    return False
+            elif top_cnt != None:
+                find_top = len(acc_ls) - torch.topk(torch.tensor(acc_ls), 1).indices[0] > top_cnt
+                if find_top:
+                    pass
+                else:
+                    return False
+            elif div_value != None:
+                find_div = len(acc_ls) > 1 and np.std(acc_ls[-top_cnt:]) < div_value
+                if find_div:
+                    pass
+                else:
+                    return False
+            else:
+                raise NotImplementedError
+        return True
