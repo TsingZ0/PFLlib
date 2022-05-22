@@ -416,7 +416,7 @@ Client 2     Samples of labels:  [(0, 3903), (1, 746)]
 </details>
 <br/>
 
-The output of `generate_mnist.py noniid - -`
+The output of `generate_mnist.py noniid - dir` (`alpha = 0.1` in `./dataset/utils/dataset_utils.py`)
 ```
 Original number of samples of each label: [6903, 7877, 6990, 7141, 6824, 6313, 6876, 7293, 6825, 6958]
 
