@@ -639,7 +639,7 @@ If you need to simulate FL in a practical setting, which includes **client dropo
 - `-tth`: The threshold for network TTL (ms). 
 
 ## Easy to extend
-This platform is easy to extend both dataset and algorithm. 
+It is easy to add new datasets or algorithms to this platform. 
 
 - To add a new dataset into this platform, all you need to do is writing the download code and using the utils the same as `./dataset/generate_mnist.py` (you can also consider it as the template). 
 
