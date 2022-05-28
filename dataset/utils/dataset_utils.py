@@ -186,10 +186,10 @@ def save_file(config_path, train_path, test_path, train_data, test_data, num_cli
     print("Saving to disk.\n")
 
     for idx, train_dict in enumerate(train_data):
-        with open(train_path[:-5] + str(idx)  + '_' + '.npz', 'wb') as f:
+        with open(train_path + str(idx) + '.npz', 'wb') as f:
             np.savez_compressed(f, data=train_dict)
     for idx, test_dict in enumerate(test_data):
-        with open(test_path[:-5] + str(idx)  + '_' + '.npz', 'wb') as f:
+        with open(test_path + str(idx) + '.npz', 'wb') as f:
             np.savez_compressed(f, data=test_dict)
     with open(config_path, 'w') as f:
         ujson.dump(config, f)

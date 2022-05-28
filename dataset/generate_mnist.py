@@ -22,8 +22,8 @@ def generate_mnist(dir_path, num_clients, num_classes, niid=False, real=True, pa
         
     # Setup directory for train/test data
     config_path = dir_path + "config.json"
-    train_path = dir_path + "train/train.json"
-    test_path = dir_path + "test/test.json"
+    train_path = dir_path + "train/"
+    test_path = dir_path + "test/"
 
     if check(config_path, train_path, test_path, num_clients, num_classes, niid, real, partition):
         return
