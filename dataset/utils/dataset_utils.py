@@ -141,7 +141,7 @@ def separate_data(data, num_clients, num_classes, niid=False, real=True, partiti
     return X, y, statistic
 
 
-def split_data(X, y, train_size=train_size):
+def split_data(X, y):
     # Split dataset
     train_data, test_data = [], []
     num_samples = {'train':[], 'test':[]}
