@@ -56,7 +56,7 @@ class Client(object):
         if batch_size == None:
             batch_size = self.batch_size
         test_data = read_client_data(self.dataset, self.id, is_train=False)
-        return DataLoader(test_data, batch_size, drop_last=True, shuffle=True)
+        return DataLoader(test_data, batch_size, drop_last=False, shuffle=True)
         
     def set_parameters(self, model):
         for new_param, old_param in zip(model.parameters(), self.model.parameters()):
@@ -94,7 +94,7 @@ class Client(object):
                 test_acc += (torch.sum(torch.argmax(output, dim=1) == y)).item()
                 test_num += y.shape[0]
 
-                y_prob.append(F.softmax(output).detach().cpu().numpy())
+                y_prob.append(output.detach().cpu().numpy())
                 y_true.append(label_binarize(y.detach().cpu().numpy(), classes=np.arange(self.num_classes)))
 
         # self.model.cpu()
