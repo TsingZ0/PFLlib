@@ -133,7 +133,7 @@ def run(args):
                 args.predictor = copy.deepcopy(args.model.fc)
                 args.model.fc = nn.Identity()
                 args.model = LocalModel(args.model, args.predictor)
-            server = FedRep(args, i)
+            server = FedPer(args, i)
 
         elif args.algorithm == "Ditto":
             server = Ditto(args, i)
