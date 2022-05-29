@@ -129,11 +129,11 @@ def run(args):
             server = APFL(args, i)
 
         elif args.algorithm == "FedPer":
-            # split model
-            args.predictor = copy.deepcopy(args.model.fc)
-            args.model.fc = nn.Identity()
-            args.model = LocalModel(args.model, args.predictor)
-            server = FedPer(args, i)
+            if i == 0:
+                args.predictor = copy.deepcopy(args.model.fc)
+                args.model.fc = nn.Identity()
+                args.model = LocalModel(args.model, args.predictor)
+            server = FedRep(args, i)
 
         elif args.algorithm == "Ditto":
             server = Ditto(args, i)
