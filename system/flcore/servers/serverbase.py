@@ -172,11 +172,11 @@ class Server(object):
 
         return ids, num_samples, tot_correct, tot_auc
 
-    def train_accuracy_and_loss(self):
+    def train_metrics(self):
         num_samples = []
         losses = []
         for c in self.selected_clients:
-            cl, ns = c.train_accuracy_and_loss()
+            cl, ns = c.train_metrics()
             num_samples.append(ns)
             losses.append(cl*1.0)
 
@@ -185,21 +185,32 @@ class Server(object):
         return ids, num_samples, losses
 
     # evaluate selected clients
-    def evaluate(self):
+    def evaluate(self, acc=None, loss=None):
         stats = self.test_metrics()
-        # stats_train = self.train_accuracy_and_loss()
+        stats_train = self.train_metrics()
 
         test_acc = sum(stats[2])*1.0 / sum(stats[1])
         test_auc = sum(stats[3])*1.0 / sum(stats[1])
-        # train_loss = sum(stats_train[2])*1.0 / sum(stats_train[1])
+        train_loss = sum(stats_train[2])*1.0 / sum(stats_train[1])
+        accs = [a / n for a, n in zip(stats[2], stats[1])]
+        aucs = [a / n for a, n in zip(stats[3], stats[1])]
         
-        self.rs_test_acc.append(test_acc)
-        self.rs_test_auc.append(test_auc)
-        # self.rs_train_loss.append(train_loss)
+        if acc == None:
+            self.rs_test_acc.append(test_acc)
+        else:
+            acc.append(test_acc)
+        
+        if loss == None:
+            self.rs_train_loss.append(train_loss)
+        else:
+            loss.append(train_loss)
 
-        print("Average Test Accurancy: {:.4f}".format(test_acc))
-        print("Average Test AUC: {:.4f}".format(test_auc))
+        print("Averaged Train Loss: {:.4f}".format(train_loss))
+        print("Averaged Test Accurancy: {:.4f}".format(test_acc))
+        print("Averaged Test AUC: {:.4f}".format(test_auc))
         # self.print_(test_acc, train_acc, train_loss)
+        print("Std Test Accurancy: {:.4f}".format(np.std(accs)))
+        print("Std Test AUC: {:.4f}".format(np.std(aucs)))
 
     def print_(self, test_acc, test_auc, train_loss):
         print("Average Test Accurancy: {:.4f}".format(test_acc))

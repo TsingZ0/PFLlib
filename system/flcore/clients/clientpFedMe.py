@@ -95,7 +95,7 @@ class clientpFedMe(Client):
         
         return test_acc, test_num
 
-    # def train_accuracy_and_loss_personalized(self):
+    # def train_metrics_personalized(self):
     #     self.update_parameters(self.model, self.personalized_params)
     #     # self.model.to(self.device)
     #     self.model.eval()

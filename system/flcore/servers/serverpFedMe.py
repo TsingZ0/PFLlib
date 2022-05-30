@@ -81,12 +81,12 @@ class pFedMe(Server):
 
         return ids, num_samples, tot_correct
 
-    def train_accuracy_and_loss_personalized(self):
+    def train_metrics_personalized(self):
         num_samples = []
         tot_correct = []
         losses = []
         for c in self.selected_clients:
-            ct, cl, ns = c.train_accuracy_and_loss_personalized()
+            ct, cl, ns = c.train_metrics_personalized()
             tot_correct.append(ct*1.0)
             num_samples.append(ns)
             losses.append(cl*1.0)
@@ -97,7 +97,7 @@ class pFedMe(Server):
 
     def evaluate_personalized_model(self):
         stats = self.test_metrics_personalized()
-        # stats_train = self.train_accuracy_and_loss_personalized()
+        # stats_train = self.train_metrics_personalized()
 
         test_acc = sum(stats[2])*1.0 / sum(stats[1])
         # train_acc = sum(stats_train[2])*1.0 / sum(stats_train[1])
