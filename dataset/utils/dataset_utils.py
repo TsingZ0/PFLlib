@@ -150,10 +150,10 @@ def split_data(X, y):
         unique, count = np.unique(y[i], return_counts=True)
         if min(count) > 1:
             X_train, X_test, y_train, y_test = train_test_split(
-                X[i], y[i], train_size=train_size, shuffle=True, stratify=y[i])
+                X[i], y[i], train_size=train_size, shuffle=False)
         else:
             X_train, X_test, y_train, y_test = train_test_split(
-                X[i], y[i], train_size=train_size, shuffle=True, stratify=None)
+                X[i], y[i], train_size=train_size, shuffle=False)
 
         train_data.append({'x': X_train, 'y': y_train})
         num_samples['train'].append(len(y_train))
