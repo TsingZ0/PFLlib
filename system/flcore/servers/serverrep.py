@@ -43,12 +43,13 @@ class FedRep(Server):
             self.aggregate_parameters()
 
             self.Budget.append(time.time() - s_t)
-            print('-'*50, self.Budget[-1])
+            print('-'*25, 'time cost', '-'*25, self.Budget[-1])
 
         print("\nBest global accuracy.")
         # self.print_(max(self.rs_test_acc), max(
         #     self.rs_train_acc), min(self.rs_train_loss))
         print(max(self.rs_test_acc))
+        print("\nAverage time cost per round.")
         print(sum(self.Budget[1:])/len(self.Budget[1:]))
 
         self.save_results()
