@@ -97,7 +97,8 @@ def run(args):
         elif model_str == "TextCNN":
             args.model = TextCNN(hidden_dim=hidden_dim, max_len=max_len, vocab_size=vocab_size, 
                             num_classes=args.num_classes).to(args.device)
-    
+        else:
+            raise NotImplementedError
 
         # select algorithm
         if args.algorithm == "FedAvg":
@@ -128,37 +129,33 @@ def run(args):
             server = APFL(args, i)
 
         elif args.algorithm == "FedPer":
-            if i == 0:
-                args.predictor = copy.deepcopy(args.model.fc)
-                args.model.fc = nn.Identity()
-                args.model = LocalModel(args.model, args.predictor)
+            args.predictor = copy.deepcopy(args.model.fc)
+            args.model.fc = nn.Identity()
+            args.model = LocalModel(args.model, args.predictor)
             server = FedPer(args, i)
 
         elif args.algorithm == "Ditto":
             server = Ditto(args, i)
 
         elif args.algorithm == "FedRep":
-            if i == 0:
-                args.predictor = copy.deepcopy(args.model.fc)
-                args.model.fc = nn.Identity()
-                args.model = LocalModel(args.model, args.predictor)
+            args.predictor = copy.deepcopy(args.model.fc)
+            args.model.fc = nn.Identity()
+            args.model = LocalModel(args.model, args.predictor)
             server = FedRep(args, i)
 
         elif args.algorithm == "FedPHP":
-            if i == 0:
-                args.predictor = copy.deepcopy(args.model.fc)
-                args.model.fc = nn.Identity()
-                args.model = LocalModel(args.model, args.predictor)
+            args.predictor = copy.deepcopy(args.model.fc)
+            args.model.fc = nn.Identity()
+            args.model = LocalModel(args.model, args.predictor)
             server = FedPHP(args, i)
 
         elif args.algorithm == "FedBN":
             server = FedBN(args, i)
 
         elif args.algorithm == "FedROD":
-            if i == 0:
-                args.predictor = copy.deepcopy(args.model.fc)
-                args.model.fc = nn.Identity()
-                args.model = LocalModel(args.model, args.predictor)
+            args.predictor = copy.deepcopy(args.model.fc)
+            args.model.fc = nn.Identity()
+            args.model = LocalModel(args.model, args.predictor)
             server = FedROD(args, i)
 
 
