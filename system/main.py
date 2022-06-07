@@ -157,7 +157,8 @@ def run(args):
             args.model.fc = nn.Identity()
             args.model = LocalModel(args.model, args.predictor)
             server = FedROD(args, i)
-
+        else:
+            raise NotImplementedError
 
         server.train()
 
