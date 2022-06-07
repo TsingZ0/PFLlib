@@ -603,10 +603,9 @@ Client 2         Samples of labels:  [(0, 75), (1, 107), (3, 130), (7, 291), (8,
 
 
 ## Environments
-With the installed [conda](https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh), we can run this platform in a conda virtual environment called *fl_torch*. Note: due to the code updates, some modules are required to install based on the given `*.yml`. 
+With the installed [conda](https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh), we can run this platform in a conda virtual environment called *fl_torch*. Note: due to the code updates, some modules are required to install based on the given `*.yaml`. 
 ```
-# current version
-conda env create -f env.yml # for Linux
+conda env create -f env_linux.yaml # for Linux
 ```
 
 ## How to start simulating 

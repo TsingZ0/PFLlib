@@ -44,13 +44,12 @@ def run(args):
 
     time_list = []
     reporter = MemReporter()
+    model_str = args.model
 
     for i in range(args.prev, args.times):
         print(f"\n============= Running time: {i}th =============")
         print("Creating server and clients ...")
         start = time.time()
-        if type(args.model) == type(''):
-            model_str = args.model
 
         # Generate args.model
         if model_str == "mlr":
