@@ -72,6 +72,29 @@ class clientFomo(Client):
         val_loader = DataLoader(val_data, self.batch_size, drop_last=self.has_BatchNorm, shuffle=True)
 
         return trainloader, val_loader
+
+    def train_metrics(self):
+        trainloader, val_loader = self.load_train_data()
+        # self.model = self.load_model('model')
+        # self.model.to(self.device)
+        self.model.eval()
+
+        train_num = 0
+        loss = 0
+        for x, y in trainloader:
+            if type(x) == type([]):
+                x[0] = x[0].to(self.device)
+            else:
+                x = x.to(self.device)
+            y = y.to(self.device)
+            output = self.model(x)
+            train_num += y.shape[0]
+            loss += self.loss(output, y).item() * y.shape[0]
+
+        # self.model.cpu()
+        # self.save_model(self.model, 'model')
+
+        return loss, train_num
     
     def receive_models(self, ids, models):
         self.received_ids = ids
