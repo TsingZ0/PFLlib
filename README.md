@@ -628,7 +628,7 @@ conda env create -f env_linux.yaml # for Linux
     ```
     Then check the figures in `./figures`.
 
-Note: The hyper-parameters have not been tuned for the algorithms. The values in `./system/auto_train.sh` are just examples. You need to tune the hyper-parameters by yourself. 
+**Note**: The hyper-parameters have not been tuned for the algorithms. The values in `./system/auto_train.sh` are just examples. You need to tune the hyper-parameters by yourself. 
 
 ## Practical setting
 If you need to simulate FL in a practical setting, which includes **client dropout**, **slow trainers**, **slow senders**, and **network TTL**, you can set the following parameters to realize it.
