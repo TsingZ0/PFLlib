@@ -24,6 +24,7 @@ from flcore.servers.serverrep import FedRep
 from flcore.servers.serverphp import FedPHP
 from flcore.servers.serverbn import FedBN
 from flcore.servers.serverrod import FedROD
+from flcore.servers.serverproto import FedProto
 
 from flcore.trainmodel.models import *
 
@@ -157,6 +158,13 @@ def run(args):
             args.model.fc = nn.Identity()
             args.model = LocalModel(args.model, args.predictor)
             server = FedROD(args, i)
+
+        elif args.algorithm == "FedProto":
+            args.predictor = copy.deepcopy(args.model.fc)
+            args.model.fc = nn.Identity()
+            args.model = LocalModel(args.model, args.predictor)
+            server = FedProto(args, i)
+            
         else:
             raise NotImplementedError
 
