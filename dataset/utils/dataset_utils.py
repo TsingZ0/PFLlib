@@ -10,7 +10,7 @@ least_samples = batch_size / (1-train_size)
 alpha = 0.1
 
 def check(config_path, train_path, test_path, num_clients, num_classes, niid=False, 
-        real=True, partition=None):
+        balance=True, partition=None):
     # check existing dataset
     if os.path.exists(config_path):
         with open(config_path, 'r') as f:
@@ -18,7 +18,7 @@ def check(config_path, train_path, test_path, num_clients, num_classes, niid=Fal
         if config['num_clients'] == num_clients and \
             config['num_classes'] == num_classes and \
             config['non_iid'] == niid and \
-            config['real_world'] == real and \
+            config['balance'] == balance and \
             config['partition'] == partition and \
             config['alpha'] == alpha and \
             config['batch_size'] == batch_size:
@@ -34,72 +34,56 @@ def check(config_path, train_path, test_path, num_clients, num_classes, niid=Fal
 
     return False
 
-def separate_data(data, num_clients, num_classes, niid=False, real=True, partition=None, 
-                balance=False, class_per_client=2):
+def separate_data(data, num_clients, num_classes, niid=False, balance=False, partition=None, class_per_client=2):
     X = [[] for _ in range(num_clients)]
     y = [[] for _ in range(num_clients)]
     statistic = [[] for _ in range(num_clients)]
 
     dataset_content, dataset_label = data
 
-    if partition == None or partition == "noise":
-        dataset = []
+    dataidx_map = {}
+
+    if not niid:
+        partition = 'pat'
+        class_per_client = num_classes
+
+    if partition == 'pat':
+        idxs = np.array(range(len(dataset_label)))
+        idx_for_each_class = []
         for i in range(num_classes):
-            idx = dataset_label == i
-            dataset.append(dataset_content[idx])
+            idx_for_each_class.append(idxs[dataset_label == i])
 
-        if not niid or real:
-            class_per_client = num_classes
-
-        class_num_client = [class_per_client for _ in range(num_clients)]
+        class_num_per_client = [class_per_client for _ in range(num_clients)]
         for i in range(num_classes):
             selected_clients = []
             for client in range(num_clients):
-                if class_num_client[client] > 0:
+                if class_num_per_client[client] > 0:
                     selected_clients.append(client)
-            if niid and not real:
                 selected_clients = selected_clients[:int(num_clients/num_classes*class_per_client)]
 
-            num_all = len(dataset[i])
-            num_clients_ = len(selected_clients)
-            if niid and real:
-                num_clients_ = np.random.randint(1, len(selected_clients))
-            num_per = num_all / num_clients_
+            num_all_samples = len(idx_for_each_class[i])
+            num_selected_clients = len(selected_clients)
+            num_per = num_all_samples / num_selected_clients
             if balance:
-                num_samples = [int(num_per) for _ in range(num_clients_-1)]
+                num_samples = [int(num_per) for _ in range(num_selected_clients-1)]
             else:
-                num_samples = np.random.randint(max(num_per/10, least_samples/num_classes), num_per, num_clients_-1).tolist()
-            num_samples.append(num_all-sum(num_samples))
-            
-            if niid:
-                # each client is not sure to have all the labels
-                selected_clients = list(np.random.choice(selected_clients, num_clients_, replace=False))
+                num_samples = np.random.randint(max(num_per/10, least_samples/num_classes), num_per, num_selected_clients-1).tolist()
+            num_samples.append(num_all_samples-sum(num_samples))
 
             idx = 0
             for client, num_sample in zip(selected_clients, num_samples):
-                if len(X[client]) == 0:
-                    X[client] = dataset[i][idx:idx+num_sample]
-                    y[client] = i*np.ones(num_sample)
+                if client not in dataidx_map.keys():
+                    dataidx_map[client] = idx_for_each_class[i][idx:idx+num_sample]
                 else:
-                    X[client] = np.append(X[client], dataset[i][idx:idx+num_sample], axis=0)
-                    y[client] = np.append(y[client], i*np.ones(num_sample), axis=0)
+                    dataidx_map[client] = np.append(dataidx_map[client], idx_for_each_class[i][idx:idx+num_sample], axis=0)
                 idx += num_sample
-                statistic[client].append((i, num_sample))
-                class_num_client[client] -= 1
-        
-        # if niid and real and partition == "noise":
-        #     for client in range(num_clients):
-        #         # X[client] = list(map(float, X[client]))
-        #         X[client] = np.array(X[client])
-        #         X[client] += np.random.normal(0, sigma * client / num_clients)
-        #         X[client] = X[client]
+                class_num_per_client[client] -= 1
 
-    elif niid and partition == "dir":
+    elif partition == "dir":
         # https://github.com/IBM/probabilistic-federated-neural-matching/blob/master/experiment.py
         min_size = 0
         K = num_classes
         N = len(dataset_label)
-        net_dataidx_map = {}
 
         while min_size < least_samples:
             idx_batch = [[] for _ in range(num_clients)]
@@ -115,19 +99,18 @@ def separate_data(data, num_clients, num_classes, niid=False, real=True, partiti
                 min_size = min([len(idx_j) for idx_j in idx_batch])
 
         for j in range(num_clients):
-            np.random.shuffle(idx_batch[j])
-            net_dataidx_map[j] = idx_batch[j]
-
-        # additional codes
-        for client in range(num_clients):
-            idxs = net_dataidx_map[client]
-            X[client] = dataset_content[idxs]
-            y[client] = dataset_label[idxs]
-
-            for i in np.unique(y[client]):
-                statistic[client].append((int(i), int(sum(y[client]==i))))
+            dataidx_map[j] = idx_batch[j]
     else:
-        raise EOFError
+        raise NotImplementedError
+
+    # assign data
+    for client in range(num_clients):
+        idxs = dataidx_map[client]
+        X[client] = dataset_content[idxs]
+        y[client] = dataset_label[idxs]
+
+        for i in np.unique(y[client]):
+            statistic[client].append((int(i), int(sum(y[client]==i))))
             
 
     del data
@@ -150,10 +133,10 @@ def split_data(X, y):
         unique, count = np.unique(y[i], return_counts=True)
         if min(count) > 1:
             X_train, X_test, y_train, y_test = train_test_split(
-                X[i], y[i], train_size=train_size, shuffle=False)
+                X[i], y[i], train_size=train_size, shuffle=True)
         else:
             X_train, X_test, y_train, y_test = train_test_split(
-                X[i], y[i], train_size=train_size, shuffle=False)
+                X[i], y[i], train_size=train_size, shuffle=True)
 
         train_data.append({'x': X_train, 'y': y_train})
         num_samples['train'].append(len(y_train))
@@ -170,12 +153,12 @@ def split_data(X, y):
     return train_data, test_data
 
 def save_file(config_path, train_path, test_path, train_data, test_data, num_clients, 
-                num_classes, statistic, niid=False, real=True, partition=None):
+                num_classes, statistic, niid=False, balance=True, partition=None):
     config = {
         'num_clients': num_clients, 
         'num_classes': num_classes, 
         'non_iid': niid, 
-        'real_world': real, 
+        'balance': balance, 
         'partition': partition, 
         'Size of samples for labels in clients': statistic, 
         'alpha': alpha, 

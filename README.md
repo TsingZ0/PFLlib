@@ -1,4 +1,4 @@
-# Personalized federated learning simulation platform with Non-IID and unbalanced dataset
+# Personalized federated learning simulation platform with Non-IID dataset
 The origin of the Non-IID phenomenon is the personalization of users, who generate the Non-IID data. With **Non-IID (Not Independent and Identically Distributed)** issue existing in the federated learning setting, a myriad of approaches has been proposed to crack this hard nut. In contrast, the personalized federated learning may take the advantage of the Non-IID data to learn the personalized model for each user. Thanks to [@Stonesjtu](https://github.com/Stonesjtu/pytorch_memlab/blob/d590c489236ee25d157ff60ecd18433e8f9acbe3/pytorch_memlab/mem_reporter.py#L185), this platform can also record the GPU memory usage for the model. By using the package [opacus v0.15](https://github.com/pytorch/opacus/releases/tag/v0.15.0), I introduce **differential privacy** into this platform (please refer to `./system/flcore/clients/clientavg.py` for details). 
 
 
@@ -20,70 +20,20 @@ The origin of the Non-IID phenomenon is the personalization of users, who genera
 
 
 ## Datasets (updating)
-Except for the **Synthetic** dataset (without update anymore), I currently using **six** famous datasets: **MNIST**, **Fashion-MNIST**, **Cifar10**, **Cifar100**, **AG_News** and **Sogou_News**, they can be easy split into **IID** and **Non-IID** version. Since some codes for generating datasets such as splitting are the same for all datasets, I move these codes into `./utils/dataset_utils.py`. Now it is easy to add other datasets to this FL platform. *If you need another data set, just write another code to download it and then using the utils.*
+Except for the **Synthetic** dataset (without update anymore), I currently using **seven** famous datasets: **MNIST**, **Fashion-MNIST**, **Cifar10**, **Cifar100**, **AG_News**, **Sogou_News** (If ConnectionError raises, please use the given downloaded file in `./dataset`) and **Tiny-ImageNet** (Please download the original data from http://cs231n.stanford.edu/tiny-imagenet-200.zip), they can be easy split into **IID** and **Non-IID** version. Since some codes for generating datasets such as splitting are the same for all datasets, I move these codes into `./dataset/utils/dataset_utils.py`. It is easy to add other datasets to this FL platform. *If you need another data set, just write another code to download it and then using the utils.* 
 
-In **Non-IID** setting, three situations exist. The first one is the **pathological Non-IID** setting, the second one is **practical Non-IID** setting and the third one is **feature skew Non-IID**. In the **pathological Non-IID** setting, for example, the data on each client only contains the specific number of labels (maybe only two labels), though the data on all clients contains 10 labels such as MNIST dataset. In the **practical Non-IID** setting, Dirichlet distribution is utilized (please refer to this [paper](https://proceedings.neurips.cc/paper/2020/hash/18df51b97ccd68128e994804f3eccc87-Abstract.html) for details). In the **feature skew Non-IID**, specific Gaussian noise is added to each client according to their IDs. We can input *balance* for the iid setting, where the data are uniformly distributed. Note that the number of data samples among clients is also unbalanced. 
+In **Non-IID** setting, two situations exist. The first one is the **pathological Non-IID** setting, the second one is **practical Non-IID** setting. In the **pathological Non-IID** setting, for example, the data on each client only contains the specific number of labels (maybe only two labels), though the data on all clients contains 10 labels such as MNIST dataset. In the **practical Non-IID** setting, Dirichlet distribution is utilized (please refer to this [paper](https://proceedings.neurips.cc/paper/2020/hash/18df51b97ccd68128e994804f3eccc87-Abstract.html) for details). We can input *balance* for the iid setting, where the data are uniformly distributed. 
+
+### Examples for **MNIST**
 - MNIST
     ```
     cd ./dataset
     python generate_mnist.py iid - - # for iid and unbalanced setting
-    # python generate_mnist.py noniid - - # for pathological noniid setting
-    # python generate_mnist.py noniid - dir # for practical noniid setting
-    # python generate_mnist.py noniid - noise # for feature skew noniid setting
-    ```
-- Cifar10
-    ```
-    cd ./dataset
-    python generate_cifar10.py iid - - # for iid and unbalanced setting
-    # python generate_cifar10.py noniid - - # for pathological noniid setting
-    # python generate_cifar10.py noniid - dir # for practical noniid setting
-    # python generate_cifar10.py noniid - noise # for feature skew noniid setting
-    ```
-- Cifar100
-    ```
-    cd ./dataset
-    python generate_cifar100py iid - - # for iid and unbalanced setting
-    # python generate_cifar100.py noniid - - # for pathological noniid setting
-    # python generate_cifar100.py noniid - dir # for practical noniid setting
-    # python generate_cifar100.py noniid - noise # for feature skew noniid setting
-    ```
-- Fashion-MNIST
-    ```
-    cd ./dataset
-    python generate_fmnist.py iid - - # for iid and unbalanced setting
-    # python generate_fmnist.py noniid - - # for pathological noniid setting
-    # python generate_fmnist.py noniid - dir # for practical noniid setting
-    # python generate_fmnist.py noniid - noise # for feature skew noniid setting
-    ```
-- AG_News
-    ```
-    cd ./dataset
-    python generate_agnews.py iid - - # for iid and unbalanced setting
-    # python generate_agnews.py noniid - - # for pathological noniid setting
-    # python generate_agnews.py noniid - dir # for practical noniid setting
-    # python generate_agnews.py noniid - noise # for feature skew noniid setting
-    ```
-- Sogou_News (remains to be tested)
-    ```
-    # If ConnectionError raises, please use the given downloaded file in './dataset'. 
-    cd ./dataset
-    python generate_sogounews.py iid - - # for iid and unbalanced setting
-    # python generate_sogounews.py noniid - - # for pathological noniid setting
-    # python generate_sogounews.py noniid - dir # for practical noniid setting
-    # python generate_sogounews.py noniid - noise # for feature skew noniid setting
-    ```
-- Tiny-ImageNet
-    ```
-    # Please download the original data from http://cs231n.stanford.edu/tiny-imagenet-200.zip. 
-    cd ./dataset
-    python generate_tiny_imagenet.py iid - - - # for iid and unbalanced setting
-    # python generate_tiny_imagenet.py iid - - balance # for iid and balanced setting
-    # python generate_tiny_imagenet.py noniid - - - # for pathological noniid setting
-    # python generate_tiny_imagenet.py noniid - dir - # for practical noniid setting
-    # python generate_tiny_imagenet.py noniid - noise - # for feature skew noniid setting
+    # python generate_mnist.py iid balance - # for iid and balanced setting
+    # python generate_mnist.py noniid - pat # for pathological noniid and unbalanced setting
+    # python generate_mnist.py noniid - dir # for practical noniid and unbalanced setting
     ```
 
-### Dataset generating examples
 The output of `generate_mnist.py iid - -`
 ```
 Original number of samples of each label: [6903, 7877, 6990, 7141, 6824, 6313, 6876, 7293, 6825, 6958]
@@ -250,7 +200,7 @@ Client 2     Samples of labels:  [(0, 136), (1, 89), (2, 84), (3, 88), (4, 78), 
 </details>
 <br/>
 
-The output of `generate_mnist.py noniid - -`
+The output of `generate_mnist.py noniid - pat`
 ```
 Original number of samples of each label: [6903, 7877, 6990, 7141, 6824, 6313, 6876, 7293, 6825, 6958]
 

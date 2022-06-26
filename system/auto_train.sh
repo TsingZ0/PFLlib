@@ -5,7 +5,7 @@
 
 # rm ../dataset/mnist/config.json
 # cd ../dataset/
-# nohup python -u generate_mnist.py noniid realworld > mnist_dataset.out 2>&1
+# nohup python -u generate_mnist.py noniid - dir > mnist_dataset.out 2>&1
 # cd ../system/
 
 # nohup python -u main.py -lbs 16 -nc 20 -jr 1 -nb 10 -data mnist -m dnn -algo FedAvg -gr 2000 -did 0 -go dnn > mnist_fedavg.out 2>&1 &
@@ -45,7 +45,7 @@
 
 # rm ../dataset/Cifar10/config.json
 # cd ../dataset/
-# nohup python -u generate_cifar10.py noniid realworld > cifar10_dataset.out 2>&1
+# nohup python -u generate_cifar10.py noniid - dir > cifar10_dataset.out 2>&1
 # cd ../system/
 
 # nohup python -u main.py -lbs 16 -nc 20 -jr 1 -nb 10 -data Cifar10 -m dnn -algo FedAvg -gr 2000 -did 0 -go dnn > cifar10_fedavg.out 2>&1 &
@@ -85,7 +85,7 @@
 
 # rm ../dataset/Cifar100/config.json
 # cd ../dataset/
-# nohup python -u generate_cifar100.py noniid realworld > cifar100_dataset.out 2>&1
+# nohup python -u generate_cifar100.py noniid - dir > cifar100_dataset.out 2>&1
 # cd ../system/
 
 # nohup python -u main.py -lbs 4 -nc 20 -jr 1 -nb 100 -data Cifar100 -m dnn -algo FedAvg -gr 2000 -did 0 -go dnn > cifar100_fedavg.out 2>&1 &
@@ -121,7 +121,7 @@
 
 # rm ../dataset/fmnist/config.json
 # cd ../dataset/
-# nohup python -u generate_fmnist.py noniid realworld > fmnist_dataset.out 2>&1
+# nohup python -u generate_fmnist.py noniid - dir > fmnist_dataset.out 2>&1
 # cd ../system/
 
 # nohup python -u main.py -lbs 16 -nc 20 -jr 1 -nb 10 -data fmnist -m dnn -algo FedAvg -gr 2000 -did 0 -go dnn > fmnist_fedavg.out 2>&1 &
@@ -145,11 +145,12 @@
 # nohup python -u main.py -lbs 16 -nc 20 -jr 1 -nb 10 -data fmnist -m dnn -algo FedAMP -gr 2000 -alk 5e-3 -lam 5e-7 -sg 1e-1 -did 1 -go dnn > fmnist_fedamp.out 2>&1 &
 # nohup python -u main.py -lbs 16 -nc 20 -jr 1 -nb 10 -data fmnist -m cnn -algo FedAMP -gr 2000 -alk 5e-3 -lam 5e-7 -sg 1e-1 -did 1 -go cnn > fmnist_fedamp1.out 2>&1 &
 
+
 # ===============================================================horizontal(agnews)======================================================================  
 
 # rm ../dataset/agnews/config.json
 # cd ../dataset/
-# nohup python -u generate_agnews.py noniid realworld > agnews_dataset.out 2>&1
+# nohup python -u generate_agnews.py noniid - dir > agnews_dataset.out 2>&1
 # cd ../system/
 
 # nohup python -u main.py -lbs 16 -nc 20 -jr 1 -nb 4 -data agnews -m lstm -algo FedAvg -gr 500 -did 0 -go lstm > agnews_fedavg.out 2>&1 &

@@ -16,7 +16,7 @@ dir_path = "mnist/"
 
 
 # Allocate data to users
-def generate_mnist(dir_path, num_clients, num_classes, niid=False, real=True, partition=None):
+def generate_mnist(dir_path, num_clients, num_classes, niid, balance, partition):
     if not os.path.exists(dir_path):
         os.makedirs(dir_path)
         
@@ -25,7 +25,7 @@ def generate_mnist(dir_path, num_clients, num_classes, niid=False, real=True, pa
     train_path = dir_path + "train/"
     test_path = dir_path + "test/"
 
-    if check(config_path, train_path, test_path, num_clients, num_classes, niid, real, partition):
+    if check(config_path, train_path, test_path, num_clients, num_classes, niid, balance, partition):
         return
 
     # FIX HTTP Error 403: Forbidden
@@ -67,15 +67,15 @@ def generate_mnist(dir_path, num_clients, num_classes, niid=False, real=True, pa
     #     dataset.append(dataset_image[idx])
 
     X, y, statistic = separate_data((dataset_image, dataset_label), num_clients, num_classes, 
-                                    niid, real, partition)
+                                    niid, balance, partition)
     train_data, test_data = split_data(X, y)
     save_file(config_path, train_path, test_path, train_data, test_data, num_clients, num_classes, 
-        statistic, niid, real, partition)
+        statistic, niid, balance, partition)
 
 
 if __name__ == "__main__":
     niid = True if sys.argv[1] == "noniid" else False
-    real = True if sys.argv[2] == "realworld" else False
+    balance = True if sys.argv[2] == "balance" else False
     partition = sys.argv[3] if sys.argv[3] != "-" else None
 
-    generate_mnist(dir_path, num_clients, num_classes, niid, real, partition)
+    generate_mnist(dir_path, num_clients, num_classes, niid, balance, partition)
