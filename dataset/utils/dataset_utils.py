@@ -5,9 +5,9 @@ import gc
 from sklearn.model_selection import train_test_split
 
 batch_size = 10
-train_size = 0.75
-least_samples = batch_size / (1-train_size)
-alpha = 0.1
+train_size = 0.75 # merge original training set and test set, then split it manually. 
+least_samples = batch_size / (1-train_size) # least samples for each client
+alpha = 0.1 # for Dirichlet distribution
 
 def check(config_path, train_path, test_path, num_clients, num_classes, niid=False, 
         balance=True, partition=None):
