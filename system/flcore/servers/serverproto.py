@@ -3,6 +3,7 @@ from flcore.servers.serverbase import Server
 from utils.data_utils import read_client_data
 from threading import Thread
 import time
+import numpy as np
 from collections import defaultdict
 
 
@@ -24,12 +25,14 @@ class FedProto(Server):
 
 
     def train(self):
-        for i in range(self.global_rounds+1):
+        self.done = False
+        i = 0
+        while not self.done:
+        # for i in range(self.global_rounds+1):
             s_t = time.time()
             self.selected_clients = self.select_clients()
-            self.send_models()
 
-            if i%self.eval_gap == 0:
+            if i%self.eval_gap == 0 and i>0:
                 print(f"\n-------------Round number: {i}-------------")
                 print("\nEvaluate global model")
                 self.evaluate()
@@ -47,18 +50,19 @@ class FedProto(Server):
             self.send_protos()
 
             self.Budget.append(time.time() - s_t)
-            print('-'*25, 'time cost', '-'*25, self.Budget[-1])
+            print('-'*50, self.Budget[-1])
+
+            if i>0:
+                self.done = self.check_done(acc_lss=[self.rs_test_acc], top_cnt=self.top_cnt)
+            i += 1
 
         print("\nBest global accuracy.")
         # self.print_(max(self.rs_test_acc), max(
         #     self.rs_train_acc), min(self.rs_train_loss))
         print(max(self.rs_test_acc))
-        print("\nAverage time cost per round.")
         print(sum(self.Budget[1:])/len(self.Budget[1:]))
 
         self.save_results()
-        self.save_global_model()
-
 
     def send_protos(self):
         assert (len(self.selected_clients) > 0)
@@ -74,6 +78,29 @@ class FedProto(Server):
         for client in self.selected_clients:
             self.uploaded_ids.append(client.id)
             self.uploaded_protos.append(client.protos)
+
+    def evaluate(self, acc=None, loss=None):
+        stats = self.test_metrics()
+        stats_train = self.train_metrics()
+
+        test_acc = sum(stats[2])*1.0 / sum(stats[1])
+        train_loss = sum(stats_train[2])*1.0 / sum(stats_train[1])
+        accs = [a / n for a, n in zip(stats[2], stats[1])]
+        
+        if acc == None:
+            self.rs_test_acc.append(test_acc)
+        else:
+            acc.append(test_acc)
+        
+        if loss == None:
+            self.rs_train_loss.append(train_loss)
+        else:
+            loss.append(train_loss)
+
+        print("Averaged Train Loss: {:.4f}".format(train_loss))
+        print("Averaged Test Accurancy: {:.4f}".format(test_acc))
+        # self.print_(test_acc, train_acc, train_loss)
+        print("Std Test Accurancy: {:.4f}".format(np.std(accs)))
             
 
 # https://github.com/yuetan031/fedproto/blob/main/lib/utils.py#L221

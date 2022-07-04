@@ -15,9 +15,17 @@ class clientProto(Client):
         self.loss = nn.CrossEntropyLoss()
         self.optimizer = torch.optim.SGD(self.model.parameters(), lr=self.learning_rate)
 
+        self.feature_dim = list(self.model.predictor.parameters())[0].shape[1]
+
+        self.protos = None
+        self.global_protos = None
+        self.loss_mse = nn.MSELoss()
+
+        self.lamda = args.lamda
+
+
     def train(self):
         trainloader = self.load_train_data()
-        
         start_time = time.time()
 
         # self.model.to(self.device)
@@ -29,7 +37,7 @@ class clientProto(Client):
 
         protos = defaultdict(list)
         for step in range(max_local_steps):
-            for i, (x, y) in enumerate(self.trainloader):
+            for i, (x, y) in enumerate(trainloader):
                 if type(x) == type([]):
                     x[0] = x[0].to(self.device)
                 else:
@@ -53,10 +61,11 @@ class clientProto(Client):
                     y_c = yy.item()
                     protos[y_c].append(rep[i, :].detach().data)
 
-                loss.backward()
                 self.optimizer.step()
 
         # self.model.cpu()
+        # rep = self.model(x, rep=True)
+        # print(torch.sum(rep!=0).item() / rep.numel())
 
         # self.collect_protos()
         self.protos = agg_func(protos)
@@ -64,16 +73,17 @@ class clientProto(Client):
         self.train_time_cost['num_rounds'] += 1
         self.train_time_cost['total_cost'] += time.time() - start_time
 
-            
+
     def set_protos(self, global_protos):
         self.global_protos = copy.deepcopy(global_protos)
 
     def collect_protos(self):
+        trainloader = self.load_train_data()
         self.model.eval()
 
         protos = defaultdict(list)
         with torch.no_grad():
-            for i, (x, y) in enumerate(self.trainloader):
+            for i, (x, y) in enumerate(trainloader):
                 if type(x) == type([]):
                     x[0] = x[0].to(self.device)
                 else:
@@ -91,6 +101,7 @@ class clientProto(Client):
         self.protos = agg_func(protos)
 
     def test_metrics(self, model=None):
+        testloader = self.load_test_data()
         if model == None:
             model = self.model
         model.eval()
@@ -99,7 +110,7 @@ class clientProto(Client):
         test_num = 0
         
         with torch.no_grad():
-            for x, y in self.testloader:
+            for x, y in testloader:
                 if type(x) == type([]):
                     x[0] = x[0].to(self.device)
                 else:
@@ -107,7 +118,7 @@ class clientProto(Client):
                 y = y.to(self.device)
                 rep = self.model.base(x)
 
-                output = float('inf') * torch.ones(self.batch_size, self.num_classes).to(self.device)
+                output = float('inf') * torch.ones(y.shape[0], self.num_classes).to(self.device)
                 for i, r in enumerate(rep):
                     for j, pro in self.global_protos.items():
                         output[i, j] = self.loss_mse(r, pro)
