@@ -61,6 +61,7 @@ class clientProto(Client):
                     y_c = yy.item()
                     protos[y_c].append(rep[i, :].detach().data)
 
+                loss.backward()
                 self.optimizer.step()
 
         # self.model.cpu()
