@@ -25,11 +25,15 @@ from flcore.servers.serverphp import FedPHP
 from flcore.servers.serverbn import FedBN
 from flcore.servers.serverrod import FedROD
 from flcore.servers.serverproto import FedProto
+from flcore.servers.serverdyn import FedDyn
+from flcore.servers.servermoon import MOON
 
 from flcore.trainmodel.models import *
 
 from flcore.trainmodel.bilstm import BiLSTM_TextClassification
 # from flcore.trainmodel.resnet import resnet18 as resnet
+from flcore.trainmodel.alexnet import alexnet
+from flcore.trainmodel.mobilenet_v2 import mobilenet_v2
 from utils.result_utils import average_data
 from utils.mem_utils import MemReporter
 
@@ -83,7 +87,34 @@ def run(args):
         
         elif model_str == "resnet":
             args.model = torchvision.models.resnet18(pretrained=False, num_classes=args.num_classes).to(args.device)
+            
+            # args.model = torchvision.models.resnet18(pretrained=True).to(args.device)
+            # feature_dim = list(args.model.fc.parameters())[0].shape[1]
+            # args.model.fc = nn.Linear(feature_dim, args.num_classes).to(args.device)
+            
+            # args.model = resnet18(num_classes=args.num_classes, has_bn=True, bn_block_num=4).to(args.device)
 
+        elif model_str == "alexnet":
+            args.model = alexnet(pretrained=False, num_classes=args.num_classes).to(args.device)
+            
+            # args.model = alexnet(pretrained=True).to(args.device)
+            # feature_dim = list(args.model.fc.parameters())[0].shape[1]
+            # args.model.fc = nn.Linear(feature_dim, args.num_classes).to(args.device)
+            
+        elif model_str == "googlenet":
+            args.model = torchvision.models.googlenet(pretrained=False, aux_logits=False, num_classes=args.num_classes).to(args.device)
+            
+            # args.model = torchvision.models.googlenet(pretrained=True, aux_logits=False).to(args.device)
+            # feature_dim = list(args.model.fc.parameters())[0].shape[1]
+            # args.model.fc = nn.Linear(feature_dim, args.num_classes).to(args.device)
+
+        elif model_str == "mobilenet_v2":
+            args.model = mobilenet_v2(pretrained=False, num_classes=args.num_classes).to(args.device)
+            
+            # args.model = mobilenet_v2(pretrained=True).to(args.device)
+            # feature_dim = list(args.model.fc.parameters())[0].shape[1]
+            # args.model.fc = nn.Linear(feature_dim, args.num_classes).to(args.device)
+            
         elif model_str == "lstm":
             args.model = LSTMNet(hidden_dim=hidden_dim, vocab_size=vocab_size, num_classes=args.num_classes).to(args.device)
 
@@ -164,6 +195,15 @@ def run(args):
             args.model.fc = nn.Identity()
             args.model = LocalModel(args.model, args.predictor)
             server = FedProto(args, i)
+
+        elif args.algorithm == "FedDyn":
+            server = FedDyn(args, i)
+
+        elif args.algorithm == "MOON":
+            args.predictor = copy.deepcopy(args.model.fc)
+            args.model.fc = nn.Identity()
+            args.model = LocalModel(args.model, args.predictor)
+            server = MOON(args, i)
             
         else:
             raise NotImplementedError
@@ -258,6 +298,8 @@ if __name__ == "__main__":
     parser.add_argument('-al', "--alpha", type=float, default=1.0)
     # Ditto / FedRep
     parser.add_argument('-pls', "--plocal_steps", type=int, default=1)
+    # MOON
+    parser.add_argument('-ta', "--tau", type=float, default=1.0)
 
     args = parser.parse_args()
 
