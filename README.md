@@ -16,6 +16,8 @@ The origin of the Non-IID phenomenon is the personalization of users, who genera
 - **FedRep** — [Exploiting Shared Representations for Personalized Federated Learning](http://proceedings.mlr.press/v139/collins21a/collins21a.pdf) *ICML 2021*
 - **FedPHP** — [FedPHP: Federated Personalization with Inherited Private Models](https://link.springer.com/chapter/10.1007/978-3-030-86486-6_36) *ECML PKDD 2021*
 - **FedBN** — [FedBN: Federated Learning on Non-IID Features via Local Batch Normalization](https://openreview.net/pdf?id=6YEQUn0QICG) *ICLR 2021*
+- **FedDyn** — [Federated Learning Based on Dynamic Regularization](https://openreview.net/pdf?id=B7v4QMR6Z9w) *ICLR 2021*
+- **MOON** — [Model-Contrastive Federated Learning](https://openaccess.thecvf.com/content/CVPR2021/papers/Li_Model-Contrastive_Federated_Learning_CVPR_2021_paper.pdf) *CVPR 2021*
 - **FedRoD** — [On Bridging Generic and Personalized Federated Learning for Image Classification](https://openreview.net/pdf?id=I1hQbx10Kxn) *ICLR 2022*
 - **FedProto** — [FedProto: Federated Prototype Learning across Heterogeneous Clients](https://arxiv.org/abs/2105.00243) *AAAI 2022*
 
@@ -544,7 +546,7 @@ Client 2         Samples of labels:  [(0, 75), (1, 107), (3, 130), (7, 291), (8,
     1. Mclr_Logistic(3\*32\*32)
     2. FedAvgCNN()
     3. DNN(3\*32\*32, 100) # non-convex
-    4. ResNet18, Resnet50 and Resnet152
+    4. ResNet18, AlexNet, MobileNet, GoogleNet, etc.
 
 - for AG_News and Sogou_News
 
