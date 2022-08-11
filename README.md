@@ -575,12 +575,6 @@ conda env create -f env_linux.yaml # for Linux
     sh auto_train.sh
     ```
 
-- Plot the result test accuracy and training loss curves and save them to figures:
-    ```
-    python plot.py 
-    ```
-    Then check the figures in `./figures`.
-
 **Note**: The hyper-parameters have not been tuned for the algorithms. The values in `./system/auto_train.sh` are just examples. You need to tune the hyper-parameters by yourself. 
 
 ## Practical setting

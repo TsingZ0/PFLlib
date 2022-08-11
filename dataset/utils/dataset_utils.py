@@ -91,7 +91,6 @@ def separate_data(data, num_clients, num_classes, niid=False, balance=False, par
                 idx_k = np.where(dataset_label == k)[0]
                 np.random.shuffle(idx_k)
                 proportions = np.random.dirichlet(np.repeat(alpha, num_clients))
-                ## Balance
                 proportions = np.array([p*(len(idx_j)<N/num_clients) for p,idx_j in zip(proportions,idx_batch)])
                 proportions = proportions/proportions.sum()
                 proportions = (np.cumsum(proportions)*len(idx_k)).astype(int)[:-1]
