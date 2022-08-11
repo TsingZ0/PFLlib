@@ -1,4 +1,4 @@
-# Personalized federated learning simulation platform with Non-IID and unbalanced dataset
+# Personalized Federated Learning Platform
 The origin of the Non-IID phenomenon is the personalization of users, who generate the Non-IID data. With **Non-IID (Not Independent and Identically Distributed)** issue existing in the federated learning setting, a myriad of approaches has been proposed to crack this hard nut. In contrast, the personalized federated learning may take the advantage of the Non-IID data to learn the personalized model for each user. Thanks to [@Stonesjtu](https://github.com/Stonesjtu/pytorch_memlab/blob/d590c489236ee25d157ff60ecd18433e8f9acbe3/pytorch_memlab/mem_reporter.py#L185), this platform can also record the GPU memory usage for the model. By using the package [opacus v0.15](https://github.com/pytorch/opacus/releases/tag/v0.15.0), I introduce **differential privacy** into this platform (please refer to `./system/flcore/clients/clientavg.py` for details). 
 
 
