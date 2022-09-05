@@ -65,7 +65,7 @@ class clientProto(Client):
                 self.optimizer.step()
 
         # self.model.cpu()
-        # rep = self.model(x, rep=True)
+        # rep = self.model.base(x)
         # print(torch.sum(rep!=0).item() / rep.numel())
 
         # self.collect_protos()

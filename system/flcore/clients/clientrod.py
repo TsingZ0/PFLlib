@@ -20,7 +20,8 @@ class clientROD(Client):
         self.opt_pred = torch.optim.SGD(self.pred.parameters(), lr=self.learning_rate)
 
         self.sample_per_class = torch.zeros(self.num_classes)
-        for x, y in self.trainloader:
+        trainloader = self.load_train_data()
+        for x, y in trainloader:
             for yy in y:
                 self.sample_per_class[yy.item()] += 1
         self.sample_per_class = self.sample_per_class / torch.sum(self.sample_per_class)
@@ -45,7 +46,7 @@ class clientROD(Client):
                 else:
                     x = x.to(self.device)
                 y = y.to(self.device)
-                rep = self.model(x, rep=True)
+                rep = self.model.base(x)
                 out_g = self.model.predictor(rep)
                 loss_bsm = balanced_softmax_loss(y, out_g, self.sample_per_class)
                 self.optimizer.zero_grad()
@@ -64,6 +65,7 @@ class clientROD(Client):
         self.train_time_cost['total_cost'] += time.time() - start_time
 
     def test_metrics(self, model=None):
+        testloader = self.load_test_data()
         if model == None:
             model = self.model
         model.eval()
@@ -74,13 +76,13 @@ class clientROD(Client):
         y_true = []
         
         with torch.no_grad():
-            for x, y in self.testloader:
+            for x, y in testloader:
                 if type(x) == type([]):
                     x[0] = x[0].to(self.device)
                 else:
                     x = x.to(self.device)
                 y = y.to(self.device)
-                rep = self.model(x, rep=True)
+                rep = self.model.base(x)
                 out_g = self.model.predictor(rep)
                 out_p = self.pred(rep.detach())
                 output = out_g.detach() + out_p
