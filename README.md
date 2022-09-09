@@ -10,7 +10,7 @@ The origin of the Non-IID phenomenon is the personalization of users, who genera
 - **FedProx** — [Federated Optimization for Heterogeneous Networks](https://openreview.net/pdf?id=SkgwE5Ss3N) *ICLR 2020*
 - **APFL** — [Adaptive Personalized Federated Learning](https://arxiv.org/pdf/2003.13461.pdf)
 - **FedFomo** — [Personalized Federated Learning with First Order Model Optimization](https://openreview.net/pdf?id=ehJqJQk9cw) *ICLR 2021*
-- **FedMTL** — [Federated multi-task learning](https://arxiv.org/abs/1705.10467) *NeurIPS 2017*
+- **FedMTL (not MOCHA)** — [Federated multi-task learning](https://arxiv.org/abs/1705.10467) *NeurIPS 2017*
 - **FedAMP** — [Personalized Cross-Silo Federated Learning on Non-IID Data](https://www.aaai.org/AAAI21Papers/AAAI-5802.HuangY.pdf) *AAAI 2021*
 - **Ditto** — [Ditto: Fair and robust federated learning through personalization](http://proceedings.mlr.press/v139/li21h/li21h.pdf) *ICML 2021*
 - **FedRep** — [Exploiting Shared Representations for Personalized Federated Learning](http://proceedings.mlr.press/v139/collins21a/collins21a.pdf) *ICML 2021*
