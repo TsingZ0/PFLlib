@@ -73,11 +73,11 @@ class pFedMe(Server):
     def test_metrics_personalized(self):
         num_samples = []
         tot_correct = []
-        for c in self.selected_clients:
+        for c in self.clients:
             ct, ns = c.test_metrics_personalized()
             tot_correct.append(ct*1.0)
             num_samples.append(ns)
-        ids = [c.id for c in self.selected_clients]
+        ids = [c.id for c in self.clients]
 
         return ids, num_samples, tot_correct
 
@@ -85,13 +85,13 @@ class pFedMe(Server):
         num_samples = []
         tot_correct = []
         losses = []
-        for c in self.selected_clients:
+        for c in self.clients:
             ct, cl, ns = c.train_metrics_personalized()
             tot_correct.append(ct*1.0)
             num_samples.append(ns)
             losses.append(cl*1.0)
 
-        ids = [c.id for c in self.selected_clients]
+        ids = [c.id for c in self.clients]
 
         return ids, num_samples, tot_correct, losses
 

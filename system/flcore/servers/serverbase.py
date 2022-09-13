@@ -162,25 +162,25 @@ class Server(object):
         num_samples = []
         tot_correct = []
         tot_auc = []
-        for c in self.selected_clients:
+        for c in self.clients:
             ct, ns, auc = c.test_metrics()
             tot_correct.append(ct*1.0)
             tot_auc.append(auc*ns)
             num_samples.append(ns)
 
-        ids = [c.id for c in self.selected_clients]
+        ids = [c.id for c in self.clients]
 
         return ids, num_samples, tot_correct, tot_auc
 
     def train_metrics(self):
         num_samples = []
         losses = []
-        for c in self.selected_clients:
+        for c in self.clients:
             cl, ns = c.train_metrics()
             num_samples.append(ns)
             losses.append(cl*1.0)
 
-        ids = [c.id for c in self.selected_clients]
+        ids = [c.id for c in self.clients]
 
         return ids, num_samples, losses
 
