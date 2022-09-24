@@ -20,6 +20,7 @@ The origin of the Non-IID phenomenon is the personalization of users, who genera
 - **MOON** — [Model-Contrastive Federated Learning](https://openaccess.thecvf.com/content/CVPR2021/papers/Li_Model-Contrastive_Federated_Learning_CVPR_2021_paper.pdf) *CVPR 2021*
 - **FedRoD** — [On Bridging Generic and Personalized Federated Learning for Image Classification](https://openreview.net/pdf?id=I1hQbx10Kxn) *ICLR 2022*
 - **FedProto** — [FedProto: Federated Prototype Learning across Heterogeneous Clients](https://arxiv.org/abs/2105.00243) *AAAI 2022*
+- **FedBABU** — [Fedbabu: Towards enhanced representation for federated image classification](https://arxiv.org/abs/2106.06042) *ICLR 2022*
 
 
 ## Datasets (updating)
