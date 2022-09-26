@@ -307,7 +307,7 @@ if __name__ == "__main__":
     parser.add_argument('-pls', "--plocal_steps", type=int, default=1)
     # MOON
     parser.add_argument('-ta', "--tau", type=float, default=1.0)
-    # MOON
+    # FedBABU
     parser.add_argument('-fts', "--fine_tuning_steps", type=int, default=1)
 
     args = parser.parse_args()
