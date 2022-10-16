@@ -51,8 +51,8 @@ class clientBABU(Client):
         self.train_time_cost['num_rounds'] += 1
         self.train_time_cost['total_cost'] += time.time() - start_time
 
-    def set_parameters(self, model):
-        for new_param, old_param in zip(model.parameters(), self.model.base.parameters()):
+    def set_parameters(self, base):
+        for new_param, old_param in zip(base.parameters(), self.model.base.parameters()):
             old_param.data = new_param.data.clone()
 
     def fine_tune(self, which_module=['base', 'predictor']):
