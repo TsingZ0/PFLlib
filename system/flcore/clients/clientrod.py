@@ -24,7 +24,6 @@ class clientROD(Client):
         for x, y in trainloader:
             for yy in y:
                 self.sample_per_class[yy.item()] += 1
-        self.sample_per_class = self.sample_per_class / torch.sum(self.sample_per_class)
 
 
     def train(self):
