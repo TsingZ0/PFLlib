@@ -82,9 +82,9 @@ class Server(object):
         return selected_clients
 
     def send_models(self):
-        assert (len(self.selected_clients) > 0)
+        assert (len(self.clients) > 0)
 
-        for client in self.selected_clients:
+        for client in self.clients:
             client.set_parameters(self.global_model)
 
     def receive_models(self):

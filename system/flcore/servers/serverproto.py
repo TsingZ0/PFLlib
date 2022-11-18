@@ -65,9 +65,9 @@ class FedProto(Server):
         self.save_results()
 
     def send_protos(self):
-        assert (len(self.selected_clients) > 0)
+        assert (len(self.clients) > 0)
 
-        for client in self.selected_clients:
+        for client in self.clients:
             client.set_protos(self.global_protos)
 
     def receive_protos(self):
