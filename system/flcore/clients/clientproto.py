@@ -110,22 +110,23 @@ class clientProto(Client):
         test_acc = 0
         test_num = 0
         
-        with torch.no_grad():
-            for x, y in testloader:
-                if type(x) == type([]):
-                    x[0] = x[0].to(self.device)
-                else:
-                    x = x.to(self.device)
-                y = y.to(self.device)
-                rep = self.model.base(x)
+        if self.global_protos is not None:
+            with torch.no_grad():
+                for x, y in testloader:
+                    if type(x) == type([]):
+                        x[0] = x[0].to(self.device)
+                    else:
+                        x = x.to(self.device)
+                    y = y.to(self.device)
+                    rep = self.model.base(x)
 
-                output = float('inf') * torch.ones(y.shape[0], self.num_classes).to(self.device)
-                for i, r in enumerate(rep):
-                    for j, pro in self.global_protos.items():
-                        output[i, j] = self.loss_mse(r, pro)
+                    output = float('inf') * torch.ones(y.shape[0], self.num_classes).to(self.device)
+                    for i, r in enumerate(rep):
+                        for j, pro in self.global_protos.items():
+                            output[i, j] = self.loss_mse(r, pro)
 
-                test_acc += (torch.sum(torch.argmin(output, dim=1) == y)).item()
-                test_num += y.shape[0]
+                    test_acc += (torch.sum(torch.argmin(output, dim=1) == y)).item()
+                    test_num += y.shape[0]
 
         return test_acc, test_num, 0
 
