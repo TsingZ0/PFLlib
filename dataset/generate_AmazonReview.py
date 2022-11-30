@@ -1,0 +1,85 @@
+import numpy as np
+import os
+import random
+from utils.dataset_utils import split_data, save_file
+from scipy.sparse import coo_matrix
+import torch.utils.data as data
+import numpy as np
+from os import path
+from torch.utils.data import DataLoader
+
+ 
+# https://github.com/FengHZ/KD3A/blob/master/datasets/AmazonReview.py
+def load_amazon(base_path):
+    dimension = 5000
+    amazon = np.load(path.join(base_path, "amazon.npz"))
+    amazon_xx = coo_matrix((amazon['xx_data'], (amazon['xx_col'], amazon['xx_row'])),
+                           shape=amazon['xx_shape'][::-1]).tocsc()
+    amazon_xx = amazon_xx[:, :dimension]
+    amazon_yy = amazon['yy']
+    amazon_yy = (amazon_yy + 1) / 2
+    amazon_offset = amazon['offset'].flatten()
+    # Partition the data into four categories and for each category partition the data set into training and test set.
+    data_name = ["books", "dvd", "electronics", "kitchen"]
+    num_data_sets = 4
+    data_insts, data_labels, num_insts = [], [], []
+    for i in range(num_data_sets):
+        data_insts.append(amazon_xx[amazon_offset[i]: amazon_offset[i + 1], :])
+        data_labels.append(amazon_yy[amazon_offset[i]: amazon_offset[i + 1], :])
+        num_insts.append(amazon_offset[i + 1] - amazon_offset[i])
+        # Randomly shuffle.
+        r_order = np.arange(num_insts[i])
+        np.random.shuffle(r_order)
+        data_insts[i] = data_insts[i][r_order, :]
+        data_labels[i] = data_labels[i][r_order, :]
+        data_insts[i] = data_insts[i].todense().astype(np.float32)
+        data_labels[i] = data_labels[i].ravel().astype(np.int64)
+    return data_insts, data_labels
+
+
+random.seed(1)
+np.random.seed(1)
+data_path = "AmazonReview/"
+dir_path = "AmazonReview/"
+num_clients = 4
+
+# Allocate data to users
+def generate_AmazonReview(dir_path):
+    if not os.path.exists(dir_path):
+        os.makedirs(dir_path)
+        
+    # Setup directory for train/test data
+    config_path = dir_path + "config.json"
+    train_path = dir_path + "train/"
+    test_path = dir_path + "test/"
+
+    if not os.path.exists(train_path):
+        os.makedirs(train_path)
+    if not os.path.exists(test_path):
+        os.makedirs(test_path)
+
+    root = data_path+"rawdata"
+    
+    # Get AmazonReview data
+    if not os.path.exists(root):
+        os.makedirs(root)
+        os.system(f'wget https://drive.google.com/u/0/uc?id=1QbXFENNyqor1IlCpRRFtOluI2_hMEd1W&export=download -P {root}')
+
+    X, y = load_amazon(root)
+
+    labels = len(set(y[0]))
+    print(f'Number of labels: {labels}')
+
+    statistic = [[] for _ in range(num_clients)]
+    for client in range(num_clients):
+        for i in np.unique(y[client]):
+            statistic[client].append((int(i), int(sum(y[client]==i))))
+
+
+    train_data, test_data = split_data(X, y)
+    save_file(config_path, train_path, test_path, train_data, test_data, 4, labels, 
+        statistic, None, None, None)
+
+
+if __name__ == "__main__":
+    generate_AmazonReview(dir_path)

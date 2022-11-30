@@ -67,16 +67,15 @@ def run(args):
                 args.model = Mclr_Logistic(60, num_classes=args.num_classes).to(args.device)
 
         elif model_str == "cnn":
-            if args.dataset == "mnist" or args.dataset == "fmnist":
+            if args.dataset[:5] == "mnist" or args.dataset == "fmnist":
                 args.model = FedAvgCNN(in_features=1, num_classes=args.num_classes, dim=1024).to(args.device)
-            elif args.dataset == "Cifar10" or args.dataset == "Cifar100":
+            elif args.dataset == "omniglot":
+                args.model = FedAvgCNN(in_features=1, num_classes=args.num_classes, dim=33856).to(args.device)
+            elif args.dataset[:5] == "Cifar":
                 args.model = FedAvgCNN(in_features=3, num_classes=args.num_classes, dim=1600).to(args.device)
                 # args.model = CifarNet(num_classes=args.num_classes).to(args.device)
-            elif args.dataset[:13] == "Tiny-imagenet" or args.dataset[:8] == "Imagenet":
-                args.model = FedAvgCNN(in_features=3, num_classes=args.num_classes, dim=10816).to(args.device)
             else:
-                args.model = FedAvgCNN(in_features=3, num_classes=args.num_classes, dim=1600).to(args.device)
-
+                args.model = FedAvgCNN(in_features=3, num_classes=args.num_classes, dim=10816).to(args.device)
 
         elif model_str == "dnn": # non-convex
             if args.dataset == "mnist" or args.dataset == "fmnist":
@@ -130,6 +129,14 @@ def run(args):
         elif model_str == "TextCNN":
             args.model = TextCNN(hidden_dim=hidden_dim, max_len=max_len, vocab_size=vocab_size, 
                             num_classes=args.num_classes).to(args.device)
+
+        elif model_str == "Transformer":
+            args.model = TransformerModel(ntoken=vocab_size, d_model=hidden_dim, nhead=2, d_hid=hidden_dim, nlayers=2, 
+                            num_classes=args.num_classes).to(args.device)
+        
+        elif model_str == "AmazonMLP":
+            args.model = AmazonMLP().to(args.device)
+
         else:
             raise NotImplementedError
 

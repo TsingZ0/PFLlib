@@ -24,9 +24,13 @@ The origin of the non-IID phenomenon is the personalization of users, who genera
 
 
 ## Datasets (updating)
-I currently using **eight** famous datasets: **MNIST**, **Fashion-MNIST**, **Cifar10**, **Cifar100**, **AG_News**, **Sogou_News** (If ConnectionError raises, please use the given downloaded file in `./dataset`) and **Tiny-ImageNet** (Please download the original data from http://cs231n.stanford.edu/tiny-imagenet-200.zip), they can be easy split into **IID** and **non-IID** version. Since some codes for generating datasets such as splitting are the same for all datasets, I move these codes into `./dataset/utils/dataset_utils.py`. It is easy to add other datasets to this FL platform. *If you need another data set, just write another code to download it and then using the utils.* In addition, I also introduce the real-world dataset: **Omniglot** (20 clients, 50 labels). 
+For the *label skew* setting, I introduce **8** famous datasets: **MNIST**, **Fashion-MNIST**, **Cifar10**, **Cifar100**, **AG_News**, **Sogou_News** (If ConnectionError raises, please use the given downloaded file in `./dataset`) and **Tiny-ImageNet** (fetch raw data from [this site](http://cs231n.stanford.edu/tiny-imagenet-200.zip)), they can be easy split into **IID** and **non-IID** version. Since some codes for generating datasets such as splitting are the same for all datasets, I move these codes into `./dataset/utils/dataset_utils.py`. In **non-IID** setting, two situations exist. The first one is the **pathological non-IID** setting, the second one is **practical non-IID** setting. In the **pathological non-IID** setting, for example, the data on each client only contains the specific number of labels (maybe only two labels), though the data on all clients contains 10 labels such as MNIST dataset. In the **practical non-IID** setting, Dirichlet distribution is utilized (please refer to this [paper](https://proceedings.neurips.cc/paper/2020/hash/18df51b97ccd68128e994804f3eccc87-Abstract.html) for details). We can input *balance* for the iid setting, where the data are uniformly distributed. 
 
-In **non-IID** setting, two situations exist. The first one is the **pathological non-IID** setting, the second one is **practical non-IID** setting. In the **pathological non-IID** setting, for example, the data on each client only contains the specific number of labels (maybe only two labels), though the data on all clients contains 10 labels such as MNIST dataset. In the **practical non-IID** setting, Dirichlet distribution is utilized (please refer to this [paper](https://proceedings.neurips.cc/paper/2020/hash/18df51b97ccd68128e994804f3eccc87-Abstract.html) for details). We can input *balance* for the iid setting, where the data are uniformly distributed. 
+For the *feature shift* setting, I use one dataset that widely used in Domain Adaptation: **AmazonReview** (fetch raw data from [this site](https://drive.google.com/u/0/uc?id=1QbXFENNyqor1IlCpRRFtOluI2_hMEd1W&export=download)).
+
+For the *real-world* setting, I also introduce one naturally separated dataset: **Omniglot** (20 clients, 50 labels).
+
+*If you need another data set, just write another code to download it and then using the utils.*
 
 ### Examples for **MNIST**
 - MNIST
@@ -554,11 +558,21 @@ Client 2         Samples of labels:  [(0, 75), (1, 107), (3, 130), (7, 291), (8,
     1. LSTM()
     2. fastText() in [Bag of Tricks for Efficient Text Classification](https://arxiv.org/abs/1607.01759)
     3. TextCNN() in [Convolutional Neural Networks for Sentence Classification](https://arxiv.org/abs/1408.5882)
+    4. *TransformerModel() in [Attention is all you need](https://proceedings.neurips.cc/paper/2017/hash/3f5ee243547dee91fbd053c1c4a845aa-Abstract.html)
 
+- for AmazonReview
+
+    1. AmazonMLP() in [Curriculum manager for source selection in multi-source domain adaptation](https://link.springer.com/chapter/10.1007/978-3-030-58568-6_36)
+
+- for Omniglot
+
+    1. FedAvgCNN()
+
+Note: * means "in progress".
 
 ## Environments
 With the installed [conda](https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh), we can run this platform in a conda virtual environment called *fl_torch*. Note: due to the code updates, some modules are required to install based on the given `*.yaml`. 
-```
+```bash
 conda env create -f env_linux.yaml # for Linux
 ```
 
@@ -566,12 +580,12 @@ conda env create -f env_linux.yaml # for Linux
 - Build dataset: [Datasets](#datasets-updating)
 
 - Train and evaluate the model:
-    ```
+    ```bash
     cd ./system
     python main.py -data mnist -m cnn -algo FedAvg -gr 2500 -did 0 -go cnn # for FedAvg and MNIST
     ```
     Or you can uncomment the lines you need in `./system/auto_train.sh` and run:
-    ```
+    ```bash
     cd ./system
     sh auto_train.sh
     ```
