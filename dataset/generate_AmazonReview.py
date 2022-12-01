@@ -3,10 +3,7 @@ import os
 import random
 from utils.dataset_utils import split_data, save_file
 from scipy.sparse import coo_matrix
-import torch.utils.data as data
-import numpy as np
 from os import path
-from torch.utils.data import DataLoader
 
  
 # https://github.com/FengHZ/KD3A/blob/master/datasets/AmazonReview.py
