@@ -2,7 +2,7 @@
 The origin of the non-IID phenomenon is the personalization of users, who generate the non-IID data. With **non-IID (not Independent and Identically Distributed)** issue existing in the federated learning setting, a myriad of approaches has been proposed to crack this hard nut. In contrast, the personalized federated learning may take the advantage of the non-IID data to learn the personalized model for each user. Thanks to [@Stonesjtu](https://github.com/Stonesjtu/pytorch_memlab/blob/d590c489236ee25d157ff60ecd18433e8f9acbe3/pytorch_memlab/mem_reporter.py#L185), this platform can also record the GPU memory usage for the model. By using the package [opacus v0.15](https://github.com/pytorch/opacus/releases/tag/v0.15.0), I introduce **differential privacy** into this platform (please refer to `./system/flcore/clients/clientavg.py` for details). 
 
 
-## Algorithms (updating)
+## Algorithms with Code (updating)
 - **FedAvg** — [Communication-Efficient Learning of Deep Networks from Decentralized Data](https://arxiv.org/abs/1602.05629) *AISTATS 2017*
 - **FedPer** — [Federated Learning with Personalization Layers](https://arxiv.org/pdf/1912.00818.pdf)
 - **Per-FadAvg** — [Personalized Federated Learning with Theoretical Guarantees: A Model-Agnostic Meta-Learning Approach](https://proceedings.neurips.cc/paper/2020/file/24389bfe4fe2eba8bf9aa9203a44cdad-Paper.pdf) *NeurIPS 2020*
@@ -23,7 +23,7 @@ The origin of the non-IID phenomenon is the personalization of users, who genera
 - **FedBABU** — [Fedbabu: Towards enhanced representation for federated image classification](https://arxiv.org/abs/2106.06042) *ICLR 2022*
 
 
-## Datasets (updating)
+## Datasets and Separation (updating)
 For the ***label skew*** setting, I introduce **8** famous datasets: **MNIST**, **Fashion-MNIST**, **Cifar10**, **Cifar100**, **AG_News**, **Sogou_News** (If ConnectionError raises, please use the given downloaded file in `./dataset`), and **Tiny-ImageNet** (fetch raw data from [this site](http://cs231n.stanford.edu/tiny-imagenet-200.zip)), they can be easy split into **IID** and **non-IID** version. Since some codes for generating datasets such as splitting are the same for all datasets, I move these codes into `./dataset/utils/dataset_utils.py`. In **non-IID** setting, two situations exist. The first one is the **pathological non-IID** setting, the second one is **practical non-IID** setting. In the **pathological non-IID** setting, for example, the data on each client only contains the specific number of labels (maybe only two labels), though the data on all clients contains 10 labels such as MNIST dataset. In the **practical non-IID** setting, Dirichlet distribution is utilized (please refer to this [paper](https://proceedings.neurips.cc/paper/2020/hash/18df51b97ccd68128e994804f3eccc87-Abstract.html) for details). We can input *balance* for the iid setting, where the data are uniformly distributed. 
 
 For the ***feature shift*** setting, I use one dataset that widely used in Domain Adaptation: **AmazonReview** (fetch raw data from [this site](https://drive.google.com/file/d/1QbXFENNyqor1IlCpRRFtOluI2_hMEd1W/view?usp=sharing)), **Digit5** (fetch raw data from [this site](https://drive.google.com/file/d/1PT6K-_wmsUEUCxoYzDy0mxF-15tvb2Eu/view?usp=share_link)), and **DomainNet**.
