@@ -214,10 +214,10 @@ def generate_Digit5(dir_path):
     for d in domains:
         train_loader, test_loader = digit5_dataset_read(root, d)
 
-        for _, train_data in enumerate(train_loader, 0):
-            train_data, train_label = train_data
-        for _, test_data in enumerate(test_loader, 0):
-            test_data, test_label = test_data
+        for _, tt in enumerate(train_loader):
+            train_data, train_label = tt
+        for _, tt in enumerate(test_loader):
+            test_data, test_label = tt
 
         dataset_image = []
         dataset_label = []
