@@ -185,7 +185,6 @@ random.seed(1)
 np.random.seed(1)
 data_path = "Digit5/"
 dir_path = "Digit5/"
-num_clients = 5
 
 # Allocate data to usersz``
 def generate_Digit5(dir_path):
@@ -233,7 +232,9 @@ def generate_Digit5(dir_path):
     
 
     labels = len(set(y[0]))
+    num_clients = len(y)
     print(f'Number of labels: {labels}')
+    print(f'Number of clients: {num_clients}')
 
     statistic = [[] for _ in range(num_clients)]
     for client in range(num_clients):
