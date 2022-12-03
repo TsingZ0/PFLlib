@@ -1,0 +1,76 @@
+import time
+from flcore.clients.clientapple import clientAPPLE
+from flcore.servers.serverbase import Server
+from threading import Thread
+
+
+class APPLE(Server):
+    def __init__(self, args, times):
+        super().__init__(args, times)
+
+        # select slow clients
+        self.set_slow_clients()
+        self.set_clients(args, clientAPPLE)
+
+        print(f"\nJoin ratio / total clients: {self.join_ratio} / {self.num_clients}")
+        print("Finished creating server and clients.")
+
+        # self.load_model()
+        self.Budget = []
+
+        self.uploaded_models = [c.model_c for c in self.clients]
+
+        train_samples = 0
+        for client in self.clients:
+            train_samples += client.train_samples
+        p0 = [client.train_samples / train_samples for client in self.clients]
+
+        for c in self.clients:
+            c.p0 = p0
+
+
+    def train(self):
+        for i in range(self.global_rounds+1):
+            s_t = time.time()
+            self.send_models()
+
+            if i%self.eval_gap == 0:
+                print(f"\n-------------Round number: {i}-------------")
+                print("\nEvaluate global model")
+                self.evaluate()
+
+            for client in self.clients:
+                client.train(i)
+
+            # threads = [Thread(target=client.train)
+            #            for client in self.clients]
+            # [t.start() for t in threads]
+            # [t.join() for t in threads]
+
+            self.receive_models()
+
+            self.Budget.append(time.time() - s_t)
+            print('-'*50, self.Budget[-1])
+
+        print("\nBest global accuracy.")
+        # self.print_(max(self.rs_test_acc), max(
+        #     self.rs_train_acc), min(self.rs_train_loss))
+        print(max(self.rs_test_acc))
+        print("\nAverage time cost per round.")
+        print(sum(self.Budget[1:])/len(self.Budget[1:]))
+
+        self.save_results()
+        self.save_global_model()
+
+    def send_models(self):
+        assert (len(self.clients) > 0)
+
+        for client in self.clients:
+            client.set_models(self.uploaded_models)
+
+    def receive_models(self):
+        assert (len(self.clients) > 0)
+
+        self.uploaded_models = []
+        for client in self.clients:
+            self.uploaded_models.append(client.model_c)

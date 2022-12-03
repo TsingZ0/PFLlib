@@ -28,6 +28,7 @@ from flcore.servers.serverproto import FedProto
 from flcore.servers.serverdyn import FedDyn
 from flcore.servers.servermoon import MOON
 from flcore.servers.serverbabu import FedBABU
+from flcore.servers.serverapple import APPLE
 
 from flcore.trainmodel.models import *
 
@@ -220,6 +221,9 @@ def run(args):
             args.model.fc = nn.Identity()
             args.model = LocalModel(args.model, args.predictor)
             server = FedBABU(args, i)
+
+        elif args.algorithm == "APPLE":
+            server = APPLE(args, i)
             
         else:
             raise NotImplementedError
@@ -318,6 +322,9 @@ if __name__ == "__main__":
     parser.add_argument('-ta', "--tau", type=float, default=1.0)
     # FedBABU
     parser.add_argument('-fts', "--fine_tuning_steps", type=int, default=1)
+    # APPLE
+    parser.add_argument('-dlr', "--dr_learning_rate", type=float, default=0.0)
+    parser.add_argument('-L', "--L", type=float, default=1.0)
 
     args = parser.parse_args()
 
