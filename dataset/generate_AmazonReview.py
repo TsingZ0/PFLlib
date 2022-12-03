@@ -38,7 +38,6 @@ random.seed(1)
 np.random.seed(1)
 data_path = "AmazonReview/"
 dir_path = "AmazonReview/"
-num_clients = 4
 
 # Allocate data to users
 def generate_AmazonReview(dir_path):
@@ -64,8 +63,12 @@ def generate_AmazonReview(dir_path):
 
     X, y = load_amazon(root)
 
-    labels = len(set(y[0]))
-    print(f'Number of labels: {labels}')
+    labelss = []
+    for yy in y:
+        labelss.append(len(set(yy)))
+    num_clients = len(y)
+    print(f'Number of labels: {labelss}')
+    print(f'Number of clients: {num_clients}')
 
     statistic = [[] for _ in range(num_clients)]
     for client in range(num_clients):
@@ -74,7 +77,7 @@ def generate_AmazonReview(dir_path):
 
 
     train_data, test_data = split_data(X, y)
-    save_file(config_path, train_path, test_path, train_data, test_data, 4, labels, 
+    save_file(config_path, train_path, test_path, train_data, test_data, num_clients, max(labelss), 
         statistic, None, None, None)
 
 

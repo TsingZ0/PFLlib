@@ -231,9 +231,11 @@ def generate_Digit5(dir_path):
         y.append(np.array(dataset_label))
     
 
-    labels = len(set(y[0]))
+    labelss = []
+    for yy in y:
+        labelss.append(len(set(yy)))
     num_clients = len(y)
-    print(f'Number of labels: {labels}')
+    print(f'Number of labels: {labelss}')
     print(f'Number of clients: {num_clients}')
 
     statistic = [[] for _ in range(num_clients)]
@@ -243,7 +245,7 @@ def generate_Digit5(dir_path):
 
 
     train_data, test_data = split_data(X, y)
-    save_file(config_path, train_path, test_path, train_data, test_data, 4, labels, 
+    save_file(config_path, train_path, test_path, train_data, test_data, num_clients, max(labelss), 
         statistic, None, None, None)
 
 
