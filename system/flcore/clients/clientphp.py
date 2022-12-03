@@ -4,7 +4,6 @@ import torch.nn as nn
 import numpy as np
 import time
 from flcore.clients.clientbase import Client
-from utils.privacy import *
 
 
 class clientPHP(Client):
@@ -54,6 +53,7 @@ class clientPHP(Client):
 
         self.train_time_cost['num_rounds'] += 1
         self.train_time_cost['total_cost'] += time.time() - start_time
+
 
     def set_parameters(self, model, R):
         mu = self.mu * R

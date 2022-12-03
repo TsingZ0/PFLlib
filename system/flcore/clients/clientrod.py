@@ -3,8 +3,8 @@ import torch
 import torch.nn as nn
 import numpy as np
 import time
-from flcore.clients.clientbase import Client
 import torch.nn.functional as F
+from flcore.clients.clientbase import Client
 from sklearn.preprocessing import label_binarize
 from sklearn import metrics
 

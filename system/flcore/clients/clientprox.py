@@ -50,6 +50,7 @@ class clientProx(Client):
         self.train_time_cost['num_rounds'] += 1
         self.train_time_cost['total_cost'] += time.time() - start_time
 
+
     def set_parameters(self, model):
         for new_param, global_param, param in zip(model.parameters(), self.global_params, self.model.parameters()):
             global_param.data = new_param.data.clone()

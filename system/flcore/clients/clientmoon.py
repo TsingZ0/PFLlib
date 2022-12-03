@@ -5,7 +5,6 @@ import numpy as np
 import time
 import torch.nn.functional as F
 from flcore.clients.clientbase import Client
-from utils.privacy import *
 
 
 class clientMOON(Client):
@@ -14,11 +13,6 @@ class clientMOON(Client):
         
         self.loss = nn.CrossEntropyLoss()
         self.optimizer = torch.optim.SGD(self.model.parameters(), lr=self.learning_rate)
-
-        # differential privacy
-        if self.privacy:
-            check_dp(self.model)
-            initialize_dp(self.model, self.optimizer, self.sample_rate, self.dp_sigma)
 
         self.tau = args.tau
         self.mu = args.mu
@@ -57,10 +51,7 @@ class clientMOON(Client):
                 loss += self.mu * torch.mean(loss_con)
 
                 loss.backward()
-                if self.privacy:
-                    dp_step(self.optimizer, i, len(trainloader))
-                else:
-                    self.optimizer.step()
+                self.optimizer.step()
 
         # self.model.cpu()
         self.old_model = copy.deepcopy(self.model)
@@ -68,9 +59,6 @@ class clientMOON(Client):
         self.train_time_cost['num_rounds'] += 1
         self.train_time_cost['total_cost'] += time.time() - start_time
 
-        if self.privacy:
-            res, DELTA = get_dp_params(self.optimizer)
-            print(f"Client {self.id}", f"(ε = {res[0]:.2f}, δ = {DELTA}) for α = {res[1]}")
 
     def set_parameters(self, model):
         for new_param, old_param in zip(model.parameters(), self.model.parameters()):
