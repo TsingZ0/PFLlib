@@ -41,7 +41,7 @@ Thanks to [@Stonesjtu](https://github.com/Stonesjtu/pytorch_memlab/blob/d590c489
 - **FedPHP** — [FedPHP: Federated Personalization with Inherited Private Models](https://link.springer.com/chapter/10.1007/978-3-030-86486-6_36) *ECML PKDD 2021*
 - **APPLE** — [Adapt to Adaptation: Learning Personalization for Cross-Silo Federated Learning](https://arxiv.org/abs/2110.08394) *IJCAI 2022*
 
-  ***Feature (representation) -based FL***
+  ***Feature (representation) -based pFL***
 
 - **FedPer** — [Federated Learning with Personalization Layers](https://arxiv.org/pdf/1912.00818.pdf)
 - **FedRep** — [Exploiting Shared Representations for Personalized Federated Learning](http://proceedings.mlr.press/v139/collins21a/collins21a.pdf) *ICML 2021*
