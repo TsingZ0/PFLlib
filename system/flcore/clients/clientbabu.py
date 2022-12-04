@@ -58,6 +58,8 @@ class clientBABU(Client):
     def fine_tune(self, which_module=['base', 'head']):
         trainloader = self.load_train_data()
         
+        start_time = time.time()
+        
         self.model.train()
 
         if 'head' in which_module:
@@ -81,3 +83,5 @@ class clientBABU(Client):
                 loss = self.loss(output, y)
                 loss.backward()
                 self.optimizer.step()
+
+        self.train_time_cost['total_cost'] += time.time() - start_time

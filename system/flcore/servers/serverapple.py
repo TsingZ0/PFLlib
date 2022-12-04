@@ -1,3 +1,4 @@
+import random
 import time
 from flcore.clients.clientapple import clientAPPLE
 from flcore.servers.serverbase import Server
@@ -69,8 +70,19 @@ class APPLE(Server):
             client.set_models(self.uploaded_models)
 
     def receive_models(self):
-        assert (len(self.clients) > 0)
+        assert (len(self.selected_clients) > 0)
 
+        active_clients = random.sample(
+            self.selected_clients, int((1-self.client_drop_rate) * self.join_clients))
+
+        self.uploaded_weights = []
         self.uploaded_models = []
-        for client in self.clients:
-            self.uploaded_models.append(client.model_c)
+        tot_samples = 0
+        for client in active_clients:
+            client_time_cost = client.train_time_cost['total_cost'] / client.train_time_cost['num_rounds'] + \
+                    client.send_time_cost['total_cost'] / client.send_time_cost['num_rounds']
+            if client_time_cost <= self.time_threthold:
+                tot_samples += client.train_samples
+                self.uploaded_models.append(client.model_c)
+        for i, w in enumerate(self.uploaded_weights):
+            self.uploaded_weights[i] = w / tot_samples
