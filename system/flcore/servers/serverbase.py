@@ -21,6 +21,7 @@ class Server(object):
         self.global_model = copy.deepcopy(args.model)
         self.num_clients = args.num_clients
         self.join_ratio = args.join_ratio
+        self.random_join_ratio = args.random_join_ratio
         self.join_clients = int(self.num_clients * self.join_ratio)
         self.algorithm = args.algorithm
         self.time_select = args.time_select
@@ -77,7 +78,11 @@ class Server(object):
             self.send_slow_rate)
 
     def select_clients(self):
-        selected_clients = list(np.random.choice(self.clients, self.join_clients, replace=False))
+        if self.random_join_ratio:
+            join_clients = np.random.choice(range(self.join_clients, self.num_clients+1), 1, replace=False)[0]
+        else:
+            join_clients = self.join_clients
+        selected_clients = list(np.random.choice(self.clients, join_clients, replace=False))
 
         return selected_clients
 
