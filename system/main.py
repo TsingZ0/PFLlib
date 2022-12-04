@@ -6,8 +6,8 @@ import os
 import time
 import warnings
 import numpy as np
-from torch.nn.functional import dropout
 import torchvision
+import logging
 
 from flcore.servers.serveravg import FedAvg
 from flcore.servers.serverpFedMe import pFedMe
@@ -38,6 +38,9 @@ from flcore.trainmodel.alexnet import alexnet
 from flcore.trainmodel.mobilenet_v2 import mobilenet_v2
 from utils.result_utils import average_data
 from utils.mem_utils import MemReporter
+
+logger = logging.getLogger()
+logger.setLevel(logging.ERROR)
 
 warnings.simplefilter("ignore")
 torch.manual_seed(0)

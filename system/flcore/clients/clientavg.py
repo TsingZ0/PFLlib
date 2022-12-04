@@ -13,18 +13,16 @@ class clientAVG(Client):
         self.loss = nn.CrossEntropyLoss()
         self.optimizer = torch.optim.SGD(self.model.parameters(), lr=self.learning_rate)
 
-        # differential privacy
-        if self.privacy:
-            check_dp(self.model)
-            initialize_dp(self.model, self.optimizer, self.sample_rate, self.dp_sigma)
-
     def train(self):
         trainloader = self.load_train_data()
-        
-        start_time = time.time()
-
         # self.model.to(self.device)
         self.model.train()
+
+        # differential privacy
+        if self.privacy:
+            self.model, self.optimizer, trainloader, privacy_engine = initialize_dp(self.model, self.optimizer, trainloader, self.dp_sigma)
+        
+        start_time = time.time()
 
         max_local_steps = self.local_steps
         if self.train_slow:
@@ -43,10 +41,7 @@ class clientAVG(Client):
                 output = self.model(x)
                 loss = self.loss(output, y)
                 loss.backward()
-                if self.privacy:
-                    dp_step(self.optimizer, i, len(trainloader))
-                else:
-                    self.optimizer.step()
+                self.optimizer.step()
 
         # self.model.cpu()
 
@@ -54,5 +49,5 @@ class clientAVG(Client):
         self.train_time_cost['total_cost'] += time.time() - start_time
 
         if self.privacy:
-            res, DELTA = get_dp_params(self.optimizer)
-            print(f"Client {self.id}", f"(ε = {res[0]:.2f}, δ = {DELTA}) for α = {res[1]}")
+            eps, DELTA = get_dp_params(privacy_engine)
+            print(f"Client {self.id}", f"epsilon = {eps:.2f}, sigma = {DELTA}")
