@@ -1,7 +1,7 @@
 # Personalized Federated Learning Platform
 The origin of the statistical heterogeneity phenomenon is the personalization of users, who generate the non-IID (not Independent and Identically Distributed) or unbalanced data. With statistical heterogeneity existing in the federated learning (FL) setting, a myriad of approaches have been proposed to crack this hard nut. In contrast, the personalized FL (pFL) may take the advantage of the statistically heterogeneious data to learn the personalized model for each user. *We expose this user-friendly platform for biginners who intend to start FL study.*
 
-Thanks to [@Stonesjtu](https://github.com/Stonesjtu/pytorch_memlab/blob/d590c489236ee25d157ff60ecd18433e8f9acbe3/pytorch_memlab/mem_reporter.py#L185), this platform can also record the GPU memory usage for the model. By using the package [opacus](https://opacus.ai/), I introduce **differential privacy** into this platform (please refer to `./system/flcore/clients/clientavg.py` for example). 
+Thanks to [@Stonesjtu](https://github.com/Stonesjtu/pytorch_memlab/blob/d590c489236ee25d157ff60ecd18433e8f9acbe3/pytorch_memlab/mem_reporter.py#L185), this platform can also record the **GPU memory usage** for the model. By using the package [opacus](https://opacus.ai/), I introduce **differential privacy** into this platform (please refer to `./system/flcore/clients/clientavg.py` for example). 
 
 
 ## Algorithms with Code (updating)
