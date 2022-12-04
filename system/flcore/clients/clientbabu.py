@@ -15,7 +15,7 @@ class clientBABU(Client):
 
         self.fine_tuning_steps = args.fine_tuning_steps
 
-        for param in self.model.predictor.parameters():
+        for param in self.model.head.parameters():
             param.requires_grad = False
 
 
@@ -55,17 +55,17 @@ class clientBABU(Client):
         for new_param, old_param in zip(base.parameters(), self.model.base.parameters()):
             old_param.data = new_param.data.clone()
 
-    def fine_tune(self, which_module=['base', 'predictor']):
+    def fine_tune(self, which_module=['base', 'head']):
         trainloader = self.load_train_data()
         
         self.model.train()
 
-        if 'predictor' in which_module:
-            for param in self.model.predictor.parameters():
+        if 'head' in which_module:
+            for param in self.model.head.parameters():
                 param.requires_grad = True
 
         if 'base' not in which_module:
-            for param in self.model.predictor.parameters():
+            for param in self.model.head.parameters():
                 param.requires_grad = False
             
 

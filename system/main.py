@@ -175,54 +175,54 @@ def run(args):
             server = APFL(args, i)
 
         elif args.algorithm == "FedPer":
-            args.predictor = copy.deepcopy(args.model.fc)
+            args.head = copy.deepcopy(args.model.fc)
             args.model.fc = nn.Identity()
-            args.model = LocalModel(args.model, args.predictor)
+            args.model = LocalModel(args.model, args.head)
             server = FedPer(args, i)
 
         elif args.algorithm == "Ditto":
             server = Ditto(args, i)
 
         elif args.algorithm == "FedRep":
-            args.predictor = copy.deepcopy(args.model.fc)
+            args.head = copy.deepcopy(args.model.fc)
             args.model.fc = nn.Identity()
-            args.model = LocalModel(args.model, args.predictor)
+            args.model = LocalModel(args.model, args.head)
             server = FedRep(args, i)
 
         elif args.algorithm == "FedPHP":
-            args.predictor = copy.deepcopy(args.model.fc)
+            args.head = copy.deepcopy(args.model.fc)
             args.model.fc = nn.Identity()
-            args.model = LocalModel(args.model, args.predictor)
+            args.model = LocalModel(args.model, args.head)
             server = FedPHP(args, i)
 
         elif args.algorithm == "FedBN":
             server = FedBN(args, i)
 
         elif args.algorithm == "FedROD":
-            args.predictor = copy.deepcopy(args.model.fc)
+            args.head = copy.deepcopy(args.model.fc)
             args.model.fc = nn.Identity()
-            args.model = LocalModel(args.model, args.predictor)
+            args.model = LocalModel(args.model, args.head)
             server = FedROD(args, i)
 
         elif args.algorithm == "FedProto":
-            args.predictor = copy.deepcopy(args.model.fc)
+            args.head = copy.deepcopy(args.model.fc)
             args.model.fc = nn.Identity()
-            args.model = LocalModel(args.model, args.predictor)
+            args.model = LocalModel(args.model, args.head)
             server = FedProto(args, i)
 
         elif args.algorithm == "FedDyn":
             server = FedDyn(args, i)
 
         elif args.algorithm == "MOON":
-            args.predictor = copy.deepcopy(args.model.fc)
+            args.head = copy.deepcopy(args.model.fc)
             args.model.fc = nn.Identity()
-            args.model = LocalModel(args.model, args.predictor)
+            args.model = LocalModel(args.model, args.head)
             server = MOON(args, i)
 
         elif args.algorithm == "FedBABU":
-            args.predictor = copy.deepcopy(args.model.fc)
+            args.head = copy.deepcopy(args.model.fc)
             args.model.fc = nn.Identity()
-            args.model = LocalModel(args.model, args.predictor)
+            args.model = LocalModel(args.model, args.head)
             server = FedBABU(args, i)
 
         elif args.algorithm == "APPLE":
@@ -263,7 +263,7 @@ if __name__ == "__main__":
     parser.add_argument('-data', "--dataset", type=str, default="mnist")
     parser.add_argument('-nb', "--num_classes", type=int, default=10)
     parser.add_argument('-m', "--model", type=str, default="cnn")
-    parser.add_argument('-p', "--predictor", type=str, default="cnn")
+    parser.add_argument('-p', "--head", type=str, default="cnn")
     parser.add_argument('-lbs', "--batch_size", type=int, default=10)
     parser.add_argument('-lr', "--local_learning_rate", type=float, default=0.005,
                         help="Local learning rate")

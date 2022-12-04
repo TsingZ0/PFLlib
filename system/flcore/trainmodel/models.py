@@ -8,15 +8,15 @@ batch_size = 16
 
 
 class LocalModel(nn.Module):
-    def __init__(self, base, predictor):
+    def __init__(self, base, head):
         super(LocalModel, self).__init__()
 
         self.base = base
-        self.predictor = predictor
+        self.head = head
         
     def forward(self, x):
         out = self.base(x)
-        out = self.predictor(out)
+        out = self.head(out)
 
         return out
 

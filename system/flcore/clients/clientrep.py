@@ -11,7 +11,7 @@ class clientRep(Client):
         
         self.loss = nn.CrossEntropyLoss()
         self.optimizer = torch.optim.SGD(self.model.base.parameters(), lr=self.learning_rate)
-        self.poptimizer = torch.optim.SGD(self.model.predictor.parameters(), lr=self.learning_rate)
+        self.poptimizer = torch.optim.SGD(self.model.head.parameters(), lr=self.learning_rate)
 
         self.plocal_steps = args.plocal_steps
 
@@ -25,7 +25,7 @@ class clientRep(Client):
 
         for param in self.model.base.parameters():
             param.requires_grad = False
-        for param in self.model.predictor.parameters():
+        for param in self.model.head.parameters():
             param.requires_grad = True
 
         for step in range(self.plocal_steps):
@@ -49,7 +49,7 @@ class clientRep(Client):
 
         for param in self.model.base.parameters():
             param.requires_grad = True
-        for param in self.model.predictor.parameters():
+        for param in self.model.head.parameters():
             param.requires_grad = False
 
         for step in range(max_local_steps):

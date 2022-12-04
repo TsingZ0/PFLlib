@@ -16,7 +16,7 @@ class clientROD(Client):
         self.loss = nn.CrossEntropyLoss()
         self.optimizer = torch.optim.SGD(self.model.parameters(), lr=self.learning_rate)
         
-        self.pred = copy.deepcopy(self.model.predictor)
+        self.pred = copy.deepcopy(self.model.head)
         self.opt_pred = torch.optim.SGD(self.pred.parameters(), lr=self.learning_rate)
 
         self.sample_per_class = torch.zeros(self.num_classes)
@@ -46,7 +46,7 @@ class clientROD(Client):
                     x = x.to(self.device)
                 y = y.to(self.device)
                 rep = self.model.base(x)
-                out_g = self.model.predictor(rep)
+                out_g = self.model.head(rep)
                 loss_bsm = balanced_softmax_loss(y, out_g, self.sample_per_class)
                 self.optimizer.zero_grad()
                 loss_bsm.backward()
@@ -82,7 +82,7 @@ class clientROD(Client):
                     x = x.to(self.device)
                 y = y.to(self.device)
                 rep = self.model.base(x)
-                out_g = self.model.predictor(rep)
+                out_g = self.model.head(rep)
                 out_p = self.pred(rep.detach())
                 output = out_g.detach() + out_p
 

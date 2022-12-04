@@ -42,7 +42,7 @@ class clientMOON(Client):
                     time.sleep(0.1 * np.abs(np.random.rand()))
                 self.optimizer.zero_grad()
                 rep = self.model.base(x)
-                output = self.model.predictor(rep)
+                output = self.model.head(rep)
                 loss = self.loss(output, y)
 
                 rep_old = self.old_model.base(x).detach()

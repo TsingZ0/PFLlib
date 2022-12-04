@@ -14,7 +14,7 @@ class clientProto(Client):
         self.loss = nn.CrossEntropyLoss()
         self.optimizer = torch.optim.SGD(self.model.parameters(), lr=self.learning_rate)
 
-        self.feature_dim = list(self.model.predictor.parameters())[0].shape[1]
+        self.feature_dim = list(self.model.head.parameters())[0].shape[1]
 
         self.protos = None
         self.global_protos = None
@@ -46,7 +46,7 @@ class clientProto(Client):
                     time.sleep(0.1 * np.abs(np.random.rand()))
                 self.optimizer.zero_grad()
                 rep = self.model.base(x)
-                output = self.model.predictor(rep)
+                output = self.model.head(rep)
                 loss = self.loss(output, y)
 
                 if self.global_protos != None:
