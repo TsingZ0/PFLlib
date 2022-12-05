@@ -69,7 +69,7 @@ class clientMTL(Client):
         self.train_time_cost['total_cost'] += time.time() - start_time
 
     
-    def receive_values(self, W_glob, omega, idx):
+    def set_parameters(self, W_glob, omega, idx):
         self.omega = torch.sqrt(omega[0][0])
         self.W_glob = copy.deepcopy(W_glob)
         self.idx = idx

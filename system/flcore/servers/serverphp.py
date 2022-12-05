@@ -54,4 +54,9 @@ class FedPHP(Server):
         assert (len(self.selected_clients) > 0)
 
         for client in self.selected_clients:
+            start_time = time.time()
+
             client.set_parameters(self.global_model, R)
+
+            client.send_time_cost['num_rounds'] += 1
+            client.send_time_cost['total_cost'] += 2 * (time.time() - start_time)

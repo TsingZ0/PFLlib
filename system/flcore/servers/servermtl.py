@@ -1,3 +1,4 @@
+import time
 import torch
 from flcore.clients.clientmtl import clientMTL
 from flcore.servers.serverbase import Server
@@ -36,7 +37,13 @@ class FedMTL(Server):
                 self.evaluate()
                 
             for idx, client in enumerate(self.selected_clients):
-                client.receive_values(self.W_glob, self.omega, idx)
+                start_time = time.time()
+                
+                client.set_parameters(self.W_glob, self.omega, idx)
+
+                client.send_time_cost['num_rounds'] += 1
+                client.send_time_cost['total_cost'] += 2 * (time.time() - start_time)
+
                 client.train()
 
             # threads = [Thread(target=client.train)

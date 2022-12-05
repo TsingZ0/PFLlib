@@ -90,7 +90,12 @@ class Server(object):
         assert (len(self.clients) > 0)
 
         for client in self.clients:
+            start_time = time.time()
+            
             client.set_parameters(self.global_model)
+
+            client.send_time_cost['num_rounds'] += 1
+            client.send_time_cost['total_cost'] += 2 * (time.time() - start_time)
 
     def receive_models(self):
         assert (len(self.selected_clients) > 0)
@@ -106,6 +111,7 @@ class Server(object):
                     client.send_time_cost['total_cost'] / client.send_time_cost['num_rounds']
             if client_time_cost <= self.time_threthold:
                 tot_samples += client.train_samples
+                self.uploaded_weights.append(client.train_samples)
                 self.uploaded_models.append(client.model)
         for i, w in enumerate(self.uploaded_weights):
             self.uploaded_weights[i] = w / tot_samples
