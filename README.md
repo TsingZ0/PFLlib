@@ -4,7 +4,7 @@ The origin of the statistical heterogeneity phenomenon is the personalization of
 Thanks to [@Stonesjtu](https://github.com/Stonesjtu/pytorch_memlab/blob/d590c489236ee25d157ff60ecd18433e8f9acbe3/pytorch_memlab/mem_reporter.py#L185), this platform can also record the **GPU memory usage** for the model. By using the package [opacus](https://opacus.ai/), I introduce **differential privacy** into this platform (please refer to `./system/flcore/clients/clientavg.py` for example). 
 
 
-## Algorithms with Code (updating)
+## Methods with Code (updating)
 
 > ### Traditional FL
 
@@ -617,7 +617,7 @@ conda env create -f env_linux.yaml # for Linux
     sh auto_train.sh
     ```
 
-**Note**: The hyper-parameters have not been tuned for the algorithms. The values in `./system/auto_train.sh` are just examples. You need to tune the hyper-parameters by yourself. 
+**Note**: The hyper-parameters have not been tuned for the methods. The values in `./system/auto_train.sh` are just examples. You need to tune the hyper-parameters by yourself. 
 
 ## Practical setting
 If you need to simulate FL in a practical setting, which includes **client dropout**, **slow trainers**, **slow senders**, and **network TTL**, you can set the following parameters to realize it.
@@ -627,7 +627,7 @@ If you need to simulate FL in a practical setting, which includes **client dropo
 - `-tth`: The threshold for network TTL (ms). 
 
 ## Easy to extend
-It is easy to add new datasets or algorithms to this platform. 
+It is easy to add new datasets or FL methods to this platform. 
 
 - To add a new dataset into this platform, all you need to do is writing the download code and using the utils the same as `./dataset/generate_mnist.py` (you can also consider it as the template). 
 
