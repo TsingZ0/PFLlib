@@ -55,7 +55,7 @@ For the ***label skew*** setting, I introduce **8** famous datasets: **MNIST**, 
 
 For the ***feature shift*** setting, I use one dataset that widely used in Domain Adaptation: **AmazonReview** (fetch raw data from [this site](https://drive.google.com/file/d/1QbXFENNyqor1IlCpRRFtOluI2_hMEd1W/view?usp=sharing)), **Digit5** (fetch raw data from [this site](https://drive.google.com/file/d/1PT6K-_wmsUEUCxoYzDy0mxF-15tvb2Eu/view?usp=share_link)), and **DomainNet**.
 
-For the ***real-world*** setting, I also introduce one naturally separated dataset: **Omniglot** (20 clients, 50 labels).
+For the ***real-world (or IoT)*** setting, I also introduce one naturally separated dataset: **Omniglot** (20 clients, 50 labels), **HAR (Human Activity Recognition)** (30 clients, 6 labels), **PAMAP2** (9 clients, 12 labels). For the details of datasets and FL methods in **IoT**, please refer to [my FL-IoT repo](https://github.com/TsingZ0/).
 
 *If you need another data set, just write another code to download it and then using the utils.*
 
