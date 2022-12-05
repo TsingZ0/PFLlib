@@ -611,13 +611,13 @@ conda env create -f env.yaml
     cd ./system
     python main.py -data mnist -m cnn -algo FedAvg -gr 2500 -did 0 -go cnn # for FedAvg and MNIST
     ```
-    Or you can uncomment the lines you need in `./system/auto_train.sh` and run:
+    Or you can uncomment the lines you need in `./system/examples.sh` and run:
     ```bash
     cd ./system
-    sh auto_train.sh
+    sh examples.sh
     ```
 
-**Note**: The hyper-parameters have not been tuned for the methods. The values in `./system/auto_train.sh` are just examples. You need to tune the hyper-parameters by yourself. 
+**Note**: The hyper-parameters have not been tuned for the methods. The values in `./system/examples.sh` are just examples. You need to tune the hyper-parameters by yourself. 
 
 ## Practical setting
 If you need to simulate FL in a practical setting, which includes **client dropout**, **slow trainers**, **slow senders**, and **network TTL**, you can set the following parameters to realize it.
