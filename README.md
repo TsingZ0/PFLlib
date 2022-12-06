@@ -600,10 +600,11 @@ Note: * means "in progress".
 ## Environments
 With the installed [conda](https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh), we can run this platform in a conda virtual environment called *fl_torch*. 
 
-Note: Due to the code updates, some modules may be required to install based on the given `env.yaml`. 
+Note: Due to the code updates, some modules may be required to install based on the given `*.yaml`. 
 
 ```bash
-conda env create -f env.yaml 
+conda env create -f env_cuda_116.yaml 
+# conda env create -f env_cuda_102.yaml 
 ```
 
 ## How to start simulating 
