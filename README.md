@@ -55,7 +55,7 @@ For the ***label skew*** setting, I introduce **8** famous datasets: **MNIST**, 
 
 For the ***feature shift*** setting, I use one dataset that widely used in Domain Adaptation: **AmazonReview** (fetch raw data from [this site](https://drive.google.com/file/d/1QbXFENNyqor1IlCpRRFtOluI2_hMEd1W/view?usp=sharing)), **Digit5** (fetch raw data from [this site](https://drive.google.com/file/d/1PT6K-_wmsUEUCxoYzDy0mxF-15tvb2Eu/view?usp=share_link)), and **DomainNet**.
 
-For the ***real-world (or IoT)*** setting, I also introduce one naturally separated dataset: **Omniglot** (20 clients, 50 labels), **HAR (Human Activity Recognition)** (30 clients, 6 labels), **PAMAP2** (9 clients, 12 labels). For the details of datasets and FL methods in **IoT**, please refer to [my FL-IoT repo](https://github.com/TsingZ0/).
+For the ***real-world (or IoT)*** setting, I also introduce one naturally separated dataset: **Omniglot** (20 clients, 50 labels), **HAR (Human Activity Recognition)** (30 clients, 6 labels), **PAMAP2** (9 clients, 12 labels). For the details of datasets and FL methods in **IoT**, please refer to [my FL-IoT repo](https://github.com/TsingZ0/FL-IoT).
 
 *If you need another data set, just write another code to download it and then using the utils.*
 
@@ -230,7 +230,7 @@ Client 2     Samples of labels:  [(0, 136), (1, 89), (2, 84), (3, 88), (4, 78), 
     Total number of samples: 70000
     The number of train samples: [798, 767, 692, 679, 783, 769, 774, 782, 764, 703, 723, 716, 761, 642, 825, 702, 733, 762, 781, 883, 711, 687, 755, 742, 852, 839, 794, 781, 742, 701, 714, 734, 775, 822, 732, 761, 653, 823, 732, 717, 831, 744, 740, 729, 831, 776, 793, 630, 735, 15565]
     The number of test samples: [266, 256, 231, 227, 262, 257, 259, 261, 255, 235, 241, 239, 254, 214, 276, 235, 245, 254, 261, 295, 237, 230, 252, 248, 285, 280, 265, 261, 248, 234, 238, 245, 259, 274, 245, 254, 218, 275, 245, 240, 278, 249, 247, 243, 278, 259, 265, 211, 245, 5189]
-
+    
     Finish generating dataset.
 </details>
 <br/>
@@ -396,7 +396,7 @@ Client 2     Samples of labels:  [(0, 3903), (1, 746)]
     Total number of samples: 70000
     The number of train samples: [599, 515, 3486, 639, 619, 849, 564, 392, 271, 3147, 406, 206, 3461, 991, 697, 525, 796, 850, 530, 2132, 660, 658, 2953, 756, 561, 1972, 470, 700, 413, 706, 585, 357, 634, 885, 3123, 663, 2734, 768, 360, 513, 555, 3131, 512, 576, 489, 544, 354, 628, 662, 2883]
     The number of test samples: [200, 172, 1163, 214, 207, 284, 188, 131, 91, 1049, 136, 69, 1154, 331, 233, 176, 266, 284, 177, 711, 220, 220, 985, 253, 187, 658, 157, 234, 138, 236, 196, 120, 212, 295, 1042, 222, 912, 256, 120, 172, 185, 1044, 171, 193, 164, 182, 118, 210, 221, 961]
-
+    
     Finish generating dataset.
 </details>
 <br/>
@@ -562,7 +562,7 @@ Client 2         Samples of labels:  [(0, 75), (1, 107), (3, 130), (7, 291), (8,
     Total number of samples: 70000
     The number of train samples: [794, 853, 566, 656, 3171, 600, 2464, 309, 480, 2519, 345, 5666, 1826, 662, 406, 1052, 742, 222, 181, 481, 639, 2049, 835, 377, 475, 2834, 932, 819, 370, 665, 390, 1214, 634, 1374, 810, 721, 369, 351, 2970, 828, 459, 2758, 333, 716, 364, 392, 289, 595, 353, 2573]
     The number of test samples: [265, 285, 189, 219, 1057, 200, 822, 104, 161, 840, 116, 1889, 609, 221, 136, 351, 248, 74, 61, 161, 213, 683, 279, 126, 159, 945, 311, 273, 124, 222, 130, 405, 212, 459, 270, 241, 124, 117, 991, 276, 154, 920, 111, 239, 122, 131, 97, 199, 118, 858]
-
+    
     Finish generating dataset.
 </details>
 
@@ -608,7 +608,7 @@ conda env create -f env_cuda_116.yaml
 ```
 
 ## How to start simulating 
-- Build dataset: [Datasets](#datasets-updating)
+- Build dataset: [Datasets](#Datasets-and-Separation-(updating))
 
 - Train and evaluate the model:
     ```bash
