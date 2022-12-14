@@ -8,46 +8,46 @@ Thanks to [@Stonesjtu](https://github.com/Stonesjtu/pytorch_memlab/blob/d590c489
 
 > ### Traditional FL
 
-- **FedAvg** — [Communication-Efficient Learning of Deep Networks from Decentralized Data](https://arxiv.org/abs/1602.05629) *AISTATS 2017*
+- **FedAvg** — [Communication-Efficient Learning of Deep Networks from Decentralized Data](http://proceedings.mlr.press/v54/mcmahan17a.html) *AISTATS 2017*
 
   ***Regularization-based FL***
 
-- **FedProx** — [Federated Optimization for Heterogeneous Networks](https://openreview.net/pdf?id=SkgwE5Ss3N) *ICLR 2020*
-- **FedDyn** — [Federated Learning Based on Dynamic Regularization](https://openreview.net/pdf?id=B7v4QMR6Z9w) *ICLR 2021*
+- **FedProx** — [Federated Optimization in Heterogeneous Networks](https://proceedings.mlsys.org/paper/2020/hash/38af86134b65d0f10fe33d30dd76442e-Abstract.html) *MLsys 2020*
+- **FedDyn** — [Federated Learning Based on Dynamic Regularization](https://openreview.net/forum?id=B7v4QMR6Z9w) *ICLR 2021*
 
   ***Feature (representation) -based FL***
 
-- **MOON** — [Model-Contrastive Federated Learning](https://openaccess.thecvf.com/content/CVPR2021/papers/Li_Model-Contrastive_Federated_Learning_CVPR_2021_paper.pdf) *CVPR 2021*
+- **MOON** — [Model-Contrastive Federated Learning](https://openaccess.thecvf.com/content/CVPR2021/html/Li_Model-Contrastive_Federated_Learning_CVPR_2021_paper.html) *CVPR 2021*
 
 > ### Personalized FL
 
-- **FedMTL (not MOCHA)** — [Federated multi-task learning](https://arxiv.org/abs/1705.10467) *NeurIPS 2017*
-- **FedBN** — [FedBN: Federated Learning on non-IID Features via Local Batch Normalization](https://openreview.net/pdf?id=6YEQUn0QICG) *ICLR 2021*
+- **FedMTL (not MOCHA)** — [Federated multi-task learning](https://papers.nips.cc/paper/2017/hash/6211080fa89981f66b1a0c9d55c61d0f-Abstract.html) *NeurIPS 2017*
+- **FedBN** — [FedBN: Federated Learning on non-IID Features via Local Batch Normalization](https://openreview.net/forum?id=6YEQUn0QICG) *ICLR 2021*
 
   ***Meta-learning-based pFL***
 
-- **Per-FadAvg** — [Personalized Federated Learning with Theoretical Guarantees: A Model-Agnostic Meta-Learning Approach](https://proceedings.neurips.cc/paper/2020/file/24389bfe4fe2eba8bf9aa9203a44cdad-Paper.pdf) *NeurIPS 2020*
+- **Per-FadAvg** — [Personalized Federated Learning with Theoretical Guarantees: A Model-Agnostic Meta-Learning Approach](https://proceedings.neurips.cc/paper/2020/hash/24389bfe4fe2eba8bf9aa9203a44cdad-Abstract.html) *NeurIPS 2020*
 
   ***Regularization-based pFL***
   
-- **pFedMe** — [Personalized Federated Learning with Moreau Envelopes](https://proceedings.neurips.cc/paper/2020/file/f4f1f13c8289ac1b1ee0ff176b56fc60-Paper.pdf) *NeurIPS 2020*
-- **Ditto** — [Ditto: Fair and robust federated learning through personalization](http://proceedings.mlr.press/v139/li21h/li21h.pdf) *ICML 2021*
+- **pFedMe** — [Personalized Federated Learning with Moreau Envelopes](https://papers.nips.cc/paper/2020/hash/f4f1f13c8289ac1b1ee0ff176b56fc60-Abstract.html) *NeurIPS 2020*
+- **Ditto** — [Ditto: Fair and robust federated learning through personalization](https://proceedings.mlr.press/v139/li21h.html) *ICML 2021*
 
   ***Personalized-aggregation-based pFL***
 
 - **APFL** — [Adaptive Personalized Federated Learning](https://arxiv.org/pdf/2003.13461.pdf)
-- **FedFomo** — [Personalized Federated Learning with First Order Model Optimization](https://openreview.net/pdf?id=ehJqJQk9cw) *ICLR 2021*
-- **FedAMP** — [Personalized Cross-Silo Federated Learning on non-IID Data](https://www.aaai.org/AAAI21Papers/AAAI-5802.HuangY.pdf) *AAAI 2021*
+- **FedFomo** — [Personalized Federated Learning with First Order Model Optimization](https://openreview.net/forum?id=ehJqJQk9cw) *ICLR 2021*
+- **FedAMP** — [Personalized Cross-Silo Federated Learning on non-IID Data](https://ojs.aaai.org/index.php/AAAI/article/view/16960) *AAAI 2021*
 - **FedPHP** — [FedPHP: Federated Personalization with Inherited Private Models](https://link.springer.com/chapter/10.1007/978-3-030-86486-6_36) *ECML PKDD 2021*
-- **APPLE** — [Adapt to Adaptation: Learning Personalization for Cross-Silo Federated Learning](https://arxiv.org/abs/2110.08394) *IJCAI 2022*
+- **APPLE** — [Adapt to Adaptation: Learning Personalization for Cross-Silo Federated Learning](https://www.ijcai.org/proceedings/2022/301) *IJCAI 2022*
 
   ***Feature (representation) -based pFL***
 
 - **FedPer** — [Federated Learning with Personalization Layers](https://arxiv.org/pdf/1912.00818.pdf)
-- **FedRep** — [Exploiting Shared Representations for Personalized Federated Learning](http://proceedings.mlr.press/v139/collins21a/collins21a.pdf) *ICML 2021*
-- **FedRoD** — [On Bridging Generic and Personalized Federated Learning for Image Classification](https://openreview.net/pdf?id=I1hQbx10Kxn) *ICLR 2022*
-- **FedProto** — [FedProto: Federated Prototype Learning across Heterogeneous Clients](https://arxiv.org/abs/2105.00243) *AAAI 2022*
-- **FedBABU** — [Fedbabu: Towards enhanced representation for federated image classification](https://arxiv.org/abs/2106.06042) *ICLR 2022*
+- **FedRep** — [Exploiting Shared Representations for Personalized Federated Learning](http://proceedings.mlr.press/v139/collins21a.html) *ICML 2021*
+- **FedRoD** — [On Bridging Generic and Personalized Federated Learning for Image Classification](https://openreview.net/forum?id=I1hQbx10Kxn) *ICLR 2022*
+- **FedProto** — [FedProto: Federated Prototype Learning across Heterogeneous Clients ](https://ojs.aaai.org/index.php/AAAI/article/view/20819) *AAAI 2022*
+- **FedBABU** — [Fedbabu: Towards enhanced representation for federated image classification](https://openreview.net/forum?id=HuaYQfggn5u) *ICLR 2022*
 
 
 ## Datasets and Separation (updating)
@@ -55,7 +55,7 @@ For the ***label skew*** setting, I introduce **8** famous datasets: **MNIST**, 
 
 For the ***feature shift*** setting, I use one dataset that widely used in Domain Adaptation: **AmazonReview** (fetch raw data from [this site](https://drive.google.com/file/d/1QbXFENNyqor1IlCpRRFtOluI2_hMEd1W/view?usp=sharing)), **Digit5** (fetch raw data from [this site](https://drive.google.com/file/d/1PT6K-_wmsUEUCxoYzDy0mxF-15tvb2Eu/view?usp=share_link)), and **DomainNet**.
 
-For the ***real-world (or IoT)*** setting, I also introduce one naturally separated dataset: **Omniglot** (20 clients, 50 labels), **HAR (Human Activity Recognition)** (30 clients, 6 labels), **PAMAP2** (9 clients, 12 labels). For the details of datasets and FL methods in **IoT**, please refer to [my FL-IoT repo](https://github.com/TsingZ0/).
+For the ***real-world (or IoT)*** setting, I also introduce one naturally separated dataset: **Omniglot** (20 clients, 50 labels), **HAR (Human Activity Recognition)** (30 clients, 6 labels), **PAMAP2** (9 clients, 12 labels). For the details of datasets and FL methods in **IoT**, please refer to [my FL-IoT repo](https://github.com/TsingZ0/FL-IoT).
 
 *If you need another data set, just write another code to download it and then using the utils.*
 
@@ -230,7 +230,7 @@ Client 2     Samples of labels:  [(0, 136), (1, 89), (2, 84), (3, 88), (4, 78), 
     Total number of samples: 70000
     The number of train samples: [798, 767, 692, 679, 783, 769, 774, 782, 764, 703, 723, 716, 761, 642, 825, 702, 733, 762, 781, 883, 711, 687, 755, 742, 852, 839, 794, 781, 742, 701, 714, 734, 775, 822, 732, 761, 653, 823, 732, 717, 831, 744, 740, 729, 831, 776, 793, 630, 735, 15565]
     The number of test samples: [266, 256, 231, 227, 262, 257, 259, 261, 255, 235, 241, 239, 254, 214, 276, 235, 245, 254, 261, 295, 237, 230, 252, 248, 285, 280, 265, 261, 248, 234, 238, 245, 259, 274, 245, 254, 218, 275, 245, 240, 278, 249, 247, 243, 278, 259, 265, 211, 245, 5189]
-
+    
     Finish generating dataset.
 </details>
 <br/>
@@ -396,7 +396,7 @@ Client 2     Samples of labels:  [(0, 3903), (1, 746)]
     Total number of samples: 70000
     The number of train samples: [599, 515, 3486, 639, 619, 849, 564, 392, 271, 3147, 406, 206, 3461, 991, 697, 525, 796, 850, 530, 2132, 660, 658, 2953, 756, 561, 1972, 470, 700, 413, 706, 585, 357, 634, 885, 3123, 663, 2734, 768, 360, 513, 555, 3131, 512, 576, 489, 544, 354, 628, 662, 2883]
     The number of test samples: [200, 172, 1163, 214, 207, 284, 188, 131, 91, 1049, 136, 69, 1154, 331, 233, 176, 266, 284, 177, 711, 220, 220, 985, 253, 187, 658, 157, 234, 138, 236, 196, 120, 212, 295, 1042, 222, 912, 256, 120, 172, 185, 1044, 171, 193, 164, 182, 118, 210, 221, 961]
-
+    
     Finish generating dataset.
 </details>
 <br/>
@@ -562,7 +562,7 @@ Client 2         Samples of labels:  [(0, 75), (1, 107), (3, 130), (7, 291), (8,
     Total number of samples: 70000
     The number of train samples: [794, 853, 566, 656, 3171, 600, 2464, 309, 480, 2519, 345, 5666, 1826, 662, 406, 1052, 742, 222, 181, 481, 639, 2049, 835, 377, 475, 2834, 932, 819, 370, 665, 390, 1214, 634, 1374, 810, 721, 369, 351, 2970, 828, 459, 2758, 333, 716, 364, 392, 289, 595, 353, 2573]
     The number of test samples: [265, 285, 189, 219, 1057, 200, 822, 104, 161, 840, 116, 1889, 609, 221, 136, 351, 248, 74, 61, 161, 213, 683, 279, 126, 159, 945, 311, 273, 124, 222, 130, 405, 212, 459, 270, 241, 124, 117, 991, 276, 154, 920, 111, 239, 122, 131, 97, 199, 118, 858]
-
+    
     Finish generating dataset.
 </details>
 
@@ -608,7 +608,7 @@ conda env create -f env_cuda_116.yaml
 ```
 
 ## How to start simulating 
-- Build dataset: [Datasets](#datasets-updating)
+- Build dataset: [Datasets](#Datasets-and-Separation-(updating))
 
 - Train and evaluate the model:
     ```bash
