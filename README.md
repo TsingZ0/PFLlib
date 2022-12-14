@@ -8,46 +8,46 @@ Thanks to [@Stonesjtu](https://github.com/Stonesjtu/pytorch_memlab/blob/d590c489
 
 > ### Traditional FL
 
-- **FedAvg** — [Communication-Efficient Learning of Deep Networks from Decentralized Data](https://arxiv.org/abs/1602.05629) *AISTATS 2017*
+- **FedAvg** — [Communication-Efficient Learning of Deep Networks from Decentralized Data](http://proceedings.mlr.press/v54/mcmahan17a.html) *AISTATS 2017*
 
   ***Regularization-based FL***
 
-- **FedProx** — [Federated Optimization for Heterogeneous Networks](https://openreview.net/pdf?id=SkgwE5Ss3N) *ICLR 2020*
-- **FedDyn** — [Federated Learning Based on Dynamic Regularization](https://openreview.net/pdf?id=B7v4QMR6Z9w) *ICLR 2021*
+- **FedProx** — [Federated Optimization in Heterogeneous Networks](https://proceedings.mlsys.org/paper/2020/hash/38af86134b65d0f10fe33d30dd76442e-Abstract.html) *MLsys 2020*
+- **FedDyn** — [Federated Learning Based on Dynamic Regularization](https://openreview.net/forum?id=B7v4QMR6Z9w) *ICLR 2021*
 
   ***Feature (representation) -based FL***
 
-- **MOON** — [Model-Contrastive Federated Learning](https://openaccess.thecvf.com/content/CVPR2021/papers/Li_Model-Contrastive_Federated_Learning_CVPR_2021_paper.pdf) *CVPR 2021*
+- **MOON** — [Model-Contrastive Federated Learning](https://openaccess.thecvf.com/content/CVPR2021/html/Li_Model-Contrastive_Federated_Learning_CVPR_2021_paper.html) *CVPR 2021*
 
 > ### Personalized FL
 
-- **FedMTL (not MOCHA)** — [Federated multi-task learning](https://arxiv.org/abs/1705.10467) *NeurIPS 2017*
-- **FedBN** — [FedBN: Federated Learning on non-IID Features via Local Batch Normalization](https://openreview.net/pdf?id=6YEQUn0QICG) *ICLR 2021*
+- **FedMTL (not MOCHA)** — [Federated multi-task learning](https://papers.nips.cc/paper/2017/hash/6211080fa89981f66b1a0c9d55c61d0f-Abstract.html) *NeurIPS 2017*
+- **FedBN** — [FedBN: Federated Learning on non-IID Features via Local Batch Normalization](https://openreview.net/forum?id=6YEQUn0QICG) *ICLR 2021*
 
   ***Meta-learning-based pFL***
 
-- **Per-FadAvg** — [Personalized Federated Learning with Theoretical Guarantees: A Model-Agnostic Meta-Learning Approach](https://proceedings.neurips.cc/paper/2020/file/24389bfe4fe2eba8bf9aa9203a44cdad-Paper.pdf) *NeurIPS 2020*
+- **Per-FadAvg** — [Personalized Federated Learning with Theoretical Guarantees: A Model-Agnostic Meta-Learning Approach](https://proceedings.neurips.cc/paper/2020/hash/24389bfe4fe2eba8bf9aa9203a44cdad-Abstract.html) *NeurIPS 2020*
 
   ***Regularization-based pFL***
   
-- **pFedMe** — [Personalized Federated Learning with Moreau Envelopes](https://proceedings.neurips.cc/paper/2020/file/f4f1f13c8289ac1b1ee0ff176b56fc60-Paper.pdf) *NeurIPS 2020*
-- **Ditto** — [Ditto: Fair and robust federated learning through personalization](http://proceedings.mlr.press/v139/li21h/li21h.pdf) *ICML 2021*
+- **pFedMe** — [Personalized Federated Learning with Moreau Envelopes](https://papers.nips.cc/paper/2020/hash/f4f1f13c8289ac1b1ee0ff176b56fc60-Abstract.html) *NeurIPS 2020*
+- **Ditto** — [Ditto: Fair and robust federated learning through personalization](https://proceedings.mlr.press/v139/li21h.html) *ICML 2021*
 
   ***Personalized-aggregation-based pFL***
 
 - **APFL** — [Adaptive Personalized Federated Learning](https://arxiv.org/pdf/2003.13461.pdf)
-- **FedFomo** — [Personalized Federated Learning with First Order Model Optimization](https://openreview.net/pdf?id=ehJqJQk9cw) *ICLR 2021*
-- **FedAMP** — [Personalized Cross-Silo Federated Learning on non-IID Data](https://www.aaai.org/AAAI21Papers/AAAI-5802.HuangY.pdf) *AAAI 2021*
+- **FedFomo** — [Personalized Federated Learning with First Order Model Optimization](https://openreview.net/forum?id=ehJqJQk9cw) *ICLR 2021*
+- **FedAMP** — [Personalized Cross-Silo Federated Learning on non-IID Data](https://ojs.aaai.org/index.php/AAAI/article/view/16960) *AAAI 2021*
 - **FedPHP** — [FedPHP: Federated Personalization with Inherited Private Models](https://link.springer.com/chapter/10.1007/978-3-030-86486-6_36) *ECML PKDD 2021*
-- **APPLE** — [Adapt to Adaptation: Learning Personalization for Cross-Silo Federated Learning](https://arxiv.org/abs/2110.08394) *IJCAI 2022*
+- **APPLE** — [Adapt to Adaptation: Learning Personalization for Cross-Silo Federated Learning](https://www.ijcai.org/proceedings/2022/301) *IJCAI 2022*
 
   ***Feature (representation) -based pFL***
 
 - **FedPer** — [Federated Learning with Personalization Layers](https://arxiv.org/pdf/1912.00818.pdf)
-- **FedRep** — [Exploiting Shared Representations for Personalized Federated Learning](http://proceedings.mlr.press/v139/collins21a/collins21a.pdf) *ICML 2021*
-- **FedRoD** — [On Bridging Generic and Personalized Federated Learning for Image Classification](https://openreview.net/pdf?id=I1hQbx10Kxn) *ICLR 2022*
-- **FedProto** — [FedProto: Federated Prototype Learning across Heterogeneous Clients](https://arxiv.org/abs/2105.00243) *AAAI 2022*
-- **FedBABU** — [Fedbabu: Towards enhanced representation for federated image classification](https://arxiv.org/abs/2106.06042) *ICLR 2022*
+- **FedRep** — [Exploiting Shared Representations for Personalized Federated Learning](http://proceedings.mlr.press/v139/collins21a.html) *ICML 2021*
+- **FedRoD** — [On Bridging Generic and Personalized Federated Learning for Image Classification](https://openreview.net/forum?id=I1hQbx10Kxn) *ICLR 2022*
+- **FedProto** — [FedProto: Federated Prototype Learning across Heterogeneous Clients ](https://ojs.aaai.org/index.php/AAAI/article/view/20819) *AAAI 2022*
+- **FedBABU** — [Fedbabu: Towards enhanced representation for federated image classification](https://openreview.net/forum?id=HuaYQfggn5u) *ICLR 2022*
 
 
 ## Datasets and Separation (updating)
