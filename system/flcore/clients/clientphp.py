@@ -43,9 +43,10 @@ class clientPHP(Client):
                 if self.train_slow:
                     time.sleep(0.1 * np.abs(np.random.rand()))
                 self.optimizer.zero_grad()
-                output = self.model(x)
+                rep = self.model.base(x)
+                output = self.model.predictor(rep)
                 loss = self.loss(output, y) * (1 - self.lamda)
-                loss += MMD(self.model.base(x), self.model_s.base(x), 'rbf', self.device) * self.lamda
+                loss += MMD(rep, self.model_s.base(x), 'rbf', self.device) * self.lamda
                 loss.backward()
                 self.optimizer.step()
 
