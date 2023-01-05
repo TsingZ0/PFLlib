@@ -146,6 +146,8 @@ def run(args):
         else:
             raise NotImplementedError
 
+        print(args.model)
+
         # select algorithm
         if args.algorithm == "FedAvg":
             server = FedAvg(args, i)
