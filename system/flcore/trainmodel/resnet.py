@@ -39,13 +39,13 @@ class BasicBlock(nn.Module):
             raise NotImplementedError("Dilation > 1 not supported in BasicBlock")
         self.conv1 = conv3x3(inplanes, planes, stride)
         if has_bn:
-            self.bn2 = norm_layer(planes, track_running_stats=False)
+            self.bn2 = norm_layer(planes)
         else:
             self.bn2 = nn.Identity()
         self.relu = nn.ReLU(inplace=True)
         self.conv2 = conv3x3(planes, planes)
         if has_bn:
-            self.bn3 = norm_layer(planes, track_running_stats=False)
+            self.bn3 = norm_layer(planes)
         else:
             self.bn3 = nn.Identity()
         self.downsample = downsample
@@ -103,7 +103,7 @@ class ResNet(nn.Module):
         self.conv1 = nn.Conv2d(3, self.inplanes, kernel_size=7, stride=2, padding=3,
                                bias=False)
         if has_bn:
-            self.bn1 = norm_layer(self.inplanes, track_running_stats=False)
+            self.bn1 = norm_layer(self.inplanes)
         else:
             self.bn1 = nn.Identity()
         self.relu = nn.ReLU(inplace=True)
@@ -149,7 +149,7 @@ class ResNet(nn.Module):
             if has_bn:
                 downsample = nn.Sequential(
                     conv1x1(self.inplanes, planes * block.expansion, stride),
-                    norm_layer(planes * block.expansion, track_running_stats=False),
+                    norm_layer(planes * block.expansion),
                 )
             else:
                 downsample = nn.Sequential(
@@ -178,9 +178,8 @@ class ResNet(nn.Module):
 
         x = self.avgpool(x)
         x = torch.flatten(x, 1)
-        x = self.fc(x)
 
-        # x = self.fc(x)
+        x = self.fc(x)
 
         return x
 
@@ -202,5 +201,3 @@ def resnet6(**kwargs: Any) -> ResNet: # 6 = 2 + 2 * (1 + 1)
 
 def resnet4(**kwargs: Any) -> ResNet: # 4 = 2 + 2 * (1)
     return ResNet(BasicBlock, [1], **kwargs)
-
-        
