@@ -95,7 +95,13 @@ class Client(object):
                 test_num += y.shape[0]
 
                 y_prob.append(output.detach().cpu().numpy())
-                y_true.append(label_binarize(y.detach().cpu().numpy(), classes=np.arange(self.num_classes)))
+                nc = self.num_classes
+                if self.num_classes == 2:
+                    nc += 1
+                lb = label_binarize(y.detach().cpu().numpy(), classes=np.arange(nc))
+                if self.num_classes == 2:
+                    lb = lb[:, :2]
+                y_true.append(lb)
 
         # self.model.cpu()
         # self.save_model(self.model, 'model')
