@@ -95,10 +95,7 @@ class clientPerAvg(Client):
         self.optimizer.step()
 
         # step 2
-        try:
-            (x, y) = next(iter_testloader)
-        except:
-            pass
+        (x, y) = next(iter_testloader)
         if type(x) == type([]):
             x[0] = x[0].to(self.device)
         else:
