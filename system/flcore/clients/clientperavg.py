@@ -5,6 +5,8 @@ import copy
 import torch.nn as nn
 from flcore.optimizers.fedoptimizer import PerAvgOptimizer
 from flcore.clients.clientbase import Client
+from utils.data_utils import read_client_data
+from torch.utils.data import DataLoader
 
 
 class clientPerAvg(Client):
@@ -76,13 +78,12 @@ class clientPerAvg(Client):
 
 
     def train_one_step(self):
-        testloader = self.load_test_data(self.batch_size)
-        iter_testloader = iter(testloader)
+        trainloader = self.load_train_data_one_step(self.batch_size)
+        iter_loader = iter(trainloader)
         # self.model.to(self.device)
         self.model.train()
 
-        # step 1
-        (x, y) = next(iter_testloader)
+        (x, y) = next(iter_loader)
         if type(x) == type([]):
             x[0] = x[0].to(self.device)
         else:
@@ -94,17 +95,11 @@ class clientPerAvg(Client):
         loss.backward()
         self.optimizer.step()
 
-        # step 2
-        (x, y) = next(iter_testloader)
-        if type(x) == type([]):
-            x[0] = x[0].to(self.device)
-        else:
-            x = x.to(self.device)
-        y = y.to(self.device)
-        self.optimizer.zero_grad()
-        output = self.model(x)
-        loss = self.loss(output, y)
-        loss.backward()
-        self.optimizer.step(beta=self.beta)
-
         # self.model.cpu()
+
+
+    def load_train_data_one_step(self, batch_size=None):
+        if batch_size == None:
+            batch_size = self.batch_size
+        train_data = read_client_data(self.dataset, self.id, is_train=True)
+        return DataLoader(train_data, batch_size, drop_last=True, shuffle=True)
