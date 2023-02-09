@@ -68,8 +68,8 @@ class clientFomo(Client):
         val_data = train_data[val_idx:]
         train_data = train_data[:val_idx]
 
-        trainloader = DataLoader(train_data, self.batch_size, drop_last=True, shuffle=True)
-        val_loader = DataLoader(val_data, self.batch_size, drop_last=self.has_BatchNorm, shuffle=True)
+        trainloader = DataLoader(train_data, self.batch_size, drop_last=True, shuffle=False)
+        val_loader = DataLoader(val_data, self.batch_size, drop_last=self.has_BatchNorm, shuffle=False)
 
         return trainloader, val_loader
 
