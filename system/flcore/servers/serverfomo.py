@@ -17,9 +17,10 @@ class FedFomo(Server):
         self.set_clients(args, clientFomo)
 
         self.P = torch.diag(torch.ones(self.num_clients, device=self.device))
-        self.uploaded_models = [self.global_model]
+        self.uploaded_models = []
         self.uploaded_ids = []
         self.M = min(args.M, self.join_clients)
+        self.client_models = [copy.deepcopy(self.global_model) for _ in range(self.num_clients)]
             
         print(f"\nJoin ratio / total clients: {self.join_ratio} / {self.num_clients}")
         print("Finished creating server and clients.")
@@ -62,17 +63,16 @@ class FedFomo(Server):
             if client.send_slow:
                 time.sleep(0.1 * np.abs(np.random.rand()))
 
-            if len(self.uploaded_ids) > 0:
-                M_ = min(self.M, len(self.uploaded_models)) # if clients dropped
-                indices = torch.topk(self.P[client.id][self.uploaded_ids], M_).indices.tolist()
+            M_ = min(self.M, len(self.uploaded_ids)) # if clients dropped
+            indices = torch.topk(self.P[client.id], M_).indices.tolist()
 
-                uploaded_ids = []
-                uploaded_models = []
-                for i in indices:
-                    uploaded_ids.append(self.uploaded_ids[i])
-                    uploaded_models.append(self.uploaded_models[i])
+            send_ids = []
+            send_models = []
+            for i in indices:
+                send_ids.append(i)
+                send_models.append(self.client_models[i])
 
-                client.receive_models(uploaded_ids, uploaded_models)
+            client.receive_models(send_ids, send_models)
 
             client.send_time_cost['num_rounds'] += 1
             client.send_time_cost['total_cost'] += 2 * (time.time() - start_time)
@@ -84,18 +84,13 @@ class FedFomo(Server):
             self.selected_clients, int((1-self.client_drop_rate) * self.join_clients))
 
         self.uploaded_ids = []
-        self.uploaded_weights = []
         tot_samples = 0
-        self.uploaded_models = []
         for client in active_clients:
             client_time_cost = client.train_time_cost['total_cost'] / client.train_time_cost['num_rounds'] + \
                     client.send_time_cost['total_cost'] / client.send_time_cost['num_rounds']
             if client_time_cost <= self.time_threthold:
                 self.uploaded_ids.append(client.id)
-                self.uploaded_weights.append(client.train_samples)
                 tot_samples += client.train_samples
-                self.uploaded_models.append(copy.deepcopy(client.model))
+                self.client_models[client.id] = copy.deepcopy(client.model)
                 self.P[client.id] += client.weight_vector
-        for i, w in enumerate(self.uploaded_weights):
-            self.uploaded_weights[i] = w / tot_samples
             
