@@ -71,11 +71,11 @@ def run(args):
                 args.model = Mclr_Logistic(60, num_classes=args.num_classes).to(args.device)
 
         elif model_str == "cnn":
-            if args.dataset[:5] == "mnist" or args.dataset == "fmnist":
+            if args.dataset == "mnist" or args.dataset == "fmnist":
                 args.model = FedAvgCNN(in_features=1, num_classes=args.num_classes, dim=1024).to(args.device)
             elif args.dataset == "omniglot":
                 args.model = FedAvgCNN(in_features=1, num_classes=args.num_classes, dim=33856).to(args.device)
-            elif args.dataset[:5] == "Cifar":
+            elif args.dataset == "Cifar10" or args.dataset == "Cifar100":
                 args.model = FedAvgCNN(in_features=3, num_classes=args.num_classes, dim=1600).to(args.device)
                 # args.model = CifarNet(num_classes=args.num_classes).to(args.device)
             elif args.dataset == "Digit5":
