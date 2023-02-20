@@ -29,7 +29,7 @@ class Ditto(Server):
 
             if i%self.eval_gap == 0:
                 print(f"\n-------------Round number: {i}-------------")
-                print("\nEvaluate personalized models")
+                print("\nEvaluate global models")
                 self.evaluate()
 
             for client in self.selected_clients:
@@ -40,6 +40,10 @@ class Ditto(Server):
             #            for client in self.selected_clients]
             # [t.start() for t in threads]
             # [t.join() for t in threads]
+
+            if i%self.eval_gap == 0:
+                print("\nEvaluate personalized models")
+                self.evaluate_personalized()
 
             self.receive_models()
             self.aggregate_parameters()
