@@ -64,7 +64,7 @@ class FedDyn(Server):
             self.done = self.check_done(acc_lss=[self.rs_test_acc], top_cnt=self.top_cnt)
             i += 1
 
-        print("\nBest global accuracy.")
+        print("\nBest accuracy.")
         # self.print_(max(self.rs_test_acc), max(
         #     self.rs_train_acc), min(self.rs_train_loss))
         print(max(self.rs_test_acc))

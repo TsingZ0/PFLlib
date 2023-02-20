@@ -29,7 +29,7 @@ class FedRep(Server):
 
             if i%self.eval_gap == 0:
                 print(f"\n-------------Round number: {i}-------------")
-                print("\nEvaluate global model")
+                print("\nEvaluate personalized models")
                 self.evaluate()
 
             for client in self.selected_clients:
@@ -46,7 +46,7 @@ class FedRep(Server):
             self.Budget.append(time.time() - s_t)
             print('-'*25, 'time cost', '-'*25, self.Budget[-1])
 
-        print("\nBest global accuracy.")
+        print("\nBest accuracy.")
         # self.print_(max(self.rs_test_acc), max(
         #     self.rs_train_acc), min(self.rs_train_loss))
         print(max(self.rs_test_acc))
@@ -54,7 +54,7 @@ class FedRep(Server):
         print(sum(self.Budget[1:])/len(self.Budget[1:]))
 
         self.save_results()
-        self.save_global_model()
+        
 
     def receive_models(self):
         assert (len(self.selected_clients) > 0)

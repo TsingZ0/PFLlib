@@ -88,7 +88,7 @@ class clientDitto(Client):
 
         self.train_time_cost['total_cost'] += time.time() - start_time
 
-    def test_metrics(self):
+    def test_metrics_personalized(self):
         testloaderfull = self.load_test_data()
         # self.model = self.load_model('model')
         # self.model.to(self.device)
@@ -122,3 +122,26 @@ class clientDitto(Client):
         auc = metrics.roc_auc_score(y_true, y_prob, average='micro')
         
         return test_acc, test_num, auc
+
+    def train_metrics_personalized(self):
+        trainloader = self.load_train_data()
+        # self.model = self.load_model('model')
+        # self.model.to(self.device)
+        self.model.eval()
+
+        train_num = 0
+        loss = 0
+        for x, y in trainloader:
+            if type(x) == type([]):
+                x[0] = x[0].to(self.device)
+            else:
+                x = x.to(self.device)
+            y = y.to(self.device)
+            output = self.pmodel(x)
+            train_num += y.shape[0]
+            loss += self.loss(output, y).item() * y.shape[0]
+
+        # self.model.cpu()
+        # self.save_model(self.model, 'model')
+
+        return loss, train_num

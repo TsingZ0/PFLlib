@@ -24,7 +24,7 @@ class APFL(Server):
 
             if i%self.eval_gap == 0:
                 print(f"\n-------------Round number: {i}-------------")
-                print("\nEvaluate global model")
+                print("\nEvaluate personalized models")
                 self.evaluate()
 
             for client in self.selected_clients:
@@ -38,10 +38,9 @@ class APFL(Server):
             self.receive_models()
             self.aggregate_parameters()
 
-        print("\nBest global accuracy.")
+        print("\nBest accuracy.")
         # self.print_(max(self.rs_test_acc), max(
         #     self.rs_train_acc), min(self.rs_train_loss))
         print(max(self.rs_test_acc))
 
         self.save_results()
-        self.save_global_model()
