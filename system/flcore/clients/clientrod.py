@@ -93,7 +93,7 @@ class clientROD(Client):
                 nc = self.num_classes
                 if self.num_classes == 2:
                     nc += 1
-                lb = label_binarize(y.detach().cpu().numpy(), np.arange(nc))
+                lb = label_binarize(y.detach().cpu().numpy(), classes=np.arange(nc))
                 if self.num_classes == 2:
                     lb = lb[:, :2]
                 y_true.append(lb)

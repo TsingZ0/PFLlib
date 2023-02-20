@@ -87,5 +87,6 @@ class FedAMP(Server):
                 c.send_time_cost['num_rounds'] += 1
                 c.send_time_cost['total_cost'] += 2 * (time.time() - start_time)
 
+
     def e(self, x):
         return math.exp(-x/self.sigma)/self.sigma

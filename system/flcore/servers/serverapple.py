@@ -33,6 +33,7 @@ class APPLE(Server):
     def train(self):
         for i in range(self.global_rounds+1):
             s_t = time.time()
+            self.selected_clients = self.select_clients()
             self.send_models()
 
             if i%self.eval_gap == 0:
