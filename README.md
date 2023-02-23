@@ -636,10 +636,10 @@ If you need to simulate FL in a practical setting, which includes **client dropo
 ## Easy to extend
 It is easy to add new datasets or FL methods to this platform. 
 
-- To add a new dataset into this platform, all you need to do is writing the download code and using the utils the same as `./dataset/generate_mnist.py` (you can also consider it as the template). 
+- To add a **new dataset** into this platform, all you need to do is writing the download code and using the utils the same as `./dataset/generate_mnist.py` (you can also consider it as the template). 
 
-- To add a new algorithm, you can utilize the class **server** and class **client**, which are wrote in `./system/flcore/servers/serverbase.py` and `./system/flcore/clients/clientbase.py`, respectively. 
+- To add a **new algorithm**, you can utilize the class **Server** and class **Client**, which are wrote in `./system/flcore/servers/serverbase.py` and `./system/flcore/clients/clientbase.py`, respectively. 
 
-- To add a new model, just add it into `./system/flcore/trainmodel/models.py`.
+- To add a **new model**, just add it into `./system/flcore/trainmodel/models.py`.
 
-- If you have an individual optimizer while training, please add it into `./system/flcore/optimizers/fedoptimizer.py`
+- If you have a **new optimizer** while training, please add it into `./system/flcore/optimizers/fedoptimizer.py`
