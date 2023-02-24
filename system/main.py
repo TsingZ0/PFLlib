@@ -287,7 +287,7 @@ if __name__ == "__main__":
     parser.add_argument('-dp', "--privacy", type=bool, default=False,
                         help="differential privacy")
     parser.add_argument('-dps', "--dp_sigma", type=float, default=0.0)
-    parser.add_argument('-sfn', "--save_folder_name", type=str, default='models')
+    parser.add_argument('-sfn', "--save_folder_name", type=str, default='items')
     # practical
     parser.add_argument('-cdr', "--client_drop_rate", type=float, default=0.0,
                         help="Rate for clients that train but drop out")
