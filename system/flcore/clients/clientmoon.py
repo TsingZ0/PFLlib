@@ -65,3 +65,34 @@ class clientMOON(Client):
             old_param.data = new_param.data.clone()
 
         self.global_model = model
+
+    def train_metrics(self):
+        trainloader = self.load_train_data()
+        # self.model = self.load_model('model')
+        # self.model.to(self.device)
+        self.model.eval()
+
+        train_num = 0
+        losses = 0
+        with torch.no_grad():
+            for x, y in trainloader:
+                if type(x) == type([]):
+                    x[0] = x[0].to(self.device)
+                else:
+                    x = x.to(self.device)
+                y = y.to(self.device)
+                rep = self.model.base(x)
+                output = self.model.head(rep)
+                loss = self.loss(output, y)
+
+                rep_old = self.old_model.base(x).detach()
+                rep_global = self.global_model.base(x).detach()
+                loss_con = - torch.log(torch.exp(F.cosine_similarity(rep, rep_global) / self.tau) / (torch.exp(F.cosine_similarity(rep, rep_global) / self.tau) + torch.exp(F.cosine_similarity(rep, rep_old) / self.tau)))
+                loss += self.mu * torch.mean(loss_con)
+                train_num += y.shape[0]
+                losses += loss.item() * y.shape[0]
+
+        # self.model.cpu()
+        # self.save_model(self.model, 'model')
+
+        return losses, train_num

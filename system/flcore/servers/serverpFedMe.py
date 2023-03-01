@@ -97,18 +97,17 @@ class pFedMe(Server):
 
     def evaluate_personalized(self):
         stats = self.test_metrics_personalized()
-        # stats_train = self.train_metrics_personalized()
+        stats_train = self.train_accuracy_and_loss_personalized()
 
         test_acc = sum(stats[2])*1.0 / sum(stats[1])
-        # train_acc = sum(stats_train[2])*1.0 / sum(stats_train[1])
-        # train_loss = sum(stats_train[3])*1.0 / sum(stats_train[1])
+        train_acc = sum(stats_train[2])*1.0 / sum(stats_train[1])
+        train_loss = sum(stats_train[3])*1.0 / sum(stats_train[1])
         
         self.rs_test_acc_per.append(test_acc)
-        # self.rs_train_acc_per.append(train_acc)
-        # self.rs_train_loss_per.append(train_loss)
+        self.rs_train_acc_per.append(train_acc)
+        self.rs_train_loss_per.append(train_loss)
 
-        print("Average Personalized Test Accurancy: {:.4f}".format(test_acc))
-        # self.print_(test_acc, train_acc, train_loss)
+        self.print_(test_acc, train_acc, train_loss)
 
     def save_results(self):
         algo = self.dataset + "_" + self.algorithm

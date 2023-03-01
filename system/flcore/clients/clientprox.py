@@ -55,3 +55,33 @@ class clientProx(Client):
         for new_param, global_param, param in zip(model.parameters(), self.global_params, self.model.parameters()):
             global_param.data = new_param.data.clone()
             param.data = new_param.data.clone()
+
+    def train_metrics(self):
+        trainloader = self.load_train_data()
+        # self.model = self.load_model('model')
+        # self.model.to(self.device)
+        self.model.eval()
+
+        train_num = 0
+        losses = 0
+        with torch.no_grad():
+            for x, y in trainloader:
+                if type(x) == type([]):
+                    x[0] = x[0].to(self.device)
+                else:
+                    x = x.to(self.device)
+                y = y.to(self.device)
+                output = self.model(x)
+                loss = self.loss(output, y)
+
+                gm = torch.concat([p.data.view(-1) for p in self.global_params], dim=0)
+                pm = torch.concat([p.data.view(-1) for p in self.model.parameters()], dim=0)
+                loss += 0.5 * self.mu * torch.norm(gm-pm, p=2)
+
+                train_num += y.shape[0]
+                losses += loss.item() * y.shape[0]
+
+        # self.model.cpu()
+        # self.save_model(self.model, 'model')
+
+        return losses, train_num

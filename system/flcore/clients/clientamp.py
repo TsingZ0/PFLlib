@@ -1,9 +1,10 @@
 import torch
 import torch.nn as nn
-from flcore.clients.clientbase import Client
 import numpy as np
 import time
 import copy
+
+from flcore.clients.clientbase import Client
 
 
 class clientAMP(Client):
@@ -41,18 +42,14 @@ class clientAMP(Client):
                 output = self.model(x)
                 loss = self.loss(output, y)
 
-                params = weight_flatten(self.model)
-                params_ = weight_flatten(self.client_u)
-                sub = params - params_
-                loss += self.lamda/self.alphaK/2 * torch.dot(sub, sub)
+                gm = torch.concat([p.data.view(-1) for p in self.model.parameters()], dim=0)
+                pm = torch.concat([p.data.view(-1) for p in self.client_u.parameters()], dim=0)
+                loss += 0.5 * self.lamda/self.alphaK * torch.norm(gm-pm, p=2)
 
                 loss.backward()
                 self.optimizer.step()
 
         # self.model.cpu()
-        del trainloader
-
-        # print(torch.dot(sub, sub))
 
         self.train_time_cost['num_rounds'] += 1
         self.train_time_cost['total_cost'] += time.time() - start_time
@@ -63,10 +60,29 @@ class clientAMP(Client):
             old_param.data = (new_param.data + coef_self * old_param.data).clone()
 
 
-def weight_flatten(model):
-    params = []
-    for u in model.parameters():
-        params.append(u.view(-1))
-    params = torch.cat(params)
+    def train_metrics(self, model=None):
+        trainloader = self.load_train_data()
+        if model == None:
+            model = self.model
+        model.eval()
 
-    return params
+        train_num = 0
+        losses = 0
+        with torch.no_grad():
+            for x, y in trainloader:
+                if type(x) == type([]):
+                    x[0] = x[0].to(self.device)
+                else:
+                    x = x.to(self.device)
+                y = y.to(self.device)
+                output = self.model(x)
+                loss = self.loss(output, y)
+
+                gm = torch.concat([p.data.view(-1) for p in self.model.parameters()], dim=0)
+                pm = torch.concat([p.data.view(-1) for p in self.client_u.parameters()], dim=0)
+                loss += 0.5 * self.lamda/self.alphaK * torch.norm(gm-pm, p=2)
+
+                train_num += y.shape[0]
+                losses += loss.item() * y.shape[0]
+
+        return losses, train_num

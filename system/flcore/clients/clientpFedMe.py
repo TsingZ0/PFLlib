@@ -95,25 +95,34 @@ class clientpFedMe(Client):
         
         return test_acc, test_num
 
-    # def train_metrics_personalized(self):
-    #     self.update_parameters(self.model, self.personalized_params)
-    #     # self.model.to(self.device)
-    #     self.model.eval()
+    def train_accuracy_and_loss_personalized(self):
+        trainloader = self.load_train_data()
+        self.update_parameters(self.model, self.personalized_params)
+        # self.model.to(self.device)
+        self.model.eval()
 
-    #     train_acc = 0
-    #     train_num = 0
-    #     loss = 0
-    #     for x, y in trainloaderfull:
-    #         if type(x) == type([]):
-    #             x[0] = x[0].to(self.device)
-    #         else:
-    #             x = x.to(self.device)
-    #         y = y.to(self.device)
-    #         output = self.model(x)
-    #         train_acc += (torch.sum(torch.argmax(output, dim=1) == y)).item()
-    #         train_num += y.shape[0]
-    #         loss += self.loss(output, y).item() * y.shape[0]
+        train_acc = 0
+        train_num = 0
+        losses = 0
+        with torch.no_grad():
+            for x, y in trainloader:
+                if type(x) == type([]):
+                    x[0] = x[0].to(self.device)
+                else:
+                    x = x.to(self.device)
+                y = y.to(self.device)
+                output = self.model(x)
+                loss = self.loss(output, y).item()
 
-    #     # self.model.cpu()
+                lm = torch.concat([p.data.view(-1) for p in self.local_params], dim=0)
+                pm = torch.concat([p.data.view(-1) for p in self.personalized_params], dim=0)
+                loss += 0.5 * self.lamda * torch.norm(lm-pm, p=2)
+
+                train_acc += (torch.sum(torch.argmax(output, dim=1) == y)).item()
+                
+                train_num += y.shape[0]
+                losses += loss.item() * y.shape[0]
+
+        # self.model.cpu()
         
-    #     return train_acc, loss, train_num
+        return train_acc, losses, train_num

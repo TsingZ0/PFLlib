@@ -3,7 +3,7 @@ import copy
 import time
 import numpy as np
 import math
-from flcore.clients.clientamp import clientAMP, weight_flatten
+from flcore.clients.clientamp import clientAMP
 from flcore.servers.serverbase import Server
 from threading import Thread
 
@@ -62,8 +62,8 @@ class FedAMP(Server):
                 coef = torch.zeros(self.join_clients)
                 for j, mw in enumerate(self.uploaded_models):
                     if c.id != self.uploaded_ids[j]:
-                        weights_i = weight_flatten(c.model)
-                        weights_j = weight_flatten(mw)
+                        weights_i = torch.concat([p.data.view(-1) for p in c.model.parameters()], dim=0)
+                        weights_j = torch.concat([p.data.view(-1) for p in mw.parameters()], dim=0)
                         sub = (weights_i - weights_j).view(-1)
                         sub = torch.dot(sub, sub)
                         coef[j] = self.alphaK * self.e(sub)

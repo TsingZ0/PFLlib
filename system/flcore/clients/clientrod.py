@@ -105,6 +105,34 @@ class clientROD(Client):
         
         return test_acc, test_num, auc
 
+    def train_metrics(self):
+        trainloader = self.load_train_data()
+        # self.model = self.load_model('model')
+        # self.model.to(self.device)
+        self.model.eval()
+
+        train_num = 0
+        losses = 0
+        with torch.no_grad():
+            for x, y in trainloader:
+                if type(x) == type([]):
+                    x[0] = x[0].to(self.device)
+                else:
+                    x = x.to(self.device)
+                y = y.to(self.device)
+                rep = self.model(x, rep=True)
+                out_g = self.model.predictor(rep)
+                out_p = self.pred(rep.detach())
+                output = out_g.detach() + out_p
+                loss = self.loss(output, y)
+                train_num += y.shape[0]
+                losses += loss.item() * y.shape[0]
+
+        # self.model.cpu()
+        # self.save_model(self.model, 'model')
+
+        return losses, train_num
+
 
 # https://github.com/jiawei-ren/BalancedMetaSoftmax-Classification
 def balanced_softmax_loss(labels, logits, sample_per_class, reduction="mean"):

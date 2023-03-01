@@ -120,21 +120,23 @@ class Client(object):
         self.model.eval()
 
         train_num = 0
-        loss = 0
-        for x, y in trainloader:
-            if type(x) == type([]):
-                x[0] = x[0].to(self.device)
-            else:
-                x = x.to(self.device)
-            y = y.to(self.device)
-            output = self.model(x)
-            train_num += y.shape[0]
-            loss += self.loss(output, y).item() * y.shape[0]
+        losses = 0
+        with torch.no_grad():
+            for x, y in trainloader:
+                if type(x) == type([]):
+                    x[0] = x[0].to(self.device)
+                else:
+                    x = x.to(self.device)
+                y = y.to(self.device)
+                output = self.model(x)
+                loss = self.loss(output, y)
+                train_num += y.shape[0]
+                losses += loss.item() * y.shape[0]
 
         # self.model.cpu()
         # self.save_model(self.model, 'model')
 
-        return loss, train_num
+        return losses, train_num
 
     # def get_next_train_batch(self):
     #     try:
