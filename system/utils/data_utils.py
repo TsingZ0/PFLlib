@@ -25,7 +25,7 @@ def read_data(dataset, idx, is_train=True):
 
 def read_client_data(dataset, idx, is_train=True):
     if dataset[:2] == "ag" or dataset[:2] == "SS":
-        return read_client_data_text(dataset, idx)
+        return read_client_data_text(dataset, idx, is_train)
 
     if is_train:
         train_data = read_data(dataset, idx, is_train)
