@@ -145,7 +145,7 @@ class clientProto(Client):
                     x = x.to(self.device)
                 y = y.to(self.device)
                 rep = self.model.base(x)
-                output = self.model.predictor(rep)
+                output = self.model.head(rep)
                 loss = self.loss(output, y)
 
                 if self.global_protos != None:
