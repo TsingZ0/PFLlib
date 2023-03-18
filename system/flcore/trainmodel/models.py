@@ -7,6 +7,7 @@ from torch import nn, Tensor
 batch_size = 10
 
 
+# split an original model into a base and a head
 class BaseHeadSplit(nn.Module):
     def __init__(self, base, head):
         super(BaseHeadSplit, self).__init__()
