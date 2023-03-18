@@ -7,9 +7,9 @@ from torch import nn, Tensor
 batch_size = 10
 
 
-class LocalModel(nn.Module):
+class BaseHeadSplit(nn.Module):
     def __init__(self, base, head):
-        super(LocalModel, self).__init__()
+        super(BaseHeadSplit, self).__init__()
 
         self.base = base
         self.head = head

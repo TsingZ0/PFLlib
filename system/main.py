@@ -179,7 +179,7 @@ def run(args):
         elif args.algorithm == "FedPer":
             args.head = copy.deepcopy(args.model.fc)
             args.model.fc = nn.Identity()
-            args.model = LocalModel(args.model, args.head)
+            args.model = BaseHeadSplit(args.model, args.head)
             server = FedPer(args, i)
 
         elif args.algorithm == "Ditto":
@@ -188,13 +188,13 @@ def run(args):
         elif args.algorithm == "FedRep":
             args.head = copy.deepcopy(args.model.fc)
             args.model.fc = nn.Identity()
-            args.model = LocalModel(args.model, args.head)
+            args.model = BaseHeadSplit(args.model, args.head)
             server = FedRep(args, i)
 
         elif args.algorithm == "FedPHP":
             args.head = copy.deepcopy(args.model.fc)
             args.model.fc = nn.Identity()
-            args.model = LocalModel(args.model, args.head)
+            args.model = BaseHeadSplit(args.model, args.head)
             server = FedPHP(args, i)
 
         elif args.algorithm == "FedBN":
@@ -203,13 +203,13 @@ def run(args):
         elif args.algorithm == "FedROD":
             args.head = copy.deepcopy(args.model.fc)
             args.model.fc = nn.Identity()
-            args.model = LocalModel(args.model, args.head)
+            args.model = BaseHeadSplit(args.model, args.head)
             server = FedROD(args, i)
 
         elif args.algorithm == "FedProto":
             args.head = copy.deepcopy(args.model.fc)
             args.model.fc = nn.Identity()
-            args.model = LocalModel(args.model, args.head)
+            args.model = BaseHeadSplit(args.model, args.head)
             server = FedProto(args, i)
 
         elif args.algorithm == "FedDyn":
@@ -218,13 +218,13 @@ def run(args):
         elif args.algorithm == "MOON":
             args.head = copy.deepcopy(args.model.fc)
             args.model.fc = nn.Identity()
-            args.model = LocalModel(args.model, args.head)
+            args.model = BaseHeadSplit(args.model, args.head)
             server = MOON(args, i)
 
         elif args.algorithm == "FedBABU":
             args.head = copy.deepcopy(args.model.fc)
             args.model.fc = nn.Identity()
-            args.model = LocalModel(args.model, args.head)
+            args.model = BaseHeadSplit(args.model, args.head)
             server = FedBABU(args, i)
 
         elif args.algorithm == "APPLE":
