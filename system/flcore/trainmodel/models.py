@@ -4,7 +4,7 @@ import torch.nn.functional as F
 from torch.nn import TransformerEncoder, TransformerEncoderLayer
 from torch import nn, Tensor
 
-batch_size = 16
+batch_size = 10
 
 
 class LocalModel(nn.Module):
