@@ -11,13 +11,14 @@ from sklearn import metrics
 class clientAPFL(Client):
     def __init__(self, args, id, train_samples, test_samples, **kwargs):
         super().__init__(args, id, train_samples, test_samples, **kwargs)
-        
-        self.loss = nn.CrossEntropyLoss()
-        self.optimizer = torch.optim.SGD(self.model.parameters(), lr=self.learning_rate)
 
         self.alpha = args.alpha
         self.model_per = copy.deepcopy(self.model)
         self.optimizer_per = torch.optim.SGD(self.model_per.parameters(), lr=self.learning_rate)
+        self.learning_rate_scheduler_per = torch.optim.lr_scheduler.ExponentialLR(
+            optimizer=self.optimizer_per, 
+            gamma=args.learning_rate_decay_gamma
+        )
 
     def train(self):
         trainloader = self.load_train_data()
@@ -56,6 +57,10 @@ class clientAPFL(Client):
 
         for lp, p in zip(self.model_per.parameters(), self.model.parameters()):
             lp.data = (1 - self.alpha) * p + self.alpha * lp
+
+        if self.learning_rate_decay:
+            self.learning_rate_scheduler.step()
+            self.learning_rate_scheduler_per.step()
 
         self.train_time_cost['num_rounds'] += 1
         self.train_time_cost['total_cost'] += time.time() - start_time

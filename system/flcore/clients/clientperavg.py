@@ -16,8 +16,11 @@ class clientPerAvg(Client):
         # self.beta = args.beta
         self.beta = self.learning_rate
 
-        self.loss = nn.CrossEntropyLoss()
         self.optimizer = PerAvgOptimizer(self.model.parameters(), lr=self.learning_rate)
+        self.learning_rate_scheduler = torch.optim.lr_scheduler.ExponentialLR(
+            optimizer=self.optimizer, 
+            gamma=args.learning_rate_decay_gamma
+        )
 
     def train(self):
         trainloader = self.load_train_data(self.batch_size*2)
@@ -72,6 +75,9 @@ class clientPerAvg(Client):
                 self.optimizer.step(beta=self.beta)
 
         # self.model.cpu()
+
+        if self.learning_rate_decay:
+            self.learning_rate_scheduler.step()
 
         self.train_time_cost['num_rounds'] += 1
         self.train_time_cost['total_cost'] += time.time() - start_time

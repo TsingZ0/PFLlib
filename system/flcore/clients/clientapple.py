@@ -10,9 +10,6 @@ from flcore.clients.clientbase import Client
 class clientAPPLE(Client):
     def __init__(self, args, id, train_samples, test_samples, **kwargs):
         super().__init__(args, id, train_samples, test_samples, **kwargs)
-        
-        self.loss = nn.CrossEntropyLoss()
-        self.optimizer = torch.optim.SGD(self.model.parameters(), lr=self.learning_rate)
 
         self.drlr = args.dr_learning_rate
         self.num_clients = args.num_clients
@@ -75,6 +72,9 @@ class clientAPPLE(Client):
             self.lamda = 0
 
         self.model_c = copy.deepcopy(self.model)
+
+        if self.learning_rate_decay:
+            self.learning_rate_scheduler.step()
 
         self.train_time_cost['num_rounds'] += 1
         self.train_time_cost['total_cost'] += time.time() - start_time

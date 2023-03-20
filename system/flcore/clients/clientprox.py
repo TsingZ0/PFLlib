@@ -18,6 +18,10 @@ class clientProx(Client):
         self.loss = nn.CrossEntropyLoss()
         self.optimizer = PerturbedGradientDescent(
             self.model.parameters(), lr=self.learning_rate, mu=self.mu)
+        self.learning_rate_scheduler = torch.optim.lr_scheduler.ExponentialLR(
+            optimizer=self.optimizer, 
+            gamma=args.learning_rate_decay_gamma
+        )
 
     def train(self):
         trainloader = self.load_train_data()
@@ -46,6 +50,9 @@ class clientProx(Client):
                 self.optimizer.step(self.global_params, self.device)
 
         # self.model.cpu()
+
+        if self.learning_rate_decay:
+            self.learning_rate_scheduler.step()
 
         self.train_time_cost['num_rounds'] += 1
         self.train_time_cost['total_cost'] += time.time() - start_time

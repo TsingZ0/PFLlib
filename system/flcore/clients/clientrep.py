@@ -9,9 +9,16 @@ class clientRep(Client):
     def __init__(self, args, id, train_samples, test_samples, **kwargs):
         super().__init__(args, id, train_samples, test_samples, **kwargs)
         
-        self.loss = nn.CrossEntropyLoss()
         self.optimizer = torch.optim.SGD(self.model.base.parameters(), lr=self.learning_rate)
-        self.poptimizer = torch.optim.SGD(self.model.head.parameters(), lr=self.learning_rate)
+        self.learning_rate_scheduler = torch.optim.lr_scheduler.ExponentialLR(
+            optimizer=self.optimizer, 
+            gamma=args.learning_rate_decay_gamma
+        )
+        self.optimizer_per = torch.optim.SGD(self.model.head.parameters(), lr=self.learning_rate)
+        self.learning_rate_scheduler_per = torch.optim.lr_scheduler.ExponentialLR(
+            optimizer=self.optimizer_per, 
+            gamma=args.learning_rate_decay_gamma
+        )
 
         self.plocal_steps = args.plocal_steps
 
@@ -37,11 +44,11 @@ class clientRep(Client):
                 y = y.to(self.device)
                 if self.train_slow:
                     time.sleep(0.1 * np.abs(np.random.rand()))
-                self.poptimizer.zero_grad()
+                self.optimizer_per.zero_grad()
                 output = self.model(x)
                 loss = self.loss(output, y)
                 loss.backward()
-                self.poptimizer.step()
+                self.optimizer_per.step()
                 
         max_local_steps = self.local_steps
         if self.train_slow:
@@ -68,6 +75,10 @@ class clientRep(Client):
                 self.optimizer.step()
 
         # self.model.cpu()
+
+        if self.learning_rate_decay:
+            self.learning_rate_scheduler.step()
+            self.learning_rate_scheduler_per.step()
 
         self.train_time_cost['num_rounds'] += 1
         self.train_time_cost['total_cost'] += time.time() - start_time

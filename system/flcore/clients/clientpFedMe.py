@@ -19,9 +19,12 @@ class clientpFedMe(Client):
         self.local_params = copy.deepcopy(list(self.model.parameters()))
         self.personalized_params = copy.deepcopy(list(self.model.parameters()))
 
-        self.loss = nn.CrossEntropyLoss()
         self.optimizer = pFedMeOptimizer(
             self.model.parameters(), lr=self.personalized_learning_rate, lamda=self.lamda)
+        self.learning_rate_scheduler = torch.optim.lr_scheduler.ExponentialLR(
+            optimizer=self.optimizer, 
+            gamma=args.learning_rate_decay_gamma
+        )
 
     def train(self):
         trainloader = self.load_train_data()
@@ -59,6 +62,9 @@ class clientpFedMe(Client):
                     localweight.data = localweight.data - self.lamda * self.learning_rate * (localweight.data - new_param.data)
 
         # self.model.cpu()
+
+        if self.learning_rate_decay:
+            self.learning_rate_scheduler.step()
 
         self.update_parameters(self.model, self.local_params)
 

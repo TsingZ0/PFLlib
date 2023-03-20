@@ -17,9 +17,6 @@ class clientMTL(Client):
         self.itk = args.itk
         self.lamba = 1e-4
 
-        self.loss = nn.CrossEntropyLoss()
-        self.optimizer = torch.optim.SGD(self.model.parameters(), lr=self.learning_rate, momentum=0.5)
-
     def train(self):
         trainloader = self.load_train_data()
         start_time = time.time()
@@ -64,6 +61,9 @@ class clientMTL(Client):
         # self.save_model(self.model, 'model')
         self.omega = None
         self.W_glob = None
+
+        if self.learning_rate_decay:
+            self.learning_rate_scheduler.step()
 
         self.train_time_cost['num_rounds'] += 1
         self.train_time_cost['total_cost'] += time.time() - start_time

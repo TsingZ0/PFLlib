@@ -9,9 +9,6 @@ from flcore.clients.clientbase import Client
 class clientPHP(Client):
     def __init__(self, args, id, train_samples, test_samples, **kwargs):
         super().__init__(args, id, train_samples, test_samples, **kwargs)
-        
-        self.loss = nn.CrossEntropyLoss()
-        self.optimizer = torch.optim.SGD(self.model.parameters(), lr=self.learning_rate)
 
         self.mu = args.mu / args.global_rounds
         self.lamda = args.lamda
@@ -50,6 +47,9 @@ class clientPHP(Client):
                 self.optimizer.step()
 
         # self.model.cpu()
+
+        if self.learning_rate_decay:
+            self.learning_rate_scheduler.step()
 
         self.train_time_cost['num_rounds'] += 1
         self.train_time_cost['total_cost'] += time.time() - start_time
