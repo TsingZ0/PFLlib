@@ -14,7 +14,17 @@ class clientProto(Client):
         self.loss = nn.CrossEntropyLoss()
         self.optimizer = torch.optim.SGD(self.model.parameters(), lr=self.learning_rate)
 
-        self.feature_dim = list(self.model.head.parameters())[0].shape[1]
+        trainloader = self.load_train_data()
+        for x, y in trainloader:
+            if type(x) == type([]):
+                x[0] = x[0].to(self.device)
+            else:
+                x = x.to(self.device)
+            y = y.to(self.device)
+            with torch.no_grad():
+                rep = self.model.base(x).detach()
+            break
+        self.feature_dim = rep.shape[1]
 
         self.protos = None
         self.global_protos = None

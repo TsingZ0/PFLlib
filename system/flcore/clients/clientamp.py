@@ -15,9 +15,6 @@ class clientAMP(Client):
         self.lamda = args.lamda
         self.client_u = copy.deepcopy(self.model)
 
-        self.loss = nn.CrossEntropyLoss()
-        self.optimizer = torch.optim.SGD(self.model.parameters(), lr=self.learning_rate)
-
     def train(self):
         trainloader = self.load_train_data()
         start_time = time.time()

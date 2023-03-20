@@ -29,6 +29,7 @@ from flcore.servers.serverdyn import FedDyn
 from flcore.servers.servermoon import MOON
 from flcore.servers.serverbabu import FedBABU
 from flcore.servers.serverapple import APPLE
+from flcore.servers.servergen import FedGen
 
 from flcore.trainmodel.models import *
 
@@ -48,7 +49,7 @@ torch.manual_seed(0)
 # hyper-params for Text tasks
 vocab_size = 98635
 max_len=200
-hidden_dim=32
+emb_dim=32
 
 def run(args):
 
@@ -122,22 +123,22 @@ def run(args):
             # args.model.fc = nn.Linear(feature_dim, args.num_classes).to(args.device)
             
         elif model_str == "lstm":
-            args.model = LSTMNet(hidden_dim=hidden_dim, vocab_size=vocab_size, num_classes=args.num_classes).to(args.device)
+            args.model = LSTMNet(emb_dim=emb_dim, vocab_size=vocab_size, num_classes=args.num_classes).to(args.device)
 
         elif model_str == "bilstm":
-            args.model = BiLSTM_TextClassification(input_size=vocab_size, hidden_size=hidden_dim, output_size=args.num_classes, 
+            args.model = BiLSTM_TextClassification(input_size=vocab_size, hidden_size=emb_dim, output_size=args.num_classes, 
                         num_layers=1, embedding_dropout=0, lstm_dropout=0, attention_dropout=0, 
-                        embedding_length=hidden_dim).to(args.device)
+                        embedding_length=emb_dim).to(args.device)
 
         elif model_str == "fastText":
-            args.model = fastText(hidden_dim=hidden_dim, vocab_size=vocab_size, num_classes=args.num_classes).to(args.device)
+            args.model = fastText(emb_dim=emb_dim, vocab_size=vocab_size, num_classes=args.num_classes).to(args.device)
 
         elif model_str == "TextCNN":
-            args.model = TextCNN(hidden_dim=hidden_dim, max_len=max_len, vocab_size=vocab_size, 
+            args.model = TextCNN(emb_dim=emb_dim, max_len=max_len, vocab_size=vocab_size, 
                             num_classes=args.num_classes).to(args.device)
 
         elif model_str == "Transformer":
-            args.model = TransformerModel(ntoken=vocab_size, d_model=hidden_dim, nhead=2, d_hid=hidden_dim, nlayers=2, 
+            args.model = TransformerModel(ntoken=vocab_size, d_model=emb_dim, nhead=2, d_hid=emb_dim, nlayers=2, 
                             num_classes=args.num_classes).to(args.device)
         
         elif model_str == "AmazonMLP":
@@ -229,6 +230,12 @@ def run(args):
 
         elif args.algorithm == "APPLE":
             server = APPLE(args, i)
+
+        elif args.algorithm == "FedGen":
+            args.head = copy.deepcopy(args.model.fc)
+            args.model.fc = nn.Identity()
+            args.model = BaseHeadSplit(args.model, args.head)
+            server = FedGen(args, i)
             
         else:
             raise NotImplementedError
@@ -269,6 +276,8 @@ if __name__ == "__main__":
     parser.add_argument('-lbs', "--batch_size", type=int, default=10)
     parser.add_argument('-lr', "--local_learning_rate", type=float, default=0.005,
                         help="Local learning rate")
+    parser.add_argument('-ld', "--learning_rate_decay", type=bool, default=False)
+    parser.add_argument('-ldg', "--learning_rate_decay_gamma", type=float, default=0.99)
     parser.add_argument('-gr', "--global_rounds", type=int, default=1000)
     parser.add_argument('-ls', "--local_steps", type=int, default=1)
     parser.add_argument('-algo', "--algorithm", type=str, default="FedAvg")
@@ -332,6 +341,12 @@ if __name__ == "__main__":
     # APPLE
     parser.add_argument('-dlr', "--dr_learning_rate", type=float, default=0.0)
     parser.add_argument('-L', "--L", type=float, default=1.0)
+    # FedGen
+    parser.add_argument('-nd', "--noise_dim", type=int, default=32)
+    parser.add_argument('-glr', "--generator_learning_rate", type=float, default=0.0)
+    parser.add_argument('-hd', "--hidden_dim", type=int, default=512)
+    parser.add_argument('-se', "--server_epochs", type=int, default=1000)
+
 
     args = parser.parse_args()
 

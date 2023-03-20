@@ -6,9 +6,34 @@ from flcore.clients.clientbase import Client
 from utils.privacy import *
 
 
-class clientAVG(Client):
+class clientGen(Client):
     def __init__(self, args, id, train_samples, test_samples, **kwargs):
         super().__init__(args, id, train_samples, test_samples, **kwargs)
+        
+        self.loss = nn.CrossEntropyLoss()
+        self.optimizer = torch.optim.SGD(self.model.parameters(), lr=self.learning_rate)
+
+        trainloader = self.load_train_data()
+        for x, y in trainloader:
+            if type(x) == type([]):
+                x[0] = x[0].to(self.device)
+            else:
+                x = x.to(self.device)
+            y = y.to(self.device)
+            with torch.no_grad():
+                rep = self.model.base(x).detach()
+            break
+        self.feature_dim = rep.shape[1]
+
+        self.sample_per_class = torch.zeros(self.num_classes)
+        trainloader = self.load_train_data()
+        for x, y in trainloader:
+            for yy in y:
+                self.sample_per_class[yy.item()] += 1
+
+        self.qualified_labels = []
+        self.generative_model = None
+        
 
     def train(self):
         trainloader = self.load_train_data()
@@ -38,13 +63,16 @@ class clientAVG(Client):
                 self.optimizer.zero_grad()
                 output = self.model(x)
                 loss = self.loss(output, y)
+                
+                labels = np.random.choice(self.qualified_labels, self.batch_size)
+                labels = torch.LongTensor(labels).to(self.device)
+                z = self.generative_model(labels)
+                loss += self.loss(self.model.head(z), labels)
+
                 loss.backward()
                 self.optimizer.step()
 
         # self.model.cpu()
-
-        if self.learning_rate_decay:
-            self.learning_rate_scheduler.step()
 
         self.train_time_cost['num_rounds'] += 1
         self.train_time_cost['total_cost'] += time.time() - start_time
@@ -52,3 +80,11 @@ class clientAVG(Client):
         if self.privacy:
             eps, DELTA = get_dp_params(privacy_engine)
             print(f"Client {self.id}", f"epsilon = {eps:.2f}, sigma = {DELTA}")
+            
+        
+    def set_parameters(self, model, generative_model, qualified_labels):
+        for new_param, old_param in zip(model.parameters(), self.model.parameters()):
+            old_param.data = new_param.data.clone()
+
+        self.generative_model = generative_model
+        self.qualified_labels = qualified_labels

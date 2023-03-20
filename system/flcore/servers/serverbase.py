@@ -14,6 +14,7 @@ class Server(object):
         # Set up the main attributes
         self.device = args.device
         self.dataset = args.dataset
+        self.num_classes = args.num_classes
         self.global_rounds = args.global_rounds
         self.local_steps = args.local_steps
         self.batch_size = args.batch_size
@@ -48,6 +49,7 @@ class Server(object):
         self.client_drop_rate = args.client_drop_rate
         self.train_slow_rate = args.train_slow_rate
         self.send_slow_rate = args.send_slow_rate
+        
 
     def set_clients(self, args, clientObj):
         for i, train_slow, send_slow in zip(range(self.num_clients), self.train_slow_clients, self.send_slow_clients):
