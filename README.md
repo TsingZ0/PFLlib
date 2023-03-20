@@ -2,8 +2,8 @@
 
 ***We expose this user-friendly platform for biginners who intend to start federated learning (FL) study.***
 
-- **[NEWS!]:** add knowledge-distillation-based FL & pFL methods
-- **[NEWS!]:** add learning rate scheduler
+- **[NEWS!]: add knowledge-distillation-based FL & pFL methods**
+- **[NEWS!]: add learning rate scheduler**
 
 The origin of the **statistical heterogeneity** phenomenon is the personalization of users, who generate the non-IID (not Independent and Identically Distributed) or unbalanced data. With statistical heterogeneity existing in the FL setting, a myriad of approaches have been proposed to crack this hard nut. In contrast, the personalized FL (pFL) may take the advantage of the statistically heterogeneious data to learn the personalized model for each user. 
 
