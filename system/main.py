@@ -343,9 +343,10 @@ if __name__ == "__main__":
     parser.add_argument('-L', "--L", type=float, default=1.0)
     # FedGen
     parser.add_argument('-nd', "--noise_dim", type=int, default=32)
-    parser.add_argument('-glr', "--generator_learning_rate", type=float, default=0.0)
+    parser.add_argument('-glr', "--generator_learning_rate", type=float, default=0.01)
     parser.add_argument('-hd', "--hidden_dim", type=int, default=512)
     parser.add_argument('-se', "--server_epochs", type=int, default=1000)
+    parser.add_argument('-lf', "--localize_feature_extractor", type=bool, default=False)
 
 
     args = parser.parse_args()

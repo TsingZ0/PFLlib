@@ -30,6 +30,7 @@ class clientGen(Client):
 
         self.qualified_labels = []
         self.generative_model = None
+        self.localize_feature_extractor = args.localize_feature_extractor
         
 
     def train(self):
@@ -83,8 +84,12 @@ class clientGen(Client):
             
         
     def set_parameters(self, model, generative_model, qualified_labels):
-        for new_param, old_param in zip(model.parameters(), self.model.parameters()):
-            old_param.data = new_param.data.clone()
+        if self.localize_feature_extractor:
+            for new_param, old_param in zip(model.parameters(), self.model.head.parameters()):
+                old_param.data = new_param.data.clone()
+        else:
+            for new_param, old_param in zip(model.parameters(), self.model.parameters()):
+                old_param.data = new_param.data.clone()
 
         self.generative_model = generative_model
         self.qualified_labels = qualified_labels

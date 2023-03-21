@@ -1,3 +1,5 @@
+import copy
+import random
 import time
 import numpy as np
 import torch
@@ -43,6 +45,9 @@ class FedGen(Server):
                 self.qualified_labels.extend([yy for _ in range(int(client.sample_per_class[yy].item()))])
 
         self.server_epochs = args.server_epochs
+        self.localize_feature_extractor = args.localize_feature_extractor
+        if self.localize_feature_extractor:
+            self.global_model = copy.deepcopy(args.model.head)
         
 
     def train(self):
@@ -93,6 +98,33 @@ class FedGen(Server):
             client.send_time_cost['num_rounds'] += 1
             client.send_time_cost['total_cost'] += 2 * (time.time() - start_time)
 
+    def receive_models(self):
+        assert (len(self.selected_clients) > 0)
+
+        active_clients = random.sample(
+            self.selected_clients, int((1-self.client_drop_rate) * self.join_clients))
+
+        self.uploaded_ids = []
+        self.uploaded_weights = []
+        self.uploaded_models = []
+        tot_samples = 0
+        for client in active_clients:
+            try:
+                client_time_cost = client.train_time_cost['total_cost'] / client.train_time_cost['num_rounds'] + \
+                        client.send_time_cost['total_cost'] / client.send_time_cost['num_rounds']
+            except ZeroDivisionError:
+                client_time_cost = 0
+            if client_time_cost <= self.time_threthold:
+                tot_samples += client.train_samples
+                self.uploaded_ids.append(client.id)
+                self.uploaded_weights.append(client.train_samples)
+                if self.localize_feature_extractor:
+                    self.uploaded_models.append(client.model.head)
+                else:
+                    self.uploaded_models.append(client.model)
+        for i, w in enumerate(self.uploaded_weights):
+            self.uploaded_weights[i] = w / tot_samples
+
     def train_generator(self):
         self.generative_model.train()
 
@@ -104,7 +136,10 @@ class FedGen(Server):
             logits = 0
             for w, model in zip(self.uploaded_weights, self.uploaded_models):
                 model.eval()
-                logits += model.head(z) * w
+                if self.localize_feature_extractor:
+                    logits += model(z) * w
+                else:
+                    logits += model.head(z) * w
 
             self.generative_optimizer.zero_grad()
             loss = self.loss(logits, labels)
