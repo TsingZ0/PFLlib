@@ -30,6 +30,7 @@ from flcore.servers.servermoon import MOON
 from flcore.servers.serverbabu import FedBABU
 from flcore.servers.serverapple import APPLE
 from flcore.servers.servergen import FedGen
+from flcore.servers.serverscaffold import SCAFFOLD
 
 from flcore.trainmodel.models import *
 
@@ -236,6 +237,9 @@ def run(args):
             args.model.fc = nn.Identity()
             args.model = BaseHeadSplit(args.model, args.head)
             server = FedGen(args, i)
+
+        elif args.algorithm == "SCAFFOLD":
+            server = SCAFFOLD(args, i)
             
         else:
             raise NotImplementedError
@@ -347,6 +351,8 @@ if __name__ == "__main__":
     parser.add_argument('-hd', "--hidden_dim", type=int, default=512)
     parser.add_argument('-se', "--server_epochs", type=int, default=1000)
     parser.add_argument('-lf', "--localize_feature_extractor", type=bool, default=False)
+    # SCAFFOLD
+    parser.add_argument('-slr', "--server_learning_rate", type=float, default=1.0)
 
 
     args = parser.parse_args()
