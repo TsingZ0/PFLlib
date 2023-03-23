@@ -29,7 +29,7 @@ class FedDistill(Server):
             s_t = time.time()
             self.selected_clients = self.select_clients()
 
-            if i%self.eval_gap == 0 and i>0:
+            if i%self.eval_gap == 0:
                 print(f"\n-------------Round number: {i}-------------")
                 print("\nEvaluate personalized models")
                 self.evaluate()

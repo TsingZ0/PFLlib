@@ -125,7 +125,9 @@ class clientProto(Client):
                     test_acc += (torch.sum(torch.argmin(output, dim=1) == y)).item()
                     test_num += y.shape[0]
 
-        return test_acc, test_num, 0
+            return test_acc, test_num, 0
+        else:
+            return 0, 1e-5, 0
 
     def train_metrics(self):
         trainloader = self.load_train_data()
