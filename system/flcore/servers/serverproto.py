@@ -25,10 +25,7 @@ class FedProto(Server):
 
 
     def train(self):
-        self.done = False
-        i = 0
-        while not self.done:
-        # for i in range(self.global_rounds+1):
+        for i in range(self.global_rounds+1):
             s_t = time.time()
             self.selected_clients = self.select_clients()
 
@@ -52,9 +49,8 @@ class FedProto(Server):
             self.Budget.append(time.time() - s_t)
             print('-'*50, self.Budget[-1])
 
-            if i>0:
-                self.done = self.check_done(acc_lss=[self.rs_test_acc], top_cnt=self.top_cnt)
-            i += 1
+            if self.auto_break and self.check_done(acc_lss=[self.rs_test_acc], top_cnt=self.top_cnt):
+                break
 
         print("\nBest accuracy.")
         # self.print_(max(self.rs_test_acc), max(

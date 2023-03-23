@@ -280,7 +280,6 @@ if __name__ == "__main__":
     parser.add_argument('-data', "--dataset", type=str, default="mnist")
     parser.add_argument('-nb', "--num_classes", type=int, default=10)
     parser.add_argument('-m', "--model", type=str, default="cnn")
-    parser.add_argument('-p', "--head", type=str, default="cnn")
     parser.add_argument('-lbs', "--batch_size", type=int, default=10)
     parser.add_argument('-lr', "--local_learning_rate", type=float, default=0.005,
                         help="Local learning rate")
@@ -305,6 +304,7 @@ if __name__ == "__main__":
                         help="differential privacy")
     parser.add_argument('-dps', "--dp_sigma", type=float, default=0.0)
     parser.add_argument('-sfn', "--save_folder_name", type=str, default='items')
+    parser.add_argument('-ab', "--auto_break", type=bool, default=False)
     # practical
     parser.add_argument('-cdr', "--client_drop_rate", type=float, default=0.0,
                         help="Rate for clients that train but drop out")
@@ -373,16 +373,23 @@ if __name__ == "__main__":
     print("Local batch size: {}".format(args.batch_size))
     print("Local steps: {}".format(args.local_steps))
     print("Local learing rate: {}".format(args.local_learning_rate))
+    print("Local learing rate decay: {}".format(args.learning_rate_decay))
+    print("Local learing rate decay gamma: {}".format(args.learning_rate_decay_gamma))
     print("Total number of clients: {}".format(args.num_clients))
     print("Clients join in each round: {}".format(args.join_ratio))
+    print("Clients randomly join: {}".format(args.random_join_ratio))
     print("Client drop rate: {}".format(args.client_drop_rate))
     print("Time select: {}".format(args.time_select))
     print("Time threthold: {}".format(args.time_threthold))
     print("Global rounds: {}".format(args.global_rounds))
     print("Running times: {}".format(args.times))
     print("Dataset: {}".format(args.dataset))
-    print("Local model: {}".format(args.model))
+    print("Number of classes: {}".format(args.num_classes))
+    print("Backbone: {}".format(args.model))
     print("Using device: {}".format(args.device))
+    print("Using DP: {}".format(args.privacy))
+    print("Sigma for DP: {}".format(args.dp_sigma))
+    print("Auto break: {}".format(args.auto_break))
 
     if args.device == "cuda":
         print("Cuda device id: {}".format(os.environ["CUDA_VISIBLE_DEVICES"]))

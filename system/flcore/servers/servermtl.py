@@ -51,6 +51,9 @@ class FedMTL(Server):
             # [t.start() for t in threads]
             # [t.join() for t in threads]
 
+            if self.auto_break and self.check_done(acc_lss=[self.rs_test_acc], top_cnt=self.top_cnt):
+                break
+
 
         print("\nBest accuracy.")
         # self.print_(max(self.rs_test_acc), max(
