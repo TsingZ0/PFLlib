@@ -256,11 +256,7 @@ def run(args):
     
 
     # Global average
-    average_data(dataset=args.dataset, 
-                algorithm=args.algorithm, 
-                goal=args.goal, 
-                times=args.times, 
-                length=args.global_rounds/args.eval_gap+1)
+    average_data(dataset=args.dataset, algorithm=args.algorithm, goal=args.goal, times=args.times)
 
     print("All done!")
 
