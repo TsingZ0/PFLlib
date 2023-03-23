@@ -11,18 +11,6 @@ class clientProto(Client):
     def __init__(self, args, id, train_samples, test_samples, **kwargs):
         super().__init__(args, id, train_samples, test_samples, **kwargs)
 
-        trainloader = self.load_train_data()
-        for x, y in trainloader:
-            if type(x) == type([]):
-                x[0] = x[0].to(self.device)
-            else:
-                x = x.to(self.device)
-            y = y.to(self.device)
-            with torch.no_grad():
-                rep = self.model.base(x).detach()
-            break
-        self.feature_dim = rep.shape[1]
-
         self.protos = None
         self.global_protos = None
         self.loss_mse = nn.MSELoss()

@@ -31,6 +31,7 @@ from flcore.servers.serverbabu import FedBABU
 from flcore.servers.serverapple import APPLE
 from flcore.servers.servergen import FedGen
 from flcore.servers.serverscaffold import SCAFFOLD
+from flcore.servers.serverdistill import FedDistill
 
 from flcore.trainmodel.models import *
 
@@ -240,6 +241,9 @@ def run(args):
 
         elif args.algorithm == "SCAFFOLD":
             server = SCAFFOLD(args, i)
+
+        elif args.algorithm == "FedDistill":
+            server = FedDistill(args, i)
             
         else:
             raise NotImplementedError
@@ -317,7 +321,7 @@ if __name__ == "__main__":
                         help="Average moving parameter for pFedMe, Second learning rate of Per-FedAvg, \
                         or L1 regularization weight of FedTransfer")
     parser.add_argument('-lam', "--lamda", type=float, default=1.0,
-                        help="Regularization weight for pFedMe and FedAMP")
+                        help="Regularization weight")
     parser.add_argument('-mu', "--mu", type=float, default=0,
                         help="Proximal rate for FedProx")
     parser.add_argument('-K', "--K", type=int, default=5,

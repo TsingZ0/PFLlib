@@ -44,7 +44,7 @@ Thanks to [@Stonesjtu](https://github.com/Stonesjtu/pytorch_memlab/blob/d590c489
 
   ***Personalized-aggregation-based pFL***
 
-- **APFL** — [Adaptive Personalized Federated Learning](https://arxiv.org/pdf/2003.13461.pdf)
+- **APFL** — [Adaptive Personalized Federated Learning](https://arxiv.org/pdf/2003.13461.pdf) *2020* 
 - **FedFomo** — [Personalized Federated Learning with First Order Model Optimization](https://openreview.net/forum?id=ehJqJQk9cw) *ICLR 2021*
 - **FedAMP** — [Personalized Cross-Silo Federated Learning on non-IID Data](https://ojs.aaai.org/index.php/AAAI/article/view/16960) *AAAI 2021*
 - **FedPHP** — [FedPHP: Federated Personalization with Inherited Private Models](https://link.springer.com/chapter/10.1007/978-3-030-86486-6_36) *ECML PKDD 2021*
@@ -52,14 +52,16 @@ Thanks to [@Stonesjtu](https://github.com/Stonesjtu/pytorch_memlab/blob/d590c489
 
   ***Feature-extraction-based pFL***
 
-- **FedPer** — [Federated Learning with Personalization Layers](https://arxiv.org/pdf/1912.00818.pdf)
+- **FedPer** — [Federated Learning with Personalization Layers](https://arxiv.org/pdf/1912.00818.pdf) *2019*
 - **FedRep** — [Exploiting Shared Representations for Personalized Federated Learning](http://proceedings.mlr.press/v139/collins21a.html) *ICML 2021*
 - **FedRoD** — [On Bridging Generic and Personalized Federated Learning for Image Classification](https://openreview.net/forum?id=I1hQbx10Kxn) *ICLR 2022*
 - **FedBABU** — [Fedbabu: Towards enhanced representation for federated image classification](https://openreview.net/forum?id=HuaYQfggn5u) *ICLR 2022*
 
   ***Knowledge-distillation-based pFL***
   
-- **FedProto** — [FedProto: Federated Prototype Learning across Heterogeneous Clients ](https://ojs.aaai.org/index.php/AAAI/article/view/20819) *AAAI 2022*
+- **FedDistill** — [Federated Knowledge Distillation](https://www.cambridge.org/core/books/abs/machine-learning-and-wireless-communications/federated-knowledge-distillation/F679266F85493319EB83635D2B17C2BD#access-block) *2020*
+
+- **FedProto** — [FedProto: Federated Prototype Learning across Heterogeneous Clients](https://ojs.aaai.org/index.php/AAAI/article/view/20819) *AAAI 2022*
 
 ## Datasets and Separation (updating)
 For the ***label skew*** setting, I introduce **8** famous datasets: **MNIST**, **Fashion-MNIST**, **Cifar10**, **Cifar100**, **AG_News**, **Sogou_News** (If ConnectionError raises, please use the given downloaded file in `./dataset`), and **Tiny-ImageNet** (fetch raw data from [this site](http://cs231n.stanford.edu/tiny-imagenet-200.zip)), they can be easy split into **IID** and **non-IID** version. Since some codes for generating datasets such as splitting are the same for all datasets, I move these codes into `./dataset/utils/dataset_utils.py`. In **non-IID** setting, two situations exist. The first one is the **pathological non-IID** setting, the second one is **practical non-IID** setting. In the **pathological non-IID** setting, for example, the data on each client only contains the specific number of labels (maybe only two labels), though the data on all clients contains 10 labels such as MNIST dataset. In the **practical non-IID** setting, Dirichlet distribution is utilized (please refer to this [paper](https://proceedings.neurips.cc/paper/2020/hash/18df51b97ccd68128e994804f3eccc87-Abstract.html) for details). We can input *balance* for the iid setting, where the data are uniformly distributed. 
