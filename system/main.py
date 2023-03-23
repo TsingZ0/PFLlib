@@ -374,23 +374,26 @@ if __name__ == "__main__":
     print("Local steps: {}".format(args.local_steps))
     print("Local learing rate: {}".format(args.local_learning_rate))
     print("Local learing rate decay: {}".format(args.learning_rate_decay))
-    print("Local learing rate decay gamma: {}".format(args.learning_rate_decay_gamma))
+    if args.learning_rate_decay:
+        print("Local learing rate decay gamma: {}".format(args.learning_rate_decay_gamma))
     print("Total number of clients: {}".format(args.num_clients))
     print("Clients join in each round: {}".format(args.join_ratio))
     print("Clients randomly join: {}".format(args.random_join_ratio))
     print("Client drop rate: {}".format(args.client_drop_rate))
-    print("Time select: {}".format(args.time_select))
-    print("Time threthold: {}".format(args.time_threthold))
-    print("Global rounds: {}".format(args.global_rounds))
+    print("Client select regarding time: {}".format(args.time_select))
+    if args.time_select:
+        print("Time threthold: {}".format(args.time_threthold))
     print("Running times: {}".format(args.times))
     print("Dataset: {}".format(args.dataset))
     print("Number of classes: {}".format(args.num_classes))
     print("Backbone: {}".format(args.model))
     print("Using device: {}".format(args.device))
     print("Using DP: {}".format(args.privacy))
-    print("Sigma for DP: {}".format(args.dp_sigma))
+    if args.privacy:
+        print("Sigma for DP: {}".format(args.dp_sigma))
     print("Auto break: {}".format(args.auto_break))
-
+    if not args.auto_break:
+        print("Global rounds: {}".format(args.global_rounds))
     if args.device == "cuda":
         print("Cuda device id: {}".format(os.environ["CUDA_VISIBLE_DEVICES"]))
     print("=" * 50)
