@@ -55,7 +55,7 @@ class FedPHP(Server):
     def send_models(self, R):
         assert (len(self.selected_clients) > 0)
 
-        for client in self.selected_clients:
+        for client in self.clients:
             start_time = time.time()
 
             client.set_parameters(self.global_model, R)

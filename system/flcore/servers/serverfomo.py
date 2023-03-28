@@ -58,7 +58,7 @@ class FedFomo(Server):
 
     def send_models(self):
         assert (len(self.selected_clients) > 0)
-        for client in self.selected_clients:
+        for client in self.clients:
             start_time = time.time()
 
             if client.send_slow:
