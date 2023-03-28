@@ -24,10 +24,10 @@ class SCAFFOLDOptimizer(Optimizer):
         defaults = dict(lr=lr)
         super(SCAFFOLDOptimizer, self).__init__(params, defaults)
 
-    def step(self, server_grads, pre_grads):
+    def step(self, server_cs, client_cs):
         for group in self.param_groups:
-            for p, sg, pg in zip(group['params'], server_grads, pre_grads):
-                p.data.add_(other=(p.grad.data + sg - pg), alpha=-group['lr'])
+            for p, sc, cc in zip(group['params'], server_cs, client_cs):
+                p.data.add_(other=(p.grad.data + sc - cc), alpha=-group['lr'])
 
 
 class pFedMeOptimizer(Optimizer):

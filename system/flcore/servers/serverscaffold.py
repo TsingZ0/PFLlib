@@ -107,8 +107,8 @@ class SCAFFOLD(Server):
     def aggregate_parameters(self):
         assert (len(self.delta_ys) > 0)
             
-        for w, dy, dc in zip(self.uploaded_weights, self.delta_ys, self.delta_cs):
+        for dy, dc in zip(self.delta_ys, self.delta_cs):
             for server_param, client_param in zip(self.global_model.parameters(), dy):
-                server_param.data += client_param.data.clone() * w * self.server_learning_rate
+                server_param.data += client_param.data.clone() / self.join_clients * self.server_learning_rate
             for server_param, client_param in zip(self.global_c, dc):
-                server_param.data += client_param.data.clone() * self.num_join_clients / self.num_clients
+                server_param.data += client_param.data.clone() / self.num_clients
