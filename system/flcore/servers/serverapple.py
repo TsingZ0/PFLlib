@@ -82,7 +82,7 @@ class APPLE(Server):
         assert (len(self.selected_clients) > 0)
 
         active_clients = random.sample(
-            self.selected_clients, int((1-self.client_drop_rate) * self.join_clients))
+            self.selected_clients, int((1-self.client_drop_rate) * self.num_join_clients))
 
         self.uploaded_weights = []
         self.uploaded_models = []

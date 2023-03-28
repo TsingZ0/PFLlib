@@ -75,7 +75,7 @@ class FedDyn(Server):
 
     def add_parameters(self, client_model):
         for server_param, client_param in zip(self.global_model.parameters(), client_model.parameters()):
-            server_param.data += client_param.data.clone() / self.join_clients
+            server_param.data += client_param.data.clone() / self.num_join_clients
 
     def aggregate_parameters(self):
         assert (len(self.uploaded_models) > 0)

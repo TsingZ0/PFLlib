@@ -19,7 +19,7 @@ class FedFomo(Server):
         self.P = torch.diag(torch.ones(self.num_clients, device=self.device))
         self.uploaded_models = []
         self.uploaded_ids = []
-        self.M = min(args.M, self.join_clients)
+        self.M = min(args.M, self.num_join_clients)
         self.client_models = [copy.deepcopy(self.global_model) for _ in range(self.num_clients)]
             
         print(f"\nJoin ratio / total clients: {self.join_ratio} / {self.num_clients}")
@@ -82,7 +82,7 @@ class FedFomo(Server):
         assert (len(self.selected_clients) > 0)
 
         active_clients = random.sample(
-            self.selected_clients, int((1-self.client_drop_rate) * self.join_clients))
+            self.selected_clients, int((1-self.client_drop_rate) * self.num_join_clients))
 
         self.uploaded_ids = []
         tot_samples = 0

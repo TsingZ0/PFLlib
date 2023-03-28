@@ -82,7 +82,7 @@ class SCAFFOLD(Server):
         assert (len(self.selected_clients) > 0)
 
         active_clients = random.sample(
-            self.selected_clients, int((1-self.client_drop_rate) * self.join_clients))
+            self.selected_clients, int((1-self.client_drop_rate) * self.num_join_clients))
 
         self.uploaded_ids = []
         self.uploaded_weights = []
@@ -111,4 +111,4 @@ class SCAFFOLD(Server):
             for server_param, client_param in zip(self.global_model.parameters(), dy):
                 server_param.data += client_param.data.clone() * w * self.server_learning_rate
             for server_param, client_param in zip(self.global_c, dc):
-                server_param.data += client_param.data.clone() * self.join_clients / self.num_clients
+                server_param.data += client_param.data.clone() * self.num_join_clients / self.num_clients

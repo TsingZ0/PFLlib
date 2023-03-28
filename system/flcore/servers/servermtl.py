@@ -10,19 +10,19 @@ class FedMTL(Server):
         super().__init__(args, times)
 
         self.dim = len(self.flatten(self.global_model))
-        self.W_glob = torch.zeros((self.dim, self.join_clients), device=args.device)
+        self.W_glob = torch.zeros((self.dim, self.num_join_clients), device=args.device)
         self.device = args.device
 
-        I = torch.ones((self.join_clients, self.join_clients))
-        i = torch.ones((self.join_clients, 1))
-        omega = (I - 1 / self.join_clients * i.mm(i.T)) ** 2
+        I = torch.ones((self.num_join_clients, self.num_join_clients))
+        i = torch.ones((self.num_join_clients, 1))
+        omega = (I - 1 / self.num_join_clients * i.mm(i.T)) ** 2
         self.omega = omega.to(args.device)
 
         # select slow clients
         self.set_slow_clients()
         self.set_clients(args, clientMTL)
             
-        print(f"\nJoin clients / total clients: {self.join_clients} / {self.num_clients}")
+        print(f"\nJoin clients / total clients: {self.num_join_clients} / {self.num_clients}")
         print("Finished creating server and clients.")
 
 
@@ -70,6 +70,6 @@ class FedMTL(Server):
         return torch.cat(W)
 
     def aggregate_parameters(self):
-        self.W_glob = torch.zeros((self.dim, self.join_clients), device=self.device)
+        self.W_glob = torch.zeros((self.dim, self.num_join_clients), device=self.device)
         for idx, client in enumerate(self.selected_clients):
             self.W_glob[:, idx] = self.flatten(client.model)

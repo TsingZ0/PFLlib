@@ -153,6 +153,9 @@ def run(args):
 
         # select algorithm
         if args.algorithm == "FedAvg":
+            args.head = copy.deepcopy(args.model.fc)
+            args.model.fc = nn.Identity()
+            args.model = BaseHeadSplit(args.model, args.head)
             server = FedAvg(args, i)
 
         elif args.algorithm == "Local":
@@ -301,6 +304,9 @@ if __name__ == "__main__":
     parser.add_argument('-dps', "--dp_sigma", type=float, default=0.0)
     parser.add_argument('-sfn', "--save_folder_name", type=str, default='items')
     parser.add_argument('-ab', "--auto_break", type=bool, default=False)
+    parser.add_argument('-dlg', "--dlg_eval", type=bool, default=False)
+    parser.add_argument('-dlgg', "--dlg_gap", type=int, default=100)
+    parser.add_argument('-bnpc', "--batch_num_per_client", type=int, default=2)
     # practical
     parser.add_argument('-cdr', "--client_drop_rate", type=float, default=0.0,
                         help="Rate for clients that train but drop out")
@@ -392,6 +398,9 @@ if __name__ == "__main__":
         print("Global rounds: {}".format(args.global_rounds))
     if args.device == "cuda":
         print("Cuda device id: {}".format(os.environ["CUDA_VISIBLE_DEVICES"]))
+    print("DLG attack evaluate: {}".format(args.dlg_eval))
+    if args.dlg_eval:
+        print("DLG attack evaluate round gap: {}".format(args.dlg_gap))
     print("=" * 50)
 
 

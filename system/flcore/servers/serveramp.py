@@ -62,7 +62,7 @@ class FedAMP(Server):
                 for param in mu.parameters():
                     param.data.zero_()
 
-                coef = torch.zeros(self.join_clients)
+                coef = torch.zeros(self.num_join_clients)
                 for j, mw in enumerate(self.uploaded_models):
                     if c.id != self.uploaded_ids[j]:
                         weights_i = torch.concat([p.data.view(-1) for p in c.model.parameters()], dim=0)

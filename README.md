@@ -6,7 +6,7 @@
 
 The origin of the **statistical heterogeneity** phenomenon is the personalization of users, who generate the non-IID (not Independent and Identically Distributed) and unbalanced data. With statistical heterogeneity existing in the FL scenario, a myriad of approaches have been proposed to crack this hard nut. In contrast, the personalized FL (pFL) may take the advantage of the statistically heterogeneious data to learn the personalized model for each user. 
 
-Thanks to [@Stonesjtu](https://github.com/Stonesjtu/pytorch_memlab/blob/d590c489236ee25d157ff60ecd18433e8f9acbe3/pytorch_memlab/mem_reporter.py#L185), this platform can also record the **GPU memory usage** for the model. By using the package [opacus](https://opacus.ai/), we introduce **differential privacy** into this platform (please refer to `./system/flcore/clients/clientavg.py` for example). 
+Thanks to [@Stonesjtu](https://github.com/Stonesjtu/pytorch_memlab/blob/d590c489236ee25d157ff60ecd18433e8f9acbe3/pytorch_memlab/mem_reporter.py#L185), this platform can also record the **GPU memory usage** for the model. By using the package [opacus](https://opacus.ai/), we introduce **DP (differential privacy)** into this platform (please refer to `./system/flcore/clients/clientavg.py` for example). Following **[FedCG](https://www.ijcai.org/proceedings/2022/0324.pdf)**, we also introduce the **[DLG (Deep Leakage from Gradients)](https://papers.nips.cc/paper_files/paper/2019/hash/60a6c4002cc7b29142def8871531281a-Abstract.html) attack** and **PSNR (Peak Signal-to-Noise Ratio) metric** to evaluate the privacy-preserving ability of FL/pFL methods (please refer to `./system/flcore/servers/serveravg.py` for example). 
 
 
 ## Methods with Code (updating)
