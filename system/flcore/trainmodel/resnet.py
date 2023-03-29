@@ -168,18 +168,20 @@ class ResNet(nn.Module):
                              "or a 3-element tuple, got {}".format(replace_stride_with_dilation))
         self.groups = groups
         self.base_width = width_per_group
+        self.conv1 = nn.Conv2d(3, self.inplanes, kernel_size=7, stride=2, padding=3, bias=False)
+        if has_bn:
+            self.bn1 = norm_layer(self.inplanes)
+        else:
+            self.bn1 = nn.Identity()
+        self.relu = nn.ReLU(inplace=True)
+        self.maxpool = nn.MaxPool2d(kernel_size=3, stride=2, padding=1)
 
-        self.conv1 = nn.Sequential(
-            nn.Conv2d(3, self.inplanes, kernel_size=7, stride=2, padding=3, bias=False), 
-            norm_layer(self.inplanes) if has_bn else nn.Identity(), 
-            nn.ReLU(inplace=True), 
-            nn.MaxPool2d(kernel_size=3, stride=2, padding=1)
-        )
-
-        self.layers = [self._make_layer(block, 64, layers[0], has_bn=has_bn and (bn_block_num > 0))]
+        self.layers = []
+        self.layers.extend(self._make_layer(block, 64, layers[0], has_bn=has_bn and (bn_block_num > 0)))
         for num in range(1, len(layers)):
-            self.layers.append(self._make_layer(block, features[num], layers[num], stride=2,
-                                       dilate=replace_stride_with_dilation[num-1], has_bn=has_bn and (num < bn_block_num)))
+            self.layers.extend(self._make_layer(block, features[num], layers[num], stride=2,
+                                       dilate=replace_stride_with_dilation[num-1], 
+                                       has_bn=has_bn and (num < bn_block_num)))
 
         for i, layer in enumerate(self.layers):
             setattr(self, f'layer_{i}', layer)
@@ -211,7 +213,7 @@ class ResNet(nn.Module):
                     nn.init.constant_(m.bn2.weight, 0)  # type: ignore[arg-type]
 
     def _make_layer(self, block: BasicBlock, planes: int, blocks: int,
-                    stride: int = 1, dilate: bool = False, has_bn=True) -> nn.Sequential:
+                    stride: int = 1, dilate: bool = False, has_bn=True) -> List:
         norm_layer = self._norm_layer
         downsample = None
         previous_dilation = self.dilation
@@ -239,17 +241,19 @@ class ResNet(nn.Module):
                                 base_width=self.base_width, dilation=self.dilation,
                                 norm_layer=norm_layer, has_bn=has_bn))
 
-        return nn.Sequential(*layers)
+        return layers
 
     def _forward_impl(self, x: Tensor) -> Tensor:
         x = self.conv1(x)
+        x = self.bn1(x)
+        x = self.relu(x)
+        x = self.maxpool(x)
 
         for i in range(len(self.layers)):
             layer = getattr(self, f'layer_{i}')
             x = layer(x)
 
         x = self.avgpool(x)
-
         x = self.fc(x)
 
         return x
