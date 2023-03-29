@@ -65,31 +65,31 @@ def run(args):
         start = time.time()
 
         # Generate args.model
-        if model_str == "mlr":
-            if args.dataset == "mnist" or args.dataset == "fmnist":
+        if model_str == "mlr": # convex
+            if "mnist" in args.dataset:
                 args.model = Mclr_Logistic(1*28*28, num_classes=args.num_classes).to(args.device)
-            elif args.dataset == "Cifar10" or args.dataset == "Cifar100":
+            elif "Cifar10" in args.dataset:
                 args.model = Mclr_Logistic(3*32*32, num_classes=args.num_classes).to(args.device)
             else:
                 args.model = Mclr_Logistic(60, num_classes=args.num_classes).to(args.device)
 
-        elif model_str == "cnn":
-            if args.dataset == "mnist" or args.dataset == "fmnist":
+        elif model_str == "cnn": # non-convex
+            if "mnist" in args.dataset:
                 args.model = FedAvgCNN(in_features=1, num_classes=args.num_classes, dim=1024).to(args.device)
-            elif args.dataset == "omniglot":
-                args.model = FedAvgCNN(in_features=1, num_classes=args.num_classes, dim=33856).to(args.device)
-            elif args.dataset == "Cifar10" or args.dataset == "Cifar100":
+            elif "Cifar10" in args.dataset:
                 args.model = FedAvgCNN(in_features=3, num_classes=args.num_classes, dim=1600).to(args.device)
+            elif "omniglot" in args.dataset:
+                args.model = FedAvgCNN(in_features=1, num_classes=args.num_classes, dim=33856).to(args.device)
                 # args.model = CifarNet(num_classes=args.num_classes).to(args.device)
-            elif args.dataset == "Digit5":
+            elif "Digit5" in args.dataset:
                 args.model = Digit5CNN().to(args.device)
             else:
                 args.model = FedAvgCNN(in_features=3, num_classes=args.num_classes, dim=10816).to(args.device)
 
         elif model_str == "dnn": # non-convex
-            if args.dataset == "mnist" or args.dataset == "fmnist":
+            if "mnist" in args.dataset:
                 args.model = DNN(1*28*28, 100, num_classes=args.num_classes).to(args.device)
-            elif args.dataset == "Cifar10" or args.dataset == "Cifar100":
+            elif "Cifar10" in args.dataset:
                 args.model = DNN(3*32*32, 100, num_classes=args.num_classes).to(args.device)
             else:
                 args.model = DNN(60, 20, num_classes=args.num_classes).to(args.device)
