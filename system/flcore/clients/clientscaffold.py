@@ -62,6 +62,7 @@ class clientSCAFFOLD(Client):
         # self.model.cpu()
         self.num_batches = len(trainloader)
         self.update_yc()
+        # self.delta_c, self.delta_y = self.delta_yc()
 
         if self.learning_rate_decay:
             self.learning_rate_scheduler.step()
@@ -82,10 +83,15 @@ class clientSCAFFOLD(Client):
         self.global_model = model
 
     def update_yc(self):
-        self.delta_c = []
-        self.delta_y = []
         for ci, c, x, yi in zip(self.client_c, self.global_c, self.global_model.parameters(), self.model.parameters()):
-            self.delta_c.append(- c + 1/self.num_batches/self.learning_rate * (x - yi))
-            ci.data = ci + self.delta_c[-1]
-            self.delta_y.append(yi - x)
+            ci.data = ci - c + 1/self.num_batches/self.learning_rate * (x - yi)
+
+    def delta_yc(self):
+        delta_c = []
+        delta_y = []
+        for c, x, yi in zip(self.global_c, self.global_model.parameters(), self.model.parameters()):
+            delta_c.append(- c + 1/self.num_batches/self.learning_rate * (x - yi))
+            delta_y.append(yi - x)
+
+        return delta_c, delta_y
 
