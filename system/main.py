@@ -35,10 +35,11 @@ from flcore.servers.serverdistill import FedDistill
 
 from flcore.trainmodel.models import *
 
-from flcore.trainmodel.bilstm import BiLSTM_TextClassification
-# from flcore.trainmodel.resnet import resnet18 as resnet
-from flcore.trainmodel.alexnet import alexnet
-from flcore.trainmodel.mobilenet_v2 import mobilenet_v2
+from flcore.trainmodel.bilstm import *
+from flcore.trainmodel.resnet import *
+from flcore.trainmodel.alexnet import *
+from flcore.trainmodel.mobilenet_v2 import *
+
 from utils.result_utils import average_data
 from utils.mem_utils import MemReporter
 
