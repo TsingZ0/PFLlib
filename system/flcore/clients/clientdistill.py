@@ -71,6 +71,39 @@ class clientDistill(Client):
     def set_logits(self, global_logits):
         self.global_logits = copy.deepcopy(global_logits)
 
+    def train_metrics(self):
+        trainloader = self.load_train_data()
+        # self.model = self.load_model('model')
+        # self.model.to(self.device)
+        self.model.eval()
+
+        train_num = 0
+        losses = 0
+        with torch.no_grad():
+            for x, y in trainloader:
+                if type(x) == type([]):
+                    x[0] = x[0].to(self.device)
+                else:
+                    x = x.to(self.device)
+                y = y.to(self.device)
+                output = self.model(x)
+                loss = self.loss(output, y)
+
+                if self.global_logits != None:
+                    logit_new = torch.zeros_like(output)
+                    for i, yy in enumerate(y):
+                        y_c = yy.item()
+                        logit_new[i, :] = self.global_logits[y_c].data
+                    loss += self.loss_mse(logit_new, output) * self.lamda
+                    
+                train_num += y.shape[0]
+                losses += loss.item() * y.shape[0]
+
+        # self.model.cpu()
+        # self.save_model(self.model, 'model')
+
+        return losses, train_num
+
 
 # https://github.com/yuetan031/fedlogit/blob/main/lib/utils.py#L205
 def agg_func(logits):

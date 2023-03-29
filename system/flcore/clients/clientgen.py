@@ -93,3 +93,34 @@ class clientGen(Client):
 
         self.generative_model = generative_model
         self.qualified_labels = qualified_labels
+
+    def train_metrics(self):
+        trainloader = self.load_train_data()
+        # self.model = self.load_model('model')
+        # self.model.to(self.device)
+        self.model.eval()
+
+        train_num = 0
+        losses = 0
+        with torch.no_grad():
+            for x, y in trainloader:
+                if type(x) == type([]):
+                    x[0] = x[0].to(self.device)
+                else:
+                    x = x.to(self.device)
+                y = y.to(self.device)
+                output = self.model(x)
+                loss = self.loss(output, y)
+                
+                labels = np.random.choice(self.qualified_labels, self.batch_size)
+                labels = torch.LongTensor(labels).to(self.device)
+                z = self.generative_model(labels)
+                loss += self.loss(self.model.head(z), labels)
+                
+                train_num += y.shape[0]
+                losses += loss.item() * y.shape[0]
+
+        # self.model.cpu()
+        # self.save_model(self.model, 'model')
+
+        return losses, train_num
