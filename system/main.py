@@ -125,7 +125,7 @@ def run(args):
             # args.model.fc = nn.Linear(feature_dim, args.num_classes).to(args.device)
             
         elif model_str == "lstm":
-            args.model = LSTMNet(emb_dim=emb_dim, vocab_size=vocab_size, num_classes=args.num_classes).to(args.device)
+            args.model = LSTMNet(hidden_dim=emb_dim, vocab_size=vocab_size, num_classes=args.num_classes).to(args.device)
 
         elif model_str == "bilstm":
             args.model = BiLSTM_TextClassification(input_size=vocab_size, hidden_size=emb_dim, output_size=args.num_classes, 
@@ -133,10 +133,10 @@ def run(args):
                         embedding_length=emb_dim).to(args.device)
 
         elif model_str == "fastText":
-            args.model = fastText(emb_dim=emb_dim, vocab_size=vocab_size, num_classes=args.num_classes).to(args.device)
+            args.model = fastText(hidden_dim=emb_dim, vocab_size=vocab_size, num_classes=args.num_classes).to(args.device)
 
         elif model_str == "TextCNN":
-            args.model = TextCNN(emb_dim=emb_dim, max_len=max_len, vocab_size=vocab_size, 
+            args.model = TextCNN(hidden_dim=emb_dim, max_len=max_len, vocab_size=vocab_size, 
                             num_classes=args.num_classes).to(args.device)
 
         elif model_str == "Transformer":
