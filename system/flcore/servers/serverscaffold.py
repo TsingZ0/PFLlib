@@ -87,7 +87,6 @@ class SCAFFOLD(Server):
         self.uploaded_ids = []
         # self.delta_ys = []
         # self.delta_cs = []
-        tot_samples = 0
         for client in active_clients:
             try:
                 client_time_cost = client.train_time_cost['total_cost'] / client.train_time_cost['num_rounds'] + \
@@ -95,7 +94,6 @@ class SCAFFOLD(Server):
             except ZeroDivisionError:
                 client_time_cost = 0
             if client_time_cost <= self.time_threthold:
-                tot_samples += client.train_samples
                 self.uploaded_ids.append(client.id)
                 # self.delta_ys.append(client.delta_y)
                 # self.delta_cs.append(client.delta_c)
@@ -109,9 +107,13 @@ class SCAFFOLD(Server):
         #         server_param.data += client_param.data.clone() / self.num_clients
         
         # save GPU memory
+        global_model = copy.deepcopy(self.global_model)
+        global_c = copy.deepcopy(self.global_c)
         for cid in self.uploaded_ids:
             dy, dc = self.clients[cid].delta_yc()
-            for server_param, client_param in zip(self.global_model.parameters(), dy):
+            for server_param, client_param in zip(global_model.parameters(), dy):
                 server_param.data += client_param.data.clone() / self.num_join_clients * self.server_learning_rate
-            for server_param, client_param in zip(self.global_c, dc):
+            for server_param, client_param in zip(global_c, dc):
                 server_param.data += client_param.data.clone() / self.num_clients
+        self.global_model = global_model
+        self.global_c = global_c

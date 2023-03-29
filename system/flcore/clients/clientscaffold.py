@@ -22,10 +22,6 @@ class clientSCAFFOLD(Client):
         for param in self.model.parameters():
             self.client_c.append(torch.zeros_like(param))
         self.global_c = None
-
-        self.delta_c = None
-        self.delta_y = None
-
         self.global_model = None
 
     def train(self):
@@ -87,11 +83,11 @@ class clientSCAFFOLD(Client):
             ci.data = ci - c + 1/self.num_batches/self.learning_rate * (x - yi)
 
     def delta_yc(self):
-        delta_c = []
         delta_y = []
+        delta_c = []
         for c, x, yi in zip(self.global_c, self.global_model.parameters(), self.model.parameters()):
-            delta_c.append(- c + 1/self.num_batches/self.learning_rate * (x - yi))
             delta_y.append(yi - x)
+            delta_c.append(- c + 1/self.num_batches/self.learning_rate * (x - yi))
 
-        return delta_c, delta_y
+        return delta_y, delta_c
 
