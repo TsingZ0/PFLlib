@@ -1,5 +1,7 @@
 # Personalized Federated Learning Platform
 
+[![DOI](https://zenodo.org/badge/292225878.svg)](https://zenodo.org/badge/latestdoi/292225878)
+
 ***We expose this user-friendly platform for beginners who intend to start federated learning (FL) study.***
 
 ***Now there are 22 FL (or pFL) methods, three scenarios, and 14 datasets in this platform.***
