@@ -21,7 +21,6 @@ class MOON(Server):
 
 
     def train(self):
-        local_acc = []
         for i in range(self.global_rounds+1):
             s_t = time.time()
             self.selected_clients = self.select_clients()
@@ -35,10 +34,6 @@ class MOON(Server):
             for client in self.selected_clients:
                 client.train()
 
-            if i%self.eval_gap == 0:
-                print("\nEvaluate local model")
-                self.evaluate(acc=local_acc)
-
             # threads = [Thread(target=client.train)
             #            for client in self.selected_clients]
             # [t.start() for t in threads]
@@ -50,7 +45,7 @@ class MOON(Server):
             self.Budget.append(time.time() - s_t)
             print('-'*50, self.Budget[-1])
 
-            if self.auto_break and self.check_done(acc_lss=[self.rs_test_acc, local_acc], top_cnt=self.top_cnt):
+            if self.auto_break and self.check_done(acc_lss=[self.rs_test_acc], top_cnt=self.top_cnt):
                 break
 
         print("\nBest accuracy.")
@@ -58,7 +53,6 @@ class MOON(Server):
         #     self.rs_train_acc), min(self.rs_train_loss))
         print(max(self.rs_test_acc))
         print("\nBest local accuracy.")
-        print(max(local_acc))
         print("\nAveraged time per iteration.")
         print(sum(self.Budget[1:])/len(self.Budget[1:]))
 
