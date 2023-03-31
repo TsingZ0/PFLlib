@@ -156,9 +156,6 @@ def run(args):
         else:
             raise NotImplementedError
 
-        else:
-            raise NotImplementedError
-
         print(args.model)
 
         # select algorithm
