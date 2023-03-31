@@ -147,6 +147,15 @@ def run(args):
         elif model_str == "AmazonMLP":
             args.model = AmazonMLP().to(args.device)
 
+        elif model_str == "harcnn":
+            if args.dataset == 'har':
+                args.model = HARCNN(9, dim_hidden=1664, num_classes=args.num_classes, conv_kernel_size=(1, 9), pool_kernel_size=(1, 2)).to(args.device)
+            elif args.dataset == 'pamap':
+                args.model = HARCNN(9, dim_hidden=3712, num_classes=args.num_classes, conv_kernel_size=(1, 9), pool_kernel_size=(1, 2)).to(args.device)
+
+        else:
+            raise NotImplementedError
+
         else:
             raise NotImplementedError
 
