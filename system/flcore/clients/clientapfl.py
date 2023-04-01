@@ -27,6 +27,7 @@ class clientAPFL(Client):
 
         # self.model.to(self.device)
         self.model.train()
+        self.model_per.train()
 
         max_local_steps = self.local_steps
         if self.train_slow:
@@ -110,9 +111,7 @@ class clientAPFL(Client):
 
     def train_metrics(self):
         trainloader = self.load_train_data()
-        # self.model = self.load_model('model')
-        # self.model.to(self.device)
-        self.model.eval()
+        self.model_per.train()
 
         train_num = 0
         losses = 0
@@ -127,8 +126,5 @@ class clientAPFL(Client):
                 loss_per = self.loss(output_per, y)
                 train_num += y.shape[0]
                 losses += loss_per.item() * y.shape[0]
-
-        # self.model.cpu()
-        # self.save_model(self.model, 'model')
 
         return losses, train_num
