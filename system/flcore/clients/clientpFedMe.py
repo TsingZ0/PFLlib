@@ -120,8 +120,8 @@ class clientpFedMe(Client):
                 output = self.model(x)
                 loss = self.loss(output, y).item()
 
-                lm = torch.concat([p.data.view(-1) for p in self.local_params], dim=0)
-                pm = torch.concat([p.data.view(-1) for p in self.personalized_params], dim=0)
+                lm = torch.cat([p.data.view(-1) for p in self.local_params], dim=0)
+                pm = torch.cat([p.data.view(-1) for p in self.personalized_params], dim=0)
                 loss += 0.5 * self.lamda * torch.norm(lm-pm, p=2)
 
                 train_acc += (torch.sum(torch.argmax(output, dim=1) == y)).item()

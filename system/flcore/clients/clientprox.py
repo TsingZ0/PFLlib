@@ -81,8 +81,8 @@ class clientProx(Client):
                 output = self.model(x)
                 loss = self.loss(output, y)
 
-                gm = torch.concat([p.data.view(-1) for p in self.global_params], dim=0)
-                pm = torch.concat([p.data.view(-1) for p in self.model.parameters()], dim=0)
+                gm = torch.cat([p.data.view(-1) for p in self.global_params], dim=0)
+                pm = torch.cat([p.data.view(-1) for p in self.model.parameters()], dim=0)
                 loss += 0.5 * self.mu * torch.norm(gm-pm, p=2)
 
                 train_num += y.shape[0]

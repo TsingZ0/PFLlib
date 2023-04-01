@@ -102,4 +102,4 @@ class clientDyn(Client):
 
 def model_parameter_vector(model):
     param = [p.view(-1) for p in model.parameters()]
-    return torch.concat(param, dim=0)
+    return torch.cat(param, dim=0)
