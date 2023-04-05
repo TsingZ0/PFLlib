@@ -50,7 +50,7 @@ class pFedMe(Server):
             self.aggregate_parameters()
             self.beta_aggregate_parameters()
 
-            if self.auto_break and self.check_done(acc_lss=[self.rs_test_acc], top_cnt=self.top_cnt):
+            if self.auto_break and self.check_done(acc_lss=[self.rs_test_acc_per], top_cnt=self.top_cnt):
                 break
 
         # print("\nBest accuracy.")
