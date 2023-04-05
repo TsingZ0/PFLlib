@@ -100,7 +100,7 @@ class pFedMe(Server):
 
     def evaluate_personalized(self):
         stats = self.test_metrics_personalized()
-        stats_train = self.train_accuracy_and_loss_personalized()
+        stats_train = self.train_metrics_personalized()
 
         test_acc = sum(stats[2])*1.0 / sum(stats[1])
         train_acc = sum(stats_train[2])*1.0 / sum(stats_train[1])
