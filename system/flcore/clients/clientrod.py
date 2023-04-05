@@ -125,7 +125,7 @@ class clientROD(Client):
                 else:
                     x = x.to(self.device)
                 y = y.to(self.device)
-                rep = self.model(x, rep=True)
+                rep = self.model.base(x)
                 out_g = self.model.head(rep)
                 out_p = self.head(rep.detach())
                 output = out_g.detach() + out_p
