@@ -1,3 +1,6 @@
+# Please manully install these packages if you fail in solving environment with Conda. 
+# Tip: Install PyTorch first. 
+
 name: fl_torch
 channels:
   - pytorch
