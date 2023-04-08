@@ -56,8 +56,8 @@ class clientAMP(Client):
 
 
     def set_parameters(self, model, coef_self):
-        for new_param, old_param in zip(model.parameters(), self.client_u.parameters()):
-            old_param.data = (new_param.data + coef_self * old_param.data).clone()
+        for new_param, old_param, self_param in zip(model.parameters(), self.client_u.parameters(), self.model.parameters()):
+            old_param.data = (new_param.data + coef_self * self_param.data).clone()
 
 
     def train_metrics(self, model=None):
