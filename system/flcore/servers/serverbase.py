@@ -282,6 +282,9 @@ class Server(object):
             trainloader = client.load_train_data()
             with torch.no_grad():
                 for i, (x, y) in enumerate(trainloader):
+                    if i >= self.batch_num_per_client:
+                        break
+
                     if type(x) == type([]):
                         x[0] = x[0].to(self.device)
                     else:
@@ -290,7 +293,7 @@ class Server(object):
                     output = client_model(x)
                     target_inputs.append((x, output))
 
-            d = DLG(client_model, origin_grad, target_inputs[:self.batch_num_per_client])
+            d = DLG(client_model, origin_grad, target_inputs)
             if d is not None:
                 psnr_val += d
                 cnt += 1
