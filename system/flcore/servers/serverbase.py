@@ -274,6 +274,7 @@ class Server(object):
         psnr_val = 0
         for client in self.selected_clients:
             client_model = client.model
+            client_model.eval()
             origin_grad = []
             for gp, pp in zip(self.global_model.parameters(), client_model.parameters()):
                 origin_grad.append(gp.data - pp.data)
