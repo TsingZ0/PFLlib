@@ -272,15 +272,14 @@ class Server(object):
         # items = []
         cnt = 0
         psnr_val = 0
-        for client in self.selected_clients:
-            client_model = client.model
+        for cid, client_model in zip(self.uploaded_ids, self.uploaded_models):
             client_model.eval()
             origin_grad = []
             for gp, pp in zip(self.global_model.parameters(), client_model.parameters()):
                 origin_grad.append(gp.data - pp.data)
 
             target_inputs = []
-            trainloader = client.load_train_data()
+            trainloader = self.clients[cid].load_train_data()
             with torch.no_grad():
                 for i, (x, y) in enumerate(trainloader):
                     if i >= self.batch_num_per_client:
