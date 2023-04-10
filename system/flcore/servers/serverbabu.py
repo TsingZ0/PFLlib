@@ -84,12 +84,8 @@ class FedBABU(Server):
         cnt = 0
         psnr_val = 0
         for client in self.selected_clients:
-            client_model = client.model
+            client_model = client.model.base
             client_model.eval()
-
-            for param in client.model.head.parameters():
-                param.requires_grad = True
-
             origin_grad = []
             for gp, pp in zip(self.global_model.parameters(), client_model.parameters()):
                 origin_grad.append(gp.data - pp.data)
@@ -115,9 +111,6 @@ class FedBABU(Server):
                 cnt += 1
             
             # items.append((client_model, origin_grad, target_inputs))
-
-            for param in client.model.head.parameters():
-                param.requires_grad = False
                 
         if cnt > 0:
             print('PSNR value is {:.2f} dB'.format(psnr_val / cnt))
