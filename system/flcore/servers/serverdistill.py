@@ -43,6 +43,8 @@ class FedDistill(Server):
             # [t.join() for t in threads]
 
             self.receive_logits()
+            if self.dlg_eval and i%self.dlg_gap == 0:
+                self.call_dlg(i)
             self.global_logits = logit_aggregation(self.uploaded_logits)
             self.send_logits()
 

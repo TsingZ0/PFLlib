@@ -47,6 +47,8 @@ class FedDyn(Server):
             # [t.join() for t in threads]
 
             self.receive_models()
+            if self.dlg_eval and i%self.dlg_gap == 0:
+                self.call_dlg(i)
             self.update_server_state()
             self.aggregate_parameters()
 

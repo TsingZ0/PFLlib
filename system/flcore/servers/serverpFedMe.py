@@ -47,6 +47,8 @@ class pFedMe(Server):
 
             self.previous_global_model = copy.deepcopy(list(self.global_model.parameters()))
             self.receive_models()
+            if self.dlg_eval and i%self.dlg_gap == 0:
+                self.call_dlg(i)
             self.aggregate_parameters()
             self.beta_aggregate_parameters()
 

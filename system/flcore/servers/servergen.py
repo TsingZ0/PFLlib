@@ -70,6 +70,8 @@ class FedGen(Server):
             # [t.join() for t in threads]
 
             self.receive_models()
+            if self.dlg_eval and i%self.dlg_gap == 0:
+                self.call_dlg(i)
             self.train_generator()
             self.aggregate_parameters()
 

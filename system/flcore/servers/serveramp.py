@@ -53,6 +53,7 @@ class FedAMP(Server):
         self.save_results()
 
 
+    # To save GPU memory in simulation, no persistent model is kept on the server.
     def send_models(self):
         assert (len(self.selected_clients) > 0)
 
