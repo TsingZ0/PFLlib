@@ -269,7 +269,7 @@ class Server(object):
         return True
 
     def call_dlg(self, R):
-        items = []
+        # items = []
         cnt = 0
         psnr_val = 0
         for client in self.selected_clients:
@@ -295,11 +295,11 @@ class Server(object):
                 psnr_val += d
                 cnt += 1
             
-            items.append((client_model, origin_grad, target_inputs))
+            # items.append((client_model, origin_grad, target_inputs))
                 
         if cnt > 0:
             print('PSNR value is {:.2f} dB'.format(psnr_val / cnt))
         else:
             print('PSNR error')
 
-        self.save_item(items, f'DLG_{R}')
+        # self.save_item(items, f'DLG_{R}')
