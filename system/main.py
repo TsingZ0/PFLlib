@@ -405,9 +405,9 @@ if __name__ == "__main__":
         print("Global rounds: {}".format(args.global_rounds))
     if args.device == "cuda":
         print("Cuda device id: {}".format(os.environ["CUDA_VISIBLE_DEVICES"]))
-    print("DLG attack evaluate: {}".format(args.dlg_eval))
+    print("DLG attack: {}".format(args.dlg_eval))
     if args.dlg_eval:
-        print("DLG attack evaluate round gap: {}".format(args.dlg_gap))
+        print("DLG attack round gap: {}".format(args.dlg_gap))
     print("=" * 50)
 
 
