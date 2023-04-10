@@ -43,7 +43,6 @@ class Client(object):
 
         self.privacy = args.privacy
         self.dp_sigma = args.dp_sigma
-        self.sample_rate = self.batch_size / self.train_samples
 
         self.loss = nn.CrossEntropyLoss()
         self.optimizer = torch.optim.SGD(self.model.parameters(), lr=self.learning_rate)
