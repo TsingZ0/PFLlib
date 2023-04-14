@@ -11,13 +11,13 @@ from torchtext.vocab import build_vocab_from_iterator
 random.seed(1)
 np.random.seed(1)
 num_clients = 20
-num_labels = 4
+num_classes = 4
 max_len = 200
 dir_path = "agnews/"
 
 
 # Allocate data to users
-def generate_agnews(dir_path, num_clients, num_labels, niid, balance, partition):
+def generate_agnews(dir_path, num_clients, num_classes, niid, balance, partition):
     if not os.path.exists(dir_path):
         os.makedirs(dir_path)
         
@@ -26,7 +26,7 @@ def generate_agnews(dir_path, num_clients, num_labels, niid, balance, partition)
     train_path = dir_path + "train/"
     test_path = dir_path + "test/"
 
-    if check(config_path, train_path, test_path, num_clients, num_labels, niid, balance, partition):
+    if check(config_path, train_path, test_path, num_clients, num_classes, niid, balance, partition):
         return
 
     # Get AG_News data
@@ -72,13 +72,13 @@ def generate_agnews(dir_path, num_clients, num_labels, niid, balance, partition)
     label_list = np.array(label_list)
 
     # dataset = []
-    # for i in range(num_labels):
+    # for i in range(num_classes):
     #     idx = label_list == i
     #     dataset.append(text_list[idx])
 
-    X, y, statistic = separate_data((text_list, label_list), num_clients, num_labels, niid, balance, partition)
+    X, y, statistic = separate_data((text_list, label_list), num_clients, num_classes, niid, balance, partition)
     train_data, test_data = split_data(X, y)
-    save_file(config_path, train_path, test_path, train_data, test_data, num_clients, num_labels, 
+    save_file(config_path, train_path, test_path, train_data, test_data, num_clients, num_classes, 
             statistic, niid, balance, partition)
 
     print("The size of vocabulary:", len(vocab))
@@ -89,4 +89,4 @@ if __name__ == "__main__":
     balance = True if sys.argv[2] == "balance" else False
     partition = sys.argv[3] if sys.argv[3] != "-" else None
 
-    generate_agnews(dir_path, num_clients, num_labels, niid, balance, partition)
+    generate_agnews(dir_path, num_clients, num_classes, niid, balance, partition)

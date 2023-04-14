@@ -145,7 +145,7 @@ class ResNet(nn.Module):
         block: BasicBlock,
         layers: List[int],
         features: List[int] = [64, 128, 256, 512],
-        num_labels: int = 1000,
+        num_classes: int = 1000,
         zero_init_residual: bool = False,
         groups: int = 1,
         width_per_group: int = 64,
@@ -190,12 +190,12 @@ class ResNet(nn.Module):
             nn.AdaptiveAvgPool2d((1, 1)),
             nn.Flatten()
         )
-        self.fc = nn.Linear(features[len(layers)-1] * block.expansion, num_labels)
+        self.fc = nn.Linear(features[len(layers)-1] * block.expansion, num_classes)
 
         # self.fc = nn.Sequential(
         #     nn.AdaptiveAvgPool2d((1, 1)), 
         #     nn.Flatten(), 
-        #     nn.Linear(features[len(layers)-1] * block.expansion, num_labels)
+        #     nn.Linear(features[len(layers)-1] * block.expansion, num_classes)
         # )
 
         for m in self.modules():

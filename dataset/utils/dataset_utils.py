@@ -9,14 +9,14 @@ train_size = 0.75 # merge original training set and test set, then split it manu
 least_samples = batch_size / (1-train_size) # least samples for each client
 alpha = 0.1 # for Dirichlet distribution
 
-def check(config_path, train_path, test_path, num_clients, num_labels, niid=False, 
+def check(config_path, train_path, test_path, num_clients, num_classes, niid=False, 
         balance=True, partition=None):
     # check existing dataset
     if os.path.exists(config_path):
         with open(config_path, 'r') as f:
             config = ujson.load(f)
         if config['num_clients'] == num_clients and \
-            config['num_labels'] == num_labels and \
+            config['num_classes'] == num_classes and \
             config['non_iid'] == niid and \
             config['balance'] == balance and \
             config['partition'] == partition and \
@@ -34,7 +34,7 @@ def check(config_path, train_path, test_path, num_clients, num_labels, niid=Fals
 
     return False
 
-def separate_data(data, num_clients, num_labels, niid=False, balance=False, partition=None, class_per_client=2):
+def separate_data(data, num_clients, num_classes, niid=False, balance=False, partition=None, class_per_client=2):
     X = [[] for _ in range(num_clients)]
     y = [[] for _ in range(num_clients)]
     statistic = [[] for _ in range(num_clients)]
@@ -45,21 +45,21 @@ def separate_data(data, num_clients, num_labels, niid=False, balance=False, part
 
     if not niid:
         partition = 'pat'
-        class_per_client = num_labels
+        class_per_client = num_classes
 
     if partition == 'pat':
         idxs = np.array(range(len(dataset_label)))
         idx_for_each_class = []
-        for i in range(num_labels):
+        for i in range(num_classes):
             idx_for_each_class.append(idxs[dataset_label == i])
 
         class_num_per_client = [class_per_client for _ in range(num_clients)]
-        for i in range(num_labels):
+        for i in range(num_classes):
             selected_clients = []
             for client in range(num_clients):
                 if class_num_per_client[client] > 0:
                     selected_clients.append(client)
-                selected_clients = selected_clients[:int(num_clients/num_labels*class_per_client)]
+                selected_clients = selected_clients[:int(num_clients/num_classes*class_per_client)]
 
             num_all_samples = len(idx_for_each_class[i])
             num_selected_clients = len(selected_clients)
@@ -67,7 +67,7 @@ def separate_data(data, num_clients, num_labels, niid=False, balance=False, part
             if balance:
                 num_samples = [int(num_per) for _ in range(num_selected_clients-1)]
             else:
-                num_samples = np.random.randint(max(num_per/10, least_samples/num_labels), num_per, num_selected_clients-1).tolist()
+                num_samples = np.random.randint(max(num_per/10, least_samples/num_classes), num_per, num_selected_clients-1).tolist()
             num_samples.append(num_all_samples-sum(num_samples))
 
             idx = 0
@@ -82,7 +82,7 @@ def separate_data(data, num_clients, num_labels, niid=False, balance=False, part
     elif partition == "dir":
         # https://github.com/IBM/probabilistic-federated-neural-matching/blob/master/experiment.py
         min_size = 0
-        K = num_labels
+        K = num_classes
         N = len(dataset_label)
 
         while min_size < least_samples:
@@ -147,10 +147,10 @@ def split_data(X, y):
     return train_data, test_data
 
 def save_file(config_path, train_path, test_path, train_data, test_data, num_clients, 
-                num_labels, statistic, niid=False, balance=True, partition=None):
+                num_classes, statistic, niid=False, balance=True, partition=None):
     config = {
         'num_clients': num_clients, 
-        'num_labels': num_labels, 
+        'num_classes': num_classes, 
         'non_iid': niid, 
         'balance': balance, 
         'partition': partition, 

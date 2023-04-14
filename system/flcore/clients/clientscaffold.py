@@ -36,7 +36,7 @@ class clientSCAFFOLD(Client):
         
         start_time = time.time()
 
-        max_local_steps = self.local_epochs
+        max_local_steps = self.local_steps
         if self.train_slow:
             max_local_steps = np.random.randint(1, max_local_steps // 2)
 
