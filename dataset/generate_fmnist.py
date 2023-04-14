@@ -11,12 +11,12 @@ from utils.dataset_utils import check, separate_data, split_data, save_file
 random.seed(1)
 np.random.seed(1)
 num_clients = 20
-num_classes = 10
+num_labels = 10
 dir_path = "fmnist/"
 
 
 # Allocate data to users
-def generate_fmnist(dir_path, num_clients, num_classes, niid, balance, partition):
+def generate_fmnist(dir_path, num_clients, num_labels, niid, balance, partition):
     if not os.path.exists(dir_path):
         os.makedirs(dir_path)
         
@@ -25,7 +25,7 @@ def generate_fmnist(dir_path, num_clients, num_classes, niid, balance, partition
     train_path = dir_path + "train/"
     test_path = dir_path + "test/"
 
-    if check(config_path, train_path, test_path, num_clients, num_classes, niid, balance, partition):
+    if check(config_path, train_path, test_path, num_clients, num_labels, niid, balance, partition):
         return
 
     # Get FashionMNIST data
@@ -56,14 +56,14 @@ def generate_fmnist(dir_path, num_clients, num_classes, niid, balance, partition
     dataset_label = np.array(dataset_label)
 
     # dataset = []
-    # for i in range(num_classes):
+    # for i in range(num_labels):
     #     idx = dataset_label == i
     #     dataset.append(dataset_image[idx])
 
-    X, y, statistic = separate_data((dataset_image, dataset_label), num_clients, num_classes, 
+    X, y, statistic = separate_data((dataset_image, dataset_label), num_clients, num_labels, 
                                     niid, balance, partition)
     train_data, test_data = split_data(X, y)
-    save_file(config_path, train_path, test_path, train_data, test_data, num_clients, num_classes, 
+    save_file(config_path, train_path, test_path, train_data, test_data, num_clients, num_labels, 
         statistic, niid, balance, partition)
 
 
@@ -72,4 +72,4 @@ if __name__ == "__main__":
     balance = True if sys.argv[2] == "balance" else False
     partition = sys.argv[3] if sys.argv[3] != "-" else None
 
-    generate_fmnist(dir_path, num_clients, num_classes, niid, balance, partition)
+    generate_fmnist(dir_path, num_clients, num_labels, niid, balance, partition)

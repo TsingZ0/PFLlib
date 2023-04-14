@@ -26,7 +26,7 @@ class FedGen(Server):
 
         self.generative_model = Generative(
                                     args.noise_dim, 
-                                    args.num_classes, 
+                                    args.num_labels, 
                                     args.hidden_dim, 
                                     self.clients[0].feature_dim, 
                                     self.device
@@ -41,7 +41,7 @@ class FedGen(Server):
         
         self.qualified_labels = []
         for client in self.clients:
-            for yy in range(self.num_classes):
+            for yy in range(self.num_labels):
                 self.qualified_labels.extend([yy for _ in range(int(client.sample_per_class[yy].item()))])
 
         self.server_epochs = args.server_epochs
@@ -155,15 +155,15 @@ class FedGen(Server):
 
 
 class Generative(nn.Module):
-    def __init__(self, noise_dim, num_classes, hidden_dim, feature_dim, device) -> None:
+    def __init__(self, noise_dim, num_labels, hidden_dim, feature_dim, device) -> None:
         super().__init__()
 
         self.noise_dim = noise_dim
-        self.num_classes = num_classes
+        self.num_labels = num_labels
         self.device = device
 
         self.fc1 = nn.Sequential(
-            nn.Linear(noise_dim + num_classes, hidden_dim), 
+            nn.Linear(noise_dim + num_labels, hidden_dim), 
             nn.BatchNorm1d(hidden_dim), 
             nn.ReLU()
         )
@@ -174,7 +174,7 @@ class Generative(nn.Module):
         batch_size = labels.shape[0]
         eps = torch.rand((batch_size, self.noise_dim), device=self.device) # sampling from Gaussian
 
-        y_input = F.one_hot(labels, self.num_classes)
+        y_input = F.one_hot(labels, self.num_labels)
         z = torch.cat((eps, y_input), dim=1)
 
         z = self.fc1(z)

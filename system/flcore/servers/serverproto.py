@@ -20,8 +20,8 @@ class FedProto(Server):
 
         # self.load_model()
         self.Budget = []
-        self.num_classes = args.num_classes
-        self.global_protos = [None for _ in range(args.num_classes)]
+        self.num_labels = args.num_labels
+        self.global_protos = [None for _ in range(args.num_labels)]
 
 
     def train(self):

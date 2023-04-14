@@ -29,7 +29,7 @@ class clientAPFL(Client):
         self.model.train()
         self.model_per.train()
 
-        max_local_steps = self.local_steps
+        max_local_steps = self.local_epochs
         if self.train_slow:
             max_local_steps = np.random.randint(1, max_local_steps // 2)
 
@@ -100,7 +100,7 @@ class clientAPFL(Client):
                 test_num += y.shape[0]
 
                 y_prob.append(output.detach().cpu().numpy())
-                y_true.append(label_binarize(y.detach().cpu().numpy(), classes=np.arange(self.num_classes)))
+                y_true.append(label_binarize(y.detach().cpu().numpy(), classes=np.arange(self.num_labels)))
 
         y_prob = np.concatenate(y_prob, axis=0)
         y_true = np.concatenate(y_true, axis=0)

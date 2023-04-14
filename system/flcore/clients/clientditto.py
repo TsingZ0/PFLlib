@@ -33,7 +33,7 @@ class clientDitto(Client):
         # self.model.to(self.device)
         self.model.train()
 
-        max_local_steps = self.local_steps
+        max_local_steps = self.local_epochs
         if self.train_slow:
             max_local_steps = np.random.randint(1, max_local_steps // 2)
 
@@ -117,7 +117,7 @@ class clientDitto(Client):
                 test_num += y.shape[0]
 
                 y_prob.append(F.softmax(output).detach().cpu().numpy())
-                y_true.append(label_binarize(y.detach().cpu().numpy(), classes=np.arange(self.num_classes)))
+                y_true.append(label_binarize(y.detach().cpu().numpy(), classes=np.arange(self.num_labels)))
 
         # self.model.cpu()
 

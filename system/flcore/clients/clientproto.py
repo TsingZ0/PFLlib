@@ -25,7 +25,7 @@ class clientProto(Client):
         # self.model.to(self.device)
         self.model.train()
 
-        max_local_steps = self.local_steps
+        max_local_steps = self.local_epochs
         if self.train_slow:
             max_local_steps = np.random.randint(1, max_local_steps // 2)
 
@@ -117,7 +117,7 @@ class clientProto(Client):
                     y = y.to(self.device)
                     rep = self.model.base(x)
 
-                    output = float('inf') * torch.ones(y.shape[0], self.num_classes).to(self.device)
+                    output = float('inf') * torch.ones(y.shape[0], self.num_labels).to(self.device)
                     for i, r in enumerate(rep):
                         for j, pro in self.global_protos.items():
                             output[i, j] = self.loss_mse(r, pro)

@@ -32,7 +32,7 @@ def generate_har(dir_path):
     X, y = load_data_har(data_path+'rawdata/')
     statistic = []
     num_clients = len(y)
-    num_classes = len(np.unique(np.concatenate(y, axis=0)))
+    num_labels = len(np.unique(np.concatenate(y, axis=0)))
     for i in range(num_clients):
         statistic.append([])
         for yy in sorted(np.unique(y[i])):
@@ -45,7 +45,7 @@ def generate_har(dir_path):
         print("-" * 50)
 
     train_data, test_data = split_data(X, y)
-    save_file(config_path, train_path, test_path, train_data, test_data, num_clients, num_classes, statistic)
+    save_file(config_path, train_path, test_path, train_data, test_data, num_clients, num_labels, statistic)
 
 
 def load_data_har(data_folder):

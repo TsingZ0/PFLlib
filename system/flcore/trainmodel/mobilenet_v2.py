@@ -76,7 +76,7 @@ class InvertedResidual(nn.Module):
 
 class MobileNetV2(nn.Module):
     def __init__(self,
-                 num_classes=1000,
+                 num_labels=1000,
                  width_mult=1.0,
                  inverted_residual_setting=None,
                  round_nearest=8,
@@ -86,7 +86,7 @@ class MobileNetV2(nn.Module):
         MobileNet V2 main class
 
         Args:
-            num_classes (int): Number of classes
+            num_labels (int): Number of classes
             width_mult (float): Width multiplier - adjusts number of channels in each layer by this amount
             inverted_residual_setting: Network structure
             round_nearest (int): Round the number of channels in each layer to be a multiple of this number
@@ -141,7 +141,7 @@ class MobileNetV2(nn.Module):
 
         # building classifier
         self.dropout = nn.Dropout(0.2)
-        self.fc = nn.Linear(self.last_channel, num_classes)
+        self.fc = nn.Linear(self.last_channel, num_labels)
 
         # weight initialization
         for m in self.modules():

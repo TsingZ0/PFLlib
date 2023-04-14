@@ -22,12 +22,12 @@ class Client(object):
         self.id = id  # integer
         self.save_folder_name = args.save_folder_name
 
-        self.num_classes = args.num_classes
+        self.num_labels = args.num_labels
         self.train_samples = train_samples
         self.test_samples = test_samples
         self.batch_size = args.batch_size
-        self.learning_rate = args.local_learning_rate
-        self.local_steps = args.local_steps
+        self.learning_rate = args.learning_rate
+        self.local_epochs = args.local_epochs
 
         # check BatchNorm
         self.has_BatchNorm = False
@@ -102,11 +102,11 @@ class Client(object):
                 test_num += y.shape[0]
 
                 y_prob.append(output.detach().cpu().numpy())
-                nc = self.num_classes
-                if self.num_classes == 2:
+                nc = self.num_labels
+                if self.num_labels == 2:
                     nc += 1
                 lb = label_binarize(y.detach().cpu().numpy(), classes=np.arange(nc))
-                if self.num_classes == 2:
+                if self.num_labels == 2:
                     lb = lb[:, :2]
                 y_true.append(lb)
 

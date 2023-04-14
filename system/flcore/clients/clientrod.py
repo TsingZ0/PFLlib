@@ -20,7 +20,7 @@ class clientROD(Client):
             gamma=args.learning_rate_decay_gamma
         )
 
-        self.sample_per_class = torch.zeros(self.num_classes)
+        self.sample_per_class = torch.zeros(self.num_labels)
         trainloader = self.load_train_data()
         for x, y in trainloader:
             for yy in y:
@@ -35,7 +35,7 @@ class clientROD(Client):
         # self.model.to(self.device)
         self.model.train()
 
-        max_local_steps = self.local_steps
+        max_local_steps = self.local_epochs
         if self.train_slow:
             max_local_steps = np.random.randint(1, max_local_steps // 2)
 
@@ -95,11 +95,11 @@ class clientROD(Client):
                 test_num += y.shape[0]
 
                 y_prob.append(F.softmax(output).detach().cpu().numpy())
-                nc = self.num_classes
-                if self.num_classes == 2:
+                nc = self.num_labels
+                if self.num_labels == 2:
                     nc += 1
                 lb = label_binarize(y.detach().cpu().numpy(), classes=np.arange(nc))
-                if self.num_classes == 2:
+                if self.num_labels == 2:
                     lb = lb[:, :2]
                 y_true.append(lb)
 

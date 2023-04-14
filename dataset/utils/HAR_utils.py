@@ -62,10 +62,10 @@ def split_data(X, y):
 
     return train_data, test_data
 
-def save_file(config_path, train_path, test_path, train_data, test_data, num_clients, num_classes, statistic):
+def save_file(config_path, train_path, test_path, train_data, test_data, num_clients, num_labels, statistic):
     config = {
         'num_clients': num_clients, 
-        'num_classes': num_classes, 
+        'num_labels': num_labels, 
         'Size of samples for labels in clients': statistic, 
     }
 

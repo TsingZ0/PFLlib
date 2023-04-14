@@ -22,7 +22,7 @@ class clientGen(Client):
             break
         self.feature_dim = rep.shape[1]
 
-        self.sample_per_class = torch.zeros(self.num_classes)
+        self.sample_per_class = torch.zeros(self.num_labels)
         trainloader = self.load_train_data()
         for x, y in trainloader:
             for yy in y:
@@ -45,7 +45,7 @@ class clientGen(Client):
         
         start_time = time.time()
 
-        max_local_steps = self.local_steps
+        max_local_steps = self.local_epochs
         if self.train_slow:
             max_local_steps = np.random.randint(1, max_local_steps // 2)
 

@@ -25,7 +25,7 @@ class BaseHeadSplit(nn.Module):
 
 # https://github.com/jindongwang/Deep-learning-activity-recognition/blob/master/pytorch/network.py
 class HARCNN(nn.Module):
-    def __init__(self, in_channels=9, dim_hidden=64*26, num_classes=6, conv_kernel_size=(1, 9), pool_kernel_size=(1, 2)):
+    def __init__(self, in_channels=9, dim_hidden=64*26, num_labels=6, conv_kernel_size=(1, 9), pool_kernel_size=(1, 2)):
         super().__init__()
         self.conv1 = nn.Sequential(
             nn.Conv2d(in_channels, 32, kernel_size=conv_kernel_size),
@@ -42,7 +42,7 @@ class HARCNN(nn.Module):
             nn.ReLU(), 
             nn.Linear(1024, 512),
             nn.ReLU(), 
-            nn.Linear(512, num_classes)
+            nn.Linear(512, num_labels)
         )
 
     def forward(self, x):
@@ -115,7 +115,7 @@ class PositionalEncoding(nn.Module):
 class TransformerModel(nn.Module):
 
     def __init__(self, ntoken: int, d_model: int, nhead: int, d_hid: int,
-                 nlayers: int, num_classes: int, dropout: float = 0.5):
+                 nlayers: int, num_labels: int, dropout: float = 0.5):
         super().__init__()
         self.model_type = 'Transformer'
         self.pos_encoder = PositionalEncoding(d_model, dropout)
@@ -123,7 +123,7 @@ class TransformerModel(nn.Module):
         self.transformer_encoder = TransformerEncoder(encoder_layers, nlayers)
         self.encoder = nn.Embedding(ntoken, d_model)
         self.d_model = d_model
-        self.fc = nn.Linear(d_model, num_classes)
+        self.fc = nn.Linear(d_model, num_labels)
 
         self.init_weights()
 
@@ -178,7 +178,7 @@ class AmazonMLP(nn.Module):
 
 # # https://github.com/katsura-jp/fedavg.pytorch/blob/master/src/models/cnn.py
 # class FedAvgCNN(nn.Module):
-#     def __init__(self, in_features=1, num_classes=10, dim=1024):
+#     def __init__(self, in_features=1, num_labels=10, dim=1024):
 #         super().__init__()
 #         self.conv1 = nn.Conv2d(in_features,
 #                                32,
@@ -193,7 +193,7 @@ class AmazonMLP(nn.Module):
 #                                stride=1,
 #                                bias=True)
 #         self.fc1 = nn.Linear(dim, 512)
-#         self.fc = nn.Linear(512, num_classes)
+#         self.fc = nn.Linear(512, num_labels)
 
 #         self.act = nn.ReLU(inplace=True)
 #         self.maxpool = nn.MaxPool2d(kernel_size=(2, 2))
@@ -209,7 +209,7 @@ class AmazonMLP(nn.Module):
 #         return x
 
 class FedAvgCNN(nn.Module):
-    def __init__(self, in_features=1, num_classes=10, dim=1024):
+    def __init__(self, in_features=1, num_labels=10, dim=1024):
         super().__init__()
         self.conv1 = nn.Sequential(
             nn.Conv2d(in_features,
@@ -235,7 +235,7 @@ class FedAvgCNN(nn.Module):
             nn.Linear(dim, 512), 
             nn.ReLU(inplace=True)
         )
-        self.fc = nn.Linear(512, num_classes)
+        self.fc = nn.Linear(512, num_labels)
 
     def forward(self, x):
         out = self.conv1(x)
@@ -249,10 +249,10 @@ class FedAvgCNN(nn.Module):
 
 # https://github.com/katsura-jp/fedavg.pytorch/blob/master/src/models/mlp.py
 class FedAvgMLP(nn.Module):
-    def __init__(self, in_features=784, num_classes=10, hidden_dim=200):
+    def __init__(self, in_features=784, num_labels=10, hidden_dim=200):
         super().__init__()
         self.fc1 = nn.Linear(in_features, hidden_dim)
-        self.fc2 = nn.Linear(hidden_dim, num_classes)
+        self.fc2 = nn.Linear(hidden_dim, num_labels)
         self.act = nn.ReLU(inplace=True)
 
     def forward(self, x):
@@ -293,9 +293,9 @@ class Net(nn.Module):
 # ====================================================================================================================
 
 class Mclr_Logistic(nn.Module):
-    def __init__(self, input_dim=1*28*28, num_classes=10):
+    def __init__(self, input_dim=1*28*28, num_labels=10):
         super(Mclr_Logistic, self).__init__()
-        self.fc = nn.Linear(input_dim, num_classes)
+        self.fc = nn.Linear(input_dim, num_labels)
 
     def forward(self, x):
         x = torch.flatten(x, 1)
@@ -306,10 +306,10 @@ class Mclr_Logistic(nn.Module):
 # ====================================================================================================================
 
 class DNN(nn.Module):
-    def __init__(self, input_dim=1*28*28, mid_dim=100, num_classes=10):
+    def __init__(self, input_dim=1*28*28, mid_dim=100, num_labels=10):
         super(DNN, self).__init__()
         self.fc1 = nn.Linear(input_dim, mid_dim)
-        self.fc = nn.Linear(mid_dim, num_classes)
+        self.fc = nn.Linear(mid_dim, num_labels)
 
     def forward(self, x):
         x = torch.flatten(x, 1)
@@ -321,14 +321,14 @@ class DNN(nn.Module):
 # ====================================================================================================================
 
 class CifarNet(nn.Module):
-    def __init__(self, num_classes=10):
+    def __init__(self, num_labels=10):
         super(CifarNet, self).__init__()
         self.conv1 = nn.Conv2d(3, 6, 5)
         self.pool = nn.MaxPool2d(2, 2)
         self.conv2 = nn.Conv2d(6, batch_size, 5)
         self.fc1 = nn.Linear(batch_size * 5 * 5, 120)
         self.fc2 = nn.Linear(120, 84)
-        self.fc = nn.Linear(84, num_classes)
+        self.fc = nn.Linear(84, num_labels)
 
     def forward(self, x):
         x = self.pool(F.relu(self.conv1(x)))
@@ -397,7 +397,7 @@ def init_weights(m):
         nn.init.zeros_(m.bias)
 
 class LeNet(nn.Module):
-    def __init__(self, feature_dim=50*4*4, bottleneck_dim=256, num_classes=10, iswn=None):
+    def __init__(self, feature_dim=50*4*4, bottleneck_dim=256, num_labels=10, iswn=None):
         super(LeNet, self).__init__()
 
         self.conv_params = nn.Sequential(
@@ -413,7 +413,7 @@ class LeNet(nn.Module):
         self.dropout = nn.Dropout(p=0.5)
         self.bottleneck = nn.Linear(feature_dim, bottleneck_dim)
         self.bottleneck.apply(init_weights)
-        self.fc = nn.Linear(bottleneck_dim, num_classes)
+        self.fc = nn.Linear(bottleneck_dim, num_labels)
         if iswn == "wn":
             self.fc = nn.utils.weight_norm(self.fc, name="weight")
         self.fc.apply(init_weights)
@@ -431,14 +431,14 @@ class LeNet(nn.Module):
 # ====================================================================================================================
 
 # class CNNCifar(nn.Module):
-#     def __init__(self, num_classes=10):
+#     def __init__(self, num_labels=10):
 #         super(CNNCifar, self).__init__()
 #         self.conv1 = nn.Conv2d(3, 6, 5)
 #         self.pool = nn.MaxPool2d(2, 2)
 #         self.conv2 = nn.Conv2d(6, batch_size, 5)
 #         self.fc1 = nn.Linear(batch_size * 5 * 5, 120)
 #         self.fc2 = nn.Linear(120, 100)
-#         self.fc3 = nn.Linear(100, num_classes)
+#         self.fc3 = nn.Linear(100, num_labels)
 
 #         # self.weight_keys = [['fc1.weight', 'fc1.bias'],
 #         #                     ['fc2.weight', 'fc2.bias'],
@@ -461,7 +461,7 @@ class LeNet(nn.Module):
 
 class LSTMNet(nn.Module):
     def __init__(self, hidden_dim, num_layers=2, bidirectional=False, dropout=0.2, 
-                padding_idx=0, vocab_size=98635, num_classes=10):
+                padding_idx=0, vocab_size=98635, num_labels=10):
         super().__init__()
 
         self.dropout = nn.Dropout(dropout)
@@ -473,7 +473,7 @@ class LSTMNet(nn.Module):
                             dropout=dropout, 
                             batch_first=True)
         dims = hidden_dim*2 if bidirectional else hidden_dim
-        self.fc = nn.Linear(dims, num_classes)
+        self.fc = nn.Linear(dims, num_labels)
 
     def forward(self, x):
         text, text_lengths = x
@@ -497,7 +497,7 @@ class LSTMNet(nn.Module):
 # ====================================================================================================================
 
 class fastText(nn.Module):
-    def __init__(self, hidden_dim, padding_idx=0, vocab_size=98635, num_classes=10):
+    def __init__(self, hidden_dim, padding_idx=0, vocab_size=98635, num_labels=10):
         super(fastText, self).__init__()
         
         # Embedding Layer
@@ -507,7 +507,7 @@ class fastText(nn.Module):
         self.fc1 = nn.Linear(hidden_dim, hidden_dim)
         
         # Output Layer
-        self.fc = nn.Linear(hidden_dim, num_classes)
+        self.fc = nn.Linear(hidden_dim, num_labels)
         
     def forward(self, x):
         text, text_lengths = x
@@ -523,7 +523,7 @@ class fastText(nn.Module):
 
 class TextCNN(nn.Module):
     def __init__(self, hidden_dim, num_channels=100, kernel_size=[3,4,5], max_len=200, dropout=0.8, 
-                padding_idx=0, vocab_size=98635, num_classes=10):
+                padding_idx=0, vocab_size=98635, num_labels=10):
         super(TextCNN, self).__init__()
         
         # Embedding Layer
@@ -550,7 +550,7 @@ class TextCNN(nn.Module):
         self.dropout = nn.Dropout(dropout)
         
         # Fully-Connected Layer
-        self.fc = nn.Linear(num_channels*len(kernel_size), num_classes)
+        self.fc = nn.Linear(num_channels*len(kernel_size), num_labels)
         
     def forward(self, x):
         text, text_lengths = x
