@@ -1,6 +1,5 @@
 from flcore.clients.clientdistill import clientDistill
 from flcore.servers.serverbase import Server
-from utils.data_utils import read_client_data
 from threading import Thread
 import time
 import numpy as np
@@ -43,8 +42,6 @@ class FedDistill(Server):
             # [t.join() for t in threads]
 
             self.receive_logits()
-            if self.dlg_eval and i%self.dlg_gap == 0:
-                self.call_dlg(i)
             self.global_logits = logit_aggregation(self.uploaded_logits)
             self.send_logits()
 
