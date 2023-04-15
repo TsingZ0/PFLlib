@@ -17,6 +17,7 @@ class Client(object):
 
     def __init__(self, args, id, train_samples, test_samples, **kwargs):
         self.model = copy.deepcopy(args.model)
+        self.algorithm = args.algorithm
         self.dataset = args.dataset
         self.device = args.device
         self.id = id  # integer
