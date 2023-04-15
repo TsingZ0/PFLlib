@@ -1,7 +1,6 @@
 import copy
 import random
 import time
-
 import torch
 from flcore.clients.clientscaffold import clientSCAFFOLD
 from flcore.servers.serverbase import Server
