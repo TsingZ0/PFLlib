@@ -44,10 +44,11 @@ class clientDistill(Client):
                 loss = self.loss(output, y)
 
                 if self.global_logits != None:
-                    logit_new = torch.zeros_like(output)
+                    logit_new = copy.deepcopy(output.detach())
                     for i, yy in enumerate(y):
                         y_c = yy.item()
-                        logit_new[i, :] = self.global_logits[y_c].data
+                        if type(self.global_logits[y_c]) != type([]):
+                            logit_new[i, :] = self.global_logits[y_c].data
                     loss += self.loss_mse(logit_new, output) * self.lamda
 
                 for i, yy in enumerate(y):
@@ -90,10 +91,11 @@ class clientDistill(Client):
                 loss = self.loss(output, y)
 
                 if self.global_logits != None:
-                    logit_new = torch.zeros_like(output)
+                    logit_new = copy.deepcopy(output.detach())
                     for i, yy in enumerate(y):
                         y_c = yy.item()
-                        logit_new[i, :] = self.global_logits[y_c].data
+                        if type(self.global_logits[y_c]) != type([]):
+                            logit_new[i, :] = self.global_logits[y_c].data
                     loss += self.loss_mse(logit_new, output) * self.lamda
                     
                 train_num += y.shape[0]

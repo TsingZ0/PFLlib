@@ -44,11 +44,12 @@ class clientProto(Client):
                 output = self.model.head(rep)
                 loss = self.loss(output, y)
 
-                if self.global_protos != None:
-                    proto_new = torch.zeros_like(rep)
+                if self.global_protos is not None:
+                    proto_new = copy.deepcopy(rep.detach())
                     for i, yy in enumerate(y):
                         y_c = yy.item()
-                        proto_new[i, :] = self.global_protos[y_c].data
+                        if type(self.global_protos[y_c]) != type([]):
+                            proto_new[i, :] = self.global_protos[y_c].data
                     loss += self.loss_mse(proto_new, rep) * self.lamda
 
                 for i, yy in enumerate(y):
@@ -120,7 +121,8 @@ class clientProto(Client):
                     output = float('inf') * torch.ones(y.shape[0], self.num_classes).to(self.device)
                     for i, r in enumerate(rep):
                         for j, pro in self.global_protos.items():
-                            output[i, j] = self.loss_mse(r, pro)
+                            if type(pro) != type([]):
+                                output[i, j] = self.loss_mse(r, pro)
 
                     test_acc += (torch.sum(torch.argmin(output, dim=1) == y)).item()
                     test_num += y.shape[0]
@@ -148,11 +150,12 @@ class clientProto(Client):
                 output = self.model.head(rep)
                 loss = self.loss(output, y)
 
-                if self.global_protos != None:
-                    proto_new = torch.zeros_like(rep)
+                if self.global_protos is not None:
+                    proto_new = copy.deepcopy(rep.detach())
                     for i, yy in enumerate(y):
                         y_c = yy.item()
-                        proto_new[i, :] = self.global_protos[y_c].data
+                        if type(self.global_protos[y_c]) != type([]):
+                            proto_new[i, :] = self.global_protos[y_c].data
                     loss += self.loss_mse(proto_new, rep) * self.lamda
                 train_num += y.shape[0]
                 losses += loss.item() * y.shape[0]
