@@ -86,6 +86,8 @@ class SCAFFOLD(Server):
             self.selected_clients, int((1-self.client_drop_rate) * self.num_join_clients))
 
         self.uploaded_ids = []
+        self.uploaded_weights = []
+        tot_samples = 0
         # self.delta_ys = []
         # self.delta_cs = []
         for client in active_clients:
@@ -95,9 +97,13 @@ class SCAFFOLD(Server):
             except ZeroDivisionError:
                 client_time_cost = 0
             if client_time_cost <= self.time_threthold:
+                tot_samples += client.train_samples
                 self.uploaded_ids.append(client.id)
+                self.uploaded_weights.append(client.train_samples)
                 # self.delta_ys.append(client.delta_y)
                 # self.delta_cs.append(client.delta_c)
+        for i, w in enumerate(self.uploaded_weights):
+            self.uploaded_weights[i] = w / tot_samples
 
     def aggregate_parameters(self):        
         # original version
