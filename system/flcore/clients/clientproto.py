@@ -39,7 +39,6 @@ class clientProto(Client):
                 y = y.to(self.device)
                 if self.train_slow:
                     time.sleep(0.1 * np.abs(np.random.rand()))
-                self.optimizer.zero_grad()
                 rep = self.model.base(x)
                 output = self.model.head(rep)
                 loss = self.loss(output, y)
@@ -56,6 +55,7 @@ class clientProto(Client):
                     y_c = yy.item()
                     protos[y_c].append(rep[i, :].detach().data)
 
+                self.optimizer.zero_grad()
                 loss.backward()
                 self.optimizer.step()
 
@@ -90,7 +90,6 @@ class clientProto(Client):
                 y = y.to(self.device)
                 if self.train_slow:
                     time.sleep(0.1 * np.abs(np.random.rand()))
-                self.optimizer.zero_grad()
                 rep = self.model.base(x)
 
                 for i, yy in enumerate(y):

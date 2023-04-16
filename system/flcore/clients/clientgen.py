@@ -58,7 +58,6 @@ class clientGen(Client):
                 y = y.to(self.device)
                 if self.train_slow:
                     time.sleep(0.1 * np.abs(np.random.rand()))
-                self.optimizer.zero_grad()
                 output = self.model(x)
                 loss = self.loss(output, y)
                 
@@ -67,6 +66,7 @@ class clientGen(Client):
                 z = self.generative_model(labels)
                 loss += self.loss(self.model.head(z), labels)
 
+                self.optimizer.zero_grad()
                 loss.backward()
                 self.optimizer.step()
 

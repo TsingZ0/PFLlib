@@ -48,9 +48,9 @@ class clientAPPLE(Client):
 
                 self.aggregate_parameters()
 
-                self.optimizer.zero_grad()
                 output = self.model(x)
                 loss = self.loss(output, y)
+                self.optimizer.zero_grad()
                 loss.backward()
 
                 for param_c, param in zip(self.model_cs[self.id].parameters(), self.model.parameters()):

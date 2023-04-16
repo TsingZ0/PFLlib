@@ -49,9 +49,9 @@ class clientpFedMe(Client):
 
                 # K is number of personalized steps
                 for i in range(self.K):
-                    self.optimizer.zero_grad()
                     output = self.model(x)
                     loss = self.loss(output, y)
+                    self.optimizer.zero_grad()
                     loss.backward()
                     # finding aproximate theta
                     self.personalized_params = self.optimizer.step(self.local_params, self.device)

@@ -42,15 +42,15 @@ class clientAPFL(Client):
                 y = y.to(self.device)
                 if self.train_slow:
                     time.sleep(0.1 * np.abs(np.random.rand()))
-                self.optimizer.zero_grad()
                 output = self.model(x)
                 loss = self.loss(output, y)
                 loss.backward()
                 self.optimizer.step()
 
-                self.optimizer_per.zero_grad()
                 output_per = self.model_per(x)
                 loss_per = self.loss(output_per, y)
+                self.optimizer.zero_grad()
+                self.optimizer_per.zero_grad()
                 loss_per.backward()
                 self.optimizer_per.step()
 

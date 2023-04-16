@@ -46,9 +46,9 @@ class clientDitto(Client):
                 y = y.to(self.device)
                 if self.train_slow:
                     time.sleep(0.1 * np.abs(np.random.rand()))
-                self.optimizer.zero_grad()
                 output = self.model(x)
                 loss = self.loss(output, y)
+                self.optimizer.zero_grad()
                 loss.backward()
                 self.optimizer.step()
 
@@ -83,9 +83,9 @@ class clientDitto(Client):
                 y = y.to(self.device)
                 if self.train_slow:
                     time.sleep(0.1 * np.abs(np.random.rand()))
-                self.optimizer_per.zero_grad()
                 output = self.model_per(x)
                 loss = self.loss(output, y)
+                self.optimizer_per.zero_grad()
                 loss.backward()
                 self.optimizer_per.step(self.model.parameters(), self.device)
 

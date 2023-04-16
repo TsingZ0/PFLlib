@@ -37,7 +37,6 @@ class clientMOON(Client):
                 y = y.to(self.device)
                 if self.train_slow:
                     time.sleep(0.1 * np.abs(np.random.rand()))
-                self.optimizer.zero_grad()
                 rep = self.model.base(x)
                 output = self.model.head(rep)
                 loss = self.loss(output, y)
@@ -47,6 +46,7 @@ class clientMOON(Client):
                 loss_con = - torch.log(torch.exp(F.cosine_similarity(rep, rep_global) / self.tau) / (torch.exp(F.cosine_similarity(rep, rep_global) / self.tau) + torch.exp(F.cosine_similarity(rep, rep_old) / self.tau)))
                 loss += self.mu * torch.mean(loss_con)
 
+                self.optimizer.zero_grad()
                 loss.backward()
                 self.optimizer.step()
 
