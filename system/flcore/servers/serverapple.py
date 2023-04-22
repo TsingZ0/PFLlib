@@ -1,3 +1,4 @@
+import copy
 import random
 import time
 from flcore.clients.clientapple import clientAPPLE
@@ -19,7 +20,7 @@ class APPLE(Server):
         # self.load_model()
         self.Budget = []
 
-        self.uploaded_models = [c.model_c for c in self.clients]
+        self.client_models = [copy.deepcopy(c.model_c) for c in self.clients]
 
         train_samples = 0
         for client in self.clients:
@@ -73,7 +74,7 @@ class APPLE(Server):
         for client in self.clients:
             start_time = time.time()
             
-            client.set_models(self.uploaded_models)
+            client.set_models(self.client_models)
 
             client.send_time_cost['num_rounds'] += 1
             client.send_time_cost['total_cost'] += 2 * (time.time() - start_time)
@@ -85,7 +86,6 @@ class APPLE(Server):
             self.selected_clients, int((1-self.client_drop_rate) * self.num_join_clients))
 
         self.uploaded_weights = []
-        self.uploaded_models = []
         tot_samples = 0
         for client in active_clients:
             client_time_cost = client.train_time_cost['total_cost'] / client.train_time_cost['num_rounds'] + \
@@ -93,6 +93,6 @@ class APPLE(Server):
             if client_time_cost <= self.time_threthold:
                 tot_samples += client.train_samples
                 self.uploaded_weights.append(client.train_samples)
-                self.uploaded_models.append(client.model_c)
+                self.client_models[client.id] = copy.deepcopy(client.model_c)
         for i, w in enumerate(self.uploaded_weights):
             self.uploaded_weights[i] = w / tot_samples
