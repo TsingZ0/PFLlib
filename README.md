@@ -623,6 +623,7 @@ With the installed [conda](https://repo.anaconda.com/miniconda/Miniconda3-latest
 Note: Due to the code updates, some modules may be required to install based on the given `*.yaml`. 
 
 ```bash
+conda config --set channel_priority strict
 conda env create -f env_cuda_116.yaml 
 # conda env create -f env_cuda_102.yaml 
 ```
