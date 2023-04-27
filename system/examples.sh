@@ -35,9 +35,9 @@
 # nohup python -u main.py -lbs 16 -nc 20 -jr 1 -nb 10 -data mnist -m cnn -algo FedMTL -gr 2000 -itk 4000 -did 1 -go cnn > mnist_FedMTL1.out 2>&1 &
 # nohup python -u main.py -lbs 16 -nc 20 -jr 1 -nb 10 -data mnist -m resnet -algo FedMTL -gr 2000 -itk 4000 -did 1 -go resnet > mnist_FedMTL2.out 2>&1 &
 
-# nohup python -u main.py -lbs 16 -nc 20 -jr 1 -nb 10 -data mnist -m dnn -algo FedAMP -gr 2000 -alk 5e-3 -lam 5e-7 -sg 1e-1 -did 0 -go dnn > mnist_fedamp.out 2>&1 &
-# nohup python -u main.py -lbs 16 -nc 20 -jr 1 -nb 10 -data mnist -m cnn -algo FedAMP -gr 2000 -alk 5e-3 -lam 5e-7 -sg 1e-1 -did 0 -go cnn > mnist_fedamp1.out 2>&1 &
-# nohup python -u main.py -lbs 16 -nc 20 -jr 1 -nb 10 -data mnist -m resnet -algo FedAMP -gr 2000 -alk 5e-3 -lam 5e-7 -sg 1e-1 -did 0 -go resnet > mnist_fedamp2.out 2>&1 &
+# nohup python -u main.py -lbs 16 -nc 20 -jr 1 -nb 10 -data mnist -m dnn -algo FedAMP -gr 2000 -alk 1e3 -lam 1 -sg 1e-1 -did 0 -go dnn > mnist_fedamp.out 2>&1 &
+# nohup python -u main.py -lbs 16 -nc 20 -jr 1 -nb 10 -data mnist -m cnn -algo FedAMP -gr 2000 -alk 1e3 -lam 1 -sg 1e-1 -did 0 -go cnn > mnist_fedamp1.out 2>&1 &
+# nohup python -u main.py -lbs 16 -nc 20 -jr 1 -nb 10 -data mnist -m resnet -algo FedAMP -gr 2000 -alk 1e3 -lam 1 -sg 1e-1 -did 0 -go resnet > mnist_fedamp2.out 2>&1 &
 
 
 # ===============================================================horizontal(Cifar10)======================================================================
@@ -75,9 +75,9 @@
 # nohup python -u main.py -lbs 16 -nc 20 -jr 1 -nb 10 -data Cifar10 -m cnn -algo FedMTL -gr 2000 -itk 4000 -did 1 -go cnn > cifar10_FedMTL1.out 2>&1 &
 # nohup python -u main.py -lbs 16 -nc 20 -jr 1 -nb 10 -data Cifar10 -m resnet -algo FedMTL -gr 2000 -itk 4000 -did 1 -go resnet > cifar10_FedMTL2.out 2>&1 &
 
-# nohup python -u main.py -lbs 16 -nc 20 -jr 1 -nb 10 -data Cifar10 -m dnn -algo FedAMP -gr 2000 -alk 5e-3 -lam 5e-7 -sg 1e-1 -did 0 -go dnn > cifar10_fedamp.out 2>&1 &
-# nohup python -u main.py -lbs 16 -nc 20 -jr 1 -nb 10 -data Cifar10 -m cnn -algo FedAMP -gr 2000 -alk 5e-3 -lam 5e-7 -sg 1e-1 -did 0 -go cnn > cifar10_fedamp1.out 2>&1 &
-# nohup python -u main.py -lbs 16 -nc 20 -jr 1 -nb 10 -data Cifar10 -m resnet -algo FedAMP -gr 2000 -alk 5e-3 -lam 5e-7 -sg 1e-1 -did 0 -go resnet > cifar10_fedamp2.out 2>&1 &
+# nohup python -u main.py -lbs 16 -nc 20 -jr 1 -nb 10 -data Cifar10 -m dnn -algo FedAMP -gr 2000 -alk 1e3 -lam 1 -sg 1e-1 -did 0 -go dnn > cifar10_fedamp.out 2>&1 &
+# nohup python -u main.py -lbs 16 -nc 20 -jr 1 -nb 10 -data Cifar10 -m cnn -algo FedAMP -gr 2000 -alk 1e3 -lam 1 -sg 1e-1 -did 0 -go cnn > cifar10_fedamp1.out 2>&1 &
+# nohup python -u main.py -lbs 16 -nc 20 -jr 1 -nb 10 -data Cifar10 -m resnet -algo FedAMP -gr 2000 -alk 1e3 -lam 1 -sg 1e-1 -did 0 -go resnet > cifar10_fedamp2.out 2>&1 &
 
 
 # ===============================================================horizontal(Cifar100)======================================================================
@@ -112,9 +112,9 @@
 # nohup python -u main.py -lbs 4 -nc 20 -jr 1 -nb 100 -data Cifar100 -m cnn -algo FedMTL -gr 2000 -itk 4000 -did 1 -go cnn > cifar100_FedMTL1.out 2>&1 &
 # nohup python -u main.py -lbs 4 -nc 20 -jr 1 -nb 100 -data Cifar100 -m resnet -algo FedMTL -gr 2000 -itk 4000 -did 1 -go resnet > cifar100_FedMTL2.out 2>&1 &
 
-# nohup python -u main.py -lbs 4 -nc 20 -jr 1 -nb 100 -data Cifar100 -m dnn -algo FedAMP -gr 2000 -alk 5e-3 -lam 5e-7 -sg 1e-1 -did 0 -go dnn > cifar100_fedamp.out 2>&1 &
-# nohup python -u main.py -lbs 4 -nc 20 -jr 1 -nb 100 -data Cifar100 -m cnn -algo FedAMP -gr 2000 -alk 5e-3 -lam 5e-7 -sg 1e-1 -did 0 -go cnn > cifar100_fedamp1.out 2>&1 &
-# nohup python -u main.py -lbs 4 -nc 20 -jr 1 -nb 100 -data Cifar100 -m resnet -algo FedAMP -gr 2000 -alk 5e-3 -lam 5e-7 -sg 1e-1 -did 0 -go resnet > cifar100_fedamp2.out 2>&1 &
+# nohup python -u main.py -lbs 4 -nc 20 -jr 1 -nb 100 -data Cifar100 -m dnn -algo FedAMP -gr 2000 -alk 1e3 -lam 1 -sg 1e-1 -did 0 -go dnn > cifar100_fedamp.out 2>&1 &
+# nohup python -u main.py -lbs 4 -nc 20 -jr 1 -nb 100 -data Cifar100 -m cnn -algo FedAMP -gr 2000 -alk 1e3 -lam 1 -sg 1e-1 -did 0 -go cnn > cifar100_fedamp1.out 2>&1 &
+# nohup python -u main.py -lbs 4 -nc 20 -jr 1 -nb 100 -data Cifar100 -m resnet -algo FedAMP -gr 2000 -alk 1e3 -lam 1 -sg 1e-1 -did 0 -go resnet > cifar100_fedamp2.out 2>&1 &
 
 
 # ===============================================================horizontal(fmnist)======================================================================  
@@ -142,8 +142,8 @@
 # nohup python -u main.py -lbs 16 -nc 20 -jr 1 -nb 10 -data fmnist -m dnn -algo FedMTL -gr 2000 -itk 4000 -did 1 -go dnn > fmnist_FedMTL.out 2>&1 &
 # nohup python -u main.py -lbs 16 -nc 20 -jr 1 -nb 10 -data fmnist -m cnn -algo FedMTL -gr 2000 -itk 4000 -did 1 -go cnn > fmnist_FedMTL1.out 2>&1 &
 
-# nohup python -u main.py -lbs 16 -nc 20 -jr 1 -nb 10 -data fmnist -m dnn -algo FedAMP -gr 2000 -alk 5e-3 -lam 5e-7 -sg 1e-1 -did 1 -go dnn > fmnist_fedamp.out 2>&1 &
-# nohup python -u main.py -lbs 16 -nc 20 -jr 1 -nb 10 -data fmnist -m cnn -algo FedAMP -gr 2000 -alk 5e-3 -lam 5e-7 -sg 1e-1 -did 1 -go cnn > fmnist_fedamp1.out 2>&1 &
+# nohup python -u main.py -lbs 16 -nc 20 -jr 1 -nb 10 -data fmnist -m dnn -algo FedAMP -gr 2000 -alk 1e3 -lam 1 -sg 1e-1 -did 1 -go dnn > fmnist_fedamp.out 2>&1 &
+# nohup python -u main.py -lbs 16 -nc 20 -jr 1 -nb 10 -data fmnist -m cnn -algo FedAMP -gr 2000 -alk 1e3 -lam 1 -sg 1e-1 -did 1 -go cnn > fmnist_fedamp1.out 2>&1 &
 
 
 # ===============================================================horizontal(agnews)======================================================================  
@@ -165,4 +165,4 @@
 
 # nohup python -u main.py -lbs 16 -nc 20 -jr 1 -nb 4 -data agnews -m lstm -algo FedMTL -gr 500 -itk 4000 -did 1 -go lstm > agnews_FedMTL.out 2>&1 &
 
-# nohup python -u main.py -lbs 16 -nc 20 -jr 1 -nb 4 -data agnews -m lstm -algo FedAMP -gr 500 -alk 5e-3 -lam 5e-7 -sg 1e-1 -did 0 -go lstm > agnews_fedamp.out 2>&1 &
+# nohup python -u main.py -lbs 16 -nc 20 -jr 1 -nb 4 -data agnews -m lstm -algo FedAMP -gr 500 -alk 1e3 -lam 1 -sg 1e-1 -did 0 -go lstm > agnews_fedamp.out 2>&1 &
