@@ -28,8 +28,9 @@ class FedAMP(Server):
             self.selected_clients = self.select_clients()
             self.send_models()
 
-            # To run DLG attack, save previous client models on the server
-            self.client_models = [copy.deepcopy(c.client_u) for c in self.clients]
+            # # To run DLG attack, save previous client models on the server
+            # # Please deactivate this line for GPU memory saving
+            # self.client_models = [copy.deepcopy(c.client_u) for c in self.clients]
 
             if i%self.eval_gap == 0:
                 print(f"\n-------------Round number: {i}-------------")
