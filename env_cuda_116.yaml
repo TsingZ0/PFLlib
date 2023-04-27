@@ -1,0 +1,26 @@
+# Please run "conda config --set channel_priority strict" first or manully install these packages if you fail in solving environment with Conda. 
+# Tip: Install PyTorch first. 
+
+name: fl_torch
+channels:
+  - pytorch
+  - nvidia
+  - defaults
+dependencies:
+  - pip
+  - pytorch
+  - torchaudio
+  - torchtext
+  - torchvision
+  - pytorch-cuda=11.6 # CUDA version
+  - pandas
+  - scikit-learn
+  - scipy
+  - ujson
+  - h5py
+  - seaborn
+  - matplotlib
+  - pip:
+    - calmsize
+    - memory-profiler
+    - opacus
