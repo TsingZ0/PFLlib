@@ -32,6 +32,7 @@ from flcore.servers.serverapple import APPLE
 from flcore.servers.servergen import FedGen
 from flcore.servers.serverscaffold import SCAFFOLD
 from flcore.servers.serverdistill import FedDistill
+from flcore.servers.serverala import FedALA
 
 from flcore.trainmodel.models import *
 
@@ -254,6 +255,9 @@ def run(args):
 
         elif args.algorithm == "FedDistill":
             server = FedDistill(args, i)
+
+        elif args.algorithm == "FedALA":
+            server = FedALA(args, i)
             
         else:
             raise NotImplementedError
@@ -367,6 +371,10 @@ if __name__ == "__main__":
     parser.add_argument('-lf', "--localize_feature_extractor", type=bool, default=False)
     # SCAFFOLD
     parser.add_argument('-slr', "--server_learning_rate", type=float, default=1.0)
+    # FedALA
+    parser.add_argument('-et', "--eta", type=float, default=1.0)
+    parser.add_argument('-rp', "--rand_percent", type=int, default=80)
+    parser.add_argument('-li', "--layer_idx", type=int, default=1)
 
 
     args = parser.parse_args()
