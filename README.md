@@ -618,9 +618,9 @@ Client 2         Samples of labels:  [(0, 75), (1, 107), (3, 130), (7, 291), (8,
 Note: * means "in progress".
 
 ## Environments
-With the installed [conda](https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh), we can run this platform in a conda virtual environment called *fl_torch*. 
+Install [CUDA](https://developer.nvidia.com/cuda-11-6-0-download-archive) first. 
 
-Note: Due to the code updates, some modules may be required to install based on the given `*.yaml`. 
+With the installed [conda](https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh), we can run this platform in a conda virtual environment called *fl_torch*. 
 
 ```bash
 conda config --set channel_priority strict
