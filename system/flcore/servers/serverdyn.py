@@ -69,6 +69,12 @@ class FedDyn(Server):
         self.save_results()
         self.save_global_model()
 
+        self.eval_new_clients = True
+        self.set_new_clients(clientDyn)
+        print(f"\n-------------Fine tuning round-------------")
+        print("\nEvaluate new clients")
+        self.evaluate()
+
     def add_parameters(self, client_model):
         for server_param, client_param in zip(self.global_model.parameters(), client_model.parameters()):
             server_param.data += client_param.data.clone() / self.num_join_clients

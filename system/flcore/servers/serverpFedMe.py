@@ -69,6 +69,12 @@ class pFedMe(Server):
         self.save_results()
         self.save_global_model()
 
+        self.eval_new_clients = True
+        self.set_new_clients(clientpFedMe)
+        print(f"\n-------------Fine tuning round-------------")
+        print("\nEvaluate new clients")
+        self.evaluate()
+
 
     def beta_aggregate_parameters(self):
         # aggregate avergage model with previous model using parameter beta
@@ -76,6 +82,10 @@ class pFedMe(Server):
             param.data = (1 - self.beta)*pre_param.data + self.beta*param.data
 
     def test_metrics_personalized(self):
+        if self.eval_new_clients and self.num_new_clients > 0:
+            self.fine_tuning_new_clients()
+            return self.test_metrics_new_clients()
+        
         num_samples = []
         tot_correct = []
         for c in self.clients:
@@ -87,6 +97,9 @@ class pFedMe(Server):
         return ids, num_samples, tot_correct
 
     def train_metrics_personalized(self):
+        if self.eval_new_clients and self.num_new_clients > 0:
+            return [0], [1], [0]
+        
         num_samples = []
         tot_correct = []
         losses = []

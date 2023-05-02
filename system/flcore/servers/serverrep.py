@@ -58,6 +58,12 @@ class FedRep(Server):
         print(sum(self.Budget[1:])/len(self.Budget[1:]))
 
         self.save_results()
+
+        self.eval_new_clients = True
+        self.set_new_clients(clientRep)
+        print(f"\n-------------Fine tuning round-------------")
+        print("\nEvaluate new clients")
+        self.evaluate()
         
 
     def receive_models(self):

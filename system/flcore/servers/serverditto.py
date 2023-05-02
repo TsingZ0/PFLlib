@@ -66,8 +66,18 @@ class Ditto(Server):
         self.save_results()
         self.save_global_model()
 
+        self.eval_new_clients = True
+        self.set_new_clients(clientDitto)
+        print(f"\n-------------Fine tuning round-------------")
+        print("\nEvaluate new clients")
+        self.evaluate()
+
 
     def test_metrics_personalized(self):
+        if self.eval_new_clients and self.num_new_clients > 0:
+            self.fine_tuning_new_clients()
+            return self.test_metrics_new_clients()
+        
         num_samples = []
         tot_correct = []
         tot_auc = []
@@ -82,6 +92,9 @@ class Ditto(Server):
         return ids, num_samples, tot_correct, tot_auc
 
     def train_metrics_personalized(self):
+        if self.eval_new_clients and self.num_new_clients > 0:
+            return [0], [1], [0]
+        
         num_samples = []
         losses = []
         for c in self.clients:

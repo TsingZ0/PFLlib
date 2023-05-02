@@ -60,6 +60,13 @@ class FedProto(Server):
 
         self.save_results()
 
+        self.eval_new_clients = True
+        self.set_new_clients(clientProto)
+        print(f"\n-------------Fine tuning round-------------")
+        print("\nEvaluate new clients")
+        self.evaluate()
+        
+
     def send_protos(self):
         assert (len(self.clients) > 0)
 
@@ -102,6 +109,13 @@ class FedProto(Server):
         print("Averaged Test Accurancy: {:.4f}".format(test_acc))
         # self.print_(test_acc, train_acc, train_loss)
         print("Std Test Accurancy: {:.4f}".format(np.std(accs)))
+
+    # fine-tuning on new clients
+    def fine_tuning_new_clients(self):
+        for client in self.new_clients:
+            client.set_protos(self.global_protos)
+            for e in range(self.fine_tuning_epoch):
+                client.train()
             
 
 # https://github.com/yuetan031/fedproto/blob/main/lib/utils.py#L221

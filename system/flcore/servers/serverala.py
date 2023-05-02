@@ -59,9 +59,22 @@ class FedALA(Server):
         self.save_results()
         self.save_global_model()
 
+        self.eval_new_clients = True
+        self.set_new_clients(clientALA)
+        print(f"\n-------------Fine tuning round-------------")
+        print("\nEvaluate new clients")
+        self.evaluate()
+
 
     def send_models(self):
         assert (len(self.clients) > 0)
 
         for client in self.clients:
             client.local_initialization(self.global_model)
+
+    # fine-tuning on new clients
+    def fine_tuning_new_clients(self):
+        for client in self.new_clients:
+            client.local_initialization(self.global_model)
+            for e in range(self.fine_tuning_epoch):
+                client.train()

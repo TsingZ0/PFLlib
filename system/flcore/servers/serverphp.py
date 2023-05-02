@@ -53,6 +53,12 @@ class FedPHP(Server):
 
         self.save_results()
 
+        self.eval_new_clients = True
+        self.set_new_clients(clientPHP)
+        print(f"\n-------------Fine tuning round-------------")
+        print("\nEvaluate new clients")
+        self.evaluate()
+
 
     def send_models(self, R):
         assert (len(self.selected_clients) > 0)
@@ -64,3 +70,10 @@ class FedPHP(Server):
 
             client.send_time_cost['num_rounds'] += 1
             client.send_time_cost['total_cost'] += 2 * (time.time() - start_time)
+
+    # fine-tuning on new clients
+    def fine_tuning_new_clients(self):
+        for client in self.new_clients:
+            client.set_parameters(self.global_model, R)
+            for e in range(self.fine_tuning_epoch):
+                client.train()

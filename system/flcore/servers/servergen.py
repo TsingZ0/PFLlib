@@ -91,6 +91,12 @@ class FedGen(Server):
         self.save_results()
         self.save_global_model()
 
+        self.eval_new_clients = True
+        self.set_new_clients(clientGen)
+        print(f"\n-------------Fine tuning round-------------")
+        print("\nEvaluate new clients")
+        self.evaluate()
+
 
     def send_models(self):
         assert (len(self.clients) > 0)
@@ -152,6 +158,13 @@ class FedGen(Server):
             self.generative_optimizer.step()
         
         self.generative_learning_rate_scheduler.step()
+
+    # fine-tuning on new clients
+    def fine_tuning_new_clients(self):
+        for client in self.new_clients:
+            client.set_parameters(self.global_model, self.generative_model, self.qualified_labels)
+            for e in range(self.fine_tuning_epoch):
+                client.train()
 
 
 class Generative(nn.Module):

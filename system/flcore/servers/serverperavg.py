@@ -53,6 +53,12 @@ class PerAvg(Server):
 
         self.save_results()
 
+        self.eval_new_clients = True
+        self.set_new_clients(clientPerAvg)
+        print(f"\n-------------Fine tuning round-------------")
+        print("\nEvaluate new clients")
+        self.evaluate()
+
 
     def evaluate_one_step(self):
         models_temp = []

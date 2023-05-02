@@ -60,3 +60,9 @@ class MOON(Server):
 
         self.save_results()
         self.save_global_model()
+
+        self.eval_new_clients = True
+        self.set_new_clients(clientMOON)
+        print(f"\n-------------Fine tuning round-------------")
+        print("\nEvaluate new clients")
+        self.evaluate()

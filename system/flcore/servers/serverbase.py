@@ -13,6 +13,7 @@ from utils.dlg import DLG
 class Server(object):
     def __init__(self, args, times):
         # Set up the main attributes
+        self.args = args
         self.device = args.device
         self.dataset = args.dataset
         self.num_classes = args.num_classes
@@ -56,11 +57,16 @@ class Server(object):
         self.dlg_gap = args.dlg_gap
         self.batch_num_per_client = args.batch_num_per_client
 
-    def set_clients(self, args, clientObj):
+        self.num_new_clients = args.num_new_clients
+        self.new_clients = []
+        self.eval_new_clients = False
+        self.fine_tuning_epoch = args.fine_tuning_epoch
+
+    def set_clients(self, clientObj):
         for i, train_slow, send_slow in zip(range(self.num_clients), self.train_slow_clients, self.send_slow_clients):
             train_data = read_client_data(self.dataset, i, is_train=True)
             test_data = read_client_data(self.dataset, i, is_train=False)
-            client = clientObj(args, 
+            client = clientObj(self.args, 
                             id=i, 
                             train_samples=len(train_data), 
                             test_samples=len(test_data), 
@@ -185,6 +191,10 @@ class Server(object):
         return torch.load(os.path.join(self.save_folder_name, "server_" + item_name + ".pt"))
 
     def test_metrics(self):
+        if self.eval_new_clients and self.num_new_clients > 0:
+            self.fine_tuning_new_clients()
+            return self.test_metrics_new_clients()
+        
         num_samples = []
         tot_correct = []
         tot_auc = []
@@ -199,6 +209,9 @@ class Server(object):
         return ids, num_samples, tot_correct, tot_auc
 
     def train_metrics(self):
+        if self.eval_new_clients and self.num_new_clients > 0:
+            return [0], [1], [0]
+        
         num_samples = []
         losses = []
         for c in self.clients:
@@ -306,3 +319,37 @@ class Server(object):
             print('PSNR error')
 
         # self.save_item(items, f'DLG_{R}')
+
+    def set_new_clients(self, clientObj):
+        for i in range(self.num_clients, self.num_clients + self.num_new_clients):
+            train_data = read_client_data(self.dataset, i, is_train=True)
+            test_data = read_client_data(self.dataset, i, is_train=False)
+            client = clientObj(self.args, 
+                            id=i, 
+                            train_samples=len(train_data), 
+                            test_samples=len(test_data), 
+                            train_slow=False, 
+                            send_slow=False)
+            self.new_clients.append(client)
+
+    # fine-tuning on new clients
+    def fine_tuning_new_clients(self):
+        for client in self.new_clients:
+            client.set_parameters(self.global_model)
+            for e in range(self.fine_tuning_epoch):
+                client.train()
+
+    # evaluating on new clients
+    def test_metrics_new_clients(self):
+        num_samples = []
+        tot_correct = []
+        tot_auc = []
+        for c in self.new_clients:
+            ct, ns, auc = c.test_metrics()
+            tot_correct.append(ct*1.0)
+            tot_auc.append(auc*ns)
+            num_samples.append(ns)
+
+        ids = [c.id for c in self.new_clients]
+
+        return ids, num_samples, tot_correct, tot_auc

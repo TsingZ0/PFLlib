@@ -67,6 +67,12 @@ class SCAFFOLD(Server):
         self.save_results()
         self.save_global_model()
 
+        self.eval_new_clients = True
+        self.set_new_clients(clientSCAFFOLD)
+        print(f"\n-------------Fine tuning round-------------")
+        print("\nEvaluate new clients")
+        self.evaluate()
+
 
     def send_models(self):
         assert (len(self.clients) > 0)
@@ -124,3 +130,10 @@ class SCAFFOLD(Server):
                 server_param.data += client_param.data.clone() / self.num_clients
         self.global_model = global_model
         self.global_c = global_c
+
+    # fine-tuning on new clients
+    def fine_tuning_new_clients(self):
+        for client in self.new_clients:
+            client.set_parameters(self.global_model, self.global_c)
+            for e in range(self.fine_tuning_epoch):
+                client.train()

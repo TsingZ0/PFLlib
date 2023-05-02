@@ -51,6 +51,12 @@ class FedPer(Server):
 
         self.save_results()
 
+        self.eval_new_clients = True
+        self.set_new_clients(clientPer)
+        print(f"\n-------------Fine tuning round-------------")
+        print("\nEvaluate new clients")
+        self.evaluate()
+
 
     def receive_models(self):
         assert (len(self.selected_clients) > 0)
