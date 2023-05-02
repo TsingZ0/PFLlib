@@ -70,12 +70,6 @@ class APPLE(Server):
         print(sum(self.Budget[1:])/len(self.Budget[1:]))
 
         self.save_results()
-
-        self.eval_new_clients = True
-        self.set_new_clients(clientAPPLE)
-        print(f"\n-------------Fine tuning round-------------")
-        print("\nEvaluate new clients")
-        self.evaluate()
         
 
     def send_models(self):
@@ -146,11 +140,3 @@ class APPLE(Server):
             print('PSNR error')
 
         # self.save_item(items, f'DLG_{R}')
-
-    # fine-tuning on new clients
-    def fine_tuning_new_clients(self):
-        for client in self.new_clients:
-            client.set_models(self.client_models)
-            for e in range(self.fine_tuning_epoch):
-                client.train()
-
