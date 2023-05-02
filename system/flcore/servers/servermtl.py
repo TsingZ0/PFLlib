@@ -20,7 +20,7 @@ class FedMTL(Server):
 
         # select slow clients
         self.set_slow_clients()
-        self.set_clients(args, clientMTL)
+        self.set_clients(clientMTL)
             
         print(f"\nJoin clients / total clients: {self.num_join_clients} / {self.num_clients}")
         print("Finished creating server and clients.")

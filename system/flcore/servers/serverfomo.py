@@ -15,7 +15,7 @@ class FedFomo(Server):
 
         # select slow clients
         self.set_slow_clients()
-        self.set_clients(args, clientFomo)
+        self.set_clients(clientFomo)
 
         self.P = torch.diag(torch.ones(self.num_clients, device=self.device))
         self.uploaded_ids = []

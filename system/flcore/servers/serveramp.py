@@ -15,7 +15,7 @@ class FedAMP(Server):
 
         # select slow clients
         self.set_slow_clients()
-        self.set_clients(args, clientAMP)
+        self.set_clients(clientAMP)
 
         self.alphaK = args.alphaK
         self.sigma = args.sigma

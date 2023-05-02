@@ -11,7 +11,7 @@ class MOON(Server):
 
         # select slow clients
         self.set_slow_clients()
-        self.set_clients(args, clientMOON)
+        self.set_clients(clientMOON)
 
         print(f"\nJoin ratio / total clients: {self.join_ratio} / {self.num_clients}")
         print("Finished creating server and clients.")

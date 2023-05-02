@@ -12,7 +12,7 @@ class Ditto(Server):
 
         # select slow clients
         self.set_slow_clients()
-        self.set_clients(args, clientDitto)
+        self.set_clients(clientDitto)
 
         print(f"\nJoin ratio / total clients: {self.join_ratio} / {self.num_clients}")
         print("Finished creating server and clients.")

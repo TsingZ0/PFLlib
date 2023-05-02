@@ -12,7 +12,7 @@ class pFedMe(Server):
 
         # select slow clients
         self.set_slow_clients()
-        self.set_clients(args, clientpFedMe)
+        self.set_clients(clientpFedMe)
 
         self.beta = args.beta
         self.rs_train_acc_per = []

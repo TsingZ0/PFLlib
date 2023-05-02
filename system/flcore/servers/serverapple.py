@@ -14,7 +14,7 @@ class APPLE(Server):
 
         # select slow clients
         self.set_slow_clients()
-        self.set_clients(args, clientAPPLE)
+        self.set_clients(clientAPPLE)
 
         print(f"\nJoin ratio / total clients: {self.join_ratio} / {self.num_clients}")
         print("Finished creating server and clients.")
