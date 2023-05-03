@@ -74,6 +74,6 @@ class FedPHP(Server):
     # fine-tuning on new clients
     def fine_tuning_new_clients(self):
         for client in self.new_clients:
-            client.set_parameters(self.global_model, R)
+            client.set_parameters(self.global_model, self.global_rounds)
             for e in range(self.fine_tuning_epoch):
                 client.train()
