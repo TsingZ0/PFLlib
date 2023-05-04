@@ -361,7 +361,7 @@ if __name__ == "__main__":
     # MOON
     parser.add_argument('-ta', "--tau", type=float, default=1.0)
     # FedBABU
-    parser.add_argument('-fts', "--fine_tuning_steps", type=int, default=1)
+    parser.add_argument('-fts', "--fine_tuning_steps", type=int, default=10)
     # APPLE
     parser.add_argument('-dlr', "--dr_learning_rate", type=float, default=0.0)
     parser.add_argument('-L', "--L", type=float, default=1.0)
