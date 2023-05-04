@@ -82,3 +82,10 @@ class FedBABU(Server):
                 self.uploaded_models.append(client.model.base)
         for i, w in enumerate(self.uploaded_weights):
             self.uploaded_weights[i] = w / tot_samples
+
+    # fine-tuning on new clients
+    def fine_tuning_new_clients(self):
+        for client in self.new_clients:
+            client.set_parameters(self.global_model)
+            for e in range(self.fine_tuning_epoch):
+                client.fine_tune()
