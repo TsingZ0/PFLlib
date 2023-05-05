@@ -6,6 +6,7 @@ from flcore.clients.clientapple import clientAPPLE
 from flcore.servers.serverbase import Server
 from threading import Thread
 from utils.dlg import DLG
+from utils.data_utils import read_client_data
 
 
 class APPLE(Server):
@@ -70,6 +71,14 @@ class APPLE(Server):
         print(sum(self.Budget[1:])/len(self.Budget[1:]))
 
         self.save_results()
+
+        if self.num_new_clients > 0:
+            self.eval_new_clients = True
+            self.set_new_clients(clientAPPLE)
+            print(f"\n-------------Fine tuning round-------------")
+            print("\nEvaluate new clients")
+            self.evaluate()
+        self.args.num_clients = self.num_clients
         
 
     def send_models(self):
@@ -140,3 +149,33 @@ class APPLE(Server):
             print('PSNR error')
 
         # self.save_item(items, f'DLG_{R}')
+
+    def set_new_clients(self, clientObj):
+        self.args.num_clients = self.num_clients + self.num_new_clients
+        for i in range(self.num_clients, self.num_clients + self.num_new_clients):
+            train_data = read_client_data(self.dataset, i, is_train=True)
+            test_data = read_client_data(self.dataset, i, is_train=False)
+            client = clientObj(self.args, 
+                            id=i, 
+                            train_samples=len(train_data), 
+                            test_samples=len(test_data), 
+                            train_slow=False, 
+                            send_slow=False)
+            self.new_clients.append(client)
+
+    # fine-tuning on new clients
+    def fine_tuning_new_clients(self):
+        self.client_models += [copy.deepcopy(c.model_c) for c in self.new_clients]
+
+        train_samples = 0
+        for client in self.clients + self.new_clients:
+            train_samples += client.train_samples
+        p0 = [client.train_samples / train_samples for client in self.clients + self.new_clients]
+
+        for c in self.clients + self.new_clients:
+            c.p0 = p0
+            
+        for client in self.new_clients:
+            client.set_models(self.client_models)
+            for e in range(self.fine_tuning_epoch):
+                client.train(self.global_rounds)
