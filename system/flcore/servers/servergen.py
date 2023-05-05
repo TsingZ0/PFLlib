@@ -91,11 +91,12 @@ class FedGen(Server):
         self.save_results()
         self.save_global_model()
 
-        self.eval_new_clients = True
-        self.set_new_clients(clientGen)
-        print(f"\n-------------Fine tuning round-------------")
-        print("\nEvaluate new clients")
-        self.evaluate()
+        if self.num_new_clients > 0:
+            self.eval_new_clients = True
+            self.set_new_clients(clientGen)
+            print(f"\n-------------Fine tuning round-------------")
+            print("\nEvaluate new clients")
+            self.evaluate()
 
 
     def send_models(self):

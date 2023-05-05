@@ -50,8 +50,9 @@ class FedBN(Server):
 
         self.save_results()
 
-        self.eval_new_clients = True
-        self.set_new_clients(clientBN)
-        print(f"\n-------------Fine tuning round-------------")
-        print("\nEvaluate new clients")
-        self.evaluate()
+        if self.num_new_clients > 0:
+            self.eval_new_clients = True
+            self.set_new_clients(clientBN)
+            print(f"\n-------------Fine tuning round-------------")
+            print("\nEvaluate new clients")
+            self.evaluate()
