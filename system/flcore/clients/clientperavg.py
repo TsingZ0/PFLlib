@@ -68,7 +68,7 @@ class clientPerAvg(Client):
                 loss = self.loss(output, y)
                 loss.backward()
 
-                # restore the model parameters to the one before first update
+                # restore the model parameters to the one before step 1
                 for old_param, new_param in zip(self.model.parameters(), temp_model):
                     old_param.data = new_param.data.clone()
 
