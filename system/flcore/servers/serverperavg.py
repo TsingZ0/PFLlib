@@ -113,3 +113,10 @@ class PerAvg(Server):
         print("Averaged Test Accurancy: {:.4f}".format(test_acc))
         # self.print_(test_acc, train_acc, train_loss)
         print("Std Test Accurancy: {:.4f}".format(np.std(accs)))
+
+    # fine-tuning on new clients
+    def fine_tuning_new_clients(self):
+        for client in self.new_clients:
+            client.set_parameters(self.global_model)
+            for e in range(self.fine_tuning_epoch):
+                client.train_one_epoch()

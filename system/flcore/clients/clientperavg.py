@@ -68,7 +68,7 @@ class clientPerAvg(Client):
                 loss = self.loss(output, y)
                 loss.backward()
 
-                # restore the model parameters to the one before step 1
+                # restore the model parameters to the one before first update
                 for old_param, new_param in zip(self.model.parameters(), temp_model):
                     old_param.data = new_param.data.clone()
 
@@ -84,7 +84,7 @@ class clientPerAvg(Client):
 
 
     def train_one_step(self):
-        trainloader = self.load_train_data_one_step(self.batch_size)
+        trainloader = self.load_train_data(self.batch_size)
         iter_loader = iter(trainloader)
         # self.model.to(self.device)
         self.model.train()
@@ -95,20 +95,13 @@ class clientPerAvg(Client):
         else:
             x = x.to(self.device)
         y = y.to(self.device)
-        self.optimizer.zero_grad()
         output = self.model(x)
         loss = self.loss(output, y)
+        self.optimizer.zero_grad()
         loss.backward()
         self.optimizer.step()
 
         # self.model.cpu()
-
-
-    def load_train_data_one_step(self, batch_size=None):
-        if batch_size == None:
-            batch_size = self.batch_size
-        train_data = read_client_data(self.dataset, self.id, is_train=True)
-        return DataLoader(train_data, batch_size, drop_last=True, shuffle=False)
 
 
     def train_metrics(self, model=None):
@@ -154,3 +147,19 @@ class clientPerAvg(Client):
             losses += loss1.item() * y.shape[0]
 
         return losses, train_num
+
+    def train_one_epoch(self):
+        trainloader = self.load_train_data(self.batch_size)
+        for i, (x, y) in enumerate(trainloader):
+            if type(x) == type([]):
+                x[0] = x[0].to(self.device)
+            else:
+                x = x.to(self.device)
+            y = y.to(self.device)
+            if self.train_slow:
+                time.sleep(0.1 * np.abs(np.random.rand()))
+            output = self.model(x)
+            loss = self.loss(output, y)
+            self.optimizer.zero_grad()
+            loss.backward()
+            self.optimizer.step()
