@@ -64,21 +64,25 @@ class FedBABU(Server):
             print("\nEvaluate new clients")
             self.evaluate()
 
-
     def receive_models(self):
         assert (len(self.selected_clients) > 0)
 
         active_clients = random.sample(
             self.selected_clients, int((1-self.client_drop_rate) * self.num_join_clients))
 
+        self.uploaded_ids = []
         self.uploaded_weights = []
         self.uploaded_models = []
         tot_samples = 0
         for client in active_clients:
-            client_time_cost = client.train_time_cost['total_cost'] / client.train_time_cost['num_rounds'] + \
-                    client.send_time_cost['total_cost'] / client.send_time_cost['num_rounds']
+            try:
+                client_time_cost = client.train_time_cost['total_cost'] / client.train_time_cost['num_rounds'] + \
+                        client.send_time_cost['total_cost'] / client.send_time_cost['num_rounds']
+            except ZeroDivisionError:
+                client_time_cost = 0
             if client_time_cost <= self.time_threthold:
                 tot_samples += client.train_samples
+                self.uploaded_ids.append(client.id)
                 self.uploaded_weights.append(client.train_samples)
                 self.uploaded_models.append(client.model.base)
         for i, w in enumerate(self.uploaded_weights):
