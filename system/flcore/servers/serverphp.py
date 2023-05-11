@@ -3,6 +3,7 @@ from flcore.servers.serverbase import Server
 from threading import Thread
 import time
 import copy
+import torch
 
 
 class FedPHP(Server):
@@ -76,5 +77,19 @@ class FedPHP(Server):
     def fine_tuning_new_clients(self):
         for client in self.new_clients:
             client.set_parameters(self.global_model, self.global_rounds)
+            opt = torch.optim.SGD(client.model.parameters(), lr=self.learning_rate)
+            CEloss = torch.nn.CrossEntropyLoss()
+            trainloader = client.load_train_data()
+            client.model.train()
             for e in range(self.fine_tuning_epoch):
-                client.train()
+                for i, (x, y) in enumerate(trainloader):
+                    if type(x) == type([]):
+                        x[0] = x[0].to(client.device)
+                    else:
+                        x = x.to(client.device)
+                    y = y.to(client.device)
+                    output = client.model(x)
+                    loss = CEloss(output, y)
+                    opt.zero_grad()
+                    loss.backward()
+                    opt.step()

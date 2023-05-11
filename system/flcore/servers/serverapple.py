@@ -168,20 +168,3 @@ class APPLE(Server):
                             train_slow=False, 
                             send_slow=False)
             self.new_clients.append(client)
-
-    # fine-tuning on new clients
-    def fine_tuning_new_clients(self):
-        self.client_models += [copy.deepcopy(c.model_c) for c in self.new_clients]
-
-        train_samples = 0
-        for client in self.clients + self.new_clients:
-            train_samples += client.train_samples
-        p0 = [client.train_samples / train_samples for client in self.clients + self.new_clients]
-
-        for c in self.clients + self.new_clients:
-            c.p0 = p0
-            
-        for client in self.new_clients:
-            client.set_models(self.client_models)
-            for e in range(self.fine_tuning_epoch):
-                client.train(self.global_rounds)

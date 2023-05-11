@@ -72,10 +72,3 @@ class FedALA(Server):
 
         for client in self.clients:
             client.local_initialization(self.global_model)
-
-    # fine-tuning on new clients
-    def fine_tuning_new_clients(self):
-        for client in self.new_clients:
-            client.local_initialization(self.global_model)
-            for e in range(self.fine_tuning_epoch):
-                client.train()

@@ -58,13 +58,6 @@ class FedDistill(Server):
         print(sum(self.Budget[1:])/len(self.Budget[1:]))
 
         self.save_results()
-
-        if self.num_new_clients > 0:
-            self.eval_new_clients = True
-            self.set_new_clients(clientDistill)
-            print(f"\n-------------Fine tuning round-------------")
-            print("\nEvaluate new clients")
-            self.evaluate()
         
 
     def send_logits(self):
@@ -86,13 +79,6 @@ class FedDistill(Server):
         for client in self.selected_clients:
             self.uploaded_ids.append(client.id)
             self.uploaded_logits.append(client.logits)
-
-    # fine-tuning on new clients
-    def fine_tuning_new_clients(self):
-        for client in self.new_clients:
-            client.set_logits(self.global_logits)
-            for e in range(self.fine_tuning_epoch):
-                client.train()
 
 
 # https://github.com/yuetan031/fedlogit/blob/main/lib/utils.py#L221

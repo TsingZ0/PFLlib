@@ -57,13 +57,6 @@ class FedFomo(Server):
 
         self.save_results()
 
-        if self.num_new_clients > 0:
-            self.eval_new_clients = True
-            self.set_new_clients(clientFomo)
-            print(f"\n-------------Fine tuning round-------------")
-            print("\nEvaluate new clients")
-            self.evaluate()
-
 
     def send_models(self):
         assert (len(self.selected_clients) > 0)
@@ -150,12 +143,5 @@ class FedFomo(Server):
             print('PSNR error')
 
         # self.save_item(items, f'DLG_{R}')
-
-    # fine-tuning on new clients
-    def fine_tuning_new_clients(self):
-        for client in self.new_clients:
-            client.receive_models(list(range(self.num_clients)), self.client_models)
-            for e in range(self.fine_tuning_epoch):
-                client.train()
 
             
