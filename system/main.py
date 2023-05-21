@@ -375,8 +375,8 @@ if __name__ == "__main__":
     parser.add_argument('-slr', "--server_learning_rate", type=float, default=1.0)
     # FedALA
     parser.add_argument('-et', "--eta", type=float, default=1.0)
-    parser.add_argument('-rp', "--rand_percent", type=int, default=80)
-    parser.add_argument('-li', "--layer_idx", type=int, default=2)
+    parser.add_argument('-s', "--rand_percent", type=int, default=80)
+    parser.add_argument('-p', "--layer_idx", type=int, default=2)
 
 
     args = parser.parse_args()
