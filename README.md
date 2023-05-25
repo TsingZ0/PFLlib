@@ -6,6 +6,8 @@
 
 ***Now there are 23 FL (or pFL) methods, three scenarios, and 14 datasets in this platform.***
 
+***This platform can simulate scenarios (e.g., Cifar100) with more than 500 clients using a single GPU card (e.g., 2080Ti, 11GB memory).***
+
 Due to the frequent update, please download the **master branch** as the latest version.
 
 The origin of the **statistical heterogeneity** phenomenon is the personalization of users, who generate the non-IID (not Independent and Identically Distributed) and unbalanced data. With statistical heterogeneity existing in the FL scenario, a myriad of approaches have been proposed to crack this hard nut. In contrast, the personalized FL (pFL) may take the advantage of the statistically heterogeneious data to learn the personalized model for each user. 
