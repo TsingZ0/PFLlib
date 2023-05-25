@@ -11,7 +11,7 @@ with open(file_name, 'r') as f:
         if is_best:
             acc.append(float(l))
             is_best = False
-        elif 'Best' in l:
+        elif 'Best accuracy' in l:
             is_best = True
 
 print(acc)
