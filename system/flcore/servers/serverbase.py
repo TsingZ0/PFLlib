@@ -26,6 +26,7 @@ class Server(object):
         self.join_ratio = args.join_ratio
         self.random_join_ratio = args.random_join_ratio
         self.num_join_clients = int(self.num_clients * self.join_ratio)
+        self.current_num_join_clients = self.num_join_clients
         self.algorithm = args.algorithm
         self.time_select = args.time_select
         self.goal = args.goal
@@ -92,10 +93,10 @@ class Server(object):
 
     def select_clients(self):
         if self.random_join_ratio:
-            num_join_clients = np.random.choice(range(self.num_join_clients, self.num_clients+1), 1, replace=False)[0]
+            self.current_num_join_clients = np.random.choice(range(self.num_join_clients, self.num_clients+1), 1, replace=False)[0]
         else:
-            num_join_clients = self.num_join_clients
-        selected_clients = list(np.random.choice(self.clients, num_join_clients, replace=False))
+            self.current_num_join_clients = self.num_join_clients
+        selected_clients = list(np.random.choice(self.clients, self.current_num_join_clients, replace=False))
 
         return selected_clients
 
@@ -114,7 +115,7 @@ class Server(object):
         assert (len(self.selected_clients) > 0)
 
         active_clients = random.sample(
-            self.selected_clients, int((1-self.client_drop_rate) * self.num_join_clients))
+            self.selected_clients, int((1-self.client_drop_rate) * self.current_num_join_clients))
 
         self.uploaded_ids = []
         self.uploaded_weights = []
