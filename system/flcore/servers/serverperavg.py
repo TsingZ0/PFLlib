@@ -61,24 +61,6 @@ class PerAvg(Server):
             self.evaluate()
 
 
-    def evaluate_one_step(self):
-        models_temp = []
-        for c in self.clients:
-            models_temp.append(copy.deepcopy(c.model))
-            c.train_one_step()
-
-        stats = self.test_metrics()
-
-        # set local model back to client for training process
-        for i, c in enumerate(self.clients):
-            c.clone_model(models_temp[i], c.model)
-
-        test_acc = sum(stats[2])*1.0 / sum(stats[1])
-        
-        self.rs_test_acc.append(test_acc)
-        print("Average Test Accurancy: {:.4f}".format(test_acc))
-
-
     def evaluate_one_step(self, acc=None, loss=None):
         models_temp = []
         for c in self.clients:
