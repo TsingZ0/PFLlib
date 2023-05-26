@@ -32,6 +32,11 @@ class pFedMe(Server):
             #     print("\nEvaluate global model")
             #     self.evaluate()
 
+            if i%self.eval_gap == 0:
+                print(f"\n-------------Round number: {i}-------------")
+                print("\nEvaluate personalized model")
+                self.evaluate_personalized()
+
             for client in self.selected_clients:
                 client.train()
 
@@ -39,11 +44,6 @@ class pFedMe(Server):
             #            for client in self.selected_clients]
             # [t.start() for t in threads]
             # [t.join() for t in threads]
-
-            if i%self.eval_gap == 0:
-                print(f"\n-------------Round number: {i}-------------")
-                print("\nEvaluate personalized model")
-                self.evaluate_personalized()
 
             self.previous_global_model = copy.deepcopy(list(self.global_model.parameters()))
             self.receive_models()
@@ -55,12 +55,12 @@ class pFedMe(Server):
             if self.auto_break and self.check_done(acc_lss=[self.rs_test_acc_per], top_cnt=self.top_cnt):
                 break
 
-        # print("\nBest accuracy.")
+        # print("\nBest global accuracy.")
         # # self.print_(max(self.rs_test_acc), max(
         # #     self.rs_train_acc), min(self.rs_train_loss))
         # print(max(self.rs_test_acc))
 
-        print("\nBest personalized results.")
+        print("\nBest accuracy.")
         # self.print_(max(self.rs_test_acc_per), max(
         #     self.rs_train_acc_per), min(self.rs_train_loss_per))
         print(max(self.rs_test_acc_per))
