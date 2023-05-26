@@ -4,7 +4,7 @@
 
 ***We expose this user-friendly platform for beginners who intend to start federated learning (FL) study.***
 
-***Now there are 23 FL (or pFL) methods, three scenarios, and 14 datasets in this platform.***
+***Now there are 23 FL (or pFL) algorithms, three scenarios, and 14 datasets in this platform.***
 
 ***This platform can simulate scenarios (e.g., Cifar100) with more than 500 clients using a single GPU card (e.g., 2080Ti, 11GB memory).***
 
@@ -12,10 +12,10 @@ Due to the frequent update, please download the **master branch** as the latest 
 
 The origin of the **statistical heterogeneity** phenomenon is the personalization of users, who generate the non-IID (not Independent and Identically Distributed) and unbalanced data. With statistical heterogeneity existing in the FL scenario, a myriad of approaches have been proposed to crack this hard nut. In contrast, the personalized FL (pFL) may take the advantage of the statistically heterogeneious data to learn the personalized model for each user. 
 
-Thanks to [@Stonesjtu](https://github.com/Stonesjtu/pytorch_memlab/blob/d590c489236ee25d157ff60ecd18433e8f9acbe3/pytorch_memlab/mem_reporter.py#L185), this platform can also record the **GPU memory usage** for the model. By using the package [opacus](https://opacus.ai/), we introduce **DP (differential privacy)** into this platform (please refer to `./system/flcore/clients/clientavg.py` for example). Following [FedCG](https://www.ijcai.org/proceedings/2022/0324), we also introduce the **[DLG (Deep Leakage from Gradients)](https://papers.nips.cc/paper_files/paper/2019/hash/60a6c4002cc7b29142def8871531281a-Abstract.html) attack** and **PSNR (Peak Signal-to-Noise Ratio) metric** to evaluate the privacy-preserving ability of FL/pFL methods (please refer to `./system/flcore/servers/serveravg.py` for example). *Now we can train on some clients and evaluate on other new clients by setting `args.num_new_clients` in `./system/main.py`. Note that not all the FL/pFL methods support this feature.*
+Thanks to [@Stonesjtu](https://github.com/Stonesjtu/pytorch_memlab/blob/d590c489236ee25d157ff60ecd18433e8f9acbe3/pytorch_memlab/mem_reporter.py#L185), this platform can also record the **GPU memory usage** for the model. By using the package [opacus](https://opacus.ai/), we introduce **DP (differential privacy)** into this platform (please refer to `./system/flcore/clients/clientavg.py` for example). Following [FedCG](https://www.ijcai.org/proceedings/2022/0324), we also introduce the **[DLG (Deep Leakage from Gradients)](https://papers.nips.cc/paper_files/paper/2019/hash/60a6c4002cc7b29142def8871531281a-Abstract.html) attack** and **PSNR (Peak Signal-to-Noise Ratio) metric** to evaluate the privacy-preserving ability of FL/pFL algorithms (please refer to `./system/flcore/servers/serveravg.py` for example). *Now we can train on some clients and evaluate on other new clients by setting `args.num_new_clients` in `./system/main.py`. Note that not all the FL/pFL algorithms support this feature.*
 
 
-## Methods with Code (updating)
+## Algorithms with Code (updating)
 
 > ### Traditional FL
 
@@ -79,7 +79,7 @@ For the ***label skew*** scenario, we introduce **8** famous datasets: **MNIST**
 
 For the ***feature shift*** scenario, we use **three** datasets that are widely used in Domain Adaptation: **AmazonReview** (fetch raw data from [this site](https://drive.google.com/file/d/1QbXFENNyqor1IlCpRRFtOluI2_hMEd1W/view?usp=sharing)), **Digit5** (fetch raw data from [this site](https://drive.google.com/file/d/1PT6K-_wmsUEUCxoYzDy0mxF-15tvb2Eu/view?usp=share_link)), and **DomainNet**.
 
-For the ***real-world (or IoT)*** scenario, we also introduce **three** naturally separated datasets: **Omniglot** (20 clients, 50 labels), **HAR (Human Activity Recognition)** (30 clients, 6 labels), **PAMAP2** (9 clients, 12 labels). For the details of datasets and FL methods in **IoT**, please refer to [my FL-IoT repo](https://github.com/TsingZ0/FL-IoT).
+For the ***real-world (or IoT)*** scenario, we also introduce **three** naturally separated datasets: **Omniglot** (20 clients, 50 labels), **HAR (Human Activity Recognition)** (30 clients, 6 labels), **PAMAP2** (9 clients, 12 labels). For the details of datasets and FL algorithms in **IoT**, please refer to [my FL-IoT repo](https://github.com/TsingZ0/FL-IoT).
 
 *If you need another data set, just write another code to download it and then using the utils.*
 
@@ -646,7 +646,7 @@ conda env create -f env_cuda_116.yaml
     sh examples.sh
     ```
 
-**Note**: The hyper-parameters have not been tuned for the methods. The values in `./system/examples.sh` are just examples. You need to tune the hyper-parameters by yourself. 
+**Note**: The hyper-parameters have not been tuned for the algorithms. The values in `./system/examples.sh` are just examples. You need to tune the hyper-parameters by yourself. 
 
 ## Practical scenario
 If you need to simulate FL in a practical scenario, which includes **client dropout**, **slow trainers**, **slow senders**, and **network TTL**, you can set the following parameters to realize it.
@@ -656,7 +656,7 @@ If you need to simulate FL in a practical scenario, which includes **client drop
 - `-tth`: The threshold for network TTL (ms). 
 
 ## Easy to extend
-It is easy to add new datasets or FL methods to this platform. 
+It is easy to add new datasets or FL algorithms to this platform. 
 
 - To add a **new dataset** into this platform, all you need to do is writing the download code and using the utils the same as `./dataset/generate_mnist.py` (you can also consider it as the template). 
 
