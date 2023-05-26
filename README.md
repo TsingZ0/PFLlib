@@ -1,4 +1,4 @@
-# Personalized Federated Learning Platform
+# Personalized Federated Learning Algorithm Library
 
 [![DOI](https://zenodo.org/badge/292225878.svg)](https://zenodo.org/badge/latestdoi/292225878)
 
