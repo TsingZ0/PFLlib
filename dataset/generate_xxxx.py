@@ -18,7 +18,7 @@ from scipy.io import loadmat
 
 
 # Allocate data to users
-def mygenerate_mnist(dir_path, num_clients, num_classes, niid, balance, partition):
+def generate_mnist(dir_path, num_clients, num_classes, niid, balance, partition):
     if not os.path.exists(dir_path):
         os.makedirs(dir_path)
 
@@ -63,17 +63,20 @@ def mygenerate_mnist(dir_path, num_clients, num_classes, niid, balance, partitio
     dataset_image = np.array(dataset_image)
     dataset_label = np.array(dataset_label)
 
-    dataset = []
-    for i in range(num_classes):
-        idx = dataset_label == i
-        dataset.append(dataset_image[idx])
+    # dataset = []
+    # for i in range(num_classes):
+    #     idx = dataset_label == i
+    #     dataset.append(dataset_image[idx])
 
     X, y, statistic = separate_data((dataset_image, dataset_label), num_clients, num_classes,
                                     niid, balance, partition)
     # train_data, test_data = split_data(X, y)
     # save_file(config_path, train_path, test_path, train_data, test_data, num_clients, num_classes, statistic, niid, balance, partition)
 
-    return X, y
+    # reshape 1D vector
+    dataset_image = [np.reshape(dataset_image[s], (np.product(dataset_image[s].shape),)) for s in range(dataset_image.shape[0])]
+
+    return dataset_image, X, y
 
 
 # if __name__ == "__main__":
@@ -90,7 +93,8 @@ def mygenerate_mnist(dir_path, num_clients, num_classes, niid, balance, partitio
 # target = target - 1
 
 
-random.seed(1)
+# random.seed(1)
+
 np.random.seed(1)
 num_clients = 20
 num_classes = 10
@@ -100,12 +104,23 @@ niid = "noniid"
 balance = "True"
 partition = "dir"
 
-data, target = mygenerate_mnist(dir_path, num_clients, num_classes, niid, balance, partition)
+dataset_image, DATA, TARGET = generate_mnist(dir_path, num_clients, num_classes, niid, balance, partition)
 
 path = '/Users/naoki/Documents/GitHub/ci-labo-omu/python/compared_algorithms/federated_learning/PFL-Non-IID/dataset/mnist/train/1.npz'
 
-client1_data = data[0]
+client1_data = DATA[0]
 
+
+b = [np.reshape(DATA[0][k], (np.product(DATA[0][k].shape), )) for k in range(DATA[0].shape[0])]
+
+# b = [[np.reshape(DATA[c][k], (np.product(DATA[c][k].shape), )) for k in range(DATA[c].shape[0])] for c in range(num_clients)]
+
+
+
+# np.product(client1_data[0].shape)
+
+
+d=np.array([[1,2],[4,5]])
 # client1_data[0]  # 1枚目
 # client1_data[1]  # 2枚目
 
