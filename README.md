@@ -4,9 +4,11 @@
 
 ***We expose this user-friendly platform for beginners who intend to start federated learning (FL) study.***
 
-*Now there are **24 FL/pFL algorithms, three scenarios, and 14 datasets** in this platform.*
+- *Now there are **24 FL/pFL algorithms, three scenarios, and 14 datasets** in this platform.*
 
-*This platform can simulate scenarios (e.g., Cifar100) with **more than 500 clients** using a **single GPU card** (e.g., 2080Ti, 11GB memory).*
+- *This platform can simulate scenarios (e.g., Cifar100) with **more than 500 clients** using a **single GPU card** (e.g., 2080Ti, 11GB memory).*
+
+--------------------------------
 
 Due to the frequent update, please download the **master branch** as the latest version.
 
