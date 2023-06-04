@@ -8,7 +8,6 @@
 
 - *This platform can simulate scenarios (e.g., Cifar100) with **more than 500 clients** using a **single GPU card** (e.g., 2080Ti, 11GB memory).*
 
---------------------------------
 
 Due to the frequent update, please download the **master branch** as the latest version.
 
