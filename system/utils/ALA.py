@@ -16,7 +16,7 @@ class ALA:
                 layer_idx: int = 0,
                 eta: float = 1.0,
                 device: str = 'cpu', 
-                threshold: float = 0.01,
+                threshold: float = 0.1,
                 num_pre_loss: int = 10) -> None:
         """
         Initialize ALA module
@@ -30,7 +30,7 @@ class ALA:
             layer_idx: Control the weight range. By default, all the layers are selected. Default: 0
             eta: Weight learning rate. Default: 1.0
             device: Using cuda or cpu. Default: 'cpu'
-            threshold: Train the weight until the standard deviation of the recorded losses is less than a given threshold. Default: 0.01
+            threshold: Train the weight until the standard deviation of the recorded losses is less than a given threshold. Default: 0.1
             num_pre_loss: The number of the recorded losses to be considered to calculate the standard deviation. Default: 10
 
         Returns:
