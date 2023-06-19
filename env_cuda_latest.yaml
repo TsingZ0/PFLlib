@@ -1,0 +1,22 @@
+name: fl
+channels:
+  - pytorch
+  - nvidia
+  - defaults
+dependencies:
+  - pip
+  - pandas
+  - scikit-learn
+  - scipy
+  - ujson
+  - h5py
+  - seaborn
+  - matplotlib
+  - pip:
+    - torch
+    - torchaudio
+    - torchtext
+    - torchvision
+    - calmsize
+    - memory-profiler
+    - opacus
