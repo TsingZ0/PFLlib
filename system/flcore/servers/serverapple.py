@@ -23,7 +23,7 @@ class APPLE(Server):
         # self.load_model()
         self.Budget = []
 
-        self.client_models = [copy.deepcopy(c.model_c) for c in self.clients]
+        self.client_models = [c.model_c for c in self.clients]
 
         train_samples = 0
         for client in self.clients:
@@ -87,34 +87,11 @@ class APPLE(Server):
         for client in self.clients:
             start_time = time.time()
             
+            self.client_models = [c.model_c for c in self.clients]
             client.set_models(self.client_models)
 
             client.send_time_cost['num_rounds'] += 1
             client.send_time_cost['total_cost'] += 2 * (time.time() - start_time)
-
-    def receive_models(self):
-        assert (len(self.selected_clients) > 0)
-
-        active_clients = random.sample(
-            self.selected_clients, int((1-self.client_drop_rate) * self.current_num_join_clients))
-
-        self.uploaded_ids = []
-        self.uploaded_weights = []
-        self.uploaded_models = []
-        tot_samples = 0
-        for client in active_clients:
-            try:
-                client_time_cost = client.train_time_cost['total_cost'] / client.train_time_cost['num_rounds'] + \
-                        client.send_time_cost['total_cost'] / client.send_time_cost['num_rounds']
-            except ZeroDivisionError:
-                client_time_cost = 0
-            if client_time_cost <= self.time_threthold:
-                tot_samples += client.train_samples
-                self.uploaded_ids.append(client.id)
-                self.uploaded_weights.append(client.train_samples)
-                self.uploaded_models.append(client.model_c)
-        for i, w in enumerate(self.uploaded_weights):
-            self.uploaded_weights[i] = w / tot_samples
 
     def call_dlg(self, R):
         # items = []

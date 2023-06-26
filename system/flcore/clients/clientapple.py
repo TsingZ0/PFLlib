@@ -71,6 +71,10 @@ class clientAPPLE(Client):
         else:
             self.lamda = 0
 
+        # recover self.model_cs[self.id] for other clients
+        for param_c, param_ in zip(self.model_cs[self.id].parameters(), self.model_c.parameters()):
+            param_c.data = param_.data.clone()
+
         self.model_c = copy.deepcopy(self.model)
 
         if self.learning_rate_decay:
