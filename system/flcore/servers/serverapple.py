@@ -55,7 +55,6 @@ class APPLE(Server):
 
             if self.dlg_eval and i%self.dlg_gap == 0:
                 self.call_dlg(i)
-            self.receive_models()
 
             self.Budget.append(time.time() - s_t)
             print('-'*50, self.Budget[-1])
