@@ -175,9 +175,9 @@ def digit5_dataset_read(base_path, domain):
     ])
     # raise train and test data loader
     train_dataset = Digit5Dataset(data=train_image, labels=train_label, transform=transform)
-    train_loader = DataLoader(dataset=train_dataset, batch_size=len(train_dataset), shuffle=True)
+    train_loader = DataLoader(dataset=train_dataset, batch_size=len(train_dataset), shuffle=False)
     test_dataset = Digit5Dataset(data=test_image, labels=test_label, transform=transform)
-    test_loader = DataLoader(dataset=test_dataset, batch_size=len(test_dataset), shuffle=True)
+    test_loader = DataLoader(dataset=test_dataset, batch_size=len(test_dataset), shuffle=False)
     return train_loader, test_loader
 
 

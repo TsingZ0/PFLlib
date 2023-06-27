@@ -61,9 +61,9 @@ def get_domainnet_dloader(dataset_path, domain_name):
     ])
 
     train_dataset = DomainNet(train_data_paths, train_data_labels, transforms_train, domain_name)
-    train_loader = DataLoader(dataset=train_dataset, batch_size=len(train_dataset), shuffle=True)
+    train_loader = DataLoader(dataset=train_dataset, batch_size=len(train_dataset), shuffle=False)
     test_dataset = DomainNet(test_data_paths, test_data_labels, transforms_test, domain_name)
-    test_loader = DataLoader(dataset=test_dataset, batch_size=len(test_dataset), shuffle=True)
+    test_loader = DataLoader(dataset=test_dataset, batch_size=len(test_dataset), shuffle=False)
     return train_loader, test_loader
 
 
