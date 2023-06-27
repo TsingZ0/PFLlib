@@ -83,10 +83,10 @@ class APPLE(Server):
     def send_models(self):
         assert (len(self.clients) > 0)
 
+        self.client_models = [c.model_c for c in self.clients]
         for client in self.clients:
             start_time = time.time()
             
-            self.client_models = [c.model_c for c in self.clients]
             client.set_models(self.client_models)
 
             client.send_time_cost['num_rounds'] += 1
