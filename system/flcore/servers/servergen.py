@@ -182,6 +182,7 @@ class FedGen(Server):
                     opt.step()
 
 
+# based on official code https://github.com/zhuangdizhu/FedGen/blob/main/FLAlgorithms/trainmodel/generator.py
 class Generative(nn.Module):
     def __init__(self, noise_dim, num_classes, hidden_dim, feature_dim, device) -> None:
         super().__init__()
