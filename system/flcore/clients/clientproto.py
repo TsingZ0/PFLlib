@@ -98,18 +98,18 @@ class clientProto(Client):
 
         self.protos = agg_func(protos)
 
-    def test_metrics(self, model=None):
-        testloader = self.load_test_data()
-        if model == None:
-            model = self.model
-        model.eval()
+    def test_metrics(self):
+        testloaderfull = self.load_test_data()
+        # self.model = self.load_model('model')
+        # self.model.to(self.device)
+        self.model.eval()
 
         test_acc = 0
         test_num = 0
         
         if self.global_protos is not None:
             with torch.no_grad():
-                for x, y in testloader:
+                for x, y in testloaderfull:
                     if type(x) == type([]):
                         x[0] = x[0].to(self.device)
                     else:
