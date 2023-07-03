@@ -83,7 +83,7 @@ class clientGen(Client):
             print(f"Client {self.id}", f"epsilon = {eps:.2f}, sigma = {DELTA}")
             
         
-    def set_parameters(self, model, generative_model, qualified_labels):
+    def set_parameters(self, model, generative_model):
         if self.localize_feature_extractor:
             for new_param, old_param in zip(model.parameters(), self.model.head.parameters()):
                 old_param.data = new_param.data.clone()
@@ -92,7 +92,6 @@ class clientGen(Client):
                 old_param.data = new_param.data.clone()
 
         self.generative_model = generative_model
-        self.qualified_labels = qualified_labels
 
     def train_metrics(self):
         trainloader = self.load_train_data()

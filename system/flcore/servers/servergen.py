@@ -43,6 +43,8 @@ class FedGen(Server):
         for client in self.clients:
             for yy in range(self.num_classes):
                 self.qualified_labels.extend([yy for _ in range(int(client.sample_per_class[yy].item()))])
+        for client in self.clients:
+            client.qualified_labels = self.qualified_labels
 
         self.server_epochs = args.server_epochs
         self.localize_feature_extractor = args.localize_feature_extractor
@@ -105,7 +107,7 @@ class FedGen(Server):
         for client in self.clients:
             start_time = time.time()
             
-            client.set_parameters(self.global_model, self.generative_model, self.qualified_labels)
+            client.set_parameters(self.global_model, self.generative_model)
 
             client.send_time_cost['num_rounds'] += 1
             client.send_time_cost['total_cost'] += 2 * (time.time() - start_time)
