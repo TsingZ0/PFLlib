@@ -74,7 +74,7 @@ class clientProto(Client):
 
 
     def set_protos(self, global_protos):
-        self.global_protos = copy.deepcopy(global_protos)
+        self.global_protos = global_protos
 
     def collect_protos(self):
         trainloader = self.load_train_data()
