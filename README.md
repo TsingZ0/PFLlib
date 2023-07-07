@@ -4,7 +4,7 @@
 
 ***We expose this user-friendly platform for beginners who intend to start federated learning (FL) study.***
 
-- *Now there are **25 FL/pFL algorithms, 3 scenarios, and 14 datasets** in this platform.*
+- *Now there are **26 FL/pFL algorithms, 3 scenarios, and 14 datasets** in this platform.*
 
 - *This platform can simulate scenarios (e.g., Cifar100) with **more than 500 clients** using a **single GPU card** (e.g., 2080Ti, 11GB memory).*
 
@@ -69,6 +69,7 @@ Thanks to [@Stonesjtu](https://github.com/Stonesjtu/pytorch_memlab/blob/d590c489
 - **FedRep** — [Exploiting Shared Representations for Personalized Federated Learning](http://proceedings.mlr.press/v139/collins21a.html) *ICML 2021*
 - **FedRoD** — [On Bridging Generic and Personalized Federated Learning for Image Classification](https://openreview.net/forum?id=I1hQbx10Kxn) *ICLR 2022*
 - **FedBABU** — [Fedbabu: Towards enhanced representation for federated image classification](https://openreview.net/forum?id=HuaYQfggn5u) *ICLR 2022*
+- **FedGC** — [Federated Learning for Face Recognition with Gradient Correction](https://ojs.aaai.org/index.php/AAAI/article/view/20095/19854) *AAAI 2022*
 
   ***Knowledge-distillation-based pFL***
   

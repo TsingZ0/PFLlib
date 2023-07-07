@@ -35,6 +35,7 @@ from flcore.servers.serverdistill import FedDistill
 from flcore.servers.serverala import FedALA
 from flcore.servers.serverpac import FedPAC
 from flcore.servers.serverlg import FedLG
+from flcore.servers.servergc import FedGC
 
 from flcore.trainmodel.models import *
 
@@ -272,6 +273,12 @@ def run(args):
             args.model.fc = nn.Identity()
             args.model = BaseHeadSplit(args.model, args.head)
             server = FedLG(args, i)
+
+        elif args.algorithm == "FedGC":
+            args.head = copy.deepcopy(args.model.fc)
+            args.model.fc = nn.Identity()
+            args.model = BaseHeadSplit(args.model, args.head)
+            server = FedGC(args, i)
             
         else:
             raise NotImplementedError
