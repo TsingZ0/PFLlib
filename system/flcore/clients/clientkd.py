@@ -44,8 +44,8 @@ class clientKD(Client):
 
         # differential privacy
         if self.privacy:
-            self.model, self.optimizer, trainloader, privacy_engine = \
-                initialize_dp(self.model, self.optimizer, trainloader, self.dp_sigma)
+            self.global_model, self.optimizer, trainloader, privacy_engine = \
+                initialize_dp(self.global_model, self.optimizer, trainloader, self.dp_sigma)
         
         start_time = time.time()
 

@@ -35,7 +35,7 @@ class FedKD(Server):
 
             if i%self.eval_gap == 0:
                 print(f"\n-------------Round number: {i}-------------")
-                print("\nEvaluate global model")
+                print("\nEvaluate personalized models")
                 self.evaluate()
 
             for client in self.selected_clients:
