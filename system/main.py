@@ -37,6 +37,7 @@ from flcore.servers.serverpac import FedPAC
 from flcore.servers.serverlg import FedLG
 from flcore.servers.servergc import FedGC
 from flcore.servers.serverfml import FML
+from flcore.servers.serverkd import FedKD
 
 from flcore.trainmodel.models import *
 
@@ -283,6 +284,12 @@ def run(args):
 
         elif args.algorithm == "FML":
             server = FML(args, i)
+
+        elif args.algorithm == "FedKD":
+            args.head = copy.deepcopy(args.model.fc)
+            args.model.fc = nn.Identity()
+            args.model = BaseHeadSplit(args.model, args.head)
+            server = FedKD(args, i)
             
         else:
             raise NotImplementedError
@@ -403,6 +410,10 @@ if __name__ == "__main__":
     parser.add_argument('-s', "--rand_percent", type=int, default=80)
     parser.add_argument('-p', "--layer_idx", type=int, default=2,
                         help="More fine-graind than its original paper.")
+    # FedKD
+    parser.add_argument('-mlr', "--mentee_learning_rate", type=float, default=0.005)
+    parser.add_argument('-Ts', "--T_start", type=float, default=0.95)
+    parser.add_argument('-Te', "--T_end", type=float, default=0.98)
 
 
     args = parser.parse_args()
