@@ -6,7 +6,7 @@ from flcore.servers.serverbase import Server
 from threading import Thread
 
 
-class FedLG(Server):
+class LG_FedAvg(Server):
     def __init__(self, args, times):
         super().__init__(args, times)
         
