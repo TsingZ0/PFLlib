@@ -16,7 +16,7 @@ class clientPCL(Client):
         self.global_protos = None
         self.client_protos_set = None
 
-        self.tau = 0.07
+        self.tau = args.tau
 
 
     def train(self):

@@ -396,7 +396,7 @@ if __name__ == "__main__":
     # Ditto / FedRep
     parser.add_argument('-pls', "--plocal_steps", type=int, default=1)
     # MOON
-    parser.add_argument('-ta', "--tau", type=float, default=1.0)
+    parser.add_argument('-tau', "--tau", type=float, default=1.0)
     # FedBABU
     parser.add_argument('-fts', "--fine_tuning_steps", type=int, default=10)
     # APPLE
