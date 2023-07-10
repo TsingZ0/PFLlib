@@ -62,9 +62,6 @@ class TransformerModel(nn.Module):
         src = self.pos_encoder(src)
         enc = self.transformer_encoder(src, src_mask).mean(1)
         output = self.fc(enc)
-        # print(enc.shape)
-        # print(output.shape)
-        # input()
         return output
 
 def generate_square_subsequent_mask(sz: int) -> Tensor:
