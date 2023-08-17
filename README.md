@@ -6,9 +6,9 @@
 
 - *Now there are **29 FL/pFL algorithms, 3 scenarios, and 14 datasets** in this platform.*
 
-- *This platform can simulate scenarios (e.g., Cifar100) with **more than 500 clients** using a **single GPU card** (e.g., 2080Ti, 11GB memory).*
+- *This platform can simulate scenarios (e.g., Cifar100) with **more than 500 clients** using **a single GPU card** (e.g., 2080Ti, 11GB memory).*
 
-- We are usually quite busy and unable to respond promptly to everyone's questions. If there is an urgent matter, please feel free to contact us via the email: tsingz@sjtu.edu.cn.
+- We are usually quite busy and unable to respond promptly to everyone's questions. If there is an urgent matter, please feel free to contact us via the email: tsingz@sjtu.edu.cn. 
 
 
 Due to the frequent update, please download the **master branch** as the latest version.
