@@ -10,8 +10,6 @@
 
 - To simultaneously support statistical and model heterogeneity, please refer to our extended project **[Heterogeneous Federated Learning (HeFL)](https://github.com/TsingZ0/HeFL)**. 
 
-- We are usually quite busy and unable to respond promptly to everyone's questions. If there is an urgent matter, please feel free to contact us via the email: *tsingz@sjtu.edu.cn*. 
-
 
 Due to the frequent update, please download the **master branch** as the latest version.
 
