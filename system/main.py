@@ -39,6 +39,7 @@ from flcore.servers.servergc import FedGC
 from flcore.servers.serverfml import FML
 from flcore.servers.serverkd import FedKD
 from flcore.servers.serverpcl import FedPCL
+from flcore.servers.servercp import FedCP
 
 from flcore.trainmodel.models import *
 
@@ -296,6 +297,12 @@ def run(args):
         elif args.algorithm == "FedPCL":
             args.model.fc = nn.Identity()
             server = FedPCL(args, i)
+
+        if args.algorithm == "FedCP":
+            args.head = copy.deepcopy(args.model.fc)
+            args.model.fc = nn.Identity()
+            args.model = BaseHeadSplit(args.model, args.head)
+            server = FedCP(args, i)
             
         else:
             raise NotImplementedError

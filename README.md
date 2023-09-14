@@ -4,7 +4,7 @@
 
 ***We expose this user-friendly platform for beginners who intend to start federated learning (FL) study.***
 
-- *Now there are **29 FL/pFL algorithms, 3 scenarios, and 14 datasets** in this platform.*
+- *Now there are **30 FL/pFL algorithms, 3 scenarios, and 14 datasets** in this platform.*
 
 - *This platform can simulate scenarios (e.g., Cifar100) with **more than 500 clients** using **a single GPU card** (e.g., 2080Ti, 11GB memory).*
 
@@ -62,7 +62,7 @@ Thanks to [@Stonesjtu](https://github.com/Stonesjtu/pytorch_memlab/blob/d590c489
 - **FedAMP** — [Personalized Cross-Silo Federated Learning on non-IID Data](https://ojs.aaai.org/index.php/AAAI/article/view/16960) *AAAI 2021*
 - **FedPHP** — [FedPHP: Federated Personalization with Inherited Private Models](https://link.springer.com/chapter/10.1007/978-3-030-86486-6_36) *ECML PKDD 2021*
 - **APPLE** — [Adapt to Adaptation: Learning Personalization for Cross-Silo Federated Learning](https://www.ijcai.org/proceedings/2022/301) *IJCAI 2022*
-- **FedALA** — [FedALA: Adaptive Local Aggregation for Personalized Federated Learning](https://ojs.aaai.org/index.php/AAAI/article/view/26330) *AAAI 2023*
+- **FedALA** — [FedALA: Adaptive Local Aggregation for Personalized Federated Learning](https://ojs.aaai.org/index.php/AAAI/article/view/26330) *AAAI 2023* 
 
   ***Model-splitting-based pFL***
 
@@ -72,6 +72,7 @@ Thanks to [@Stonesjtu](https://github.com/Stonesjtu/pytorch_memlab/blob/d590c489
 - **FedRoD** — [On Bridging Generic and Personalized Federated Learning for Image Classification](https://openreview.net/forum?id=I1hQbx10Kxn) *ICLR 2022*
 - **FedBABU** — [Fedbabu: Towards enhanced representation for federated image classification](https://openreview.net/forum?id=HuaYQfggn5u) *ICLR 2022*
 - **FedGC** — [Federated Learning for Face Recognition with Gradient Correction](https://ojs.aaai.org/index.php/AAAI/article/view/20095/19854) *AAAI 2022*
+- **FedCP** — [FedCP: Separating Feature Information for Personalized Federated Learning via Conditional Policy](https://dl.acm.org/doi/10.1145/3580305.3599345) *KDD 2023*
 
   ***Knowledge-distillation-based pFL***
 
@@ -674,3 +675,34 @@ It is easy to add new datasets or FL algorithms to this platform.
 - To add a **new model**, just add it into `./system/flcore/trainmodel/models.py`.
 
 - If you have a **new optimizer** while training, please add it into `./system/flcore/optimizers/fedoptimizer.py`
+
+
+## Experimental results
+
+If you are interested in **the experimental results(e.g., the accuracy) of above algorithms**, you can find some results in our accepted FL papers (i.e., [FedALA](https://ojs.aaai.org/index.php/AAAI/article/view/26330), [FedCP](https://dl.acm.org/doi/10.1145/3580305.3599345), and [GPFL](https://arxiv.org/pdf/2308.10279.pdf)) listed as follows that also use this platform. 
+
+```
+@inproceedings{zhang2023fedala,
+  title={Fedala: Adaptive local aggregation for personalized federated learning},
+  author={Zhang, Jianqing and Hua, Yang and Wang, Hao and Song, Tao and Xue, Zhengui and Ma, Ruhui and Guan, Haibing},
+  booktitle={Proceedings of the AAAI Conference on Artificial Intelligence},
+  volume={37},
+  number={9},
+  pages={11237--11244},
+  year={2023}
+}
+
+@inproceedings{Zhang2023fedcp,
+  author = {Zhang, Jianqing and Hua, Yang and Wang, Hao and Song, Tao and Xue, Zhengui and Ma, Ruhui and Guan, Haibing},
+  title = {FedCP: Separating Feature Information for Personalized Federated Learning via Conditional Policy},
+  year = {2023},
+  booktitle = {Proceedings of the 29th ACM SIGKDD Conference on Knowledge Discovery and Data Mining}
+}
+
+@article{zhang2023gpfl,
+  title={GPFL: Simultaneously Learning Global and Personalized Feature Information for Personalized Federated Learning},
+  author={Zhang, Jianqing and Hua, Yang and Wang, Hao and Song, Tao and Xue, Zhengui and Ma, Ruhui and Cao, Jian and Guan, Haibing},
+  journal={arXiv preprint arXiv:2308.10279},
+  year={2023}
+}
+```
