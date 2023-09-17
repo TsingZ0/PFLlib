@@ -679,7 +679,7 @@ It is easy to add new datasets or FL algorithms to this platform.
 
 ## Experimental results
 
-If you are interested in **the experimental results(e.g., the accuracy) of above algorithms**, you can find some results in our accepted FL papers (i.e., [FedALA](https://ojs.aaai.org/index.php/AAAI/article/view/26330), [FedCP](https://dl.acm.org/doi/10.1145/3580305.3599345), and [GPFL](https://arxiv.org/pdf/2308.10279.pdf)) listed as follows that also use this platform. 
+If you are interested in **the experimental results(e.g., the accuracy) of above algorithms**, you can find some results in our accepted FL papers (i.e., [FedALA](https://github.com/TsingZ0/FedALA), [FedCP](https://github.com/TsingZ0/FedCP), and [GPFL](https://github.com/TsingZ0/GPFL)) listed as follows that also use this platform. 
 
 ```
 @inproceedings{zhang2023fedala,
