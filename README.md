@@ -8,7 +8,7 @@
 
 - *This platform can simulate scenarios (e.g., Cifar100) with **more than 500 clients** using **a single GPU card** (e.g., 2080Ti, 11GB memory).*
 
-- To simultaneously support statistical and model heterogeneity, please refer to our extended project **[Heterogeneous Federated Learning (HeFL)](https://github.com/TsingZ0/HeFL)**. 
+- To simultaneously support statistical and model heterogeneity, please refer to our extended project **[Heterogeneous Federated Learning (HtFL)](https://github.com/TsingZ0/HtFL)**. 
 
 
 Due to the frequent update, please download the **master branch** as the latest version.
