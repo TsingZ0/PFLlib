@@ -298,7 +298,7 @@ def run(args):
             args.model.fc = nn.Identity()
             server = FedPCL(args, i)
 
-        if args.algorithm == "FedCP":
+        elif args.algorithm == "FedCP":
             args.head = copy.deepcopy(args.model.fc)
             args.model.fc = nn.Identity()
             args.model = BaseHeadSplit(args.model, args.head)
