@@ -633,6 +633,10 @@ Client 2         Samples of labels:  [(0, 75), (1, 107), (3, 130), (7, 291), (8,
 
     1. FedAvgCNN()
 
+- for HAR and PAMAP
+
+    1. HARCNN() in [Convolutional neural networks for human activity recognition using mobile sensors](https://eudl.eu/pdf/10.4108/icst.mobicase.2014.257786)
+
 ## Environments
 Install [CUDA](https://developer.nvidia.com/cuda-11-6-0-download-archive) first. 
 
