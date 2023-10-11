@@ -40,6 +40,7 @@ from flcore.servers.serverfml import FML
 from flcore.servers.serverkd import FedKD
 from flcore.servers.serverpcl import FedPCL
 from flcore.servers.servercp import FedCP
+from flcore.servers.servergpfl import GPFL
 
 from flcore.trainmodel.models import *
 
@@ -303,6 +304,12 @@ def run(args):
             args.model.fc = nn.Identity()
             args.model = BaseHeadSplit(args.model, args.head)
             server = FedCP(args, i)
+
+        elif args.algorithm == "GPFL":
+            args.head = copy.deepcopy(args.model.fc)
+            args.model.fc = nn.Identity()
+            args.model = BaseHeadSplit(args.model, args.head)
+            server = GPFL(args, i)
             
         else:
             raise NotImplementedError
@@ -427,6 +434,8 @@ if __name__ == "__main__":
     parser.add_argument('-mlr', "--mentee_learning_rate", type=float, default=0.005)
     parser.add_argument('-Ts', "--T_start", type=float, default=0.95)
     parser.add_argument('-Te', "--T_end", type=float, default=0.98)
+    # GPFL
+    parser.add_argument('-lamr', "--lamda_reg", type=float, default=0.0)
 
 
     args = parser.parse_args()

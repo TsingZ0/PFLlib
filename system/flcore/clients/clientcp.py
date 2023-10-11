@@ -3,10 +3,8 @@ import torch
 import torch.nn as nn
 import numpy as np
 import torch.nn.functional as F
-from torch.utils.data import DataLoader
 from sklearn.preprocessing import label_binarize
 from sklearn import metrics
-from utils.data_utils import read_client_data
 from flcore.clients.clientbase import Client
 
 
