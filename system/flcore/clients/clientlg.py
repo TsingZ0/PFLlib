@@ -3,7 +3,6 @@ import torch.nn as nn
 import numpy as np
 import time
 from flcore.clients.clientbase import Client
-from utils.privacy import *
 
 
 class clientLG(Client):
@@ -14,11 +13,6 @@ class clientLG(Client):
         trainloader = self.load_train_data()
         # self.model.to(self.device)
         self.model.train()
-
-        # differential privacy
-        if self.privacy:
-            self.model, self.optimizer, trainloader, privacy_engine = \
-                initialize_dp(self.model, self.optimizer, trainloader, self.dp_sigma)
         
         start_time = time.time()
 
@@ -49,9 +43,6 @@ class clientLG(Client):
         self.train_time_cost['num_rounds'] += 1
         self.train_time_cost['total_cost'] += time.time() - start_time
 
-        if self.privacy:
-            eps, DELTA = get_dp_params(privacy_engine)
-            print(f"Client {self.id}", f"epsilon = {eps:.2f}, sigma = {DELTA}")
         
     def set_parameters(self, head):
         for new_param, old_param in zip(head.parameters(), self.model.head.parameters()):

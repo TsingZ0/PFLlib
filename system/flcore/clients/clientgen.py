@@ -3,7 +3,6 @@ import torch.nn as nn
 import numpy as np
 import time
 from flcore.clients.clientbase import Client
-from utils.privacy import *
 
 
 class clientGen(Client):
@@ -38,11 +37,6 @@ class clientGen(Client):
         # self.model.to(self.device)
         self.model.train()
 
-        # differential privacy
-        if self.privacy:
-            self.model, self.optimizer, trainloader, privacy_engine = \
-                initialize_dp(self.model, self.optimizer, trainloader, self.dp_sigma)
-        
         start_time = time.time()
 
         max_local_epochs = self.local_epochs
@@ -77,10 +71,6 @@ class clientGen(Client):
 
         self.train_time_cost['num_rounds'] += 1
         self.train_time_cost['total_cost'] += time.time() - start_time
-
-        if self.privacy:
-            eps, DELTA = get_dp_params(privacy_engine)
-            print(f"Client {self.id}", f"epsilon = {eps:.2f}, sigma = {DELTA}")
             
         
     def set_parameters(self, model, generative_model):
