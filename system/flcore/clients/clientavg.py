@@ -1,3 +1,4 @@
+import copy
 import torch
 import torch.nn as nn
 import numpy as np
@@ -17,6 +18,7 @@ class clientAVG(Client):
 
         # differential privacy
         if self.privacy:
+            model_origin = copy.deepcopy(self.model)
             self.model, self.optimizer, trainloader, privacy_engine = \
                 initialize_dp(self.model, self.optimizer, trainloader, self.dp_sigma)
         
@@ -52,3 +54,8 @@ class clientAVG(Client):
         if self.privacy:
             eps, DELTA = get_dp_params(privacy_engine)
             print(f"Client {self.id}", f"epsilon = {eps:.2f}, sigma = {DELTA}")
+
+            for param, param_dp in zip(model_origin.parameters(), self.model.parameters()):
+                param.data = param_dp.data.clone()
+            self.model = model_origin
+            self.optimizer = torch.optim.SGD(self.model.parameters(), lr=self.learning_rate)
