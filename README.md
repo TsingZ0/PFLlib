@@ -6,7 +6,7 @@
 
 - *Now there are **31 traditional FL (tFL) or personalized FL (pFL) algorithms, 3 scenarios, and 14 datasets** in this platform.*
 
-- *This platform can simulate scenarios using the 4-layer CNN on Cifar100 for **500 clients** on **one NVIDIA GeForce RTX 3090 GPU card** with only **5.08GB VRAM** cost.*
+- *This platform can simulate scenarios using the 4-layer CNN on Cifar100 for **500 clients** on **one NVIDIA GeForce RTX 3090 GPU card** with only **5.08GB GPU memory** cost.*
 
 - To simultaneously support statistical and model heterogeneity, please refer to our extended project **[Heterogeneous Federated Learning (HtFL)](https://github.com/TsingZ0/HtFL)**. 
 
