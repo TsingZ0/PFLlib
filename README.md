@@ -1,6 +1,6 @@
 # Personalized Federated Learning Platform
 
-[![DOI](https://zenodo.org/badge/292225878.svg)](https://zenodo.org/badge/latestdoi/292225878)
+[![DOI](https://zenodo.org/badge/292225878.svg)](https://zenodo.org/doi/10.5281/zenodo.7780679)
 
 ***We expose this user-friendly platform for beginners who intend to start federated learning (FL) study.***
 
