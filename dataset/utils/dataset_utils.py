@@ -85,7 +85,7 @@ def separate_data(data, num_clients, num_classes, niid=False, balance=False, par
         K = num_classes
         N = len(dataset_label)
 
-        while min_size < num_classes:
+        while min_size < least_samples:
             idx_batch = [[] for _ in range(num_clients)]
             for k in range(K):
                 idx_k = np.where(dataset_label == k)[0]
