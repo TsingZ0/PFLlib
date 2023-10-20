@@ -647,7 +647,10 @@ With the installed [conda](https://repo.anaconda.com/miniconda/Miniconda3-latest
 conda env create -f env_cuda_latest.yaml
 ```
 
-## How to start simulating 
+## How to start simulating (examples for FedAvg)
+
+![](./structure.png)
+
 - Build dataset: [Datasets](#Datasets-and-Separation-(updating))
 
 - Train and evaluate the model:
