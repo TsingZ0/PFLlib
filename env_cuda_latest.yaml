@@ -21,3 +21,4 @@ dependencies:
     - memory-profiler
     - opacus
     - portalocker
+    - cvxpy
