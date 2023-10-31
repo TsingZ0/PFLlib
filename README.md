@@ -644,7 +644,7 @@ Install [CUDA](https://developer.nvidia.com/cuda-11-6-0-download-archive) first.
 With the installed [conda](https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh), we can run this platform in a conda virtual environment called *fl_torch*. 
 
 ```bash
-conda env create -f env_cuda_latest.yaml
+conda env create -f env_cuda_latest.yaml # You may need to downgrade the torch using pip to match CUDA version
 ```
 
 ## How to start simulating (examples for FedAvg)
