@@ -385,9 +385,7 @@ if __name__ == "__main__":
     parser.add_argument('-tth', "--time_threthold", type=float, default=10000,
                         help="The threthold for droping slow clients")
     # pFedMe / PerAvg / FedProx / FedAMP / FedPHP
-    parser.add_argument('-bt', "--beta", type=float, default=0.0,
-                        help="Average moving parameter for pFedMe, Second learning rate of Per-FedAvg, \
-                        or L1 regularization weight of FedTransfer")
+    parser.add_argument('-bt', "--beta", type=float, default=0.0)
     parser.add_argument('-lam', "--lamda", type=float, default=1.0,
                         help="Regularization weight")
     parser.add_argument('-mu', "--mu", type=float, default=0,
