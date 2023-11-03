@@ -6,7 +6,7 @@ from sklearn.model_selection import train_test_split
 
 batch_size = 10
 train_size = 0.75 # merge original training set and test set, then split it manually. 
-least_samples = batch_size / (1-train_size) # least samples for each client
+least_samples = 1 # guarantee that each client must have at least one samples for testing. 
 alpha = 0.1 # for Dirichlet distribution
 
 def check(config_path, train_path, test_path, num_clients, num_classes, niid=False, 
@@ -85,7 +85,11 @@ def separate_data(data, num_clients, num_classes, niid=False, balance=False, par
         K = num_classes
         N = len(dataset_label)
 
+        try_cnt = 1
         while min_size < least_samples:
+            if try_cnt > 1:
+                print(f'Client data size does not meet the minimum requirement {least_samples}. Try allocating again for the {try_cnt}-th time.')
+
             idx_batch = [[] for _ in range(num_clients)]
             for k in range(K):
                 idx_k = np.where(dataset_label == k)[0]
@@ -96,6 +100,7 @@ def separate_data(data, num_clients, num_classes, niid=False, balance=False, par
                 proportions = (np.cumsum(proportions)*len(idx_k)).astype(int)[:-1]
                 idx_batch = [idx_j + idx.tolist() for idx_j,idx in zip(idx_batch,np.split(idx_k,proportions))]
                 min_size = min([len(idx_j) for idx_j in idx_batch])
+            try_cnt += 1
 
         for j in range(num_clients):
             dataidx_map[j] = idx_batch[j]
