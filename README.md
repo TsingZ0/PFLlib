@@ -4,7 +4,7 @@
 
 ***We expose this user-friendly platform for beginners who intend to start federated learning (FL) study.***
 
-- *Now there are **31 traditional FL (tFL) or personalized FL (pFL) algorithms, 3 scenarios, and 14 datasets** in this platform.*
+- *Now there are **32 traditional FL (tFL) or personalized FL (pFL) algorithms, 3 scenarios, and 14 datasets** in this platform.*
 
 - *This platform can simulate scenarios using the 4-layer CNN on Cifar100 for **500 clients** on **one NVIDIA GeForce RTX 3090 GPU card** with only **5.08GB GPU memory** cost.*
 
@@ -40,6 +40,8 @@ Thanks to [@Stonesjtu](https://github.com/Stonesjtu/pytorch_memlab/blob/d590c489
   ***Knowledge-distillation-based tFL***
 
 - **FedGen** — [Data-Free Knowledge Distillation for Heterogeneous Federated Learning](http://proceedings.mlr.press/v139/zhu21b.html) *ICML 2021*
+
+- **FedNTD** — [Preservation of the Global Knowledge by Not-True Distillation in Federated Learning](https://proceedings.neurips.cc/paper_files/paper/2022/hash/fadec8f2e65f181d777507d1df69b92f-Abstract-Conference.html) *NeurIPS 2022*
 
 > ### Personalized FL (pFL)
 

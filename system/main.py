@@ -41,6 +41,7 @@ from flcore.servers.serverkd import FedKD
 from flcore.servers.serverpcl import FedPCL
 from flcore.servers.servercp import FedCP
 from flcore.servers.servergpfl import GPFL
+from flcore.servers.serverntd import FedNTD
 
 from flcore.trainmodel.models import *
 
@@ -113,6 +114,12 @@ def run(args):
             # args.model.fc = nn.Linear(feature_dim, args.num_classes).to(args.device)
             
             # args.model = resnet18(num_classes=args.num_classes, has_bn=True, bn_block_num=4).to(args.device)
+        
+        elif model_str == "resnet10":
+            args.model = resnet10(num_classes=args.num_classes).to(args.device)
+        
+        elif model_str == "resnet34":
+            args.model = torchvision.models.resnet34(pretrained=False, num_classes=args.num_classes).to(args.device)
 
         elif model_str == "alexnet":
             args.model = alexnet(pretrained=False, num_classes=args.num_classes).to(args.device)
@@ -310,6 +317,9 @@ def run(args):
             args.model.fc = nn.Identity()
             args.model = BaseHeadSplit(args.model, args.head)
             server = GPFL(args, i)
+
+        elif args.algorithm == "FedNTD":
+            server = FedNTD(args, i)
             
         else:
             raise NotImplementedError
