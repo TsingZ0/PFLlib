@@ -4,9 +4,11 @@
 
 ***We expose this user-friendly platform for beginners who intend to start federated learning (FL) study.***
 
-- *Now there are **32 traditional FL (tFL) or personalized FL (pFL) algorithms, 3 scenarios, and 14 datasets** in this platform.*
+- *Now there are **32 traditional FL ([tFL](#traditional-fl-tfl)) or personalized FL ([pFL](#personalized-fl-pfl)) algorithms, 3 scenarios, and 14 datasets** in this platform.*
 
-- Some experimental results are avalible [here](#experimental-results). 
+- Some **experimental results** are avalible [here](#experimental-results). 
+
+- Refer to [this guide](#how-to-start-simulating-examples-for-fedavg) to learn how to use it.
 
 - *This platform can simulate scenarios using the 4-layer CNN on Cifar100 for **500 clients** on **one NVIDIA GeForce RTX 3090 GPU card** with only **5.08GB GPU memory** cost.*
 
