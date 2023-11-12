@@ -6,6 +6,8 @@
 
 - *Now there are **32 traditional FL (tFL) or personalized FL (pFL) algorithms, 3 scenarios, and 14 datasets** in this platform.*
 
+- Some experimental results are avalible [here](#experimental-results). 
+
 - *This platform can simulate scenarios using the 4-layer CNN on Cifar100 for **500 clients** on **one NVIDIA GeForce RTX 3090 GPU card** with only **5.08GB GPU memory** cost.*
 
 - To simultaneously support statistical and model heterogeneity, please refer to our extended project **[Heterogeneous Federated Learning (HtFL)](https://github.com/TsingZ0/HtFL)**. 
@@ -691,7 +693,7 @@ It is easy to add new datasets or FL algorithms to this platform.
 
 ## Experimental results
 
-If you are interested in **the experimental results(e.g., the accuracy) of above algorithms**, you can find some results in our accepted FL papers (i.e., [FedALA](https://github.com/TsingZ0/FedALA), [FedCP](https://github.com/TsingZ0/FedCP), and [GPFL](https://github.com/TsingZ0/GPFL)) listed as follows that also use this platform. 
+If you are interested in **the experimental results (e.g., the accuracy) of above algorithms**, you can find some results in our accepted FL papers (i.e., [FedALA](https://github.com/TsingZ0/FedALA), [FedCP](https://github.com/TsingZ0/FedCP), and [GPFL](https://github.com/TsingZ0/GPFL)) listed as follows that also use this platform. 
 
 ```
 @inproceedings{zhang2023fedala,
