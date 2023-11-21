@@ -2,6 +2,8 @@
 
 [![DOI](https://zenodo.org/badge/292225878.svg)](https://zenodo.org/doi/10.5281/zenodo.7780679)
 
+![](./structure.png)
+
 ***We expose this user-friendly platform for beginners who intend to start federated learning (FL) study.***
 
 - *Now there are **32 traditional FL ([tFL](#traditional-fl-tfl)) or personalized FL ([pFL](#personalized-fl-pfl)) algorithms, 3 scenarios, and 14 datasets** in this platform.*
@@ -654,8 +656,6 @@ conda env create -f env_cuda_latest.yaml # You may need to downgrade the torch u
 ```
 
 ## How to start simulating (examples for FedAvg)
-
-![](./structure.png)
 
 - Build dataset: [Datasets](#Datasets-and-Separation-(updating))
 
