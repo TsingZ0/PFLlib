@@ -7,7 +7,7 @@ Figure 1: An Example for FedAvg.
 
 ***We expose this user-friendly platform for beginners who intend to start federated learning (FL) study.***
 
-- *Now there are **32 traditional FL ([tFL](#traditional-fl-tfl)) or personalized FL ([pFL](#personalized-fl-pfl)) algorithms, 3 scenarios, and 14 datasets** in this platform.*
+- ***32 traditional FL ([tFL](#traditional-fl-tfl)) or personalized FL ([pFL](#personalized-fl-pfl)) algorithms, 3 scenarios, and 14 datasets**.*
 
 - Some **experimental results** are avalible [here](#experimental-results). 
 
