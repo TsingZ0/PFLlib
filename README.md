@@ -3,6 +3,7 @@
 [![DOI](https://zenodo.org/badge/292225878.svg)](https://zenodo.org/doi/10.5281/zenodo.7780679)
 
 ![](./structure.png)
+Figure 1: An Example for FedAvg. 
 
 ***We expose this user-friendly platform for beginners who intend to start federated learning (FL) study.***
 
