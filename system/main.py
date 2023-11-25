@@ -42,6 +42,7 @@ from flcore.servers.serverpcl import FedPCL
 from flcore.servers.servercp import FedCP
 from flcore.servers.servergpfl import GPFL
 from flcore.servers.serverntd import FedNTD
+from flcore.servers.servergh import FedGH
 
 from flcore.trainmodel.models import *
 
@@ -320,6 +321,12 @@ def run(args):
 
         elif args.algorithm == "FedNTD":
             server = FedNTD(args, i)
+
+        elif args.algorithm == "FedGH":
+            args.head = copy.deepcopy(args.model.fc)
+            args.model.fc = nn.Identity()
+            args.model = BaseHeadSplit(args.model, args.head)
+            server = FedGH(args, i)
             
         else:
             raise NotImplementedError
@@ -431,7 +438,7 @@ if __name__ == "__main__":
     parser.add_argument('-hd', "--hidden_dim", type=int, default=512)
     parser.add_argument('-se', "--server_epochs", type=int, default=1000)
     parser.add_argument('-lf', "--localize_feature_extractor", type=bool, default=False)
-    # SCAFFOLD
+    # SCAFFOLD / FedGH
     parser.add_argument('-slr', "--server_learning_rate", type=float, default=1.0)
     # FedALA
     parser.add_argument('-et', "--eta", type=float, default=1.0)
