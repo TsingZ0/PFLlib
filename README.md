@@ -1,4 +1,4 @@
-# Personalized Federated Learning Platform
+# PFLlib: Personalized Federated Learning Algorithm Library
 
 [![DOI](https://zenodo.org/badge/292225878.svg)](https://zenodo.org/doi/10.5281/zenodo.7780679)
 
