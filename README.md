@@ -5,7 +5,7 @@
 ![](./structure.png)
 Figure 1: An Example for FedAvg. You can create a scenario using `generate_xxx.py` and run an algorithm using `main.py`, `clientxxx.py`, and `serverxxx.py`. 
 
-***We expose this user-friendly library (with an simulation platform for evaluation) for beginners who intend to start federated learning (FL) study.***
+***We expose this user-friendly algorithm library (with a built-in simulation platform for evaluation) for beginners who intend to start federated learning (FL) study.***
 
 - ***34 traditional FL ([tFL](#traditional-fl-tfl)) or personalized FL ([pFL](#personalized-fl-pfl)) algorithms, 3 scenarios, and 14 datasets**.*
 
