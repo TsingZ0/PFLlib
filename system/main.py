@@ -43,6 +43,7 @@ from flcore.servers.servercp import FedCP
 from flcore.servers.servergpfl import GPFL
 from flcore.servers.serverntd import FedNTD
 from flcore.servers.servergh import FedGH
+from flcore.servers.serveravgDBE import FedAvgDBE
 
 from flcore.trainmodel.models import *
 
@@ -327,6 +328,12 @@ def run(args):
             args.model.fc = nn.Identity()
             args.model = BaseHeadSplit(args.model, args.head)
             server = FedGH(args, i)
+
+        elif args.algorithm == "FedAvgDBE":
+            args.head = copy.deepcopy(args.model.fc)
+            args.model.fc = nn.Identity()
+            args.model = BaseHeadSplit(args.model, args.head)
+            server = FedAvgDBE(args, i)
             
         else:
             raise NotImplementedError
@@ -451,6 +458,9 @@ if __name__ == "__main__":
     parser.add_argument('-Te', "--T_end", type=float, default=0.98)
     # GPFL
     parser.add_argument('-lamr', "--lamda_reg", type=float, default=0.0)
+    # FedAvgDBE
+    parser.add_argument('-mo', "--momentum", type=float, default=0.1)
+    parser.add_argument('-klw', "--kl_weight", type=float, default=0.0)
 
 
     args = parser.parse_args()
