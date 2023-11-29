@@ -5,7 +5,7 @@
 ![](./structure.png)
 Figure 1: An Example for FedAvg. You can create a scenario using `generate_xxx.py` and run an algorithm using `main.py`, `clientxxx.py`, and `serverxxx.py`. 
 
-***We expose this user-friendly platform for beginners who intend to start federated learning (FL) study.***
+***We expose this user-friendly library (with an simulation platform for evaluation) for beginners who intend to start federated learning (FL) study.***
 
 - ***34 traditional FL ([tFL](#traditional-fl-tfl)) or personalized FL ([pFL](#personalized-fl-pfl)) algorithms, 3 scenarios, and 14 datasets**.*
 
@@ -13,7 +13,7 @@ Figure 1: An Example for FedAvg. You can create a scenario using `generate_xxx.p
 
 - Refer to [this guide](#how-to-start-simulating-examples-for-fedavg) to learn how to use it.
 
-- *This platform can simulate scenarios using the 4-layer CNN on Cifar100 for **500 clients** on **one NVIDIA GeForce RTX 3090 GPU card** with only **5.08GB GPU memory** cost.*
+- *This library can simulate scenarios using the 4-layer CNN on Cifar100 for **500 clients** on **one NVIDIA GeForce RTX 3090 GPU card** with only **5.08GB GPU memory** cost.*
 
 - To simultaneously support statistical and model heterogeneity, please refer to our extended project **[Heterogeneous Federated Learning (HtFL)](https://github.com/TsingZ0/HtFL)**. 
 
@@ -22,7 +22,7 @@ Due to the frequent update, please download the **master branch** as the latest 
 
 The origin of the **statistical heterogeneity** phenomenon is the personalization of users, who generate the non-IID (not Independent and Identically Distributed) and unbalanced data. With statistical heterogeneity existing in the FL scenario, a myriad of approaches have been proposed to crack this hard nut. In contrast, the personalized FL (pFL) may take the advantage of the statistically heterogeneious data to learn the personalized model for each user. 
 
-Thanks to [@Stonesjtu](https://github.com/Stonesjtu/pytorch_memlab/blob/d590c489236ee25d157ff60ecd18433e8f9acbe3/pytorch_memlab/mem_reporter.py#L185), this platform can also record the **GPU memory usage** for the model. By using the package [opacus](https://opacus.ai/), we introduce **DP (differential privacy)** into this platform (please refer to `./system/flcore/clients/clientavg.py` for example). Following [FedCG](https://www.ijcai.org/proceedings/2022/0324), we also introduce the **[DLG (Deep Leakage from Gradients)](https://papers.nips.cc/paper_files/paper/2019/hash/60a6c4002cc7b29142def8871531281a-Abstract.html) attack** and **PSNR (Peak Signal-to-Noise Ratio) metric** to evaluate the privacy-preserving ability of tFL/pFL algorithms (please refer to `./system/flcore/servers/serveravg.py` for example). *Now we can train on some clients and evaluate on other new clients by setting `args.num_new_clients` in `./system/main.py`. Note that not all the tFL/pFL algorithms support this feature.*
+Thanks to [@Stonesjtu](https://github.com/Stonesjtu/pytorch_memlab/blob/d590c489236ee25d157ff60ecd18433e8f9acbe3/pytorch_memlab/mem_reporter.py#L185), this library can also record the **GPU memory usage** for the model. By using the package [opacus](https://opacus.ai/), we introduce **DP (differential privacy)** into this library (please refer to `./system/flcore/clients/clientavg.py` for example). Following [FedCG](https://www.ijcai.org/proceedings/2022/0324), we also introduce the **[DLG (Deep Leakage from Gradients)](https://papers.nips.cc/paper_files/paper/2019/hash/60a6c4002cc7b29142def8871531281a-Abstract.html) attack** and **PSNR (Peak Signal-to-Noise Ratio) metric** to evaluate the privacy-preserving ability of tFL/pFL algorithms (please refer to `./system/flcore/servers/serveravg.py` for example). *Now we can train on some clients and evaluate on other new clients by setting `args.num_new_clients` in `./system/main.py`. Note that not all the tFL/pFL algorithms support this feature.*
 
 
 ## Algorithms with code (updating)
@@ -646,7 +646,7 @@ Client 2         Samples of labels:  [(0, 75), (1, 107), (3, 130), (7, 291), (8,
 ## Environments
 Install [CUDA](https://developer.nvidia.com/cuda-11-6-0-download-archive) first. 
 
-With the installed [conda](https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh), we can run this platform in a conda virtual environment called *fl_torch*. 
+With the installed [conda](https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh), we can run the simulation platform in a conda virtual environment called *fl_torch*. 
 
 ```bash
 conda env create -f env_cuda_latest.yaml # You may need to downgrade the torch using pip to match CUDA version
@@ -677,9 +677,9 @@ If you need to simulate FL in a practical scenario, which includes **client drop
 - `-tth`: The threshold for network TTL (ms). 
 
 ## Easy to extend
-It is easy to add new datasets or FL algorithms to this platform. 
+It is easy to add new datasets or FL algorithms to this library. 
 
-- To add a **new dataset** into this platform, all you need to do is writing the download code and using the utils the same as `./dataset/generate_mnist.py` (you can also consider it as the template). 
+- To add a **new dataset** into this library, all you need to do is writing the download code and using the utils the same as `./dataset/generate_mnist.py` (you can also consider it as the template). 
 
 - To add a **new algorithm**, you can utilize the class **Server** and class **Client**, which are wrote in `./system/flcore/servers/serverbase.py` and `./system/flcore/clients/clientbase.py`, respectively. 
 
@@ -687,12 +687,12 @@ It is easy to add new datasets or FL algorithms to this platform.
 
 - If you have a **new optimizer** while training, please add it into `./system/flcore/optimizers/fedoptimizer.py`
 
-- This platform is also convenient for users to bulid a new platform for specific applications, such as our [FL-IoT](https://github.com/TsingZ0/FL-IoT) and [HtFL](https://github.com/TsingZ0/HtFL). 
+- The simulation platform is also convenient for users to bulid a new platform for specific applications, such as our [FL-IoT](https://github.com/TsingZ0/FL-IoT) and [HtFL](https://github.com/TsingZ0/HtFL). 
 
 
 ## Experimental results
 
-If you are interested in **the experimental results (e.g., the accuracy) of above algorithms**, you can find some results in our accepted FL papers (i.e., [FedALA](https://github.com/TsingZ0/FedALA), [FedCP](https://github.com/TsingZ0/FedCP), and [GPFL](https://github.com/TsingZ0/GPFL)) listed as follows that also use this platform. *Please note that this developing project may not be able to reproduce the results on these papers, since some basic settings may change due to the requests of the community.* 
+If you are interested in **the experimental results (e.g., the accuracy) of above algorithms**, you can find some results in our accepted FL papers (i.e., [FedALA](https://github.com/TsingZ0/FedALA), [FedCP](https://github.com/TsingZ0/FedCP), [GPFL](https://github.com/TsingZ0/GPFL), and [DBE](https://github.com/TsingZ0/DBE)) listed as follows that also use this library. *Please note that this developing project may not be able to reproduce the results on these papers, since some basic settings may change due to the requests of the community.* 
 
 ```
 @inproceedings{zhang2023fedala,
@@ -718,5 +718,14 @@ If you are interested in **the experimental results (e.g., the accuracy) of abov
   booktitle={Proceedings of the IEEE/CVF International Conference on Computer Vision},
   pages={5041--5051},
   year={2023}
+}
+
+@inproceedings{
+  zhang2023eliminating,
+  title={Eliminating Domain Bias for Federated Learning in Representation Space},
+  author={Jianqing Zhang and Yang Hua and Jian Cao and Hao Wang and Tao Song and Zhengui XUE and Ruhui Ma and Haibing Guan},
+  booktitle={Thirty-seventh Conference on Neural Information Processing Systems},
+  year={2023},
+  url={https://openreview.net/forum?id=nO5i1XdUS0}
 }
 ```
