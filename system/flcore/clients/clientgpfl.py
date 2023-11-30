@@ -15,18 +15,18 @@ class clientGPFL(Client):
         self.feature_dim = list(self.model.head.parameters())[0].shape[1]
 
         self.lamda = args.lamda
-        self.lamda_reg = args.lamda_reg
+        self.mu = args.mu
 
         self.GCE = copy.deepcopy(args.GCE)
         self.GCE_opt = torch.optim.SGD(self.GCE.parameters(),
                                        lr=self.learning_rate,
-                                       weight_decay=self.lamda_reg)
+                                       weight_decay=self.mu)
         self.GCE_frozen = copy.deepcopy(self.GCE)
 
         self.CoV = copy.deepcopy(args.CoV)
         self.CoV_opt = torch.optim.SGD(self.CoV.parameters(),
                                          lr=self.learning_rate,
-                                         weight_decay=self.lamda_reg)
+                                         weight_decay=self.mu)
 
         self.generic_conditional_input = torch.zeros(self.feature_dim).to(self.device)
         self.personalized_conditional_input = torch.zeros(self.feature_dim).to(self.device)
