@@ -17,8 +17,7 @@ Figure 1: An Example for FedAvg. You can create a scenario using `generate_xxx.p
 
 - To simultaneously support statistical and model heterogeneity, please refer to our extended project **[Heterogeneous Federated Learning (HtFL)](https://github.com/TsingZ0/HtFL)**. 
 
-
-Due to the frequent update, please download the **master branch** as the latest version.
+- As we strive to meet diverse user demands, frequent updates to the project may alter default settings and scenario creation codes, affecting experimental results.  
 
 The origin of the **statistical heterogeneity** phenomenon is the personalization of users, who generate the non-IID (not Independent and Identically Distributed) and unbalanced data. With statistical heterogeneity existing in the FL scenario, a myriad of approaches have been proposed to crack this hard nut. In contrast, the personalized FL (pFL) may take the advantage of the statistically heterogeneious data to learn the personalized model for each user. 
 

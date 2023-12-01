@@ -34,7 +34,7 @@ def check(config_path, train_path, test_path, num_clients, num_classes, niid=Fal
 
     return False
 
-def separate_data(data, num_clients, num_classes, niid=False, balance=False, partition=None, class_per_client=2):
+def separate_data(data, num_clients, num_classes, niid=False, balance=False, partition=None, class_per_client=None):
     X = [[] for _ in range(num_clients)]
     y = [[] for _ in range(num_clients)]
     statistic = [[] for _ in range(num_clients)]
