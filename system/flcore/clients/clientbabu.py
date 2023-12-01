@@ -10,7 +10,7 @@ class clientBABU(Client):
     def __init__(self, args, id, train_samples, test_samples, **kwargs):
         super().__init__(args, id, train_samples, test_samples, **kwargs)
 
-        self.fine_tuning_steps = args.fine_tuning_steps
+        self.fine_tuning_epochs = args.fine_tuning_epochs
 
         for param in self.model.head.parameters():
             param.requires_grad = False
@@ -71,7 +71,7 @@ class clientBABU(Client):
                 param.requires_grad = False
             
 
-        for step in range(self.fine_tuning_steps):
+        for step in range(self.fine_tuning_epochs):
             for i, (x, y) in enumerate(trainloader):
                 if type(x) == type([]):
                     x[0] = x[0].to(self.device)

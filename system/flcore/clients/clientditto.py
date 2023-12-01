@@ -15,7 +15,7 @@ class clientDitto(Client):
         super().__init__(args, id, train_samples, test_samples, **kwargs)
 
         self.mu = args.mu
-        self.plocal_steps = args.plocal_steps
+        self.plocal_epochs = args.plocal_epochs
 
         self.model_per = copy.deepcopy(self.model)
         self.optimizer_per = PerturbedGradientDescent(
@@ -70,7 +70,7 @@ class clientDitto(Client):
         # self.model.to(self.device)
         self.model_per.train()
 
-        max_local_epochs = self.plocal_steps
+        max_local_epochs = self.plocal_epochs
         if self.train_slow:
             max_local_epochs = np.random.randint(1, max_local_epochs // 2)
 

@@ -20,7 +20,7 @@ class clientRep(Client):
             gamma=args.learning_rate_decay_gamma
         )
 
-        self.plocal_steps = args.plocal_steps
+        self.plocal_epochs = args.plocal_epochs
 
     def train(self):
         trainloader = self.load_train_data()
@@ -35,7 +35,7 @@ class clientRep(Client):
         for param in self.model.head.parameters():
             param.requires_grad = True
 
-        for step in range(self.plocal_steps):
+        for step in range(self.plocal_epochs):
             for i, (x, y) in enumerate(trainloader):
                 if type(x) == type([]):
                     x[0] = x[0].to(self.device)

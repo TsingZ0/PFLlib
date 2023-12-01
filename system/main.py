@@ -430,11 +430,11 @@ if __name__ == "__main__":
     # APFL
     parser.add_argument('-al', "--alpha", type=float, default=1.0)
     # Ditto / FedRep
-    parser.add_argument('-pls', "--plocal_steps", type=int, default=1)
+    parser.add_argument('-pls', "--plocal_epochs", type=int, default=1)
     # MOON
     parser.add_argument('-tau', "--tau", type=float, default=1.0)
     # FedBABU
-    parser.add_argument('-fts', "--fine_tuning_steps", type=int, default=10)
+    parser.add_argument('-fte', "--fine_tuning_epochs", type=int, default=10)
     # APPLE
     parser.add_argument('-dlr', "--dr_learning_rate", type=float, default=0.0)
     parser.add_argument('-L', "--L", type=float, default=1.0)
@@ -472,7 +472,7 @@ if __name__ == "__main__":
 
     print("Algorithm: {}".format(args.algorithm))
     print("Local batch size: {}".format(args.batch_size))
-    print("Local steps: {}".format(args.local_epochs))
+    print("Local epochs: {}".format(args.local_epochs))
     print("Local learing rate: {}".format(args.local_learning_rate))
     print("Local learing rate decay: {}".format(args.learning_rate_decay))
     if args.learning_rate_decay:
