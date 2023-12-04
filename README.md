@@ -5,7 +5,7 @@
 ![](./structure.png)
 Figure 1: An Example for FedAvg. You can create a scenario using `generate_xxx.py` and run an algorithm using `main.py`, `clientxxx.py`, and `serverxxx.py`. 
 
-***We expose this user-friendly algorithm library (with an integrated simulation platform for evaluation) for beginners who intend to start federated learning (FL) study.***
+***We expose this user-friendly algorithm library (with an integrated evaluation platform) for beginners who intend to start federated learning (FL) study.***
 
 - ***34 traditional FL ([tFL](#traditional-fl-tfl)) or personalized FL ([pFL](#personalized-fl-pfl)) algorithms, 3 scenarios, and 14 datasets**.*
 
@@ -645,7 +645,7 @@ Client 2         Samples of labels:  [(0, 75), (1, 107), (3, 130), (7, 291), (8,
 ## Environments
 Install [CUDA](https://developer.nvidia.com/cuda-11-6-0-download-archive) first. 
 
-With the installed [conda](https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh), we can run the simulation platform in a conda virtual environment called *fl_torch*. 
+With the installed [conda](https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh), we can run the evaluation platform in a conda virtual environment called *fl_torch*. 
 
 ```bash
 conda env create -f env_cuda_latest.yaml # You may need to downgrade the torch using pip to match CUDA version
@@ -686,7 +686,7 @@ It is easy to add new datasets or FL algorithms to this library.
 
 - If you have a **new optimizer** while training, please add it into `./system/flcore/optimizers/fedoptimizer.py`
 
-- The simulation platform is also convenient for users to bulid a new platform for specific applications, such as our [FL-IoT](https://github.com/TsingZ0/FL-IoT) and [HtFL](https://github.com/TsingZ0/HtFL). 
+- The evaluation platform is also convenient for users to bulid a new platform for specific applications, such as our [FL-IoT](https://github.com/TsingZ0/FL-IoT) and [HtFL](https://github.com/TsingZ0/HtFL). 
 
 
 ## Experimental results
