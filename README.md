@@ -15,7 +15,7 @@ Figure 1: An Example for FedAvg. You can create a scenario using `generate_xxx.p
 
 - *This library can simulate scenarios using the 4-layer CNN on Cifar100 for **500 clients** on **one NVIDIA GeForce RTX 3090 GPU card** with only **5.08GB GPU memory** cost.*
 
-- To simultaneously support statistical and model heterogeneity, please refer to our extended project **[Heterogeneous Federated Learning (HtFL)](https://github.com/TsingZ0/HtFL)**. 
+- To simultaneously support statistical and **model heterogeneity**, please refer to our extended project **[Heterogeneous Federated Learning (HtFL)](https://github.com/TsingZ0/HtFL)**. 
 
 - As we strive to meet diverse user demands, frequent updates to the project may alter default settings and scenario creation codes, affecting experimental results.  
 
