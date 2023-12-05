@@ -3,7 +3,7 @@
 [![DOI](https://zenodo.org/badge/292225878.svg)](https://zenodo.org/doi/10.5281/zenodo.7780679)
 
 ![](./structure.png)
-Figure 1: An Example for FedAvg. You can create a scenario using `generate_xxx.py` and run an algorithm using `main.py`, `clientxxx.py`, and `serverxxx.py`. 
+Figure 1: An Example for FedAvg. You can create a scenario using `generate_X.py` and run an algorithm using `main.py`, `clientX.py`, and `serverX.py`. 
 
 ***We expose this user-friendly algorithm library (with an integrated evaluation platform) for beginners who intend to start federated learning (FL) study.***
 
