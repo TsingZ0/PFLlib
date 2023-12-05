@@ -396,7 +396,7 @@ if __name__ == "__main__":
     parser.add_argument('-dlgg', "--dlg_gap", type=int, default=100)
     parser.add_argument('-bnpc', "--batch_num_per_client", type=int, default=2)
     parser.add_argument('-nnc', "--num_new_clients", type=int, default=0)
-    parser.add_argument('-fte', "--fine_tuning_epoch", type=int, default=0)
+    parser.add_argument('-ften', "--fine_tuning_epoch_new", type=int, default=0)
     # practical
     parser.add_argument('-cdr', "--client_drop_rate", type=float, default=0.0,
                         help="Rate for clients that train but drop out")
@@ -501,7 +501,7 @@ if __name__ == "__main__":
     if args.dlg_eval:
         print("DLG attack round gap: {}".format(args.dlg_gap))
     print("Total number of new clients: {}".format(args.num_new_clients))
-    print("Fine tuning epoches on new clients: {}".format(args.fine_tuning_epoch))
+    print("Fine tuning epoches on new clients: {}".format(args.fine_tuning_epoch_new))
     print("=" * 50)
 
 

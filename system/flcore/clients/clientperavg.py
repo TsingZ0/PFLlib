@@ -33,7 +33,7 @@ class clientPerAvg(Client):
         if self.train_slow:
             max_local_epochs = np.random.randint(1, max_local_epochs // 2)
 
-        for step in range(max_local_epochs):  # local update
+        for epoch in range(max_local_epochs):  # local update
             for X, Y in trainloader:
                 temp_model = copy.deepcopy(list(self.model.parameters()))
 

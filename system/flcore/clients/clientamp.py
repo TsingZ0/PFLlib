@@ -26,7 +26,7 @@ class clientAMP(Client):
         if self.train_slow:
             max_local_epochs = np.random.randint(1, max_local_epochs // 2)
 
-        for step in range(max_local_epochs):
+        for epoch in range(max_local_epochs):
             for x, y in trainloader:
                 if type(x) == type([]):
                     x[0] = x[0].to(self.device)

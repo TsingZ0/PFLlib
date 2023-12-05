@@ -56,7 +56,7 @@ class clientPAC(Client):
             param.requires_grad = False
             
         # protos = defaultdict(list)
-        for step in range(max_local_epochs):
+        for epoch in range(max_local_epochs):
             for i, (x, y) in enumerate(trainloader):
                 if type(x) == type([]):
                     x[0] = x[0].to(self.device)

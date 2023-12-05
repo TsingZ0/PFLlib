@@ -109,7 +109,7 @@ class clientCP(Client):
         if self.train_slow:
             max_local_epochs = np.random.randint(1, max_local_epochs // 2)
 
-        for step in range(max_local_epochs):
+        for epoch in range(max_local_epochs):
             self.model.gate.pm = []
             self.model.gate.gm = []
             self.pm_train = []

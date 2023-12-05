@@ -31,7 +31,7 @@ class clientPCL(Client):
             if self.train_slow:
                 max_local_epochs = np.random.randint(1, max_local_epochs // 2)
                 
-            for step in range(max_local_epochs):
+            for epoch in range(max_local_epochs):
                 global_protos_emb = []
                 for k in self.global_protos.keys():
                     assert (type(self.global_protos[k]) != type([]))

@@ -170,7 +170,7 @@ class FedGen(Server):
             CEloss = torch.nn.CrossEntropyLoss()
             trainloader = client.load_train_data()
             client.model.train()
-            for e in range(self.fine_tuning_epoch):
+            for e in range(self.fine_tuning_epoch_new):
                 for i, (x, y) in enumerate(trainloader):
                     if type(x) == type([]):
                         x[0] = x[0].to(client.device)

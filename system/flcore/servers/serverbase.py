@@ -61,7 +61,7 @@ class Server(object):
         self.num_new_clients = args.num_new_clients
         self.new_clients = []
         self.eval_new_clients = False
-        self.fine_tuning_epoch = args.fine_tuning_epoch
+        self.fine_tuning_epoch_new = args.fine_tuning_epoch_new
 
     def set_clients(self, clientObj):
         for i, train_slow, send_slow in zip(range(self.num_clients), self.train_slow_clients, self.send_slow_clients):
@@ -341,7 +341,7 @@ class Server(object):
             CEloss = torch.nn.CrossEntropyLoss()
             trainloader = client.load_train_data()
             client.model.train()
-            for e in range(self.fine_tuning_epoch):
+            for e in range(self.fine_tuning_epoch_new):
                 for i, (x, y) in enumerate(trainloader):
                     if type(x) == type([]):
                         x[0] = x[0].to(client.device)
