@@ -1,6 +1,6 @@
 # PFLlib: Personalized Federated Learning Algorithm Library
 
-[![DOI](https://zenodo.org/badge/292225878.svg)](https://zenodo.org/doi/10.5281/zenodo.7780679)
+[![DOI](https://zenodo.org/badge/292225878.svg)](https://zenodo.org/doi/10.5281/zenodo.7780679) [![License: GPL v2](https://img.shields.io/badge/License-GPL_v2-blue.svg)](https://www.gnu.org/licenses/old-licenses/gpl-2.0.en.html)
 
 ![](./structure.png)
 Figure 1: An Example for FedAvg. You can create a scenario using `generate_X.py` and run an algorithm using `main.py`, `clientX.py`, and `serverX.py`. 
