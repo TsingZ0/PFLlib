@@ -643,9 +643,9 @@ Client 2         Samples of labels:  [(0, 75), (1, 107), (3, 130), (7, 291), (8,
     1. HARCNN() in [Convolutional neural networks for human activity recognition using mobile sensors](https://eudl.eu/pdf/10.4108/icst.mobicase.2014.257786)
 
 ## Environments
-Install [CUDA](https://developer.nvidia.com/cuda-11-6-0-download-archive) first. 
+Install [CUDA](https://developer.nvidia.com/cuda-11-6-0-download-archive). 
 
-With the installed [conda](https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh), we can run the evaluation platform in a conda virtual environment called *fl_torch*. 
+Install [conda](https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh) and activate conda. 
 
 ```bash
 conda env create -f env_cuda_latest.yaml # You may need to downgrade the torch using pip to match CUDA version
@@ -653,12 +653,14 @@ conda env create -f env_cuda_latest.yaml # You may need to downgrade the torch u
 
 ## How to start simulating (examples for FedAvg)
 
-- Build dataset: [Datasets](#Datasets-and-Separation-(updating))
+- Create proper environments (see [above](#environments)).
 
-- Train and evaluate the model:
+- Build dataset: [Datasets](#Datasets-and-Separation-(updating)).
+
+- Run evaluation: 
     ```bash
     cd ./system
-    python main.py -data mnist -m cnn -algo FedAvg -gr 2500 -did 0 -go cnn # for FedAvg and MNIST
+    python main.py -data mnist -m cnn -algo FedAvg -gr 2000 -did 0 # for FedAvg and MNIST
     ```
     Or you can uncomment the lines you need in `./system/examples.sh` and run:
     ```bash
