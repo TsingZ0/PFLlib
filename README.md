@@ -93,7 +93,7 @@ Thanks to [@Stonesjtu](https://github.com/Stonesjtu/pytorch_memlab/blob/d590c489
 - **FedPCL (w/o pre-trained models)** — [Federated learning from pre-trained models: A contrastive learning approach](https://proceedings.neurips.cc/paper_files/paper/2022/file/7aa320d2b4b8f6400b18f6f77b6c1535-Paper-Conference.pdf) *NeurIPS 2022* 
 - **FedPAC** — [Personalized Federated Learning with Feature Alignment and Classifier Collaboration](https://openreview.net/pdf?id=SXZr8aDKia) *ICLR 2023*
 
-## Datasets and separation (updating)
+## Datasets and scenarios (updating)
 For the ***label skew*** scenario, we introduce **8** famous datasets: **MNIST**, **Fashion-MNIST**, **Cifar10**, **Cifar100**, **AG_News**, **Sogou_News**, and **Tiny-ImageNet** (fetch raw data from [this site](http://cs231n.stanford.edu/tiny-imagenet-200.zip)), they can be easy split into **IID** and **non-IID** version. Since some codes for generating datasets such as splitting are the same for all datasets, we move these codes into `./dataset/utils/dataset_utils.py`. In **non-IID** scenario, 2 situations exist. The first one is the **pathological non-IID** scenario, the second one is **practical non-IID** scenario. In the **pathological non-IID** scenario, for example, the data on each client only contains the specific number of labels (maybe only 2 labels), though the data on all clients contains 10 labels such as MNIST dataset. In the **practical non-IID** scenario, Dirichlet distribution is utilized (please refer to this [paper](https://proceedings.neurips.cc/paper/2020/hash/18df51b97ccd68128e994804f3eccc87-Abstract.html) for details). We can input `balance` for the iid scenario, where the data are uniformly distributed. 
 
 For the ***feature shift*** scenario, we use **3** datasets that are widely used in Domain Adaptation: **AmazonReview** (fetch raw data from [this site](https://drive.google.com/file/d/1QbXFENNyqor1IlCpRRFtOluI2_hMEd1W/view?usp=sharing)), **Digit5** (fetch raw data from [this site](https://drive.google.com/file/d/1PT6K-_wmsUEUCxoYzDy0mxF-15tvb2Eu/view?usp=share_link)), and **DomainNet**.
@@ -653,14 +653,14 @@ conda env create -f env_cuda_latest.yaml # You may need to downgrade the torch u
 
 ## How to start simulating (examples for FedAvg)
 
-- Create proper environments (see [above](#environments)).
+- Create proper environments (see [Environments](#environments)).
 
 - Download this project to an appropriate location using [git](https://git-scm.com/).
     ```bash
     git clone https://github.com/TsingZ0/PFLlib.git
     ```
 
-- Build dataset: [Datasets](#Datasets-and-Separation-(updating)).
+- Build evaluation scenarios (see [Datasets and scenarios (updating)](#datasets-and-scenarios-updating)).
 
 - Run evaluation: 
     ```bash
