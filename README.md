@@ -655,6 +655,11 @@ conda env create -f env_cuda_latest.yaml # You may need to downgrade the torch u
 
 - Create proper environments (see [above](#environments)).
 
+- Download this project to an appropriate location using [git](https://git-scm.com/).
+    ```bash
+    git clone https://github.com/TsingZ0/PFLlib.git
+    ```
+
 - Build dataset: [Datasets](#Datasets-and-Separation-(updating)).
 
 - Run evaluation: 
