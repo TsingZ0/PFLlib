@@ -670,17 +670,17 @@ conda env create -f env_cuda_latest.yaml # You may need to downgrade the torch u
 
 **Note**: The hyper-parameters have not been tuned for the algorithms. The values in `./system/examples.sh` are just examples. You need to tune the hyper-parameters by yourself. 
 
-## Practical scenario
-If you need to simulate FL in a practical scenario, which includes **client dropout**, **slow trainers**, **slow senders**, and **network TTL**, you can set the following parameters to realize it.
+## Practical situations
+If you need to simulate FL under practical situations, which includes **client dropout**, **slow trainers**, **slow senders**, and **network TTL**, you can set the following parameters to realize it.
 
 - `-cdr`: The dropout rate for total clients. The selected clients will randomly drop at each training round.
 - `-tsr` and `-ssr`: The rates for slow trainers and slow senders among all clients. Once a client was selected as "slow trainers", for example, it will always train slower than the original one. So does "slow senders". 
 - `-tth`: The threshold for network TTL (ms). 
 
 ## Easy to extend
-It is easy to add new datasets or FL algorithms to this library. 
+It is easy to add new algorithms and datasets to this library. 
 
-- To add a **new dataset** into this library, all you need to do is writing the download code and using the utils the same as `./dataset/generate_mnist.py` (you can also consider it as the template). 
+- To add a **new dataset** into this library, all you need to do is writing the download code and using the utils which is similar to `./dataset/generate_mnist.py` (you can also consider it as the template). 
 
 - To add a **new algorithm**, you can utilize the class **Server** and class **Client**, which are wrote in `./system/flcore/servers/serverbase.py` and `./system/flcore/clients/clientbase.py`, respectively. 
 
