@@ -15,12 +15,11 @@
 # with this program; if not, write to the Free Software Foundation, Inc.,
 # 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 
+import time
+import torch
 from flcore.clients.clientphp import clientPHP
 from flcore.servers.serverbase import Server
 from threading import Thread
-import time
-import copy
-import torch
 
 
 class FedPHP(Server):

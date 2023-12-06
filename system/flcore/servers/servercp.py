@@ -114,6 +114,7 @@ class FedCP(Server):
 
         print("\nBest global accuracy.")
         print(max(self.rs_test_acc))
+        print("\nAverage time cost per round.")
         print(sum(self.Budget[1:])/len(self.Budget[1:]))
 
 

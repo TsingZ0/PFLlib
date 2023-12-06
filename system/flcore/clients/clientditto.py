@@ -19,7 +19,6 @@ import torch
 import numpy as np
 import time
 import copy
-import torch.nn as nn
 from flcore.optimizers.fedoptimizer import PerturbedGradientDescent
 from flcore.clients.clientbase import Client
 import torch.nn.functional as F

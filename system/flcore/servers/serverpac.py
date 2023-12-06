@@ -15,17 +15,16 @@
 # with this program; if not, write to the Free Software Foundation, Inc.,
 # 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 
-from flcore.clients.clientpac import clientPAC
-from flcore.servers.serverbase import Server
-from utils.data_utils import read_client_data
-from threading import Thread
-from collections import defaultdict
 import time
 import numpy as np
 import random
 import torch
 import cvxpy as cvx
 import copy
+from flcore.clients.clientpac import clientPAC
+from flcore.servers.serverbase import Server
+from threading import Thread
+from collections import defaultdict
 
 
 class FedPAC(Server):

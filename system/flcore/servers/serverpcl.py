@@ -15,12 +15,11 @@
 # with this program; if not, write to the Free Software Foundation, Inc.,
 # 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 
-from flcore.clients.clientpcl import clientPCL
-from flcore.servers.serverbase import Server
-from utils.data_utils import read_client_data
-from threading import Thread
 import time
 import numpy as np
+from flcore.clients.clientpcl import clientPCL
+from flcore.servers.serverbase import Server
+from threading import Thread
 from collections import defaultdict
 
 

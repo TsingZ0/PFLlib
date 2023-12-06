@@ -16,11 +16,11 @@
 # 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 
 import copy
+import time
 import torch
 from flcore.clients.clientdyn import clientDyn
 from flcore.servers.serverbase import Server
 from threading import Thread
-import time
 
 
 class FedDyn(Server):

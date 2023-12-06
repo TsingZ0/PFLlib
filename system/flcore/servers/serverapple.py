@@ -16,8 +16,6 @@
 # 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 
 import torch
-import copy
-import random
 import time
 from flcore.clients.clientapple import clientAPPLE
 from flcore.servers.serverbase import Server

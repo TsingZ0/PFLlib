@@ -16,7 +16,6 @@
 # 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 
 import torch
-import torch.nn as nn
 import numpy as np
 import time
 import math

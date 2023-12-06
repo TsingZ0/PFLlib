@@ -17,7 +17,6 @@
 
 # https://github.com/jindongwang/Deep-learning-activity-recognition/blob/master/pytorch/data_preprocess.py
 import numpy as np
-import os
 import ujson
 import numpy as np
 import gc

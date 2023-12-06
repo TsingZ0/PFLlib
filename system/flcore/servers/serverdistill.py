@@ -15,11 +15,10 @@
 # with this program; if not, write to the Free Software Foundation, Inc.,
 # 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 
+import time
 from flcore.clients.clientdistill import clientDistill
 from flcore.servers.serverbase import Server
 from threading import Thread
-import time
-import numpy as np
 from collections import defaultdict
 
 

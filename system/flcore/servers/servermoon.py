@@ -15,11 +15,11 @@
 # with this program; if not, write to the Free Software Foundation, Inc.,
 # 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 
+import time
 from flcore.clients.clientmoon import clientMOON
 from flcore.servers.serverbase import Server
 from utils.data_utils import read_client_data
 from threading import Thread
-import time
 
 
 class MOON(Server):

@@ -16,6 +16,7 @@
 # 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 
 import os
+import time
 import copy
 import h5py
 from flcore.clients.clientpFedMe import clientpFedMe
@@ -38,9 +39,11 @@ class pFedMe(Server):
 
         print(f"\nJoin ratio / total clients: {self.join_ratio} / {self.num_clients}")
         print("Finished creating server and clients.")
+        self.Budget = []
 
     def train(self):
         for i in range(self.global_rounds+1):
+            s_t = time.time()
             self.selected_clients = self.select_clients()
             self.send_models()
 
@@ -69,6 +72,9 @@ class pFedMe(Server):
             self.aggregate_parameters()
             self.beta_aggregate_parameters()
 
+            self.Budget.append(time.time() - s_t)
+            print('-'*25, 'time cost', '-'*25, self.Budget[-1])
+
             if self.auto_break and self.check_done(acc_lss=[self.rs_test_acc_per], top_cnt=self.top_cnt):
                 break
 
@@ -81,6 +87,8 @@ class pFedMe(Server):
         # self.print_(max(self.rs_test_acc_per), max(
         #     self.rs_train_acc_per), min(self.rs_train_loss_per))
         print(max(self.rs_test_acc_per))
+        print("\nAverage time cost per round.")
+        print(sum(self.Budget[1:])/len(self.Budget[1:]))
 
 
         self.save_results()

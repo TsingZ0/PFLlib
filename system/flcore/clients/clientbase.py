@@ -20,7 +20,6 @@ import torch
 import torch.nn as nn
 import numpy as np
 import os
-import torch.nn.functional as F
 from torch.utils.data import DataLoader
 from sklearn.preprocessing import label_binarize
 from sklearn import metrics

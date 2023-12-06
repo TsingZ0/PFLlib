@@ -17,7 +17,6 @@
 
 import math
 import torch
-import torch.nn.functional as F
 from torch.nn import TransformerEncoder, TransformerEncoderLayer
 from torch import nn, Tensor
 

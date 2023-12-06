@@ -19,7 +19,6 @@ import numpy as np
 import torch
 import time
 import copy
-import torch.nn as nn
 from flcore.optimizers.fedoptimizer import PerAvgOptimizer
 from flcore.clients.clientbase import Client
 

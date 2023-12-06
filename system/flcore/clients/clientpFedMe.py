@@ -19,7 +19,6 @@ import numpy as np
 import time
 import copy
 import torch
-import torch.nn as nn
 from flcore.optimizers.fedoptimizer import pFedMeOptimizer
 from flcore.clients.clientbase import Client
 
