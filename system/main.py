@@ -80,7 +80,7 @@ warnings.simplefilter("ignore")
 torch.manual_seed(0)
 
 # hyper-params for Text tasks
-vocab_size = 98635
+vocab_size = 98635   #98635 for AG_News and 399198 for Sogou_News
 max_len=200
 emb_dim=32
 
