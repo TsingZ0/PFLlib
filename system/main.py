@@ -25,6 +25,13 @@ import warnings
 import numpy as np
 import torchvision
 import logging
+import sys
+sys.path.append('../')
+sys.path.append(os.path.dirname(os.path.dirname(os.path.realpath(__file__))))
+from system.flcore.trainmodel.utils import get_model
+from dataset.generate_cifar10 import generate_cifar10
+from dataset.generate_cifar100 import generate_cifar100
+from dataset.generate_mnist import generate_mnist
 
 from flcore.servers.serveravg import FedAvg
 from flcore.servers.serverpFedMe import pFedMe
@@ -79,12 +86,7 @@ logger.setLevel(logging.ERROR)
 warnings.simplefilter("ignore")
 torch.manual_seed(0)
 
-# hyper-params for Text tasks
-vocab_size = 98635   #98635 for AG_News and 399198 for Sogou_News
-max_len=200
-emb_dim=32
-
-def run(args):
+def run(args, dataset_path = None):
 
     time_list = []
     reporter = MemReporter()
@@ -96,103 +98,11 @@ def run(args):
         start = time.time()
 
         # Generate args.model
-        if model_str == "mlr": # convex
-            if "mnist" in args.dataset:
-                args.model = Mclr_Logistic(1*28*28, num_classes=args.num_classes).to(args.device)
-            elif "Cifar10" in args.dataset:
-                args.model = Mclr_Logistic(3*32*32, num_classes=args.num_classes).to(args.device)
-            else:
-                args.model = Mclr_Logistic(60, num_classes=args.num_classes).to(args.device)
-
-        elif model_str == "cnn": # non-convex
-            if "mnist" in args.dataset:
-                args.model = FedAvgCNN(in_features=1, num_classes=args.num_classes, dim=1024).to(args.device)
-            elif "Cifar10" in args.dataset:
-                args.model = FedAvgCNN(in_features=3, num_classes=args.num_classes, dim=1600).to(args.device)
-            elif "omniglot" in args.dataset:
-                args.model = FedAvgCNN(in_features=1, num_classes=args.num_classes, dim=33856).to(args.device)
-                # args.model = CifarNet(num_classes=args.num_classes).to(args.device)
-            elif "Digit5" in args.dataset:
-                args.model = Digit5CNN().to(args.device)
-            else:
-                args.model = FedAvgCNN(in_features=3, num_classes=args.num_classes, dim=10816).to(args.device)
-
-        elif model_str == "dnn": # non-convex
-            if "mnist" in args.dataset:
-                args.model = DNN(1*28*28, 100, num_classes=args.num_classes).to(args.device)
-            elif "Cifar10" in args.dataset:
-                args.model = DNN(3*32*32, 100, num_classes=args.num_classes).to(args.device)
-            else:
-                args.model = DNN(60, 20, num_classes=args.num_classes).to(args.device)
-        
-        elif model_str == "resnet":
-            args.model = torchvision.models.resnet18(pretrained=False, num_classes=args.num_classes).to(args.device)
-            
-            # args.model = torchvision.models.resnet18(pretrained=True).to(args.device)
-            # feature_dim = list(args.model.fc.parameters())[0].shape[1]
-            # args.model.fc = nn.Linear(feature_dim, args.num_classes).to(args.device)
-            
-            # args.model = resnet18(num_classes=args.num_classes, has_bn=True, bn_block_num=4).to(args.device)
-        
-        elif model_str == "resnet10":
-            args.model = resnet10(num_classes=args.num_classes).to(args.device)
-        
-        elif model_str == "resnet34":
-            args.model = torchvision.models.resnet34(pretrained=False, num_classes=args.num_classes).to(args.device)
-
-        elif model_str == "alexnet":
-            args.model = alexnet(pretrained=False, num_classes=args.num_classes).to(args.device)
-            
-            # args.model = alexnet(pretrained=True).to(args.device)
-            # feature_dim = list(args.model.fc.parameters())[0].shape[1]
-            # args.model.fc = nn.Linear(feature_dim, args.num_classes).to(args.device)
-            
-        elif model_str == "googlenet":
-            args.model = torchvision.models.googlenet(pretrained=False, aux_logits=False, num_classes=args.num_classes).to(args.device)
-            
-            # args.model = torchvision.models.googlenet(pretrained=True, aux_logits=False).to(args.device)
-            # feature_dim = list(args.model.fc.parameters())[0].shape[1]
-            # args.model.fc = nn.Linear(feature_dim, args.num_classes).to(args.device)
-
-        elif model_str == "mobilenet_v2":
-            args.model = mobilenet_v2(pretrained=False, num_classes=args.num_classes).to(args.device)
-            
-            # args.model = mobilenet_v2(pretrained=True).to(args.device)
-            # feature_dim = list(args.model.fc.parameters())[0].shape[1]
-            # args.model.fc = nn.Linear(feature_dim, args.num_classes).to(args.device)
-            
-        elif model_str == "lstm":
-            args.model = LSTMNet(hidden_dim=emb_dim, vocab_size=vocab_size, num_classes=args.num_classes).to(args.device)
-
-        elif model_str == "bilstm":
-            args.model = BiLSTM_TextClassification(input_size=vocab_size, hidden_size=emb_dim, output_size=args.num_classes, 
-                        num_layers=1, embedding_dropout=0, lstm_dropout=0, attention_dropout=0, 
-                        embedding_length=emb_dim).to(args.device)
-
-        elif model_str == "fastText":
-            args.model = fastText(hidden_dim=emb_dim, vocab_size=vocab_size, num_classes=args.num_classes).to(args.device)
-
-        elif model_str == "TextCNN":
-            args.model = TextCNN(hidden_dim=emb_dim, max_len=max_len, vocab_size=vocab_size, 
-                            num_classes=args.num_classes).to(args.device)
-
-        elif model_str == "Transformer":
-            args.model = TransformerModel(ntoken=vocab_size, d_model=emb_dim, nhead=8, d_hid=emb_dim, nlayers=2, 
-                            num_classes=args.num_classes).to(args.device)
-        
-        elif model_str == "AmazonMLP":
-            args.model = AmazonMLP().to(args.device)
-
-        elif model_str == "harcnn":
-            if args.dataset == 'har':
-                args.model = HARCNN(9, dim_hidden=1664, num_classes=args.num_classes, conv_kernel_size=(1, 9), pool_kernel_size=(1, 2)).to(args.device)
-            elif args.dataset == 'pamap':
-                args.model = HARCNN(9, dim_hidden=3712, num_classes=args.num_classes, conv_kernel_size=(1, 9), pool_kernel_size=(1, 2)).to(args.device)
-
-        else:
-            raise NotImplementedError
-
+        args.model = get_model(args)
+        # dataset path
         print(args.model)
+        if dataset_path:
+            args.dataset = dataset_path
 
         # select algorithm
         if args.algorithm == "FedAvg":
@@ -475,7 +385,18 @@ if __name__ == "__main__":
     # FedAvgDBE
     parser.add_argument('-mo', "--momentum", type=float, default=0.1)
     parser.add_argument('-klw', "--kl_weight", type=float, default=0.0)
+    #data
+    parser.add_argument('--niid', type=bool, default=True)
+    parser.add_argument('--balance', type=bool, default=True)
+    parser.add_argument('--partition', type=str, default="dir")
+    parser.add_argument('--niid_alpha', type=float, default=0.1)
+    parser.add_argument('--seed', type=int, default=1)
+    # hyper-params for Text tasks
 
+    # hyper-params for Text tasks
+    parser.add_argument('--vocab_size', type=int, default=98635)
+    parser.add_argument('--max_len', type=int, default=200)
+    parser.add_argument('--emb_dim', type=int, default=32)
 
     args = parser.parse_args()
 
@@ -521,11 +442,13 @@ if __name__ == "__main__":
     print("Fine tuning epoches on new clients: {}".format(args.fine_tuning_epoch_new))
     print("=" * 50)
 
-
-    # if args.dataset == "mnist" or args.dataset == "fmnist":
-    #     generate_mnist('../dataset/mnist/', args.num_clients, 10, args.niid)
-    # elif args.dataset == "Cifar10" or args.dataset == "Cifar100":
-    #     generate_cifar10('../dataset/Cifar10/', args.num_clients, 10, args.niid)
+    print(args.balance)
+    if args.dataset == "mnist" or args.dataset == "fmnist":
+        train_path, test_path = generate_mnist('../dataset/fmnist/', args.num_clients, args.num_classes, args.niid, args.balance, args.partition, args.niid_alpha, args.seed)
+    elif args.dataset == "Cifar10" :
+        train_path, test_path = generate_cifar10('../dataset/Cifar10/', args.num_clients, args.num_classes, args.niid, args.balance, args.partition, args.niid_alpha, args.seed)
+    elif args.dataset == "Cifar100":
+        train_path, test_path = generate_cifar100('../dataset/Cifar100/', args.num_clients, args.num_classes, args.niid, args.balance, args.partition, args.niid_alpha, args.seed)
     # else:
     #     generate_synthetic('../dataset/synthetic/', args.num_clients, 10, args.niid)
 
@@ -537,7 +460,12 @@ if __name__ == "__main__":
     #     on_trace_ready=torch.profiler.tensorboard_trace_handler('./log')
     #     ) as prof:
     # with torch.autograd.profiler.profile(profile_memory=True) as prof:
-    run(args)
+
+    if train_path:
+        dataset_path = os.path.abspath(os.path.join(train_path, os.path.pardir))
+    else: dataset_path = None
+
+    run(args, dataset_path)
 
     
     # print(prof.key_averages().table(sort_by="cpu_time_total", row_limit=20))

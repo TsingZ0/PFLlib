@@ -22,37 +22,25 @@ import random
 import torch
 import torchvision
 import torchvision.transforms as transforms
-from utils.dataset_utils import check, separate_data, split_data, save_file
-
-
-random.seed(1)
-np.random.seed(1)
-num_clients = 20
-num_classes = 10
-dir_path = "Cifar10/"
-
+sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+from dataset.utils.dataset_utils import check, get_path, separate_data, split_data, save_file
 
 # Allocate data to users
-def generate_cifar10(dir_path, num_clients, num_classes, niid, balance, partition):
-    if not os.path.exists(dir_path):
-        os.makedirs(dir_path)
-        
-    # Setup directory for train/test data
-    config_path = dir_path + "config.json"
-    train_path = dir_path + "train/"
-    test_path = dir_path + "test/"
+def generate_cifar10(dir_path: str, num_clients: int, num_classes: int, niid: bool, balance: bool, partition: str, niid_alpha: float, seed: int, *args, **kwargs):
+    random.seed(seed)
+    np.random.seed(seed)
 
-    if check(config_path, train_path, test_path, num_clients, num_classes, niid, balance, partition):
-        return
-        
+    raw_data, config_path, train_path, test_path, is_exist = get_path(dir_path, num_clients, num_classes, niid, balance, partition, niid_alpha)
+    if is_exist: return train_path, test_path
+
     # Get Cifar10 data
     transform = transforms.Compose(
         [transforms.ToTensor(), transforms.Normalize((0.5, 0.5, 0.5), (0.5, 0.5, 0.5))])
 
     trainset = torchvision.datasets.CIFAR10(
-        root=dir_path+"rawdata", train=True, download=True, transform=transform)
+        root=raw_data+"rawdata", train=True, download=True, transform=transform)
     testset = torchvision.datasets.CIFAR10(
-        root=dir_path+"rawdata", train=False, download=True, transform=transform)
+        root=raw_data+"rawdata", train=False, download=True, transform=transform)
     trainloader = torch.utils.data.DataLoader(
         trainset, batch_size=len(trainset.data), shuffle=False)
     testloader = torch.utils.data.DataLoader(
@@ -79,10 +67,11 @@ def generate_cifar10(dir_path, num_clients, num_classes, niid, balance, partitio
     #     dataset.append(dataset_image[idx])
 
     X, y, statistic = separate_data((dataset_image, dataset_label), num_clients, num_classes,  
-                                    niid, balance, partition, class_per_client=2)
+                                    niid, balance, partition, class_per_client=2, niid_alpha=0.1)
     train_data, test_data = split_data(X, y)
     save_file(config_path, train_path, test_path, train_data, test_data, num_clients, num_classes, 
-        statistic, niid, balance, partition)
+        statistic, niid, balance, partition, niid_alpha)
+    return train_path, test_path
 
 
 if __name__ == "__main__":
@@ -90,4 +79,4 @@ if __name__ == "__main__":
     balance = True if sys.argv[2] == "balance" else False
     partition = sys.argv[3] if sys.argv[3] != "-" else None
 
-    generate_cifar10(dir_path, num_clients, num_classes, niid, balance, partition)
+    # generate_cifar10(dir_path, num_clients, num_classes, niid, balance, partition, niid_alpha, seed)
