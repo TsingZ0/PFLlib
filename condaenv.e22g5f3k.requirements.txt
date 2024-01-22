@@ -1,9 +1,0 @@
-torch==2.0.1
-torchaudio
-torchtext
-torchvision
-calmsize
-memory-profiler
-opacus
-portalocker
-cvxpy
