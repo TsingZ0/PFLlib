@@ -1,0 +1,77 @@
+Bottleneck @ file:///work/ci_py311/bottleneck_1676827011612/work
+calmsize==0.1.3
+certifi==2023.11.17
+charset-normalizer==3.3.2
+clarabel==0.6.0
+cmake==3.28.1
+contourpy @ file:///croot/contourpy_1700583582875/work
+cvxpy==1.4.2
+cycler @ file:///tmp/build/80754af9/cycler_1637851556182/work
+ecos==2.0.12
+filelock==3.13.1
+fonttools==4.25.0
+h5py @ file:///croot/h5py_1691589708553/work
+idna==3.6
+Jinja2==3.1.3
+joblib @ file:///croot/joblib_1685113087166/work
+kiwisolver @ file:///work/ci_py311/kiwisolver_1676827230232/work
+lit==17.0.6
+MarkupSafe==2.1.4
+matplotlib @ file:///croot/matplotlib-suite_1698692105134/work
+memory-profiler==0.61.0
+mkl-fft @ file:///croot/mkl_fft_1695058164594/work
+mkl-random @ file:///croot/mkl_random_1695059800811/work
+mkl-service==2.4.0
+mpmath==1.3.0
+munkres==1.1.4
+networkx==3.2.1
+numexpr @ file:///croot/numexpr_1696515281613/work
+numpy @ file:///work/mkl/numpy_and_numpy_base_1682953417311/work
+nvidia-cublas-cu11==11.10.3.66
+nvidia-cuda-cupti-cu11==11.7.101
+nvidia-cuda-nvrtc-cu11==11.7.99
+nvidia-cuda-runtime-cu11==11.7.99
+nvidia-cudnn-cu11==8.5.0.96
+nvidia-cufft-cu11==10.9.0.58
+nvidia-curand-cu11==10.2.10.91
+nvidia-cusolver-cu11==11.4.0.1
+nvidia-cusparse-cu11==11.7.4.91
+nvidia-nccl-cu11==2.14.3
+nvidia-nvtx-cu11==11.7.91
+opacus==1.4.0
+opt-einsum==3.3.0
+osqp==0.6.3
+packaging @ file:///croot/packaging_1693575174725/work
+pandas @ file:///croot/pandas_1702317985682/work/dist/pandas-2.1.4-cp311-cp311-linux_x86_64.whl#sha256=a15c481f210e34ff91dac4944a5f8f0fe38ff2c3afa7c45ea621ff460d6f9b57
+Pillow @ file:///croot/pillow_1696580024257/work
+ply==3.11
+portalocker==2.8.2
+psutil==5.9.8
+pybind11==2.11.1
+pyparsing @ file:///work/ci_py311/pyparsing_1677811559502/work
+PyQt5==5.15.10
+PyQt5-sip @ file:///croot/pyqt-split_1698769088074/work/pyqt_sip
+python-dateutil @ file:///tmp/build/80754af9/python-dateutil_1626374649649/work
+pytz @ file:///croot/pytz_1695131579487/work
+qdldl==0.1.7.post0
+requests==2.31.0
+scikit-learn @ file:///croot/scikit-learn_1694788527225/work
+scipy @ file:///croot/scipy_1701295040508/work/dist/scipy-1.11.4-cp311-cp311-linux_x86_64.whl#sha256=4a1942ba48a330f141b1056df960d77f9be4cee3e2d999d754e791da201edffd
+scs==3.2.4.post1
+seaborn @ file:///work/ci_py311/seaborn_1676845747354/work
+sip @ file:///croot/sip_1698675935381/work
+six @ file:///tmp/build/80754af9/six_1644875935023/work
+sympy==1.12
+threadpoolctl @ file:///Users/ktietz/demo/mc3/conda-bld/threadpoolctl_1629802263681/work
+torch==2.0.1
+torchaudio==2.0.2
+torchdata==0.6.1
+torchtext==0.15.2
+torchvision==0.15.2
+tornado @ file:///croot/tornado_1696936946304/work
+tqdm==4.66.1
+triton==2.0.0
+typing_extensions==4.9.0
+tzdata @ file:///croot/python-tzdata_1690578112552/work
+ujson @ file:///work/ci_py311/ujson_1676828903327/work
+urllib3==2.1.0
