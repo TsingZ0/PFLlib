@@ -27,8 +27,9 @@ import torchvision
 import logging
 import sys
 sys.path.append('../')
+sys.path.append('system/')
 sys.path.append(os.path.dirname(os.path.dirname(os.path.realpath(__file__))))
-from system.flcore.trainmodel.utils import get_model
+from flcore.trainmodel.utils import get_model
 from dataset.generate_cifar10 import generate_cifar10
 from dataset.generate_cifar100 import generate_cifar100
 from dataset.generate_mnist import generate_mnist
@@ -79,6 +80,8 @@ from flcore.trainmodel.transformer import *
 
 from utils.result_utils import average_data
 from utils.mem_utils import MemReporter
+
+from accelerate import Accelerator
 
 logger = logging.getLogger()
 logger.setLevel(logging.ERROR)
@@ -400,11 +403,14 @@ if __name__ == "__main__":
 
     args = parser.parse_args()
 
-    os.environ["CUDA_VISIBLE_DEVICES"] = args.device_id
+    # os.environ["CUDA_VISIBLE_DEVICES"] = args.device_id
 
-    if args.device == "cuda" and not torch.cuda.is_available():
-        print("\ncuda is not avaiable.\n")
-        args.device = "cpu"
+    # if args.device == "cuda" and not torch.cuda.is_available():
+    #     print("\ncuda is not avaiable.\n")
+    #     args.device = "cpu"
+    accelerator = Accelerator()
+    args.device = accelerator.device
+    print("device: ",args.device)
 
     print("=" * 50)
 
@@ -444,11 +450,11 @@ if __name__ == "__main__":
 
     print(args.balance)
     if args.dataset == "mnist" or args.dataset == "fmnist":
-        train_path, test_path = generate_mnist('../dataset/fmnist/', args.num_clients, args.num_classes, args.niid, args.balance, args.partition, args.niid_alpha, args.seed)
+        train_path, test_path = generate_mnist('data/fmnist/', args.num_clients, args.num_classes, args.niid, args.balance, args.partition, args.niid_alpha, args.seed)
     elif args.dataset == "Cifar10" :
-        train_path, test_path = generate_cifar10('../dataset/Cifar10/', args.num_clients, args.num_classes, args.niid, args.balance, args.partition, args.niid_alpha, args.seed)
+        train_path, test_path = generate_cifar10('data/Cifar10/', args.num_clients, args.num_classes, args.niid, args.balance, args.partition, args.niid_alpha, args.seed)
     elif args.dataset == "Cifar100":
-        train_path, test_path = generate_cifar100('../dataset/Cifar100/', args.num_clients, args.num_classes, args.niid, args.balance, args.partition, args.niid_alpha, args.seed)
+        train_path, test_path = generate_cifar100('data/Cifar100/', args.num_clients, args.num_classes, args.niid, args.balance, args.partition, args.niid_alpha, args.seed)
     # else:
     #     generate_synthetic('../dataset/synthetic/', args.num_clients, 10, args.niid)
 

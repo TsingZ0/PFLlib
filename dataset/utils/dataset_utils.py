@@ -42,12 +42,12 @@ def check(config_path, train_path, test_path, num_clients, num_classes, niid=Fal
             print("\nDataset already generated.\n")
             return True
 
-    dir_path = os.path.dirname(train_path)
-    if not os.path.exists(dir_path):
-        os.makedirs(dir_path)
-    dir_path = os.path.dirname(test_path)
-    if not os.path.exists(dir_path):
-        os.makedirs(dir_path)
+    # dir_path = os.path.dirname(train_path)
+    if not os.path.exists(train_path):
+        os.makedirs(train_path)
+    # dir_path = os.path.dirname(test_path)
+    if not os.path.exists(test_path):
+        os.makedirs(test_path)
 
     return False
 
@@ -203,6 +203,7 @@ def get_path(dir_path, num_clients, num_classes, niid, balance, partition, niid_
         dir_path = dir_path + "dir/" + str(niid_alpha) + "/" + str(num_clients) + 'c/'
     
     if not os.path.exists(dir_path):
+        print("dir_path: ",dir_path)
         os.makedirs(dir_path)
         
     # Setup directory for train/test data

@@ -28,7 +28,8 @@ class clientAVG(Client):
         super().__init__(args, id, train_samples, test_samples, **kwargs)
 
     def train(self):
-        trainloader = self.load_train_data()
+        # trainloader = self.load_train_data()
+        trainloader = self.train_loader
         # self.model.to(self.device)
         self.model.train()
 
@@ -56,7 +57,8 @@ class clientAVG(Client):
                 output = self.model(x)
                 loss = self.loss(output, y)
                 self.optimizer.zero_grad()
-                loss.backward()
+                # loss.backward()
+                self.accelerator.backward(loss)
                 self.optimizer.step()
 
         # self.model.cpu()

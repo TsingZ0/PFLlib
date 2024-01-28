@@ -25,7 +25,6 @@ import random
 from utils.data_utils import read_client_data
 from utils.dlg import DLG
 
-
 class Server(object):
     def __init__(self, args, times):
         # Set up the main attributes
