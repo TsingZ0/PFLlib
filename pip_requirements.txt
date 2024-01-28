@@ -1,77 +1,147 @@
-Bottleneck @ file:///work/ci_py311/bottleneck_1676827011612/work
+accelerate==0.26.1
+aiohttp==3.9.1
+aiohttp-cors==0.7.0
+aiorwlock==1.4.0
+aiosignal==1.3.1
+annotated-types==0.6.0
+anyio==4.2.0
+async-timeout==4.0.3
+attrs==23.2.0
+blessed==1.20.0
+Bottleneck==1.3.5
+Brotli==1.0.9
+cachetools==5.3.2
 calmsize==0.1.3
 certifi==2023.11.17
+cffi==1.16.0
+chardet==4.0.0
 charset-normalizer==3.3.2
 clarabel==0.6.0
-cmake==3.28.1
-contourpy @ file:///croot/contourpy_1700583582875/work
+click==8.1.7
+cloudpickle==3.0.0
+colorful==0.5.6
+contourpy==1.2.0
+cryptography==41.0.7
 cvxpy==1.4.2
-cycler @ file:///tmp/build/80754af9/cycler_1637851556182/work
+cycler==0.11.0
+deepspeed==0.13.1
+dill==0.3.7
+distlib==0.3.8
 ecos==2.0.12
+exceptiongroup==1.2.0
+fastapi==0.109.0
 filelock==3.13.1
 fonttools==4.25.0
-h5py @ file:///croot/h5py_1691589708553/work
+frozenlist==1.4.1
+fsspec==2023.12.2
+gmpy2==2.1.2
+google-api-core==2.15.0
+google-auth==2.27.0
+googleapis-common-protos==1.62.0
+gpustat==1.1.1
+grpcio==1.60.0
+h11==0.14.0
+h5py==3.9.0
+hjson==3.1.0
+httptools==0.6.1
+huggingface-hub==0.20.3
 idna==3.6
-Jinja2==3.1.3
-joblib @ file:///croot/joblib_1685113087166/work
-kiwisolver @ file:///work/ci_py311/kiwisolver_1676827230232/work
-lit==17.0.6
-MarkupSafe==2.1.4
-matplotlib @ file:///croot/matplotlib-suite_1698692105134/work
-memory-profiler==0.61.0
-mkl-fft @ file:///croot/mkl_fft_1695058164594/work
-mkl-random @ file:///croot/mkl_random_1695059800811/work
+jax==0.4.23
+jaxlib==0.4.23
+Jinja2==3.1.2
+joblib==1.2.0
+jsonschema==4.21.1
+jsonschema-specifications==2023.12.1
+kiwisolver==1.4.4
+MarkupSafe==2.1.3
+matplotlib==3.8.0
+mkl-fft==1.3.8
+mkl-random==1.2.4
 mkl-service==2.4.0
+ml-dtypes==0.3.2
 mpmath==1.3.0
+msgpack==1.0.7
+multidict==6.0.4
+multiprocess==0.70.15
 munkres==1.1.4
 networkx==3.2.1
-numexpr @ file:///croot/numexpr_1696515281613/work
-numpy @ file:///work/mkl/numpy_and_numpy_base_1682953417311/work
-nvidia-cublas-cu11==11.10.3.66
-nvidia-cuda-cupti-cu11==11.7.101
-nvidia-cuda-nvrtc-cu11==11.7.99
-nvidia-cuda-runtime-cu11==11.7.99
-nvidia-cudnn-cu11==8.5.0.96
-nvidia-cufft-cu11==10.9.0.58
-nvidia-curand-cu11==10.2.10.91
-nvidia-cusolver-cu11==11.4.0.1
-nvidia-cusparse-cu11==11.7.4.91
-nvidia-nccl-cu11==2.14.3
-nvidia-nvtx-cu11==11.7.91
+ninja==1.11.1.1
+numexpr==2.8.7
+numpy==1.26.3
+nvidia-ml-py==12.535.133
 opacus==1.4.0
+opencensus==0.11.4
+opencensus-context==0.1.3
 opt-einsum==3.3.0
 osqp==0.6.3
-packaging @ file:///croot/packaging_1693575174725/work
-pandas @ file:///croot/pandas_1702317985682/work/dist/pandas-2.1.4-cp311-cp311-linux_x86_64.whl#sha256=a15c481f210e34ff91dac4944a5f8f0fe38ff2c3afa7c45ea621ff460d6f9b57
-Pillow @ file:///croot/pillow_1696580024257/work
+packaging==23.1
+pandas==2.1.4
+Pillow==10.0.1
+pip==22.3.1
+platformdirs==4.1.0
 ply==3.11
-portalocker==2.8.2
+prometheus-client==0.19.0
+protobuf==3.20.3
 psutil==5.9.8
+py-cpuinfo==9.0.0
+py-spy==0.3.14
+pyarrow==15.0.0
+pyasn1==0.5.1
+pyasn1-modules==0.3.0
 pybind11==2.11.1
-pyparsing @ file:///work/ci_py311/pyparsing_1677811559502/work
+pycparser==2.21
+pydantic==2.5.3
+pydantic_core==2.14.6
+pynvml==11.5.0
+pyOpenSSL==23.2.0
+pyparsing==3.0.9
 PyQt5==5.15.10
-PyQt5-sip @ file:///croot/pyqt-split_1698769088074/work/pyqt_sip
-python-dateutil @ file:///tmp/build/80754af9/python-dateutil_1626374649649/work
-pytz @ file:///croot/pytz_1695131579487/work
+PyQt5-sip==12.13.0
+PySocks==1.7.1
+python-dateutil==2.8.2
+python-dotenv==1.0.1
+pytz==2023.3.post1
+PyYAML==6.0.1
 qdldl==0.1.7.post0
+ray==2.9.0
+referencing==0.32.1
 requests==2.31.0
-scikit-learn @ file:///croot/scikit-learn_1694788527225/work
-scipy @ file:///croot/scipy_1701295040508/work/dist/scipy-1.11.4-cp311-cp311-linux_x86_64.whl#sha256=4a1942ba48a330f141b1056df960d77f9be4cee3e2d999d754e791da201edffd
+rpds-py==0.17.1
+rsa==4.9
+safetensors==0.4.2
+scikit-learn==1.3.0
+scipy==1.11.4
 scs==3.2.4.post1
-seaborn @ file:///work/ci_py311/seaborn_1676845747354/work
-sip @ file:///croot/sip_1698675935381/work
-six @ file:///tmp/build/80754af9/six_1644875935023/work
+seaborn==0.12.2
+secretflow-ray==2.2.0
+secretflow-rayfed==0.2.0a16
+setuptools==68.2.2
+sip==6.7.12
+six==1.16.0
+smart-open==6.4.0
+sniffio==1.3.0
+spu==0.7.0b0
+starlette==0.35.1
 sympy==1.12
-threadpoolctl @ file:///Users/ktietz/demo/mc3/conda-bld/threadpoolctl_1629802263681/work
-torch==2.0.1
-torchaudio==2.0.2
-torchdata==0.6.1
-torchtext==0.15.2
-torchvision==0.15.2
-tornado @ file:///croot/tornado_1696936946304/work
+tensorboardX==2.6.2.2
+termcolor==2.4.0
+threadpoolctl==2.2.0
+tomli==2.0.1
+torch==2.1.2
+torchaudio==2.1.2
+torchvision==0.16.2
+tornado==6.3.3
 tqdm==4.66.1
-triton==2.0.0
+triton==2.1.0
 typing_extensions==4.9.0
-tzdata @ file:///croot/python-tzdata_1690578112552/work
-ujson @ file:///work/ci_py311/ujson_1676828903327/work
+tzdata==2023.3
+ujson==5.4.0
 urllib3==2.1.0
+uvicorn==0.27.0
+uvloop==0.19.0
+virtualenv==20.25.0
+watchfiles==0.21.0
+wcwidth==0.2.13
+websockets==12.0
+wheel==0.41.2
+yarl==1.9.4
