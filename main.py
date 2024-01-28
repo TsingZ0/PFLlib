@@ -452,25 +452,26 @@ if __name__ == "__main__":
     if args.dataset == "mnist" or args.dataset == "fmnist":
         train_path, test_path = generate_mnist('data/fmnist/', args.num_clients, args.num_classes, args.niid, args.balance, args.partition, args.niid_alpha, args.seed)
     elif args.dataset == "Cifar10" :
-        train_path, test_path = generate_cifar10('data/Cifar10/', args.num_clients, args.num_classes, args.niid, args.balance, args.partition, args.niid_alpha, args.seed)
+        train_path, test_path = generate_cifar10('data/Cifar10/', args.num_clients, args.num_classes, args.niid, args.balance, args.partition, args.niid_alpha, args.seed, accelerator)
     elif args.dataset == "Cifar100":
         train_path, test_path = generate_cifar100('data/Cifar100/', args.num_clients, args.num_classes, args.niid, args.balance, args.partition, args.niid_alpha, args.seed)
-    # else:
-    #     generate_synthetic('../dataset/synthetic/', args.num_clients, 10, args.niid)
+        # else:
+        #     generate_synthetic('../dataset/synthetic/', args.num_clients, 10, args.niid)
 
-    # with torch.profiler.profile(
-    #     activities=[
-    #         torch.profiler.ProfilerActivity.CPU,
-    #         torch.profiler.ProfilerActivity.CUDA],
-    #     profile_memory=True, 
-    #     on_trace_ready=torch.profiler.tensorboard_trace_handler('./log')
-    #     ) as prof:
-    # with torch.autograd.profiler.profile(profile_memory=True) as prof:
+        # with torch.profiler.profile(
+        #     activities=[
+        #         torch.profiler.ProfilerActivity.CPU,
+        #         torch.profiler.ProfilerActivity.CUDA],
+        #     profile_memory=True, 
+        #     on_trace_ready=torch.profiler.tensorboard_trace_handler('./log')
+        #     ) as prof:
+        # with torch.autograd.profiler.profile(profile_memory=True) as prof:
+    
+    # accelerator.wait_for_everyone()
 
     if train_path:
         dataset_path = os.path.abspath(os.path.join(train_path, os.path.pardir))
     else: dataset_path = None
-
     run(args, dataset_path)
 
     
