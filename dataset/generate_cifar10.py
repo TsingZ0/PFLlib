@@ -27,7 +27,7 @@ from dataset.utils.dataset_utils import check, get_path, separate_data, split_da
 import torch.distributed as dist
 
 # Allocate data to users
-def generate_cifar10(dir_path: str, num_clients: int, num_classes: int, niid: bool, balance: bool, partition: str, niid_alpha: float, seed: int, accelerator):
+def generate_cifar10(dir_path: str, num_clients: int, num_classes: int, niid: bool, balance: bool, partition: str, niid_alpha: float, seed: int):
     random.seed(seed)
     np.random.seed(seed)
 
@@ -38,21 +38,11 @@ def generate_cifar10(dir_path: str, num_clients: int, num_classes: int, niid: bo
     transform = transforms.Compose(
         [transforms.ToTensor(), transforms.Normalize((0.5, 0.5, 0.5), (0.5, 0.5, 0.5))])
     
-    if accelerator.is_local_main_process:
-        trainset = torchvision.datasets.CIFAR10(
-            root=raw_data+"rawdata", train=True, download=True, transform=transform)
-        testset = torchvision.datasets.CIFAR10(
-            root=raw_data+"rawdata", train=False, download=True, transform=transform)
-    else: accelerator.wait_for_everyone()
-
-    if not accelerator.is_main_process:
-        trainset = torchvision.datasets.CIFAR10(
-            root=raw_data+"rawdata", train=True, download=True, transform=transform)
-        testset = torchvision.datasets.CIFAR10(
-            root=raw_data+"rawdata", train=False, download=True, transform=transform)
-    else:
-        accelerator.wait_for_everyone()
-
+    trainset = torchvision.datasets.CIFAR10(
+        root=raw_data+"rawdata", train=True, download=True, transform=transform)
+    testset = torchvision.datasets.CIFAR10(
+        root=raw_data+"rawdata", train=False, download=True, transform=transform)
+    
     trainloader = torch.utils.data.DataLoader(
         trainset, batch_size=len(trainset.data), shuffle=False)
     testloader = torch.utils.data.DataLoader(

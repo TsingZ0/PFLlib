@@ -81,8 +81,6 @@ from flcore.trainmodel.transformer import *
 from utils.result_utils import average_data
 from utils.mem_utils import MemReporter
 
-from accelerate import Accelerator
-
 logger = logging.getLogger()
 logger.setLevel(logging.ERROR)
 
@@ -405,11 +403,10 @@ if __name__ == "__main__":
 
     # os.environ["CUDA_VISIBLE_DEVICES"] = args.device_id
 
-    # if args.device == "cuda" and not torch.cuda.is_available():
-    #     print("\ncuda is not avaiable.\n")
-    #     args.device = "cpu"
-    accelerator = Accelerator()
-    args.device = accelerator.device
+    if args.device == "cuda" and not torch.cuda.is_available():
+        print("\ncuda is not avaiable.\n")
+        args.device = "cpu"
+
     print("device: ",args.device)
 
     print("=" * 50)
@@ -452,7 +449,7 @@ if __name__ == "__main__":
     if args.dataset == "mnist" or args.dataset == "fmnist":
         train_path, test_path = generate_mnist('data/fmnist/', args.num_clients, args.num_classes, args.niid, args.balance, args.partition, args.niid_alpha, args.seed)
     elif args.dataset == "Cifar10" :
-        train_path, test_path = generate_cifar10('data/Cifar10/', args.num_clients, args.num_classes, args.niid, args.balance, args.partition, args.niid_alpha, args.seed, accelerator)
+        train_path, test_path = generate_cifar10('data/Cifar10/', args.num_clients, args.num_classes, args.niid, args.balance, args.partition, args.niid_alpha, args.seed)
     elif args.dataset == "Cifar100":
         train_path, test_path = generate_cifar100('data/Cifar100/', args.num_clients, args.num_classes, args.niid, args.balance, args.partition, args.niid_alpha, args.seed)
         # else:

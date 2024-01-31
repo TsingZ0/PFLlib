@@ -1,0 +1,8 @@
+[Unit]
+Description=Git Push Service
+
+[Service]
+ExecStart=/opt/tiger/PFLlib/git-push.sh
+
+[Install]
+WantedBy=default.target

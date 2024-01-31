@@ -24,7 +24,6 @@ from torch.utils.data import DataLoader
 from sklearn.preprocessing import label_binarize
 from sklearn import metrics
 from utils.data_utils import read_client_data
-from accelerate import Accelerator
 
 class Client(object):
     """
@@ -32,8 +31,6 @@ class Client(object):
     """
 
     def __init__(self, args, id, train_samples, test_samples, **kwargs):
-        self.accelerator = Accelerator()
-
         self.model = copy.deepcopy(args.model)
         self.algorithm = args.algorithm
         self.dataset = args.dataset
@@ -73,10 +70,6 @@ class Client(object):
 
         self.train_loader = self.load_train_data()
         self.test_loader = self.load_test_data()
-        # Send everything through `accelerator.prepare`
-        self.train_loader, self.test_loader, self.model, self.optimizer = self.accelerator.prepare(
-            self.train_loader, self.test_loader, self.model, self.optimizer
-        )
 
 
     def load_train_data(self, batch_size=None):
