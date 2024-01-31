@@ -436,8 +436,8 @@ if __name__ == "__main__":
     print("Auto break: {}".format(args.auto_break))
     if not args.auto_break:
         print("Global rounds: {}".format(args.global_rounds))
-    if args.device == "cuda":
-        print("Cuda device id: {}".format(os.environ["CUDA_VISIBLE_DEVICES"]))
+    # if args.device == "cuda":
+    #     print("Cuda device id: {}".format(os.environ["CUDA_VISIBLE_DEVICES"]))
     print("DLG attack: {}".format(args.dlg_eval))
     if args.dlg_eval:
         print("DLG attack round gap: {}".format(args.dlg_gap))

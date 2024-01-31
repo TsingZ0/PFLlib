@@ -18,8 +18,7 @@
 import time
 from flcore.clients.clientavg import clientAVG
 from flcore.servers.serverbase import Server
-from threading import Thread
-
+from multiprocessing import  Pool
 
 class FedAvg(Server):
     def __init__(self, args, times):
@@ -46,9 +45,12 @@ class FedAvg(Server):
                 print(f"\n-------------Round number: {i}-------------")
                 print("\nEvaluate global model")
                 self.evaluate()
-
+            
+            pool = Pool()
             for client in self.selected_clients:
-                client.train()
+                pool.apply_async(client.train)
+            pool.close()
+            pool.join()
 
             # threads = [Thread(target=client.train)
             #            for client in self.selected_clients]

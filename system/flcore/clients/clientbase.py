@@ -24,6 +24,8 @@ from torch.utils.data import DataLoader
 from sklearn.preprocessing import label_binarize
 from sklearn import metrics
 from utils.data_utils import read_client_data
+from torch.nn.parallel import DistributedDataParallel as DDP
+import torch.distributed as dist
 
 class Client(object):
     """
@@ -31,7 +33,10 @@ class Client(object):
     """
 
     def __init__(self, args, id, train_samples, test_samples, **kwargs):
+        port = 30000 + int(id) 
+        dist.init_process_group(backend="nccl", init_method="tcp:////127.0.0.1:{}".format(port), world_size=args.num_clients+1, rank=id+1)
         self.model = copy.deepcopy(args.model)
+        self.model = DDP(self.model,device_ids=[id%torch.cuda.device_count()])
         self.algorithm = args.algorithm
         self.dataset = args.dataset
         self.device = args.device
@@ -70,8 +75,18 @@ class Client(object):
 
         self.train_loader = self.load_train_data()
         self.test_loader = self.load_test_data()
-
-
+#——————————————————————————————————————————————————————————————————————#
+    def hook(self, func):
+        def wrapper(*args, **kwargs):
+            # 执行钩子操作
+            print('Before running the function {}()'.format(func.__name__))
+            self.model = nn.DataParallel(self.model)
+            result = func(*args, **kwargs)
+            # 执行钩子操作
+            print('After running the function {}()'.format(func.__name__))
+            return result
+        return wrapper
+#——————————————————————————————————————————————————————————————————————#
     def load_train_data(self, batch_size=None):
         if batch_size == None:
             batch_size = self.batch_size

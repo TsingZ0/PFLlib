@@ -24,6 +24,8 @@ import time
 import random
 from utils.data_utils import read_client_data
 from utils.dlg import DLG
+import multiprocessing as mp
+import torch.distributed as dist
 
 class Server(object):
     def __init__(self, args, times):
@@ -77,6 +79,10 @@ class Server(object):
         self.new_clients = []
         self.eval_new_clients = False
         self.fine_tuning_epoch_new = args.fine_tuning_epoch_new
+        mp.set_start_method('spawn')
+        os.environ['MASTER_ADDR']='localhost'
+        os.environ['MASTER_PORT']= '30000'
+        dist.init_process_group("tcp://127.0.0.1:30000", rank=0, world_size=self.num_clients+1)
 
     def set_clients(self, clientObj):
         for i, train_slow, send_slow in zip(range(self.num_clients), self.train_slow_clients, self.send_slow_clients):
