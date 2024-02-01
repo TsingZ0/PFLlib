@@ -27,10 +27,7 @@ from utils.data_utils import read_client_data
 from utils.dlg import DLG
 import multiprocessing as mp
 import torch.distributed as dist
-import ray
-import fed
 
-@fed.remote
 class Server(object):
     def __init__(self, args, times):
         # Set up the main attributes
@@ -83,19 +80,12 @@ class Server(object):
         self.new_clients = []
         self.eval_new_clients = False
         self.fine_tuning_epoch_new = args.fine_tuning_epoch_new
-        # mp.set_start_method('spawn')
-        ray.init(address='local', include_dashboard=False)
-        addresses = {}
-        for i in range(self.num_clients):
-            addresses[str(i+1)]='127.0.0.1:{}'.format(11000+i)
-        fed.init(addresses=addresses,party='0')
-
 
     def set_clients(self, clientObj):
         for i, train_slow, send_slow in zip(range(self.num_clients), self.train_slow_clients, self.send_slow_clients):
             train_data = read_client_data(self.dataset, i, is_train=True)
             test_data = read_client_data(self.dataset, i, is_train=False)
-            client = clientObj.party(str(i+1)).remote(self.args, #这里+1 很重要，因为 0 是 server
+            client = clientObj(self.args, 
                             id=i, 
                             train_samples=len(train_data), 
                             test_samples=len(test_data), 
@@ -134,7 +124,7 @@ class Server(object):
         for client in self.clients:
             start_time = time.time()
             
-            client.set_parameters.remote(self.global_model)
+            client.set_parameters(self.global_model)
 
             client.send_time_cost['num_rounds'] += 1
             client.send_time_cost['total_cost'] += 2 * (time.time() - start_time)

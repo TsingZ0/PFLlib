@@ -33,6 +33,15 @@ def get_cpu_mem_info():
     mem_process_used = round(psutil.Process(os.getpid()).memory_info().rss / 1024 / 1024, 2)
     return mem_total, mem_free, mem_process_used
 
+def is_available():
+    mem_total, mem_free, mem_process_used = get_cpu_mem_info()
+    total, used, free = get_gpu_mem_info()
+    gpu_percent = free/total
+    mem_percent = mem_free/mem_total
+    if mem_percent <= 0.15 or gpu_percent <= 0.15:
+        return False
+    else: return True
+
 
 if __name__ == "__main__":
 

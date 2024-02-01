@@ -19,10 +19,7 @@ import time
 from flcore.clients.clientavg import clientAVG
 from flcore.servers.serverbase import Server
 from multiprocessing import  Pool
-import ray
-import fed
 
-@fed.remote
 class FedAvg(Server):
     def __init__(self, args, times):
         super().__init__(args, times)

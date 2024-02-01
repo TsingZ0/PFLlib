@@ -21,10 +21,7 @@ import numpy as np
 import time
 from flcore.clients.clientbase import Client
 from utils.privacy import *
-import ray
-import fed
 
-# @fed.remote
 class clientAVG(Client):
     def __init__(self, args, id, train_samples, test_samples, **kwargs):
         super(Client).__init__(args, id, train_samples, test_samples, **kwargs)

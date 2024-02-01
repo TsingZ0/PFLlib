@@ -3,15 +3,25 @@
     // Hover to view descriptions of existing attributes.
     // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
     "version": "0.2.0",
+    // "configurations": [
+    //     {
+    //         "name": "Python: Current File",
+    //         "type": "python",
+    //         "request": "launch",
+    //         "program": "/opt/tiger/PFLlib/main.py",
+    //         "console": "integratedTerminal",
+    //         "justMyCode": true,
+    //         "args": ["-data", "Cifar10", "-m", "cnn", "-algo", "FedAvg", "-gr", "100", "-did", "0", "-go", "cnn", "-lbs", "64", "-nc", "10", "-jr", "1", "-nb", "10", "-ls", "5"]
+    //     }
+    // ]
     "configurations": [
         {
             "name": "Python: Current File",
             "type": "python",
             "request": "launch",
-            "program": "/opt/tiger/PFLlib/main.py",
+            "program": "/opt/tiger/PFLlib/runner.py",
             "console": "integratedTerminal",
-            "justMyCode": true,
-            "args": ["-data", "Cifar10", "-m", "cnn", "-algo", "FedAvg", "-gr", "100", "-did", "0", "-go", "cnn", "-lbs", "64", "-nc", "10", "-jr", "1", "-nb", "10", "-ls", "5"]
+            "justMyCode": true
         }
     ]
 }
