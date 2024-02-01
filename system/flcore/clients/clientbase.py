@@ -26,17 +26,20 @@ from sklearn import metrics
 from utils.data_utils import read_client_data
 from torch.nn.parallel import DistributedDataParallel as DDP
 import torch.distributed as dist
+import ray
+import fed
 
+@fed.remote
 class Client(object):
     """
     Base class for clients in federated learning.
     """
 
     def __init__(self, args, id, train_samples, test_samples, **kwargs):
-        port = 30000 + int(id) 
-        dist.init_process_group(backend="nccl", init_method="tcp:////127.0.0.1:{}".format(port), world_size=args.num_clients+1, rank=id+1)
+        # port = 30000 + int(id) 
+        # dist.init_process_group(backend="nccl", init_method="tcp:////127.0.0.1:{}".format(port), world_size=args.num_clients+1, rank=id+1)
         self.model = copy.deepcopy(args.model)
-        self.model = DDP(self.model,device_ids=[id%torch.cuda.device_count()])
+        # self.model = DDP(self.model,device_ids=[id%torch.cuda.device_count()])
         self.algorithm = args.algorithm
         self.dataset = args.dataset
         self.device = args.device
