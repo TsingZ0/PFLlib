@@ -88,7 +88,7 @@ class ALA:
         rand_ratio = self.rand_percent / 100
         rand_num = int(rand_ratio*len(self.train_data))
         rand_idx = random.randint(0, len(self.train_data)-rand_num)
-        rand_loader = DataLoader(self.train_data[rand_idx:rand_idx+rand_num], self.batch_size, drop_last=True)
+        rand_loader = DataLoader(self.train_data[rand_idx:rand_idx+rand_num], self.batch_size, drop_last=False)
 
 
         # obtain the references of the parameters
