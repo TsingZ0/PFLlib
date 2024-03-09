@@ -26,14 +26,13 @@ train_size = 0.75 # merge original training set and test set, then split it manu
 least_samples = 1 # guarantee that each client must have at least one samples for testing. 
 alpha = 0.1 # for Dirichlet distribution
 
-def check(config_path, train_path, test_path, num_clients, num_classes, niid=False, 
+def check(config_path, train_path, test_path, num_clients, niid=False, 
         balance=True, partition=None):
     # check existing dataset
     if os.path.exists(config_path):
         with open(config_path, 'r') as f:
             config = ujson.load(f)
         if config['num_clients'] == num_clients and \
-            config['num_classes'] == num_classes and \
             config['non_iid'] == niid and \
             config['balance'] == balance and \
             config['partition'] == partition and \

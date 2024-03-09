@@ -23,8 +23,8 @@ from utils.HAR_utils import *
 
 random.seed(1)
 np.random.seed(1)
-data_path = "pamap/"
-dir_path = "pamap/"
+data_path = "PAMAP2/"
+dir_path = "PAMAP2/"
 
 sample_window = 256 # 2.56s
 # sample_window = 128 # 1.28s

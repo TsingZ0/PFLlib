@@ -28,12 +28,11 @@ from utils.dataset_utils import check, separate_data, split_data, save_file
 random.seed(1)
 np.random.seed(1)
 num_clients = 20
-num_classes = 10
-dir_path = "emnist/"
+dir_path = "EMNIST/"
 
 
 # Allocate data to users
-def generate_emnist(dir_path, num_clients, num_classes, niid, balance, partition):
+def generate_emnist(dir_path, num_clients, niid, balance, partition):
     if not os.path.exists(dir_path):
         os.makedirs(dir_path)
         
@@ -42,7 +41,7 @@ def generate_emnist(dir_path, num_clients, num_classes, niid, balance, partition
     train_path = dir_path + "train/"
     test_path = dir_path + "test/"
 
-    if check(config_path, train_path, test_path, num_clients, num_classes, niid, balance, partition):
+    if check(config_path, train_path, test_path, num_clients, niid, balance, partition):
         return
 
     # Get EMNIST data
@@ -72,6 +71,9 @@ def generate_emnist(dir_path, num_clients, num_classes, niid, balance, partition
     dataset_image = np.array(dataset_image)
     dataset_label = np.array(dataset_label)
 
+    num_classes = len(set(dataset_label))
+    print(f'Number of classes: {num_classes}')
+
     # dataset = []
     # for i in range(num_classes):
     #     idx = dataset_label == i
@@ -89,4 +91,4 @@ if __name__ == "__main__":
     balance = True if sys.argv[2] == "balance" else False
     partition = sys.argv[3] if sys.argv[3] != "-" else None
 
-    generate_emnist(dir_path, num_clients, num_classes, niid, balance, partition)
+    generate_emnist(dir_path, num_clients, niid, balance, partition)

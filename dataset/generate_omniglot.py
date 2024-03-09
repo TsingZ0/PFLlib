@@ -25,7 +25,7 @@ from PIL import Image
 
 random.seed(1)
 np.random.seed(1)
-dir_path = "omniglot/"
+dir_path = "Omniglot/"
 
 
 # Allocate data to users
