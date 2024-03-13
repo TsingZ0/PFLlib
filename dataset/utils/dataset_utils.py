@@ -22,8 +22,7 @@ import gc
 from sklearn.model_selection import train_test_split
 
 batch_size = 10
-train_size = 0.75 # merge original training set and test set, then split it manually. 
-least_samples = 1 # guarantee that each client must have at least one samples for testing. 
+train_ratio = 0.75 # merge original training set and test set, then split it manually. 
 alpha = 0.1 # for Dirichlet distribution
 
 def check(config_path, train_path, test_path, num_clients, niid=False, 
@@ -56,6 +55,8 @@ def separate_data(data, num_clients, num_classes, niid=False, balance=False, par
     statistic = [[] for _ in range(num_clients)]
 
     dataset_content, dataset_label = data
+    # guarantee that each client must have at least one batch of data for testing. 
+    least_samples = int(min(batch_size / (1-train_ratio), len(dataset_label) / num_clients / 2))
 
     dataidx_map = {}
 
@@ -151,7 +152,7 @@ def split_data(X, y):
 
     for i in range(len(y)):
         X_train, X_test, y_train, y_test = train_test_split(
-            X[i], y[i], train_size=train_size, shuffle=True)
+            X[i], y[i], train_size=train_ratio, shuffle=True)
 
         train_data.append({'x': X_train, 'y': y_train})
         num_samples['train'].append(len(y_train))
