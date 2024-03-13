@@ -2,7 +2,7 @@ import copy
 import numpy as np
 import time
 from flcore.clients.clientpFedCon import clientpFedCon
-from serverbase import Server
+from flcore.servers.serverbase import Server
 from threading import Thread
 
 

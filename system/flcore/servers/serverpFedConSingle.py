@@ -2,7 +2,7 @@ import copy
 import numpy as np
 import time
 from flcore.clients.clientpFedCon import clientpFedCon
-from serverbase import Server
+from flcore.servers.serverbase import Server
 from threading import Thread
 
 
@@ -28,12 +28,16 @@ class pFedConSingle(Server):
             self.send_models()
 
             if i%self.eval_gap == 0:
-                print("\nEvaluate personalized models")
+                print("\nEvaluate global models")
                 self.evaluate()
 
             for client in self.selected_clients:
                 client.train()
                 client.save_last_local_model()
+            
+            if i%self.eval_gap == 0:
+                print("\nEvaluate personalized models")
+                self.evaluate()
 
             # threads = [Thread(target=client.train)
             #            for client in self.selected_clients]

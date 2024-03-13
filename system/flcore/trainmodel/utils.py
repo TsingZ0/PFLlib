@@ -49,6 +49,9 @@ def get_model(args, vocab_size = 98635, max_len=200, emb_dim=32):
     
     elif model_str == "resnet10":
         return resnet10(num_classes=args.num_classes).to(args.device)
+        
+    elif model_str == "resnet_con":
+        return resnet8_con(feature_dim = args.feature_dim ,num_classes=args.num_classes).to(args.device)
     
     elif model_str == "resnet34":
         return torchvision.models.resnet34(pretrained=False, num_classes=args.num_classes).to(args.device)

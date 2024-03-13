@@ -3,7 +3,7 @@ import numpy as np
 import time
 import copy
 import torch.nn as nn
-from clientbase import Client
+from flcore.clients.clientbase import Client
 import torch.nn.functional as F
 from sklearn.preprocessing import label_binarize
 from sklearn import metrics
@@ -14,7 +14,6 @@ class clientpFedConSingle(Client):
         super().__init__(args, id, train_samples, test_samples, **kwargs)
 
         self.mu = args.mu
-        self.plocal_steps = args.plocal_steps
         # 初始化上一路本地模型
         self.last_local_model = 0
         self.cos = torch.nn.CosineSimilarity(dim=-1)
@@ -27,12 +26,11 @@ class clientpFedConSingle(Client):
     def train(self):
         trainloader = self.load_train_data()
         start_time = time.time()
-        #保存接收到的全球模型作为w_glob
-        model_glob = self.model
+
         # self.model.to(self.device)
         self.model.train()
 
-        max_local_epochs = self.plocal_steps
+        max_local_epochs = self.local_epochs
         if self.train_slow:
             max_local_epochs = np.random.randint(1, max_local_epochs // 2)
 

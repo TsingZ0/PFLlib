@@ -1,5 +1,5 @@
 *__pycache__*
-.npz
-.gz
+*.npz
+*.gz
 data/
-.out
+*.out

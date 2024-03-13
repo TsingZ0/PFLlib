@@ -25,7 +25,7 @@ import torchvision.transforms as transforms
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 from dataset.utils.dataset_utils import check, get_path, separate_data, split_data, save_file
 import torch.distributed as dist
-from cifar_utils import CIFAR10Pair, CIFAR100Pair, train_transform, test_transform, train_transform_100, test_transform_100
+from dataset.cifar_utils import CIFAR10Pair, CIFAR100Pair, train_transform, test_transform, train_transform_100, test_transform_100
 
 # Allocate data to users
 def generate_cifar10(dir_path: str, num_clients: int, num_classes: int, niid: bool, balance: bool, partition: str, niid_alpha: float, seed: int, isCon: bool):
@@ -40,8 +40,8 @@ def generate_cifar10(dir_path: str, num_clients: int, num_classes: int, niid: bo
         [transforms.ToTensor(), transforms.Normalize((0.5, 0.5, 0.5), (0.5, 0.5, 0.5))])
     
     if isCon:
-        trainset =  CIFAR10Pair(root=raw_data+"rawdata", train=True, transform= train_transform, download=False)
-        testset = CIFAR10Pair(root=raw_data+"rawdata", train=False, transform= test_transform, download=False)
+        trainset =  CIFAR10Pair(root=raw_data+"rawdata", train=True, transform= train_transform, download=True)
+        testset = CIFAR10Pair(root=raw_data+"rawdata", train=False, transform= test_transform, download=True)
     else:
         trainset = torchvision.datasets.CIFAR10(
         root=raw_data+"rawdata", train=True, download=True, transform=transform)

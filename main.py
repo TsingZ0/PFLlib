@@ -398,12 +398,17 @@ if __name__ == "__main__":
     parser.add_argument('--partition', type=str, default="dir")
     parser.add_argument('--niid_alpha', type=float, default=0.1)
     parser.add_argument('--seed', type=int, default=1)
-    # hyper-params for Text tasks
+
+    #Con
+    parser.add_argument('--feature_dim', type=int, default=128)
+    parser.add_argument('--temperature', type=float, default=0.5)
+    parser.add_argument('--is_con', type=int, default=0)
 
     # hyper-params for Text tasks
     parser.add_argument('--vocab_size', type=int, default=98635)
     parser.add_argument('--max_len', type=int, default=200)
     parser.add_argument('--emb_dim', type=int, default=32)
+    
 
     args = parser.parse_args()
 
@@ -455,7 +460,7 @@ if __name__ == "__main__":
     if args.dataset == "mnist" or args.dataset == "fmnist":
         train_path, test_path = generate_mnist('data/fmnist/', args.num_clients, args.num_classes, args.niid, args.balance, args.partition, args.niid_alpha, args.seed)
     elif args.dataset == "Cifar10" :
-        train_path, test_path = generate_cifar10('data/Cifar10/', args.num_clients, args.num_classes, args.niid, args.balance, args.partition, args.niid_alpha, args.seed)
+        train_path, test_path = generate_cifar10('data/Cifar10/', args.num_clients, args.num_classes, args.niid, args.balance, args.partition, args.niid_alpha, args.seed, args.is_con)
     elif args.dataset == "Cifar100":
         train_path, test_path = generate_cifar100('data/Cifar100/', args.num_clients, args.num_classes, args.niid, args.balance, args.partition, args.niid_alpha, args.seed)
         # else:

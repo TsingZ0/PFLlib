@@ -3,7 +3,7 @@ import numpy as np
 import time
 import copy
 import torch.nn as nn
-from clientbase import Client
+from flcore.clients.clientbase import Client
 import torch.nn.functional as F
 from sklearn.preprocessing import label_binarize
 from sklearn import metrics
@@ -14,7 +14,7 @@ class clientpFedCon(Client):
         super().__init__(args, id, train_samples, test_samples, **kwargs)
 
         self.mu = args.mu
-        self.plocal_steps = args.plocal_steps
+        self.plocal_steps = args.plocal_epochs
         #init for model_per
         self.model_per = copy.deepcopy(self.model)
         self.last_local_model = 0

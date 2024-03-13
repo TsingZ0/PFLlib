@@ -3,7 +3,6 @@ from torchvision import transforms
 from torchvision.datasets import CIFAR10, CIFAR100
 import torch
 import numpy as np
-from cifar_utils import CIFAR10Pair, CIFAR100Pair, train_transform, test_transform, train_transform_100, test_transform_100
 
 
 class CIFAR10Pair(CIFAR10):
