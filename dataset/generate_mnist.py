@@ -28,12 +28,11 @@ from dataset.utils.dataset_utils import check, separate_data, split_data, save_f
 random.seed(1)
 np.random.seed(1)
 num_clients = 20
-num_classes = 10
-dir_path = "mnist/"
+dir_path = "MNIST/"
 
 
 # Allocate data to users
-def generate_mnist(dir_path, num_clients, num_classes, niid, balance, partition):
+def generate_mnist(dir_path, num_clients, niid, balance, partition):
     if not os.path.exists(dir_path):
         os.makedirs(dir_path)
         
@@ -42,14 +41,14 @@ def generate_mnist(dir_path, num_clients, num_classes, niid, balance, partition)
     train_path = dir_path + "train/"
     test_path = dir_path + "test/"
 
-    if check(config_path, train_path, test_path, num_clients, num_classes, niid, balance, partition):
+    if check(config_path, train_path, test_path, num_clients, niid, balance, partition):
         return
 
-    # FIX HTTP Error 403: Forbidden
-    from six.moves import urllib
-    opener = urllib.request.build_opener()
-    opener.addheaders = [('User-agent', 'Mozilla/5.0')]
-    urllib.request.install_opener(opener)
+    # # FIX HTTP Error 403: Forbidden
+    # from six.moves import urllib
+    # opener = urllib.request.build_opener()
+    # opener.addheaders = [('User-agent', 'Mozilla/5.0')]
+    # urllib.request.install_opener(opener)
 
     # Get MNIST data
     transform = transforms.Compose([transforms.ToTensor(), transforms.Normalize([0.5], [0.5])])
@@ -78,6 +77,9 @@ def generate_mnist(dir_path, num_clients, num_classes, niid, balance, partition)
     dataset_image = np.array(dataset_image)
     dataset_label = np.array(dataset_label)
 
+    num_classes = len(set(dataset_label))
+    print(f'Number of classes: {num_classes}')
+
     # dataset = []
     # for i in range(num_classes):
     #     idx = dataset_label == i
@@ -95,4 +97,4 @@ if __name__ == "__main__":
     balance = True if sys.argv[2] == "balance" else False
     partition = sys.argv[3] if sys.argv[3] != "-" else None
 
-    generate_mnist(dir_path, num_clients, num_classes, niid, balance, partition)
+    generate_mnist(dir_path, num_clients, niid, balance, partition)

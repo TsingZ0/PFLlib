@@ -28,13 +28,12 @@ from torchtext.vocab import build_vocab_from_iterator
 random.seed(1)
 np.random.seed(1)
 num_clients = 20
-num_classes = 4
 max_len = 200
-dir_path = "agnews/"
+dir_path = "AGNews/"
 
 
 # Allocate data to users
-def generate_agnews(dir_path, num_clients, num_classes, niid, balance, partition):
+def generate_agnews(dir_path, num_clients, niid, balance, partition):
     if not os.path.exists(dir_path):
         os.makedirs(dir_path)
         
@@ -43,7 +42,7 @@ def generate_agnews(dir_path, num_clients, num_classes, niid, balance, partition
     train_path = dir_path + "train/"
     test_path = dir_path + "test/"
 
-    if check(config_path, train_path, test_path, num_clients, num_classes, niid, balance, partition):
+    if check(config_path, train_path, test_path, num_clients, niid, balance, partition):
         return
 
     # Get AG_News data
@@ -59,6 +58,9 @@ def generate_agnews(dir_path, num_clients, num_classes, niid, balance, partition
     dataset_text.extend(testtext)
     dataset_label.extend(trainlabel)
     dataset_label.extend(testlabel)
+
+    num_classes = len(set(dataset_label))
+    print(f'Number of classes: {num_classes}')
 
     tokenizer = get_tokenizer('basic_english')
     vocab = build_vocab_from_iterator(map(tokenizer, iter(dataset_text)), specials=["<unk>"])
@@ -106,4 +108,4 @@ if __name__ == "__main__":
     balance = True if sys.argv[2] == "balance" else False
     partition = sys.argv[3] if sys.argv[3] != "-" else None
 
-    generate_agnews(dir_path, num_clients, num_classes, niid, balance, partition)
+    generate_agnews(dir_path, num_clients, niid, balance, partition)

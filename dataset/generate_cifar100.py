@@ -60,6 +60,9 @@ def generate_cifar100(dir_path, num_clients, num_classes, niid, balance, partiti
     dataset_image = np.array(dataset_image)
     dataset_label = np.array(dataset_label)
 
+    num_classes = len(set(dataset_label))
+    print(f'Number of classes: {num_classes}')
+
     # dataset = []
     # for i in range(num_classes):
     #     idx = dataset_label == i

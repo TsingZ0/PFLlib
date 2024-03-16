@@ -23,8 +23,8 @@ from utils.HAR_utils import *
 
 random.seed(1)
 np.random.seed(1)
-data_path = "har/"
-dir_path = "har/"
+data_path = "HAR/"
+dir_path = "HAR/"
 
 
 def generate_har(dir_path):
