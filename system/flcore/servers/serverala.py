@@ -50,6 +50,11 @@ class FedALA(Server):
             for client in self.selected_clients:
                 client.train()
 
+            if i%self.eval_gap == 0:
+                print(f"\n-------------Round number: {i}-------------")
+                print("\nEvaluate personalized model")
+                self.evaluate()
+
             # threads = [Thread(target=client.train)
             #            for client in self.selected_clients]
             # [t.start() for t in threads]
