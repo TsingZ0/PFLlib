@@ -121,6 +121,76 @@ def separate_data(data, num_clients, num_classes, niid=False, balance=False, par
 
         for j in range(num_clients):
             dataidx_map[j] = idx_batch[j]
+    
+    elif partition == 'exdir':
+        # https://github.com/bird-two/convergence/blob/master/sim/data/partition.py
+        # https://github.com/TsingZ0/PFL-Non-IID/issues/139
+        # You can simply change 
+        # net_dataidx_map  -> dataidx_map
+        # label_netidx_map -> labelidx_map
+        # n_nets -> num_clients, n_class -> num_classes
+        # and some other small changes
+        C, alpha = 5, 100.0
+        
+        '''The first level: allocate labels to clients
+        label_netidx_map (dict, {label: clientidx}), e.g., C=2, num_clients=5, num_classes=10
+            {0: [0, 1], 1: [1, 2], 2: [2, 3], 3: [3, 4], 4: [4, 5], 5: [5, 6], 6: [6, 7], 7: [7, 8], 8: [8, 9], 9: [9, 0]}
+        '''
+        min_size_per_label = 0
+        # You can adjust the `min_require_size_per_label` to meet you requirements 
+        min_require_size_per_label = max(C * num_clients // num_classes // 5, 1)
+        if min_require_size_per_label < 1:
+            raise ValueError
+        labelidx_map = {}
+        while min_size_per_label < min_require_size_per_label:
+            # initialize
+            for k in range(num_classes):
+                labelidx_map[k] = []
+            # allocate
+            for i in range(num_clients):
+                labelidx = np.random.choice(range(num_classes), C, replace=False)
+                for k in labelidx:
+                    labelidx_map[k].append(i)
+            min_size_per_label = min([len(labelidx_map[k]) for k in range(num_classes)])
+        
+        '''The second level: allocate data idx'''
+        dataidx_map = {}
+        y_train = dataset_label
+        min_size = 0
+        min_require_size = 10
+        K = num_classes
+        N = len(y_train)
+        print("\n*****labelidx_map*****")
+        print(labelidx_map)
+        print("\n*****Number of clients per label*****")
+        print([len(labelidx_map[i]) for i in range(len(labelidx_map))])
+
+        # ensure per client' sampling size >= min_require_size (is set to 10 originally in [3])
+        while min_size < min_require_size:
+            idx_batch = [[] for _ in range(num_clients)]
+            # for each class in the dataset
+            for k in range(K):
+                idx_k = np.where(y_train == k)[0]
+                np.random.shuffle(idx_k)
+                proportions = np.random.dirichlet(np.repeat(alpha, num_clients))
+                # Balance
+                # Case 1 (original case in Dir): Balance the number of sample per client
+                proportions = np.array([p * (len(idx_j) < N / num_clients and j in labelidx_map[k]) for j, (p, idx_j) in enumerate(zip(proportions, idx_batch))])
+                # Case 2: Don't balance
+                #proportions = np.array([p * (j in label_netidx_map[k]) for j, (p, idx_j) in enumerate(zip(proportions, idx_batch))])
+                proportions = proportions / proportions.sum()
+                proportions = (np.cumsum(proportions) * len(idx_k)).astype(int)[:-1]
+                # process the remainder samples
+                if num_clients-1 not in labelidx_map[k] and proportions[-1] != len(idx_k):
+                    for w in range(labelidx_map[k][-1], num_clients-1):
+                        proportions[w] = len(idx_k)
+                idx_batch = [idx_j + idx.tolist() for idx_j, idx in zip(idx_batch, np.split(idx_k, proportions))] 
+                min_size = min([len(idx_j) for idx_j in idx_batch])
+
+        for j in range(num_clients):
+            np.random.shuffle(idx_batch[j])
+            dataidx_map[j] = idx_batch[j]
+    
     else:
         raise NotImplementedError
 

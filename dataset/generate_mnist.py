@@ -96,5 +96,10 @@ if __name__ == "__main__":
     niid = True if sys.argv[1] == "noniid" else False
     balance = True if sys.argv[2] == "balance" else False
     partition = sys.argv[3] if sys.argv[3] != "-" else None
+    # BD2-2023-11-06 test exdir End
+    # niid = True
+    # balance = False
+    # partition = 'exdir'
+    # num_clients = 10
 
     generate_mnist(dir_path, num_clients, niid, balance, partition)
