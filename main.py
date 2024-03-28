@@ -481,7 +481,7 @@ if __name__ == "__main__":
         dataset_path = os.path.abspath(os.path.join(train_path, os.path.pardir))
     else: dataset_path = None
     run(args, dataset_path)
-
+    sys.exit(521)
     
     # print(prof.key_averages().table(sort_by="cpu_time_total", row_limit=20))
     # print(f"\nTotal time cost: {round(time.time()-total_start, 2)}s.")
