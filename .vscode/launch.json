@@ -21,7 +21,8 @@
             "request": "launch",
             "program": "/opt/tiger/PFLlib/runner.py",
             "console": "integratedTerminal",
-            "justMyCode": true
+            "justMyCode": false,
+            "cwd": "/opt/tiger/PFLlib"
         }
     ]
 }

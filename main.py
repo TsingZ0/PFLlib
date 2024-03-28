@@ -17,7 +17,7 @@
 
 #!/usr/bin/env python
 import copy
-import imp
+# import imp
 import torch
 import argparse
 import os
@@ -97,7 +97,7 @@ def run(args, dataset_path = None):
     model_str = args.model
 
     for i in range(args.prev, args.times):
-        print(f"\n============= Running time: {i}th =============")
+        print(f"============= Running time: {i}th =============\n")
         print("Creating server and clients ...")
         start = time.time()
 

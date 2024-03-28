@@ -3,3 +3,4 @@
 *.gz
 data/
 *.out
+results/

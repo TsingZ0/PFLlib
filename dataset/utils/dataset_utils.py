@@ -24,6 +24,7 @@ from sklearn.model_selection import train_test_split
 batch_size = 10
 train_size = 0.75 # merge original training set and test set, then split it manually. 
 least_samples = 1 # guarantee that each client must have at least one samples for testing. 
+train_ratio = 0.8
 
 # 检查数据集是否已经生成
 def check(config_path, train_path, test_path, num_clients, num_classes, niid=False, 
