@@ -22,11 +22,13 @@ import gc
 from sklearn.model_selection import train_test_split
 
 batch_size = 10
-train_ratio = 0.75 # merge original training set and test set, then split it manually. 
-alpha = 0.1 # for Dirichlet distribution
+train_size = 0.75 # merge original training set and test set, then split it manually. 
+least_samples = 1 # guarantee that each client must have at least one samples for testing. 
+train_ratio = 0.8
 
-def check(config_path, train_path, test_path, num_clients, niid=False, 
-        balance=True, partition=None):
+# 检查数据集是否已经生成
+def check(config_path, train_path, test_path, num_clients, num_classes, niid=False, 
+        balance=True, partition=None, niid_alpha=0.1):
     # check existing dataset
     if os.path.exists(config_path):
         with open(config_path, 'r') as f:
@@ -35,21 +37,21 @@ def check(config_path, train_path, test_path, num_clients, niid=False,
             config['non_iid'] == niid and \
             config['balance'] == balance and \
             config['partition'] == partition and \
-            config['alpha'] == alpha and \
+            config['alpha'] == niid_alpha and \
             config['batch_size'] == batch_size:
             print("\nDataset already generated.\n")
             return True
 
-    dir_path = os.path.dirname(train_path)
-    if not os.path.exists(dir_path):
-        os.makedirs(dir_path)
-    dir_path = os.path.dirname(test_path)
-    if not os.path.exists(dir_path):
-        os.makedirs(dir_path)
+    # dir_path = os.path.dirname(train_path)
+    if not os.path.exists(train_path):
+        os.makedirs(train_path)
+    # dir_path = os.path.dirname(test_path)
+    if not os.path.exists(test_path):
+        os.makedirs(test_path)
 
     return False
 
-def separate_data(data, num_clients, num_classes, niid=False, balance=False, partition=None, class_per_client=None):
+def separate_data(data, num_clients, num_classes, niid=False, balance=False, partition=None, class_per_client=None, niid_alpha=0.1):
     X = [[] for _ in range(num_clients)]
     y = [[] for _ in range(num_clients)]
     statistic = [[] for _ in range(num_clients)]
@@ -111,7 +113,7 @@ def separate_data(data, num_clients, num_classes, niid=False, balance=False, par
             for k in range(K):
                 idx_k = np.where(dataset_label == k)[0]
                 np.random.shuffle(idx_k)
-                proportions = np.random.dirichlet(np.repeat(alpha, num_clients))
+                proportions = np.random.dirichlet(np.repeat(niid_alpha, num_clients))
                 proportions = np.array([p*(len(idx_j)<N/num_clients) for p,idx_j in zip(proportions,idx_batch)])
                 proportions = proportions/proportions.sum()
                 proportions = (np.cumsum(proportions)*len(idx_k)).astype(int)[:-1]
@@ -169,7 +171,7 @@ def split_data(X, y):
     return train_data, test_data
 
 def save_file(config_path, train_path, test_path, train_data, test_data, num_clients, 
-                num_classes, statistic, niid=False, balance=True, partition=None):
+                num_classes, statistic, niid=False, balance=True, partition=None, niid_alpha=0.1):
     config = {
         'num_clients': num_clients, 
         'num_classes': num_classes, 
@@ -177,7 +179,7 @@ def save_file(config_path, train_path, test_path, train_data, test_data, num_cli
         'balance': balance, 
         'partition': partition, 
         'Size of samples for labels in clients': statistic, 
-        'alpha': alpha, 
+        'alpha': niid_alpha, 
         'batch_size': batch_size, 
     }
 
@@ -194,3 +196,21 @@ def save_file(config_path, train_path, test_path, train_data, test_data, num_cli
         ujson.dump(config, f)
 
     print("Finish generating dataset.\n")
+
+def get_path(dir_path, num_clients, num_classes, niid, balance, partition, niid_alpha):
+    raw_data = dir_path
+    if partition == "pat":
+        dir_path = dir_path + "pat/" + str(num_clients) + 'c/'
+    else:
+        dir_path = dir_path + "dir/" + str(niid_alpha) + "/" + str(num_clients) + 'c/'
+    
+    if not os.path.exists(dir_path):
+        print("dir_path: ",dir_path)
+        os.makedirs(dir_path)
+        
+    # Setup directory for train/test data
+    config_path = dir_path + "config.json"
+    train_path = dir_path + "train/"
+    test_path = dir_path + "test/"
+    return raw_data, config_path, train_path, test_path, check(config_path, train_path, test_path, num_clients, num_classes, niid, balance, partition, niid_alpha)
+    

@@ -1,1 +1,6 @@
 *__pycache__*
+*.npz
+*.gz
+data/
+*.out
+results/

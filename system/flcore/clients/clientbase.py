@@ -24,7 +24,8 @@ from torch.utils.data import DataLoader
 from sklearn.preprocessing import label_binarize
 from sklearn import metrics
 from utils.data_utils import read_client_data
-
+from torch.nn.parallel import DistributedDataParallel as DDP
+import torch.distributed as dist
 
 class Client(object):
     """
@@ -70,6 +71,8 @@ class Client(object):
         )
         self.learning_rate_decay = args.learning_rate_decay
 
+        self.train_loader = self.load_train_data()
+        self.test_loader = self.load_test_data()
 
     def load_train_data(self, batch_size=None):
         if batch_size == None:
@@ -97,7 +100,8 @@ class Client(object):
             param.data = new_param.data.clone()
 
     def test_metrics(self):
-        testloaderfull = self.load_test_data()
+        # testloaderfull = self.load_test_data()
+        testloaderfull = self.test_loader
         # self.model = self.load_model('model')
         # self.model.to(self.device)
         self.model.eval()
@@ -139,7 +143,8 @@ class Client(object):
         return test_acc, test_num, auc
 
     def train_metrics(self):
-        trainloader = self.load_train_data()
+        # trainloader = self.load_train_data()
+        trainloader = self.train_loader
         # self.model = self.load_model('model')
         # self.model.to(self.device)
         self.model.eval()

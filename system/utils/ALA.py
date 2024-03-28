@@ -65,7 +65,7 @@ class ALA:
         self.num_pre_loss = num_pre_loss
         self.device = device
 
-        self.weights = None # Learnable local aggregation weights.
+        self.weights = None # Learnable local aggregation weights. 也就是[0-1]权重 element-wise
         self.start_phase = True
 
 
@@ -106,7 +106,7 @@ class ALA:
 
         # temp local model only for weight learning
         model_t = copy.deepcopy(local_model)
-        params_t = list(model_t.parameters())
+        params_t = list(model_t.parameters()) #指的是theta hat
 
         # only consider higher layers
         params_p = params[-self.layer_idx:]
@@ -149,7 +149,7 @@ class ALA:
                 for param_t, param, param_g, weight in zip(params_tp, params_p,
                                                         params_gp, self.weights):
                     weight.data = torch.clamp(
-                        weight - self.eta * (param_t.grad * (param_g - param)), 0, 1)
+                        weight - self.eta * (param_t.grad * (param_g - param)), 0, 1) # Clamps all elements in input into the range [ min, max ]. Letting min_value and max_value be min and max, respectively
 
                 # update temp local model in this batch
                 for param_t, param, param_g, weight in zip(params_tp, params_p,

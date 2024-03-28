@@ -1,0 +1,1 @@
+"args": ["-data", "Cifar10", "-m", "cnn", "-algo", "FedAvg", "-gr", "100", "-did", "0", "-go", "cnn", "-lbs", "64", "-nc", "10", "-jr", "1", "-nb", "10", "-ls", "5"]

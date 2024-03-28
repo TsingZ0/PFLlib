@@ -15,6 +15,7 @@
 # with this program; if not, write to the Free Software Foundation, Inc.,
 # 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 
+from audioop import add
 import torch
 import os
 import numpy as np
@@ -24,7 +25,8 @@ import time
 import random
 from utils.data_utils import read_client_data
 from utils.dlg import DLG
-
+import multiprocessing as mp
+import torch.distributed as dist
 
 class Server(object):
     def __init__(self, args, times):
@@ -185,13 +187,13 @@ class Server(object):
         
     def save_results(self):
         algo = self.dataset + "_" + self.algorithm
-        result_path = "../results/"
+        result_path = "/opt/tiger/PFLlib/results/"
         if not os.path.exists(result_path):
             os.makedirs(result_path)
 
         if (len(self.rs_test_acc)):
             algo = algo + "_" + self.goal + "_" + str(self.times)
-            file_path = result_path + "{}.h5".format(algo)
+            file_path = result_path + "{}.h5".format(algo.split("/")[-1])
             print("File path: " + file_path)
 
             with h5py.File(file_path, 'w') as hf:

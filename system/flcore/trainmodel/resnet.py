@@ -1,24 +1,9 @@
-# PFLlib: Personalized Federated Learning Algorithm Library
-# Copyright (C) 2021  Jianqing Zhang
-
-# This program is free software; you can redistribute it and/or modify
-# it under the terms of the GNU General Public License as published by
-# the Free Software Foundation; either version 2 of the License, or
-# (at your option) any later version.
-
-# This program is distributed in the hope that it will be useful,
-# but WITHOUT ANY WARRANTY; without even the implied warranty of
-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-# GNU General Public License for more details.
-
-# You should have received a copy of the GNU General Public License along
-# with this program; if not, write to the Free Software Foundation, Inc.,
-# 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
-
-import torch.nn as nn
+import torch
 from torch import Tensor
-from typing import Any, Callable, List, Optional
-
+import torch.nn as nn
+from typing import Type, Any, Callable, Union, List, Optional
+import torch.nn.functional as F
+from torch.nn import Module
 
 def conv3x3(in_planes: int, out_planes: int, stride: int = 1, groups: int = 1, dilation: int = 1) -> nn.Conv2d:
     """3x3 convolution with padding"""
@@ -207,7 +192,7 @@ class ResNet(nn.Module):
             nn.Flatten()
         )
         self.fc = nn.Linear(features[len(layers)-1] * block.expansion, num_classes)
-
+        
         # self.fc = nn.Sequential(
         #     nn.AdaptiveAvgPool2d((1, 1)), 
         #     nn.Flatten(), 
@@ -277,6 +262,31 @@ class ResNet(nn.Module):
     def forward(self, x: Tensor) -> Tensor:
         return self._forward_impl(x)
 
+class ResNetCon(ResNet):
+    def __init__(self,block: BasicBlock, layers: List[int], feature_dim: int=128 ,features: List[int] = [64, 128, 256, 512], num_classes: int = 1000, zero_init_residual: bool = False, groups: int = 1, width_per_group: int = 64, replace_stride_with_dilation: List[bool] or None = None, norm_layer: Callable[..., Module] or None = None, has_bn=True, bn_block_num=4) -> None:
+        super().__init__(block, layers, features, num_classes, zero_init_residual, groups, width_per_group, replace_stride_with_dilation, norm_layer, has_bn, bn_block_num)
+        self.feature_dim = feature_dim
+        self.g = nn.Sequential(nn.Linear(features[len(layers)-1] * block.expansion, 512, bias=False), nn.BatchNorm1d(512),
+                               nn.ReLU(inplace=True), nn.Linear(512, self.feature_dim, bias=True))
+        
+    def _forward_impl(self, x: Tensor) -> Tensor:
+        x = self.conv1(x)
+        x = self.bn1(x)
+        x = self.relu(x)
+        x = self.maxpool(x)
+
+        for i in range(len(self.layers)):
+            layer = getattr(self, f'layer_{i}')
+            x = layer(x)
+
+        x = self.avgpool(x) #avgpool 自带 flatten 
+        # projection head
+        out = self.g(x)
+        x_f = x
+        #classification head
+        x = self.fc(x)
+
+        return F.normalize(x_f,dim=-1), F.normalize(out,dim=-1), x
 
 def resnet152(**kwargs: Any) -> ResNet: 
     return ResNet(Bottleneck, [3, 8, 36, 3], **kwargs)
@@ -298,6 +308,9 @@ def resnet10(**kwargs: Any) -> ResNet: # 10 = 2 + 2 * (1 + 1 + 1 + 1)
 
 def resnet8(**kwargs: Any) -> ResNet: # 8 = 2 + 2 * (1 + 1 + 1)
     return ResNet(BasicBlock, [1, 1, 1], **kwargs)
+
+def resnet8_con(**kwargs: Any) -> ResNet: # 8 = 2 + 2 * (1 + 1 + 1)
+    return ResNetCon(BasicBlock, [1, 1, 1], **kwargs)
 
 def resnet6(**kwargs: Any) -> ResNet: # 6 = 2 + 2 * (1 + 1)
     return ResNet(BasicBlock, [1, 1], **kwargs)
