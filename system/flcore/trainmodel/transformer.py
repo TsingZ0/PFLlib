@@ -30,31 +30,32 @@ class PositionalEncoding(nn.Module):
 
         position = torch.arange(max_len).unsqueeze(1)
         div_term = torch.exp(torch.arange(0, d_model, 2) * (-math.log(10000.0) / d_model))
-        pe = torch.zeros(max_len, 1, d_model)
-        pe[:, 0, 0::2] = torch.sin(position * div_term)
-        pe[:, 0, 1::2] = torch.cos(position * div_term)
+        pe = torch.zeros(1, max_len, d_model)
+        pe[0, :, 0::2] = torch.sin(position * div_term)
+        pe[0, :, 1::2] = torch.cos(position * div_term)
         self.register_buffer('pe', pe)
 
     def forward(self, x: Tensor) -> Tensor:
         """
         Args:
-            x: Tensor, shape [seq_len, batch_size, embedding_dim]
+            x: Tensor, shape [batch_size, seq_len, d_model]
         """
-        x = x + self.pe[:x.size(0)]
+        x = x + self.pe[:, :x.size(1)]
         return self.dropout(x)
 
 class TransformerModel(nn.Module):
 
-    def __init__(self, ntoken: int, d_model: int, nhead: int, d_hid: int,
-                 nlayers: int, num_classes: int, dropout: float = 0.5):
+    def __init__(self, ntoken: int, d_model: int, nhead: int, nlayers: int, 
+                 num_classes: int, dropout: float = 0.5, max_len: int = 200):
         super().__init__()
         self.model_type = 'Transformer'
-        self.pos_encoder = PositionalEncoding(d_model, dropout)
-        encoder_layers = TransformerEncoderLayer(d_model, nhead, d_hid, dropout)
+        self.pos_encoder = PositionalEncoding(d_model, dropout, max_len)
+        encoder_layers = TransformerEncoderLayer(d_model, nhead, d_model, dropout, batch_first=True)
         self.encoder = TransformerEncoder(encoder_layers, nlayers)
         self.embedding = nn.Embedding(ntoken, d_model)
-        self.d_model = d_model
+        self.hidden_dim = d_model
         self.fc = nn.Linear(d_model, num_classes)
+        self.class_token = nn.Parameter(torch.zeros(1, 1, d_model)) # the [CLS] token
 
         self.init_weights()
 
@@ -64,22 +65,25 @@ class TransformerModel(nn.Module):
         self.fc.bias.data.zero_()
         self.fc.weight.data.uniform_(-initrange, initrange)
 
-    def forward(self, src: Tensor, src_mask: Tensor = None) -> Tensor:
-        src, src_lengths = src
+    def forward(self, src: Tensor) -> Tensor:
+        src, _ = src
         """
         Args:
-            src: Tensor, shape [seq_len, batch_size]
-            src_mask: Tensor, shape [seq_len, seq_len]
+            src: Tensor, shape [batch_size, seq_len, d_model]
 
         Returns:
-            output Tensor of shape [seq_len, batch_size, ntoken]
+            output Tensor of shape [batch_size, num_classes]
         """
-        src = self.embedding(src) * math.sqrt(self.d_model)
-        src = self.pos_encoder(src)
-        enc = self.encoder(src, src_mask).mean(1)
-        output = self.fc(enc)
-        return output
+        x = self.embedding(src)
+        x = self.pos_encoder(x)
 
-def generate_square_subsequent_mask(sz: int) -> Tensor:
-    """Generates an upper-triangular matrix of -inf, with zeros on diag."""
-    return torch.triu(torch.ones(sz, sz) * float('-inf'), diagonal=1)
+        # Extend the class token to encompass the entire batch, following the ViT approach in PyTorch
+        n = x.shape[0]
+        batch_class_token = self.class_token.expand(n, -1, -1)
+        x = torch.cat([batch_class_token, x], dim=1)
+
+        x = self.encoder(x)
+        x = x[:, 0]
+        output = self.fc(x)
+
+        return output
