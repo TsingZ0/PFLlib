@@ -679,7 +679,7 @@ conda env create -f env_cuda_latest.yaml # You may need to downgrade the torch u
     python main.py -data mnist -m cnn -algo FedAvg -gr 2000 -did 0 # using the MNIST dataset, the FedAvg algorithm, and the 4-layer CNN model
     ```
 
-**Note**: The hyper-parameters have not been tuned for the algorithms. The values in `./system/examples.sh` are just examples. You need to tune the hyper-parameters by yourself. 
+**Note**: It is preferable to tune algorithm-specific hyper-parameters before using any algorithm. 
 
 ## Practical situations
 If you need to simulate FL under practical situations, which includes **client dropout**, **slow trainers**, **slow senders**, and **network TTL**, you can set the following parameters to realize it.
