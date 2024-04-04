@@ -678,11 +678,6 @@ conda env create -f env_cuda_latest.yaml # You may need to downgrade the torch u
     cd ./system
     python main.py -data mnist -m cnn -algo FedAvg -gr 2000 -did 0 # using the MNIST dataset, the FedAvg algorithm, and the 4-layer CNN model
     ```
-    Or you can uncomment the lines you need in `./system/examples.sh` and run:
-    ```bash
-    cd ./system
-    sh examples.sh
-    ```
 
 **Note**: The hyper-parameters have not been tuned for the algorithms. The values in `./system/examples.sh` are just examples. You need to tune the hyper-parameters by yourself. 
 
