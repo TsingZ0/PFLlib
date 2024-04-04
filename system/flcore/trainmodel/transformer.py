@@ -51,7 +51,7 @@ class TransformerModel(nn.Module):
         self.model_type = 'Transformer'
         self.pos_encoder = PositionalEncoding(d_model, dropout)
         encoder_layers = TransformerEncoderLayer(d_model, nhead, d_hid, dropout)
-        self.transformer_encoder = TransformerEncoder(encoder_layers, nlayers)
+        self.encoder = TransformerEncoder(encoder_layers, nlayers)
         self.embedding = nn.Embedding(ntoken, d_model)
         self.d_model = d_model
         self.fc = nn.Linear(d_model, num_classes)
@@ -76,7 +76,7 @@ class TransformerModel(nn.Module):
         """
         src = self.embedding(src) * math.sqrt(self.d_model)
         src = self.pos_encoder(src)
-        enc = self.transformer_encoder(src, src_mask).mean(1)
+        enc = self.encoder(src, src_mask).mean(1)
         output = self.fc(enc)
         return output
 
