@@ -20,7 +20,7 @@ import torch
 from torch.nn import TransformerEncoder, TransformerEncoderLayer
 from torch import nn, Tensor
 
-        
+
 # https://pytorch.org/tutorials/beginner/transformer_tutorial.html
 class PositionalEncoding(nn.Module):
 
@@ -45,15 +45,15 @@ class PositionalEncoding(nn.Module):
 
 class TransformerModel(nn.Module):
 
-    def __init__(self, ntoken: int, d_model: int, nhead: int, nlayers: int, 
-                 num_classes: int, dropout: float = 0.5, max_len: int = 200):
+    def __init__(self, ntoken: int, d_model: int, nhead: int, nlayers: int, num_classes: int, 
+                 dropout: float = 0.1, max_len: int = 200, d_hid: int = 2048):
         super().__init__()
         self.model_type = 'Transformer'
         self.pos_encoder = PositionalEncoding(d_model, dropout, max_len)
-        encoder_layers = TransformerEncoderLayer(d_model, nhead, d_model, dropout, batch_first=True)
+        encoder_layers = TransformerEncoderLayer(d_model, nhead, d_hid, dropout, batch_first=True)
         self.encoder = TransformerEncoder(encoder_layers, nlayers)
         self.embedding = nn.Embedding(ntoken, d_model)
-        self.hidden_dim = d_model
+        self.d_model = d_model
         self.fc = nn.Linear(d_model, num_classes)
         self.class_token = nn.Parameter(torch.zeros(1, 1, d_model)) # the [CLS] token
 
@@ -69,17 +69,17 @@ class TransformerModel(nn.Module):
         src, _ = src
         """
         Args:
-            src: Tensor, shape [batch_size, seq_len, d_model]
+            src: Tensor, shape [batch_size, seq_len]
 
         Returns:
             output Tensor of shape [batch_size, num_classes]
         """
-        x = self.embedding(src)
+        x = self.embedding(src) * math.sqrt(self.d_model)
         x = self.pos_encoder(x)
 
         # Extend the class token to encompass the entire batch, following the ViT approach in PyTorch
         n = x.shape[0]
-        batch_class_token = self.class_token.expand(n, -1, -1)
+        batch_class_token = self.class_token.expand(n, -1, -1) * math.sqrt(self.d_model)
         x = torch.cat([batch_class_token, x], dim=1)
 
         x = self.encoder(x)
