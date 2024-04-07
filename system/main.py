@@ -97,7 +97,7 @@ def run(args):
 
         # Generate args.model
         if model_str == "mlr": # convex
-            if "mnist" in args.dataset:
+            if "MNIST" in args.dataset:
                 args.model = Mclr_Logistic(1*28*28, num_classes=args.num_classes).to(args.device)
             elif "Cifar10" in args.dataset:
                 args.model = Mclr_Logistic(3*32*32, num_classes=args.num_classes).to(args.device)
@@ -105,11 +105,11 @@ def run(args):
                 args.model = Mclr_Logistic(60, num_classes=args.num_classes).to(args.device)
 
         elif model_str == "cnn": # non-convex
-            if "mnist" in args.dataset:
+            if "MNIST" in args.dataset:
                 args.model = FedAvgCNN(in_features=1, num_classes=args.num_classes, dim=1024).to(args.device)
             elif "Cifar10" in args.dataset:
                 args.model = FedAvgCNN(in_features=3, num_classes=args.num_classes, dim=1600).to(args.device)
-            elif "omniglot" in args.dataset:
+            elif "Omniglot" in args.dataset:
                 args.model = FedAvgCNN(in_features=1, num_classes=args.num_classes, dim=33856).to(args.device)
                 # args.model = CifarNet(num_classes=args.num_classes).to(args.device)
             elif "Digit5" in args.dataset:
@@ -118,7 +118,7 @@ def run(args):
                 args.model = FedAvgCNN(in_features=3, num_classes=args.num_classes, dim=10816).to(args.device)
 
         elif model_str == "dnn": # non-convex
-            if "mnist" in args.dataset:
+            if "MNIST" in args.dataset:
                 args.model = DNN(1*28*28, 100, num_classes=args.num_classes).to(args.device)
             elif "Cifar10" in args.dataset:
                 args.model = DNN(3*32*32, 100, num_classes=args.num_classes).to(args.device)
@@ -186,10 +186,10 @@ def run(args):
             args.model = AmazonMLP().to(args.device)
 
         elif model_str == "harcnn":
-            if args.dataset == 'har':
+            if args.dataset == 'HAR':
                 args.model = HARCNN(9, dim_hidden=1664, num_classes=args.num_classes, conv_kernel_size=(1, 9), 
                                     pool_kernel_size=(1, 2)).to(args.device)
-            elif args.dataset == 'pamap':
+            elif args.dataset == 'PAMAP2':
                 args.model = HARCNN(9, dim_hidden=3712, num_classes=args.num_classes, conv_kernel_size=(1, 9), 
                                     pool_kernel_size=(1, 2)).to(args.device)
 
@@ -384,7 +384,7 @@ if __name__ == "__main__":
     parser.add_argument('-dev', "--device", type=str, default="cuda",
                         choices=["cpu", "cuda"])
     parser.add_argument('-did', "--device_id", type=str, default="0")
-    parser.add_argument('-data', "--dataset", type=str, default="mnist")
+    parser.add_argument('-data', "--dataset", type=str, default="MNIST")
     parser.add_argument('-nb', "--num_classes", type=int, default=10)
     parser.add_argument('-m', "--model", type=str, default="cnn")
     parser.add_argument('-lbs', "--batch_size", type=int, default=10)
@@ -526,8 +526,8 @@ if __name__ == "__main__":
     print("=" * 50)
 
 
-    # if args.dataset == "mnist" or args.dataset == "fmnist":
-    #     generate_mnist('../dataset/mnist/', args.num_clients, 10, args.niid)
+    # if args.dataset == "MNIST" or args.dataset == "fmnist":
+    #     generate_mnist('../dataset/MNIST/', args.num_clients, 10, args.niid)
     # elif args.dataset == "Cifar10" or args.dataset == "Cifar100":
     #     generate_cifar10('../dataset/Cifar10/', args.num_clients, 10, args.niid)
     # else:
