@@ -525,14 +525,6 @@ if __name__ == "__main__":
     print("Fine tuning epoches on new clients: {}".format(args.fine_tuning_epoch_new))
     print("=" * 50)
 
-
-    # if args.dataset == "MNIST" or args.dataset == "fmnist":
-    #     generate_mnist('../dataset/MNIST/', args.num_clients, 10, args.niid)
-    # elif args.dataset == "Cifar10" or args.dataset == "Cifar100":
-    #     generate_cifar10('../dataset/Cifar10/', args.num_clients, 10, args.niid)
-    # else:
-    #     generate_synthetic('../dataset/synthetic/', args.num_clients, 10, args.niid)
-
     # with torch.profiler.profile(
     #     activities=[
     #         torch.profiler.ProfilerActivity.CPU,
