@@ -1,0 +1,443 @@
+nohup: ignoring input
+==================================================
+Algorithm: FedAMP
+Local batch size: 16
+Local epochs: 1
+Local learing rate: 0.005
+Local learing rate decay: False
+Total number of clients: 20
+Clients join in each round: 1.0
+Clients randomly join: False
+Client drop rate: 0.0
+Client select regarding time: False
+Running times: 1
+Dataset: Cifar10
+Number of classes: 10
+Backbone: resnet
+Using device: cuda
+Using DP: False
+Auto break: False
+Global rounds: 2000
+Cuda device id: 0
+DLG attack: False
+Total number of new clients: 0
+Fine tuning epoches on new clients: 0
+==================================================
+
+============= Running time: 0th =============
+Creating server and clients ...
+ResNet(
+  (conv1): Conv2d(3, 64, kernel_size=(7, 7), stride=(2, 2), padding=(3, 3), bias=False)
+  (bn1): BatchNorm2d(64, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+  (relu): ReLU(inplace=True)
+  (maxpool): MaxPool2d(kernel_size=3, stride=2, padding=1, dilation=1, ceil_mode=False)
+  (layer1): Sequential(
+    (0): BasicBlock(
+      (conv1): Conv2d(64, 64, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), bias=False)
+      (bn1): BatchNorm2d(64, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+      (relu): ReLU(inplace=True)
+      (conv2): Conv2d(64, 64, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), bias=False)
+      (bn2): BatchNorm2d(64, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+    )
+    (1): BasicBlock(
+      (conv1): Conv2d(64, 64, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), bias=False)
+      (bn1): BatchNorm2d(64, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+      (relu): ReLU(inplace=True)
+      (conv2): Conv2d(64, 64, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), bias=False)
+      (bn2): BatchNorm2d(64, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+    )
+  )
+  (layer2): Sequential(
+    (0): BasicBlock(
+      (conv1): Conv2d(64, 128, kernel_size=(3, 3), stride=(2, 2), padding=(1, 1), bias=False)
+      (bn1): BatchNorm2d(128, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+      (relu): ReLU(inplace=True)
+      (conv2): Conv2d(128, 128, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), bias=False)
+      (bn2): BatchNorm2d(128, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+      (downsample): Sequential(
+        (0): Conv2d(64, 128, kernel_size=(1, 1), stride=(2, 2), bias=False)
+        (1): BatchNorm2d(128, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+      )
+    )
+    (1): BasicBlock(
+      (conv1): Conv2d(128, 128, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), bias=False)
+      (bn1): BatchNorm2d(128, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+      (relu): ReLU(inplace=True)
+      (conv2): Conv2d(128, 128, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), bias=False)
+      (bn2): BatchNorm2d(128, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+    )
+  )
+  (layer3): Sequential(
+    (0): BasicBlock(
+      (conv1): Conv2d(128, 256, kernel_size=(3, 3), stride=(2, 2), padding=(1, 1), bias=False)
+      (bn1): BatchNorm2d(256, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+      (relu): ReLU(inplace=True)
+      (conv2): Conv2d(256, 256, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), bias=False)
+      (bn2): BatchNorm2d(256, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+      (downsample): Sequential(
+        (0): Conv2d(128, 256, kernel_size=(1, 1), stride=(2, 2), bias=False)
+        (1): BatchNorm2d(256, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+      )
+    )
+    (1): BasicBlock(
+      (conv1): Conv2d(256, 256, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), bias=False)
+      (bn1): BatchNorm2d(256, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+      (relu): ReLU(inplace=True)
+      (conv2): Conv2d(256, 256, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), bias=False)
+      (bn2): BatchNorm2d(256, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+    )
+  )
+  (layer4): Sequential(
+    (0): BasicBlock(
+      (conv1): Conv2d(256, 512, kernel_size=(3, 3), stride=(2, 2), padding=(1, 1), bias=False)
+      (bn1): BatchNorm2d(512, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+      (relu): ReLU(inplace=True)
+      (conv2): Conv2d(512, 512, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), bias=False)
+      (bn2): BatchNorm2d(512, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+      (downsample): Sequential(
+        (0): Conv2d(256, 512, kernel_size=(1, 1), stride=(2, 2), bias=False)
+        (1): BatchNorm2d(512, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+      )
+    )
+    (1): BasicBlock(
+      (conv1): Conv2d(512, 512, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), bias=False)
+      (bn1): BatchNorm2d(512, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+      (relu): ReLU(inplace=True)
+      (conv2): Conv2d(512, 512, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), bias=False)
+      (bn2): BatchNorm2d(512, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+    )
+  )
+  (avgpool): AdaptiveAvgPool2d(output_size=(1, 1))
+  (fc): Linear(in_features=512, out_features=10, bias=True)
+)
+
+Join ratio / total clients: 1.0 / 20
+Finished creating server and clients.
+
+-------------Round number: 0-------------
+
+Evaluate personalized models
+Averaged Train Loss: 2.3066
+Averaged Test Accurancy: 0.0957
+Averaged Test AUC: 0.5039
+Std Test Accurancy: 0.1327
+Std Test AUC: 0.2102
+------------------------- time cost ------------------------- 34.49809241294861
+
+-------------Round number: 1-------------
+
+Evaluate personalized models
+Averaged Train Loss: 0.4045
+Averaged Test Accurancy: 0.8259
+Averaged Test AUC: 0.9757
+Std Test Accurancy: 0.1537
+Std Test AUC: 0.0281
+------------------------- time cost ------------------------- 35.88342094421387
+
+-------------Round number: 2-------------
+
+Evaluate personalized models
+Averaged Train Loss: 0.3333
+Averaged Test Accurancy: 0.8412
+Averaged Test AUC: 0.9782
+Std Test Accurancy: 0.1515
+Std Test AUC: 0.0280
+------------------------- time cost ------------------------- 36.855955600738525
+
+-------------Round number: 3-------------
+
+Evaluate personalized models
+Averaged Train Loss: 0.2644
+Averaged Test Accurancy: 0.8520
+Averaged Test AUC: 0.9808
+Std Test Accurancy: 0.1418
+Std Test AUC: 0.0244
+------------------------- time cost ------------------------- 40.05450749397278
+
+-------------Round number: 4-------------
+
+Evaluate personalized models
+Averaged Train Loss: 0.2014
+Averaged Test Accurancy: 0.8463
+Averaged Test AUC: 0.9805
+Std Test Accurancy: 0.1391
+Std Test AUC: 0.0237
+------------------------- time cost ------------------------- 40.57984232902527
+
+-------------Round number: 5-------------
+
+Evaluate personalized models
+Averaged Train Loss: 0.1373
+Averaged Test Accurancy: 0.8598
+Averaged Test AUC: 0.9828
+Std Test Accurancy: 0.1370
+Std Test AUC: 0.0229
+------------------------- time cost ------------------------- 41.30024313926697
+
+-------------Round number: 6-------------
+
+Evaluate personalized models
+Averaged Train Loss: 0.1182
+Averaged Test Accurancy: 0.8493
+Averaged Test AUC: 0.9818
+Std Test Accurancy: 0.1343
+Std Test AUC: 0.0229
+------------------------- time cost ------------------------- 40.12057662010193
+
+-------------Round number: 7-------------
+
+Evaluate personalized models
+Averaged Train Loss: 0.0708
+Averaged Test Accurancy: 0.8600
+Averaged Test AUC: 0.9837
+Std Test Accurancy: 0.1338
+Std Test AUC: 0.0217
+------------------------- time cost ------------------------- 39.48215842247009
+
+-------------Round number: 8-------------
+
+Evaluate personalized models
+Averaged Train Loss: 0.0585
+Averaged Test Accurancy: 0.8590
+Averaged Test AUC: 0.9832
+Std Test Accurancy: 0.1253
+Std Test AUC: 0.0221
+------------------------- time cost ------------------------- 39.2730610370636
+
+-------------Round number: 9-------------
+
+Evaluate personalized models
+Averaged Train Loss: 0.0358
+Averaged Test Accurancy: 0.8668
+Averaged Test AUC: 0.9842
+Std Test Accurancy: 0.1256
+Std Test AUC: 0.0212
+------------------------- time cost ------------------------- 40.246052742004395
+
+-------------Round number: 10-------------
+
+Evaluate personalized models
+Averaged Train Loss: 0.0358
+Averaged Test Accurancy: 0.8620
+Averaged Test AUC: 0.9836
+Std Test Accurancy: 0.1230
+Std Test AUC: 0.0209
+------------------------- time cost ------------------------- 40.163718700408936
+
+-------------Round number: 11-------------
+
+Evaluate personalized models
+Averaged Train Loss: 0.0228
+Averaged Test Accurancy: 0.8650
+Averaged Test AUC: 0.9839
+Std Test Accurancy: 0.1278
+Std Test AUC: 0.0223
+------------------------- time cost ------------------------- 40.543102741241455
+
+-------------Round number: 12-------------
+
+Evaluate personalized models
+Averaged Train Loss: 0.0214
+Averaged Test Accurancy: 0.8643
+Averaged Test AUC: 0.9839
+Std Test Accurancy: 0.1278
+Std Test AUC: 0.0233
+------------------------- time cost ------------------------- 40.98215627670288
+
+-------------Round number: 13-------------
+
+Evaluate personalized models
+Averaged Train Loss: 0.0162
+Averaged Test Accurancy: 0.8632
+Averaged Test AUC: 0.9837
+Std Test Accurancy: 0.1284
+Std Test AUC: 0.0231
+------------------------- time cost ------------------------- 39.27297830581665
+
+-------------Round number: 14-------------
+
+Evaluate personalized models
+Averaged Train Loss: 0.0133
+Averaged Test Accurancy: 0.8673
+Averaged Test AUC: 0.9840
+Std Test Accurancy: 0.1240
+Std Test AUC: 0.0218
+------------------------- time cost ------------------------- 39.954410791397095
+
+-------------Round number: 15-------------
+
+Evaluate personalized models
+Averaged Train Loss: 0.0168
+Averaged Test Accurancy: 0.8607
+Averaged Test AUC: 0.9839
+Std Test Accurancy: 0.1274
+Std Test AUC: 0.0218
+------------------------- time cost ------------------------- 38.832058906555176
+
+-------------Round number: 16-------------
+
+Evaluate personalized models
+Averaged Train Loss: 0.0115
+Averaged Test Accurancy: 0.8646
+Averaged Test AUC: 0.9834
+Std Test Accurancy: 0.1277
+Std Test AUC: 0.0221
+------------------------- time cost ------------------------- 40.04227638244629
+
+-------------Round number: 17-------------
+
+Evaluate personalized models
+Averaged Train Loss: 0.0105
+Averaged Test Accurancy: 0.8658
+Averaged Test AUC: 0.9835
+Std Test Accurancy: 0.1278
+Std Test AUC: 0.0227
+------------------------- time cost ------------------------- 37.86586022377014
+
+-------------Round number: 18-------------
+
+Evaluate personalized models
+Averaged Train Loss: 0.0115
+Averaged Test Accurancy: 0.8677
+Averaged Test AUC: 0.9836
+Std Test Accurancy: 0.1271
+Std Test AUC: 0.0229
+------------------------- time cost ------------------------- 38.26526737213135
+
+-------------Round number: 19-------------
+
+Evaluate personalized models
+Averaged Train Loss: 0.0079
+Averaged Test Accurancy: 0.8674
+Averaged Test AUC: 0.9839
+Std Test Accurancy: 0.1268
+Std Test AUC: 0.0220
+------------------------- time cost ------------------------- 38.29134798049927
+
+-------------Round number: 20-------------
+
+Evaluate personalized models
+Averaged Train Loss: 0.0076
+Averaged Test Accurancy: 0.8686
+Averaged Test AUC: 0.9838
+Std Test Accurancy: 0.1202
+Std Test AUC: 0.0216
+------------------------- time cost ------------------------- 38.37166237831116
+
+-------------Round number: 21-------------
+
+Evaluate personalized models
+Averaged Train Loss: 0.0059
+Averaged Test Accurancy: 0.8720
+Averaged Test AUC: 0.9840
+Std Test Accurancy: 0.1197
+Std Test AUC: 0.0214
+------------------------- time cost ------------------------- 37.74844932556152
+
+-------------Round number: 22-------------
+
+Evaluate personalized models
+Averaged Train Loss: 0.0049
+Averaged Test Accurancy: 0.8717
+Averaged Test AUC: 0.9846
+Std Test Accurancy: 0.1214
+Std Test AUC: 0.0202
+------------------------- time cost ------------------------- 38.40725326538086
+
+-------------Round number: 23-------------
+
+Evaluate personalized models
+Averaged Train Loss: 0.0051
+Averaged Test Accurancy: 0.8727
+Averaged Test AUC: 0.9844
+Std Test Accurancy: 0.1185
+Std Test AUC: 0.0210
+------------------------- time cost ------------------------- 38.49955987930298
+
+-------------Round number: 24-------------
+
+Evaluate personalized models
+Averaged Train Loss: 0.0036
+Averaged Test Accurancy: 0.8698
+Averaged Test AUC: 0.9840
+Std Test Accurancy: 0.1284
+Std Test AUC: 0.0228
+------------------------- time cost ------------------------- 37.24162721633911
+
+-------------Round number: 25-------------
+
+Evaluate personalized models
+Averaged Train Loss: 0.0038
+Averaged Test Accurancy: 0.8690
+Averaged Test AUC: 0.9840
+Std Test Accurancy: 0.1230
+Std Test AUC: 0.0222
+------------------------- time cost ------------------------- 37.46778678894043
+
+-------------Round number: 26-------------
+
+Evaluate personalized models
+Averaged Train Loss: 0.0029
+Averaged Test Accurancy: 0.8690
+Averaged Test AUC: 0.9839
+Std Test Accurancy: 0.1239
+Std Test AUC: 0.0225
+------------------------- time cost ------------------------- 37.75442433357239
+
+-------------Round number: 27-------------
+
+Evaluate personalized models
+Averaged Train Loss: 0.0021
+Averaged Test Accurancy: 0.8724
+Averaged Test AUC: 0.9841
+Std Test Accurancy: 0.1206
+Std Test AUC: 0.0213
+------------------------- time cost ------------------------- 37.92756938934326
+
+-------------Round number: 28-------------
+
+Evaluate personalized models
+Averaged Train Loss: 0.0031
+Averaged Test Accurancy: 0.8700
+Averaged Test AUC: 0.9836
+Std Test Accurancy: 0.1243
+Std Test AUC: 0.0236
+------------------------- time cost ------------------------- 38.0829074382782
+
+-------------Round number: 29-------------
+
+Evaluate personalized models
+Averaged Train Loss: 0.0019
+Averaged Test Accurancy: 0.8716
+Averaged Test AUC: 0.9837
+Std Test Accurancy: 0.1251
+Std Test AUC: 0.0229
+------------------------- time cost ------------------------- 36.73319602012634
+
+-------------Round number: 30-------------
+
+Evaluate personalized models
+Averaged Train Loss: 0.0023
+Averaged Test Accurancy: 0.8719
+Averaged Test AUC: 0.9837
+Std Test Accurancy: 0.1191
+Std Test AUC: 0.0234
+------------------------- time cost ------------------------- 36.449252128601074
+
+-------------Round number: 31-------------
+
+Evaluate personalized models
+Traceback (most recent call last):
+  File "main.py", line 540, in <module>
+    run(args)
+  File "main.py", line 358, in run
+    server.train()
+  File "/mnt/c/Users/lwm/Documents/GitHub/PFLlib/system/flcore/servers/serveramp.py", line 58, in train
+    self.evaluate()
+  File "/mnt/c/Users/lwm/Documents/GitHub/PFLlib/system/flcore/servers/serverbase.py", line 246, in evaluate
+    stats_train = self.train_metrics()
+  File "/mnt/c/Users/lwm/Documents/GitHub/PFLlib/system/flcore/servers/serverbase.py", line 235, in train_metrics
+    cl, ns = c.train_metrics()
+  File "/mnt/c/Users/lwm/Documents/GitHub/PFLlib/system/flcore/clients/clientamp.py", line 102, in train_metrics
+    losses += loss.item() * y.shape[0]
+KeyboardInterrupt
