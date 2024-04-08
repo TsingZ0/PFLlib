@@ -27,6 +27,7 @@ import torchvision
 import logging
 
 from flcore.servers.serveravg import FedAvg
+from flcore.servers.Camouflaged_serveravg import Camouflaged_FedAvg
 from flcore.servers.serverpFedMe import pFedMe
 from flcore.servers.serverperavg import PerAvg
 from flcore.servers.serverprox import FedProx
@@ -200,6 +201,12 @@ def run(args):
             args.model.fc = nn.Identity()
             args.model = BaseHeadSplit(args.model, args.head)
             server = FedAvg(args, i)
+
+        elif args.algorithm == "Camouflaged_FedAvg":
+            args.head = copy.deepcopy(args.model.fc)
+            args.model.fc = nn.Identity()
+            args.model = BaseHeadSplit(args.model, args.head)
+            server = Camouflaged_FedAvg(args, i)
 
         elif args.algorithm == "Local":
             server = Local(args, i)
@@ -476,6 +483,16 @@ if __name__ == "__main__":
     parser.add_argument('-mo', "--momentum", type=float, default=0.1)
     parser.add_argument('-klw', "--kl_weight", type=float, default=0.0)
 
+    # Camouflaged_FedAvg
+    parser.add_argument('-cratio', "--camouflage_ratio", type=float, default=0.1)
+    parser.add_argument('-cstart', "--camouflage_start_epoch", type=int, default=10)
+    parser.add_argument('-ceps', "--camouflage_eps", type=float, default=16)
+    parser.add_argument('-crestart', "--camouflage_restarts", type=int, default=1)
+    parser.add_argument('-cattackiter', "--camouflage_attackiter", type=int, default=10)
+    # parser.add_argument('-cend', "--camouflage_end", type=int, default=100)
+    # parser.add_argument('-cstep', "--camouflage_step", type=int, default=10)
+    # parser.add_argument('-cdir', "--camouflage_dir", type=str, default="both",
+    #                     choices=["both", "up", "down"])
 
     args = parser.parse_args()
 

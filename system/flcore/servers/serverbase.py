@@ -91,6 +91,30 @@ class Server(object):
                             send_slow=send_slow)
             self.clients.append(client)
 
+
+    def set_camouflage_clients(self, clientObj, camouflage_clients, target_class, poison_class):
+        [target_class, poison_class] = np.random.choice(self.global_model.head.out_features, replace=False, size=2)
+
+        for i in camouflage_clients:
+            train_data = read_client_data(self.dataset, i, is_train=True)
+            test_data = read_client_data(self.dataset, i, is_train=False)
+            poison_data = [item for item in train_data if item[1] == poison_class]
+            targets_index= [i for i, item in enumerate(train_data) if item[1] == poison_class]
+            poison_index = np.random.choice(targets_index, len(poison_data)//2, replace=False)
+            camou_index = np.random.choice(targets_index, len(poison_data)//2, replace=False)
+
+            client = clientObj(self.args,
+                            id=i,
+                            train_samples=len(train_data),
+                            test_samples=len(test_data),
+                            train_slow=False,
+                            send_slow=False,
+                            target_class=target_class,
+                            poison_class=poison_class,
+                            poison_index=poison_index,
+                            camou_index=camou_index)
+            self.clients[i]=client
+
     # random select slow clients
     def select_slow_clients(self, slow_rate):
         slow_clients = [False for i in range(self.num_clients)]
