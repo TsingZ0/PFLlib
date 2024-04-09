@@ -676,7 +676,7 @@ conda env create -f env_cuda_latest.yaml # You may need to downgrade the torch u
 - Run evaluation: 
     ```bash
     cd ./system
-    python main.py -data mnist -m cnn -algo FedAvg -gr 2000 -did 0 # using the MNIST dataset, the FedAvg algorithm, and the 4-layer CNN model
+    python main.py -data MNIST -m cnn -algo FedAvg -gr 2000 -did 0 # using the MNIST dataset, the FedAvg algorithm, and the 4-layer CNN model
     ```
 
 **Note**: It is preferable to tune algorithm-specific hyper-parameters before using any algorithm on a new machine. 
