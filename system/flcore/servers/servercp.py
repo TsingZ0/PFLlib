@@ -28,7 +28,7 @@ class FedCP(Server):
     def __init__(self, args, times):
         super().__init__(args, times)
 
-        in_dim = list(args.model.base.parameters())[-1].shape[0]
+        in_dim = list(args.model.head.parameters())[0].shape[1]
         cs = ConditionalSelection(in_dim, in_dim).to(args.device)
 
         # select slow clients

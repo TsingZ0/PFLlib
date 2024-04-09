@@ -31,7 +31,7 @@ class clientCP(Client):
 
         self.lamda = args.lamda
 
-        in_dim = list(args.model.base.parameters())[-1].shape[0]
+        in_dim = list(args.model.head.parameters())[0].shape[1]
         self.context = torch.rand(1, in_dim).to(self.device)
 
         self.model = Ensemble(
@@ -54,7 +54,13 @@ class clientCP(Client):
 
 
     def set_head_g(self, head):
-        headw_p = self.model.model.head.weight.data.clone()
+        headw_ps = []
+        for name, mat in self.model.model.head.named_parameters():
+            if 'weight' in name:
+                headw_ps.append(mat.data)
+        headw_p = headw_ps[-1]
+        for mat in headw_ps[-2::-1]:
+            headw_p = torch.matmul(headw_p, mat)
         headw_p.detach_()
         self.context = torch.sum(headw_p, dim=0, keepdim=True)
         
