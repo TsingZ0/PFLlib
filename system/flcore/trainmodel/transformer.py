@@ -53,7 +53,7 @@ class TransformerModel(nn.Module):
         encoder_layers = TransformerEncoderLayer(d_model, nhead, d_hid, dropout, batch_first=True)
         self.encoder = TransformerEncoder(encoder_layers, nlayers)
         self.embedding = nn.Embedding(ntoken, d_model)
-        self.d_model = d_model
+        self.hidden_dim = d_model
         self.fc = nn.Linear(d_model, num_classes)
         self.class_token = nn.Parameter(torch.zeros(1, 1, d_model)) # the [CLS] token
 
@@ -65,24 +65,25 @@ class TransformerModel(nn.Module):
         self.fc.bias.data.zero_()
         self.fc.weight.data.uniform_(-initrange, initrange)
 
-    def forward(self, src: Tensor) -> Tensor:
+    def forward(self, src: Tensor, attn_mask: Tensor = None) -> Tensor:
         src, _ = src
         """
         Args:
             src: Tensor, shape [batch_size, seq_len]
+            attn_mask: Tensor, shape [batch_size, seq_len]
 
         Returns:
             output Tensor of shape [batch_size, num_classes]
         """
-        x = self.embedding(src) * math.sqrt(self.d_model)
+        x = self.embedding(src) * math.sqrt(self.hidden_dim)
         x = self.pos_encoder(x)
 
         # Extend the class token to encompass the entire batch, following the ViT approach in PyTorch
         n = x.shape[0]
-        batch_class_token = self.class_token.expand(n, -1, -1) * math.sqrt(self.d_model)
+        batch_class_token = self.class_token.expand(n, -1, -1) * math.sqrt(self.hidden_dim)
         x = torch.cat([batch_class_token, x], dim=1)
 
-        x = self.encoder(x)
+        x = self.encoder(x, attn_mask)
         x = x[:, 0]
         output = self.fc(x)
 
