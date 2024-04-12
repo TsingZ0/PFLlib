@@ -57,7 +57,7 @@ data_path = "AmazonReview/"
 dir_path = "AmazonReview/"
 
 # Allocate data to users
-def generate_AmazonReview(dir_path):
+def generate_dataset(dir_path):
     if not os.path.exists(dir_path):
         os.makedirs(dir_path)
         
@@ -99,4 +99,4 @@ def generate_AmazonReview(dir_path):
 
 
 if __name__ == "__main__":
-    generate_AmazonReview(dir_path)
+    generate_dataset(dir_path)

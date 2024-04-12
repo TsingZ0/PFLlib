@@ -24,7 +24,7 @@ def process_y(raw_y_batch):
     return y_batch
 
 # Allocate data to users
-def generate_shakespeare(dir_path):
+def generate_dataset(dir_path):
     train_path = dir_path + "train/"
     test_path = dir_path + "test/"
     
@@ -77,4 +77,4 @@ def generate_shakespeare(dir_path):
     print("Finish generating dataset.\n")
 
 if __name__ == "__main__":
-    generate_shakespeare(dir_path)
+    generate_dataset(dir_path)

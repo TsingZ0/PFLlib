@@ -29,7 +29,7 @@ dir_path = "PAMAP2/"
 sample_window = 256 # 2.56s
 # sample_window = 128 # 1.28s
 
-def generate_pamap(dir_path):
+def generate_dataset(dir_path):
     if not os.path.exists(dir_path):
         os.makedirs(dir_path)
         
@@ -48,7 +48,7 @@ def generate_pamap(dir_path):
     if not os.path.exists(data_path+'rawdata/PAMAP2_Dataset/'):
         os.system(f"unzip {data_path}rawdata/'PAMAP2_Dataset.zip' -d {data_path}rawdata/")
 
-    X, y = load_data_pamap(data_path+'rawdata/')
+    X, y = load_data_PAMAP2(data_path+'rawdata/')
     statistic = []
     num_clients = len(y)
     num_classes = len(np.unique(np.concatenate(y, axis=0)))
@@ -67,7 +67,7 @@ def generate_pamap(dir_path):
     save_file(config_path, train_path, test_path, train_data, test_data, num_clients, num_classes, statistic)
 
 
-def load_data_pamap(data_folder):
+def load_data_PAMAP2(data_folder):
     s_folder = data_folder + 'PAMAP2_Dataset/'
 
     file_names = [
@@ -169,4 +169,4 @@ def complete_HR(data):
     return data_no_NaN
 
 if __name__ == "__main__":
-    generate_pamap(dir_path)
+    generate_dataset(dir_path)
