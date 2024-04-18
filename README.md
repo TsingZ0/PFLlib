@@ -622,6 +622,61 @@ Client 2         Samples of labels:  [(0, 75), (1, 107), (3, 130), (7, 291), (8,
     Finish generating dataset.
 </details>
 
+## Visualize data set partitioning results 
+Visualize the types of data sets assigned to each client graphically with the help of visualization tools
+
+### Example ``MNIST``
+- MNIST
+    ```
+    cd ./dataset
+    python python show_data_distribution.py -dsname=MNISt  # dsname represents the dataset name, e.g. [MNIST,FashionMNIST,Cifar10,Cifar100,Flowers102]
+    ```
+  
+The output of `show_data_distribution.py -dsname=MNISt`
+```
+The client owns the data classification
+
+Client Id:   0 | Dataset Classes: {0, 1, 4, 5, 7, 8, 9}
+Client Id:   1 | Dataset Classes: {0, 2, 5, 6, 8, 9}
+Client Id:   2 | Dataset Classes: {0, 9, 3, 6}
+Client Id:   3 | Dataset Classes: {0, 8, 4, 7}
+Client Id:   4 | Dataset Classes: {0, 1, 3, 5, 6, 8, 9}
+Client Id:   5 | Dataset Classes: {1, 3, 4, 8, 9}
+Client Id:   6 | Dataset Classes: {1, 2, 3, 6, 8, 9}
+Client Id:   7 | Dataset Classes: {1, 2, 3, 5, 7, 8}
+Client Id:   8 | Dataset Classes: {0, 1}
+Client Id:   9 | Dataset Classes: {0, 1, 2, 4, 6}
+Client Id:  10 | Dataset Classes: {0, 1, 2, 3, 4, 5}
+Client Id:  11 | Dataset Classes: {2, 3, 5}
+Client Id:  12 | Dataset Classes: {0, 1, 2, 5}
+Client Id:  13 | Dataset Classes: {1, 2, 4, 5, 7}
+Client Id:  14 | Dataset Classes: {5, 7}
+Client Id:  15 | Dataset Classes: {0, 3, 5, 6, 7, 8}
+Client Id:  16 | Dataset Classes: {0}
+Client Id:  17 | Dataset Classes: {1, 2, 3, 4, 5, 7, 8}
+Client Id:  18 | Dataset Classes: {0, 5, 6}
+Client Id:  19 | Dataset Classes: {0, 1, 2, 3, 4, 9}
+```
+```
+Each type of label is distributed across that client
+
+Label ID:   0 - zero | Client ID: [0, 1, 2, 3, 4, 8, 9, 10, 12, 15, 16, 18, 19]
+Label ID:    1 - one | Client ID: [0, 4, 5, 6, 7, 8, 9, 10, 12, 13, 17, 19]
+Label ID:    2 - two | Client ID: [1, 6, 7, 9, 10, 11, 12, 13, 17, 19]
+Label ID:  3 - three | Client ID: [2, 4, 5, 6, 7, 10, 11, 15, 17, 19]
+Label ID:   4 - four | Client ID: [0, 3, 5, 9, 10, 13, 17, 19]
+Label ID:   5 - five | Client ID: [0, 1, 4, 7, 10, 11, 12, 13, 14, 15, 17, 18]
+Label ID:    6 - six | Client ID: [1, 2, 4, 6, 9, 15, 18]
+Label ID:  7 - seven | Client ID: [0, 3, 7, 13, 14, 15, 17]
+Label ID:  8 - eight | Client ID: [0, 1, 3, 4, 5, 6, 7, 15, 17]
+Label ID:   9 - nine | Client ID: [0, 1, 2, 4, 5, 6, 19]
+```
+Display Partition Results  
+
+![](./dataset/images/mnist_partition.png)
+
+
+
 ## Models
 - for MNIST and Fashion-MNIST
 
