@@ -12,6 +12,7 @@ dependencies:
   - h5py
   - seaborn
   - matplotlib
+  - click
   - pip:
     - torch==2.0.1
     - torchaudio
@@ -22,3 +23,7 @@ dependencies:
     - opacus
     - portalocker
     - cvxpy
+    - higher
+    - diffusers
+    - accelerate
+    - transformers

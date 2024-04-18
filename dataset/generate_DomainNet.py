@@ -90,7 +90,7 @@ data_path = "DomainNet/"
 dir_path = "DomainNet/"
 
 # Allocate data to users
-def generate_DomainNet(dir_path):
+def generate_dataset(dir_path):
     if not os.path.exists(dir_path):
         os.makedirs(dir_path)
         
@@ -165,4 +165,4 @@ def generate_DomainNet(dir_path):
 
 
 if __name__ == "__main__":
-    generate_DomainNet(dir_path)
+    generate_dataset(dir_path)

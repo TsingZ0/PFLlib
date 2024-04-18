@@ -33,7 +33,7 @@ dir_path = "SogouNews/"
 
 
 # Allocate data to users
-def generate_sogounews(dir_path, num_clients, niid, balance, partition):
+def generate_dataset(dir_path, num_clients, niid, balance, partition):
     if not os.path.exists(dir_path):
         os.makedirs(dir_path)
         
@@ -110,4 +110,4 @@ if __name__ == "__main__":
     balance = True if sys.argv[2] == "balance" else False
     partition = sys.argv[3] if sys.argv[3] != "-" else None
 
-    generate_sogounews(dir_path, num_clients, niid, balance, partition)
+    generate_dataset(dir_path, num_clients, niid, balance, partition)

@@ -204,7 +204,7 @@ data_path = "Digit5/"
 dir_path = "Digit5/"
 
 # Allocate data to usersz``
-def generate_Digit5(dir_path):
+def generate_dataset(dir_path):
     if not os.path.exists(dir_path):
         os.makedirs(dir_path)
         
@@ -267,4 +267,4 @@ def generate_Digit5(dir_path):
 
 
 if __name__ == "__main__":
-    generate_Digit5(dir_path)
+    generate_dataset(dir_path)

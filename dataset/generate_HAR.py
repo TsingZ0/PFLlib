@@ -27,7 +27,7 @@ data_path = "HAR/"
 dir_path = "HAR/"
 
 
-def generate_har(dir_path):
+def generate_dataset(dir_path):
     if not os.path.exists(dir_path):
         os.makedirs(dir_path)
         
@@ -46,7 +46,7 @@ def generate_har(dir_path):
     if not os.path.exists(data_path+'rawdata/UCI HAR Dataset/'):
         os.system(f"unzip {data_path}rawdata/'UCI HAR Dataset.zip' -d {data_path}rawdata/")
 
-    X, y = load_data_har(data_path+'rawdata/')
+    X, y = load_data_HAR(data_path+'rawdata/')
     statistic = []
     num_clients = len(y)
     num_classes = len(np.unique(np.concatenate(y, axis=0)))
@@ -65,7 +65,7 @@ def generate_har(dir_path):
     save_file(config_path, train_path, test_path, train_data, test_data, num_clients, num_classes, statistic)
 
 
-def load_data_har(data_folder):
+def load_data_HAR(data_folder):
     str_folder = data_folder + 'UCI HAR Dataset/'
     INPUT_SIGNAL_TYPES = [
         "body_acc_x_",
@@ -111,4 +111,4 @@ def load_data_har(data_folder):
 
 
 if __name__ == "__main__":
-    generate_har(dir_path)
+    generate_dataset(dir_path)

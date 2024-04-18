@@ -29,7 +29,7 @@ dir_path = "Omniglot/"
 
 
 # Allocate data to users
-def generate_omniglot(dir_path):
+def generate_dataset(dir_path):
     if not os.path.exists(dir_path):
         os.makedirs(dir_path)
         
@@ -45,7 +45,7 @@ def generate_omniglot(dir_path):
 
     root = dir_path+"rawdata"
     
-    # Get omniglot data
+    # Get Omniglot data
     torchvision.datasets.Omniglot(root=root, background=True, download=True)
     torchvision.datasets.Omniglot(root=root, background=False, download=True)
 
@@ -81,4 +81,4 @@ def generate_omniglot(dir_path):
 
 
 if __name__ == "__main__":
-    generate_omniglot(dir_path)
+    generate_dataset(dir_path)
