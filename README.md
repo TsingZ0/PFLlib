@@ -629,7 +629,7 @@ Visualize the types of data sets assigned to each client graphically with the he
 - MNIST
     ```
     cd ./dataset
-    python python show_data_distribution.py -dsname=MNISt  # dsname represents the dataset name, e.g. [MNIST,FashionMNIST,Cifar10,Cifar100,Flowers102]
+    python python show_data_distribution.py -dsname=MNIST  # dsname represents the dataset name, e.g. [MNIST,FashionMNIST,Cifar10,Cifar100,Flowers102]
     ```
   
 The output of `show_data_distribution.py -dsname=MNISt`
