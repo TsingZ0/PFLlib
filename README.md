@@ -21,9 +21,11 @@ Figure 1: An Example for FedAvg. You can create a scenario using `generate_DATA.
   
 - [Closed issues](https://github.com/TsingZ0/PFLlib/issues?q=is%3Aissue+is%3Aclosed) may help you a lot.
 
-The origin of the **statistical heterogeneity** phenomenon is the personalization of users, who generate the non-IID (not Independent and Identically Distributed) and unbalanced data. With statistical heterogeneity existing in the FL scenario, a myriad of approaches have been proposed to crack this hard nut. In contrast, the personalized FL (pFL) may take the advantage of the statistically heterogeneious data to learn the personalized model for each user. 
+- When submitting pull requests, please provide sufficient *instructions* and *examples* in the comment box. 
 
-Thanks to [@Stonesjtu](https://github.com/Stonesjtu/pytorch_memlab/blob/d590c489236ee25d157ff60ecd18433e8f9acbe3/pytorch_memlab/mem_reporter.py#L185), this library can also record the **GPU memory usage** for the model. By using the package [opacus](https://opacus.ai/), we introduce **DP (differential privacy)** into this library (please refer to `./system/flcore/clients/clientavg.py` for example). Following [FedCG](https://www.ijcai.org/proceedings/2022/0324.pdf), we also introduce the **[DLG (Deep Leakage from Gradients)](https://papers.nips.cc/paper_files/paper/2019/hash/60a6c4002cc7b29142def8871531281a-Abstract.html) attack** and **PSNR (Peak Signal-to-Noise Ratio) metric** to evaluate the privacy-preserving ability of tFL/pFL algorithms (please refer to `./system/flcore/servers/serveravg.py` for example). *Now we can train on some clients and evaluate on other new clients by setting `args.num_new_clients` in `./system/main.py`. Note that not all the tFL/pFL algorithms support this feature.*
+The origin of the **statistical heterogeneity** phenomenon is the personalization of users, who generate non-IID (not Independent and Identically Distributed) and unbalanced data. With statistical heterogeneity existing in the FL scenario, a myriad of approaches have been proposed to crack this hard nut. In contrast, the personalized FL (pFL) may take advantage of the statistically heterogeneous data to learn the personalized model for each user. 
+
+Thanks to [@Stonesjtu](https://github.com/Stonesjtu/pytorch_memlab/blob/d590c489236ee25d157ff60ecd18433e8f9acbe3/pytorch_memlab/mem_reporter.py#L185), this library can also record the **GPU memory usage** for the model. By using the package [opacus](https://opacus.ai/), we introduce **DP (differential privacy)** into this library (please refer to `./system/flcore/clients/clientavg.py` for example). Following [FedCG](https://www.ijcai.org/proceedings/2022/0324.pdf), we also introduce the **[DLG (Deep Leakage from Gradients)](https://papers.nips.cc/paper_files/paper/2019/hash/60a6c4002cc7b29142def8871531281a-Abstract.html) attack** and **PSNR (Peak Signal-to-Noise Ratio) metric** to evaluate the privacy-preserving ability of tFL/pFL algorithms (please refer to `./system/flcore/servers/serveravg.py` for example). *Now we can train on some clients and evaluate performance on other new clients by setting `args.num_new_clients` in `./system/main.py`. Note that not all the tFL/pFL algorithms support this feature.*
 
 **Citation**
 
@@ -107,13 +109,13 @@ Thanks to [@Stonesjtu](https://github.com/Stonesjtu/pytorch_memlab/blob/d590c489
 - **FedPAC** — [Personalized Federated Learning with Feature Alignment and Classifier Collaboration](https://openreview.net/pdf?id=SXZr8aDKia) *ICLR 2023*
 
 ## Datasets and scenarios (updating)
-For the ***label skew*** scenario, we introduce **14** famous datasets: **MNIST**, **EMNIST**, **Fashion-MNIST**, **Cifar10**, **Cifar100**, **AG News**, **Sogou News**, **Tiny-ImageNet**, **Country211**, **Flowers102**, **GTSRB**, **Shakespeare**, and **Stanford Cars**, they can be easy split into **IID** and **non-IID** version. Since some codes for generating datasets such as splitting are the same for all datasets, we move these codes into `./dataset/utils/dataset_utils.py`. In **non-IID** scenario, 2 situations exist. The first one is the **pathological non-IID** scenario, the second one is **practical non-IID** scenario. In the **pathological non-IID** scenario, for example, the data on each client only contains the specific number of labels (maybe only 2 labels), though the data on all clients contains 10 labels such as MNIST dataset. In the **practical non-IID** scenario, Dirichlet distribution is utilized (please refer to this [paper](https://proceedings.neurips.cc/paper/2020/hash/18df51b97ccd68128e994804f3eccc87-Abstract.html) for details). We can input `balance` for the iid scenario, where the data are uniformly distributed. 
+For the ***label skew*** scenario, we introduce **14** famous datasets: **MNIST**, **EMNIST**, **Fashion-MNIST**, **Cifar10**, **Cifar100**, **AG News**, **Sogou News**, **Tiny-ImageNet**, **Country211**, **Flowers102**, **GTSRB**, **Shakespeare**, and **Stanford Cars**, they can be easy split into **IID** and **non-IID** version. Since some codes for generating datasets such as splitting are the same for all datasets, we move these codes into `./dataset/utils/dataset_utils.py`. In the **non-IID** scenario, 2 situations exist. The first one is the **pathological non-IID** scenario, the second one is the **practical non-IID** scenario. In the **pathological non-IID** scenario, for example, the data on each client only contains the specific number of labels (maybe only 2 labels), though the data on all clients contains 10 labels such as the MNIST dataset. In the **practical non-IID** scenario, Dirichlet distribution is utilized (please refer to this [paper](https://proceedings.neurips.cc/paper/2020/hash/18df51b97ccd68128e994804f3eccc87-Abstract.html) for details). We can input `balance` for the iid scenario, where the data are uniformly distributed. 
 
 For the ***feature shift*** scenario, we use **3** datasets that are widely used in Domain Adaptation: **Amazon Review** (fetch raw data from [this site](https://drive.google.com/file/d/1QbXFENNyqor1IlCpRRFtOluI2_hMEd1W/view?usp=sharing)), **Digit5** (fetch raw data from [this site](https://drive.google.com/file/d/1PT6K-_wmsUEUCxoYzDy0mxF-15tvb2Eu/view?usp=share_link)), and **DomainNet**.
 
 For the ***real-world (or IoT)*** scenario, we also introduce **3** naturally separated datasets: **Omniglot** (20 clients, 50 labels), **HAR (Human Activity Recognition)** (30 clients, 6 labels), **PAMAP2** (9 clients, 12 labels). For the details of datasets and FL algorithms in **IoT**, please refer to [my FL-IoT repo](https://github.com/TsingZ0/FL-IoT).
 
-*If you need another data set, just write another code to download it and then using the utils.*
+*If you need another data set, just write another code to download it and then use the utils.*
 
 ### Examples for **MNIST**
 - MNIST
@@ -197,7 +199,7 @@ Client 2         Size of data: 1630      Labels:  [0 3 6 9]
 
     Saving to disk.
 
-    Finish generating dataset.
+    Finish generating the dataset.
 </details>
 
 ## Models
@@ -239,7 +241,7 @@ Install [CUDA](https://developer.nvidia.com/cuda-11-6-0-download-archive).
 Install [conda](https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh) and activate conda. 
 
 ```bash
-conda env create -f env_cuda_latest.yaml # You may need to downgrade the torch using pip to match CUDA version
+conda env create -f env_cuda_latest.yaml # You may need to downgrade the torch using pip to match the CUDA version
 ```
 
 ## How to start simulating (examples for FedAvg)
@@ -265,13 +267,13 @@ conda env create -f env_cuda_latest.yaml # You may need to downgrade the torch u
 If you need to simulate FL under practical situations, which includes **client dropout**, **slow trainers**, **slow senders**, and **network TTL**, you can set the following parameters to realize it.
 
 - `-cdr`: The dropout rate for total clients. The selected clients will randomly drop at each training round.
-- `-tsr` and `-ssr`: The rates for slow trainers and slow senders among all clients. Once a client was selected as "slow trainers", for example, it will always train slower than the original one. So does "slow senders". 
+- `-tsr` and `-ssr`: The rates for slow trainers and slow senders among all clients. Once a client is selected as a "slow trainer"/"slow sender", for example, it will always train/send slower than the original one. 
 - `-tth`: The threshold for network TTL (ms). 
 
 ## Easy to extend
 It is easy to add new algorithms and datasets to this library. 
 
-- To add a **new dataset** into this library, all you need to do is writing the download code and using the utils which is similar to `./dataset/generate_MNIST.py` (you can also consider it as the template). 
+- To add a **new dataset** into this library, all you need to do is write the download code and use the utils which is similar to `./dataset/generate_MNIST.py` (you can also consider it as the template). 
 
 - To add a **new algorithm**, you can utilize the class **Server** and class **Client**, which are wrote in `./system/flcore/servers/serverbase.py` and `./system/flcore/clients/clientbase.py`, respectively. 
 
@@ -279,7 +281,7 @@ It is easy to add new algorithms and datasets to this library.
 
 - If you have a **new optimizer** while training, please add it into `./system/flcore/optimizers/fedoptimizer.py`
 
-- The evaluation platform is also convenient for users to bulid a new platform for specific applications, such as our [FL-IoT](https://github.com/TsingZ0/FL-IoT) and [HtFL](https://github.com/TsingZ0/HtFL). 
+- The evaluation platform is also convenient for users to build a new platform for specific applications, such as our [FL-IoT](https://github.com/TsingZ0/FL-IoT) and [HtFL](https://github.com/TsingZ0/HtFL). 
 
 
 ## Experimental results
