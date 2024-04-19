@@ -142,6 +142,7 @@ Client 2         Size of data: 1630      Labels:  [0 3 6 9]
 ```
 <details>
     <summary>Show more</summary>
+
     Client 3         Size of data: 2541      Labels:  [0 4 7 8]
                      Samples of labels:  [(0, 155), (4, 1), (7, 2381), (8, 4)]
     --------------------------------------------------
@@ -199,7 +200,7 @@ Client 2         Size of data: 1630      Labels:  [0 3 6 9]
 
     Saving to disk.
 
-    Finish generating the dataset.
+    Finish generating dataset.
 </details>
 
 ## Models
