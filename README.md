@@ -125,6 +125,7 @@ For the ***real-world (or IoT)*** scenario, we also introduce **3** naturally se
     # python generate_MNIST.py iid balance - # for iid and balanced scenario
     # python generate_MNIST.py noniid - pat # for pathological noniid and unbalanced scenario
     python generate_MNIST.py noniid - dir # for practical noniid and unbalanced scenario
+    # python generate_MNIST.py noniid - exdir # for Extended Dirichlet strategy 
     ```
 
 The output of `python generate_MNIST.py noniid - dir`
