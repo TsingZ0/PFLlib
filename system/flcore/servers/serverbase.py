@@ -92,16 +92,14 @@ class Server(object):
             self.clients.append(client)
 
 
-    def set_camouflage_clients(self, clientObj, camouflage_clients, target_class, poison_class):
-        [target_class, poison_class] = np.random.choice(self.global_model.head.out_features, replace=False, size=2)
-
+    def set_camouflage_clients(self, clientObj, camouflage_clients, target_class, poison_class, target_images):
         for i in camouflage_clients:
             train_data = read_client_data(self.dataset, i, is_train=True)
             test_data = read_client_data(self.dataset, i, is_train=False)
-            poison_data = [item for item in train_data if item[1] == poison_class]
+            # poison_data = [item for item in train_data if item[1] == poison_class]
             targets_index= [i for i, item in enumerate(train_data) if item[1] == poison_class]
-            poison_index = np.random.choice(targets_index, len(poison_data)//2, replace=False)
-            camou_index = np.random.choice(targets_index, len(poison_data)//2, replace=False)
+            poison_index = np.random.choice(targets_index, len(targets_index)//2, replace=False)
+            camou_index = np.random.choice(targets_index, len(targets_index)//2, replace=False)
 
             client = clientObj(self.args,
                             id=i,
@@ -112,7 +110,9 @@ class Server(object):
                             target_class=target_class,
                             poison_class=poison_class,
                             poison_index=poison_index,
-                            camou_index=camou_index)
+                            camou_index=camou_index,
+                            target_images=target_images
+                               )
             self.clients[i]=client
 
     # random select slow clients
@@ -175,22 +175,67 @@ class Server(object):
         for i, w in enumerate(self.uploaded_weights):
             self.uploaded_weights[i] = w / tot_samples
 
+        if self.args.defense == 'TrimmedMean':
+            flattened_parameters = []
+            for model in self.uploaded_models:
+                model_parameters = [param.view(-1) for param in model.parameters()]
+                model_parameters_flattened = torch.cat(model_parameters)
+                flattened_parameters.append(model_parameters_flattened)
+
+            flattened_parameters=torch.stack(flattened_parameters)
+            middele_parameters = torch.median(flattened_parameters[:, :], dim=0)[0]
+            indices = torch.topk(torch.abs(flattened_parameters - middele_parameters), k=18, largest=False, dim=0)[1]
+            for cid in self.camouflage_clients:
+                equals_cid = torch.eq(indices, cid)
+                count_equals_cid = torch.sum(equals_cid)
+                print(f"Camouflaged_Client {cid} has {count_equals_cid / len(flattened_parameters.T)} parameters accessed")
+            self.flattened_parameters= flattened_parameters
+            self.defense_indices=indices
+
+
+        # model_parameters = [list(model.parameters()) for model in self.uploaded_models]
+        # # 初始化一个空列表来存储所有的距离
+        # distances = []
+        # # 计算每对模型之间的欧氏距离
+        # for i in range(len(model_parameters)):
+        #     for j in range(len(model_parameters)):
+        #         dist = torch.dist(model_parameters[i][0], model_parameters[j][0])
+        #         distances.append(dist.item())
+        # # 打印所有的距离
+        # distances=np.reshape(distances, (len(model_parameters), len(model_parameters)))
+        # distancess=0
+
+
     def aggregate_parameters(self):
         assert (len(self.uploaded_models) > 0)
 
         self.global_model = copy.deepcopy(self.uploaded_models[0])
         for param in self.global_model.parameters():
             param.data.zero_()
-            
-        for w, client_model in zip(self.uploaded_weights, self.uploaded_models):
-            self.add_parameters(w, client_model)
+
+        if self.args.defense == 'NoDefense':
+            for w, client_model in zip(self.uploaded_weights, self.uploaded_models):
+                self.add_parameters(w, client_model)
+        else:
+            good_vals = torch.gather(self.flattened_parameters, dim=0, index=self.defense_indices)
+            current_grads = torch.mean(good_vals, dim=0)
+            param_index = 0
+            for server_param in self.global_model.parameters():
+                param_size=torch.numel(server_param)
+
+                new_param_vector = current_grads[param_index:param_index + param_size]
+                new_param_tensor = new_param_vector.view(server_param.shape)
+
+                server_param.data += new_param_tensor.clone()
+
+                param_index += param_size
 
     def add_parameters(self, w, client_model):
         for server_param, client_param in zip(self.global_model.parameters(), client_model.parameters()):
             server_param.data += client_param.data.clone() * w
 
     def save_global_model(self):
-        model_path = os.path.join("models", self.dataset)
+        model_path = f'../results/{self.args.algorithm}/{self.args.server_start_time}-{self.args.model_str}-{self.args.dataset}'
         if not os.path.exists(model_path):
             os.makedirs(model_path)
         model_path = os.path.join(model_path, self.algorithm + "_server" + ".pt")
@@ -209,13 +254,13 @@ class Server(object):
         
     def save_results(self):
         algo = self.dataset + "_" + self.algorithm
-        result_path = "../results/"
+        result_path = f'../results/{self.args.algorithm}/{self.args.server_start_time}-{self.args.model_str}-{self.args.dataset}'
         if not os.path.exists(result_path):
             os.makedirs(result_path)
 
         if (len(self.rs_test_acc)):
             algo = algo + "_" + self.goal + "_" + str(self.times)
-            file_path = result_path + "{}.h5".format(algo)
+            file_path = result_path + "/{}.h5".format(algo)
             print("File path: " + file_path)
 
             with h5py.File(file_path, 'w') as hf:
@@ -231,25 +276,37 @@ class Server(object):
     def load_item(self, item_name):
         return torch.load(os.path.join(self.save_folder_name, "server_" + item_name + ".pt"))
 
-    def test_metrics(self):
+    def test_metrics(self, target_class=None, poison_class=None):
         if self.eval_new_clients and self.num_new_clients > 0:
             self.fine_tuning_new_clients()
             return self.test_metrics_new_clients()
         
         num_samples = []
         tot_correct = []
+        poison_num_samples = 0
+        poison_tot_correct = 0
+        poison_tot_success = 0
         tot_auc = []
         for c in self.clients:
             ct, ns, auc = c.test_metrics()
             tot_correct.append(ct*1.0)
             tot_auc.append(auc*ns)
             num_samples.append(ns)
+            if target_class is not None and poison_class is not None:
+                poison_ct, poison_ns, poison_su = c.test_metrics_poison_class(target_class=target_class, poison_class=poison_class)
+                poison_tot_correct += poison_ct
+                poison_num_samples += poison_ns
+                poison_tot_success += poison_su
+
+        if target_class is not None:
+            # print("Averaged Poison Success Rate: {:.4f}".format(poison_tot_success / poison_num_samples))
+            print("Averaged Poison Class Accurancy: {:.4f}".format(poison_tot_correct / poison_num_samples))
 
         ids = [c.id for c in self.clients]
 
         return ids, num_samples, tot_correct, tot_auc
 
-    def train_metrics(self):
+    def train_metrics(self, target_class=None, poison_class=None):
         if self.eval_new_clients and self.num_new_clients > 0:
             return [0], [1], [0]
         
@@ -265,9 +322,9 @@ class Server(object):
         return ids, num_samples, losses
 
     # evaluate selected clients
-    def evaluate(self, acc=None, loss=None):
-        stats = self.test_metrics()
-        stats_train = self.train_metrics()
+    def evaluate(self, acc=None, loss=None, target_class=None, poison_class=None):
+        stats = self.test_metrics(target_class=target_class, poison_class=poison_class)
+        stats_train = self.train_metrics(target_class=target_class, poison_class=poison_class)
 
         test_acc = sum(stats[2])*1.0 / sum(stats[1])
         test_auc = sum(stats[3])*1.0 / sum(stats[1])

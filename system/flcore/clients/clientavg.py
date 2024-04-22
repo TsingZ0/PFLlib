@@ -19,6 +19,9 @@ import copy
 import torch
 import numpy as np
 import time
+
+import matplotlib.pyplot as plt
+from PIL import Image
 from flcore.clients.clientbase import Client
 from utils.privacy import *
 import torch.utils.data as data
@@ -28,9 +31,10 @@ from utils.witch import Witch
 class clientAVG(Client):
     def __init__(self, args, id, train_samples, test_samples, **kwargs):
         super().__init__(args, id, train_samples, test_samples, **kwargs)
+        self.trainloader = self.load_train_data()
 
     def train(self):
-        trainloader = self.load_train_data()
+        trainloader = self.trainloader
         # self.model.to(self.device)
         self.model.train()
 
@@ -80,13 +84,16 @@ class clientAVG(Client):
 
 
 class Camouflage_clientAVG(Client):
-    def __init__(self, args, id, train_samples, test_samples,target_class, poison_class, poison_index, camou_index, **kwargs):
+    def __init__(self, args, id, train_samples, test_samples,target_class, poison_class, poison_index, camou_index, target_images, **kwargs):
         super().__init__(args, id, train_samples, test_samples, **kwargs)
+        self.args=args
         self.target_class = target_class
         self.poison_class = poison_class
         self.poison_index = poison_index
         self.camou_index = camou_index
-        self.witch=Witch(args, target_class, poison_class, poison_index, camou_index, self.loss, setup=dict(device=torch.device('cuda'), dtype=torch.float))
+        self.witch=Witch(args, target_class, poison_class, poison_index, camou_index, target_images, self.loss, setup=dict(device=torch.device('cuda'), dtype=torch.float))
+        self.poison_delta= None
+        self.trainloader = self.load_train_data_add_index()
 
         # poison_index = []
         # poison_index = self.trainset.get_index(poison_class)
@@ -100,10 +107,12 @@ class Camouflage_clientAVG(Client):
         # self.true_classes = torch.tensor([data[1] for data in self.target_image]).to(device='cuda', dtype=torch.long)
         # self.target_grad, self.target_grad_norm = self.gradient(model, self.targets, self.intended_classes)
 
-    def train(self):
-        trainloader = self.load_train_data_add_index()
+    def train(self, global_epoch):
+        trainloader = self.trainloader
         # self.model.to(self.device)
         self.model.train()
+
+        global_model_params=copy.deepcopy(self.model.state_dict())
 
         # differential privacy
         if self.privacy:
@@ -117,80 +126,107 @@ class Camouflage_clientAVG(Client):
         if self.train_slow:
             max_local_epochs = np.random.randint(1, max_local_epochs // 2)
 
-        for epoch in range(max_local_epochs):
-            for i, (x, y, _) in enumerate(trainloader):
-                if type(x) == type([]):
-                    x[0] = x[0].to(self.device)
-                else:
-                    x = x.to(self.device)
-                y = y.to(self.device)
-                if self.train_slow:
-                    time.sleep(0.1 * np.abs(np.random.rand()))
-                output = self.model(x)
-                loss = self.loss(output, y)
-                self.optimizer.zero_grad()
-                loss.backward()
-                self.optimizer.step()
+        if global_epoch < self.args.camouflage_start_epoch:
+            # normal training
+            for epoch in range(max_local_epochs):
+                for i, (x, y, _) in enumerate(trainloader):
+                    if type(x) == type([]):
+                        x[0] = x[0].to(self.device)
+                    else:
+                        x = x.to(self.device)
+                    y = y.to(self.device)
+                    if self.train_slow:
+                        time.sleep(0.1 * np.abs(np.random.rand()))
+                    output = self.model(x)
+                    loss = self.loss(output, y)
+                    self.optimizer.zero_grad()
+                    loss.backward()
+                    self.optimizer.step()
+            # self.model.cpu()
+        else:
+            # posioning
+            poison_delta = self.witch.brew(self.model, trainloader, True,last_delta=self.poison_delta)
+            self.poison_delta= poison_delta
 
-        # self.model.cpu()
+            weight = np.array([1] * len(trainloader.dataset))
+            weight [self.poison_index] = 5
+            poison_sampler = data.WeightedRandomSampler(weight, num_samples=len(weight), replacement=True)
+            trainloader = data.DataLoader(trainloader.dataset, batch_size=self.args.batch_size, sampler=poison_sampler)
 
-        # posioning
-        poison_delta = self.witch.brew(self.model, trainloader, True)
+            # poisoning retrain
+            self.model.train()
+            for epoch in range(max_local_epochs):
+                for i, (x, y, z_index) in enumerate(trainloader):
+                    if type(x) == type([]):
+                        x[0] = x[0].to(self.device)
+                    else:
+                        x = x.to(self.device)
+                    y = y.to(self.device)
 
-        # poisoning retrain
-        self.model.train()
-        for epoch in range(max_local_epochs):
-            for i, (x, y, z_index) in enumerate(trainloader):
-                if type(x) == type([]):
-                    x[0] = x[0].to(self.device)
-                else:
-                    x = x.to(self.device)
-                y = y.to(self.device)
+                    picture_id = []
+                    poison_order = []
+                    for order, id in enumerate(z_index.tolist()):
+                        if id in self.poison_index:
+                            picture_id.append(order)
+                            poison_order.append(np.where(np.array(self.poison_index)==id)[0][0])
 
-                picture_id = []
-                poison_order = []
-                for order, id in enumerate(z_index.tolist()):
-                    if id in self.poison_index:
-                        picture_id.append(order)
-                        poison_order.append(np.where(self.poison_index==id)[0][0])
+                    if len(poison_order) > 0:
+                        x[picture_id] += poison_delta[poison_order]
+                        y[picture_id] = self.target_class
 
-                if len(poison_order) > 0:
-                    x[picture_id] += poison_delta[poison_order]
+                    output = self.model(x)
+                    loss = self.loss(output, y)
+                    self.optimizer.zero_grad()
+                    loss.backward()
+                    self.optimizer.step()
+            _,_,_=self.test_metrics_poison_class(self.target_class, self.poison_class)
 
-                output = self.model(x)
-                loss = self.loss(output, y)
-                self.optimizer.zero_grad()
-                loss.backward()
-                self.optimizer.step()
 
-        # camouflage
-        camou_delta = self.witch.brew(self.model, trainloader, False)
+            # camouflage
+            if self.args.camouflage == 1:
 
-        # camouflage retrain
-        self.model.train()
-        for epoch in range(max_local_epochs):
-            for i, (x, y, z_index) in enumerate(trainloader):
-                if type(x) == type([]):
-                    x[0] = x[0].to(self.device)
-                else:
-                    x = x.to(self.device)
-                y = y.to(self.device)
+                camou_delta = self.witch.brew(self.model, trainloader, False)
 
-                picture_id = []
-                camou_order = []
-                for order, id in enumerate(z_index.tolist()):
-                    if id in self.camou_index:
-                        picture_id.append(order)
-                        camou_order.append(np.where(self.camou_index == id)[0][0])
+                weight[self.camou_index] = 5
+                camou_sampler = data.WeightedRandomSampler(weight, num_samples=len(weight), replacement=True)
+                trainloader = data.DataLoader(trainloader.dataset, batch_size=self.args.batch_size,
+                                              sampler=camou_sampler)
 
-                if len(camou_order) > 0:
-                    x[picture_id] += camou_delta[camou_order]
+                # camouflage retrain
+                self.model.train()
+                for epoch in range(max_local_epochs):
+                    for i, (x, y, z_index) in enumerate(trainloader):
+                        if type(x) == type([]):
+                            x[0] = x[0].to(self.device)
+                        else:
+                            x = x.to(self.device)
+                        y = y.to(self.device)
 
-                output = self.model(x)
-                loss = self.loss(output, y)
-                self.optimizer.zero_grad()
-                loss.backward()
-                self.optimizer.step()
+                        picture_id = []
+                        camou_order = []
+
+                        picture_id_poison = []
+                        poison_order = []
+                        for order, id in enumerate(z_index.tolist()):
+                            if id in self.camou_index:
+                                picture_id.append(order)
+                                camou_order.append(np.where(self.camou_index == id)[0][0])
+                            if id in self.poison_index:
+                                picture_id_poison.append(order)
+                                poison_order.append(np.where(self.poison_index == id)[0][0])
+
+                        if len(poison_order) > 0:
+                            x[picture_id_poison] += poison_delta[poison_order]
+                            y[picture_id_poison] = self.target_class
+                        if len(camou_order) > 0:
+                            x[picture_id] += camou_delta[camou_order]
+                            y[picture_id] = self.poison_class
+
+                        output = self.model(x)
+                        loss = self.loss(output, y)
+                        self.optimizer.zero_grad()
+                        loss.backward()
+                        self.optimizer.step()
 
         if self.learning_rate_decay:
             self.learning_rate_scheduler.step()
@@ -209,55 +245,19 @@ class Camouflage_clientAVG(Client):
             self.model = model_origin
             self.optimizer = torch.optim.SGD(self.model.parameters(), lr=self.learning_rate)
 
-    # # Function to calculate gradient:
-    # def gradient(self, model, images, labels, criterion=None):
-    #     """Compute the gradient of criterion(model) w.r.t to given data."""
-    #
-    #     #    labels_uns = labels.unsqueeze(1)
-    #     #    labels_uns = labels_uns
-    #     if self.model.head.out_features == 2:
-    #         loss = self.loss(model(images).flatten(), labels.float())
-    #     else:
-    #         loss = self.loss(model(images), labels)
-    #     gradients = torch.autograd.grad(loss, model.parameters(), only_inputs=True)
-    #     grad_norm = 0
-    #     for grad in gradients:
-    #         grad_norm += grad.detach().pow(2).sum()
-    #     grad_norm = grad_norm.sqrt()
-    #     return gradients, grad_norm
-    #
-    # def compute_loss(self, inputs, labels, support_data):
-    #     target_losses = 0
-    #     poison_norm = 0
-    #
-    #     outputs = self.model(inputs)  # .flatten()
-    #     flipped_labels = labels  # * -1
-    #
-    #     if self.model.head.out_features == 2:
-    #         labels = labels.to(torch.float32)
-    #         outputs = outputs.flatten()
-    #         poison_prediction = torch.where(outputs < 0, 0, 1)
-    #     else:
-    #         poison_prediction = torch.argmax(outputs.data, dim=1)
-    #
-    #     poison_correct = (poison_prediction == labels).sum().item()
-    #
-    #     poison_loss = self.loss(outputs, flipped_labels)
-    #     poison_grad = torch.autograd.grad(poison_loss, self.model.parameters(), retain_graph=True, create_graph=True)
-    #
-    #     indices = torch.arange(len(poison_grad))
-    #     # print(indices)
-    #     for i in indices:
-    #         target_losses -= (poison_grad[i] * self.target_grad[i]).sum()
-    #         poison_norm += poison_grad[i].pow(2).sum()
-    #
-    #     poison_norm = poison_norm.sqrt()
-    #
-    #     # poison_grad_norm = torch.norm(torch.stack([torch.norm(grad, norm_type).to(device) for grad in poison_grad]), norm_type)
-    #     target_losses /= self.target_grad_norm
-    #
-    #     target_losses = 1 + target_losses / poison_norm
-    #     target_losses.backward()
-    #
-    #     return target_losses.detach().cpu(), poison_correct
+    def tensor_to_image(self, x):
+        # 将Tensor转换为numpy数组
+        array = x.numpy().transpose((1, 2, 0))
+
+        # 将numpy数组的值范围从[-1, 1]转换为[0, 1]
+        array = (array * 0.5) + 0.5
+
+        # 将numpy数组的值范围从[0, 1]转换为[0, 255]
+        array = (array * 255).astype(np.uint8)
+
+        # 创建图片
+        img = Image.fromarray(array)
+
+        return img
+
 

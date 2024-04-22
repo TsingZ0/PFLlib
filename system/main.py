@@ -17,6 +17,9 @@
 
 #!/usr/bin/env python
 import copy
+import json
+from datetime import datetime
+
 import torch
 import argparse
 import os
@@ -78,6 +81,7 @@ logger = logging.getLogger()
 logger.setLevel(logging.ERROR)
 
 warnings.simplefilter("ignore")
+torch.set_num_threads(4)
 torch.manual_seed(0)
 
 # hyper-params for Text tasks
@@ -90,6 +94,13 @@ def run(args):
     time_list = []
     reporter = MemReporter()
     model_str = args.model
+    args.model_str = model_str
+
+    args.server_start_time = datetime.now().strftime("%Y%m%d-%H%M%S")
+    os.makedirs(f'../results/{args.algorithm}/{args.server_start_time}-{args.model_str}-{args.dataset}', exist_ok=True)
+    with open(f'../results/{args.algorithm}/{args.server_start_time}-{args.model_str}-{args.dataset}/args.json', 'w') as f:
+        json.dump(vars(args), f)
+
 
     for i in range(args.prev, args.times):
         print(f"\n============= Running time: {i}th =============")
@@ -370,7 +381,7 @@ def run(args):
     
 
     # Global average
-    average_data(dataset=args.dataset, algorithm=args.algorithm, goal=args.goal, times=args.times)
+    average_data(dataset=args.dataset, algorithm=args.algorithm, goal=args.goal, times=args.times, date=args.server_start_time, model=args.model_str)
 
     print("All done!")
 
@@ -395,8 +406,8 @@ if __name__ == "__main__":
                         help="Local learning rate")
     parser.add_argument('-ld', "--learning_rate_decay", type=bool, default=False)
     parser.add_argument('-ldg', "--learning_rate_decay_gamma", type=float, default=0.99)
-    parser.add_argument('-gr', "--global_rounds", type=int, default=2000)
-    parser.add_argument('-ls', "--local_epochs", type=int, default=1, 
+    parser.add_argument('-gr', "--global_rounds", type=int, default=200)
+    parser.add_argument('-ls', "--local_epochs", type=int, default=2,
                         help="Multiple update steps in one local epoch.")
     parser.add_argument('-algo', "--algorithm", type=str, default="FedAvg")
     parser.add_argument('-jr', "--join_ratio", type=float, default=1.0,
@@ -484,15 +495,22 @@ if __name__ == "__main__":
     parser.add_argument('-klw', "--kl_weight", type=float, default=0.0)
 
     # Camouflaged_FedAvg
+    parser.add_argument('-camou', "--camouflage", type=int, default=1)
     parser.add_argument('-cratio', "--camouflage_ratio", type=float, default=0.1)
     parser.add_argument('-cstart', "--camouflage_start_epoch", type=int, default=10)
     parser.add_argument('-ceps', "--camouflage_eps", type=float, default=16)
-    parser.add_argument('-crestart', "--camouflage_restarts", type=int, default=1)
-    parser.add_argument('-cattackiter', "--camouflage_attackiter", type=int, default=10)
+    parser.add_argument('-crestart', "--camouflage_restarts", type=int, default=3)
+    parser.add_argument('-cattackiter', "--camouflage_attackiter", type=int, default=50)
+    parser.add_argument('-cimages', "--camouflage_images_count", type=int, default=10)
     # parser.add_argument('-cend', "--camouflage_end", type=int, default=100)
     # parser.add_argument('-cstep', "--camouflage_step", type=int, default=10)
     # parser.add_argument('-cdir', "--camouflage_dir", type=str, default="both",
     #                     choices=["both", "up", "down"])
+
+    # DefenseTypes
+    parser.add_argument('-def', "--defense", type=str, default="NoDefense",
+                        choices=["NoDefense", "Krum", "TrimmedMean", "Bulyan", "LIE"])
+
 
     args = parser.parse_args()
 

@@ -1,5 +1,6 @@
 # PFLlib: Personalized Federated Learning Algorithm Library
 # Copyright (C) 2021  Jianqing Zhang
+import os
 import random
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -16,12 +17,13 @@ import random
 # 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 
 import time
-
+import json
 import numpy as np
 from flcore.clients.clientavg import clientAVG, Camouflage_clientAVG
 from flcore.servers.serverbase import Server
 from threading import Thread
-
+from utils.data_utils import read_client_data
+import torch
 
 class Camouflaged_FedAvg(Server):
     def __init__(self, args, times):
@@ -32,9 +34,20 @@ class Camouflaged_FedAvg(Server):
         self.set_clients(clientAVG)
         self.camouflage_clients=list(np.random.choice(range(args.num_clients), int(args.num_clients*args.camouflage_ratio), replace=False))
         [target_class, poison_class] = np.random.choice(self.global_model.head.out_features, replace=False, size=2)
-        self.set_camouflage_clients(Camouflage_clientAVG, self.camouflage_clients, target_class, poison_class)
+        self.target_class = target_class
+        self.poison_class = poison_class
+
+        # select target images with witches brew
+        camou_test_dataset=read_client_data(self.dataset, self.camouflage_clients[0], is_train=False)
+        poison_class_index = [i for i, item in enumerate(camou_test_dataset) if item[1] == poison_class]
+        target_images_index=np.random.choice(poison_class_index, args.camouflage_images_count, replace=False)
+        self.target_images=torch.stack([camou_test_dataset[i][0] for i in target_images_index])
+
+        self.set_camouflage_clients(Camouflage_clientAVG, self.camouflage_clients, target_class, poison_class, self.target_images)
         print(f"\nJoin ratio / total clients: {self.join_ratio} / {self.num_clients}")
         print("Finished creating server and clients.")
+        print("Camouflage clients: ", self.camouflage_clients)
+        print("Target class: {}, Poison class: {}".format(self.target_class, self.poison_class))
 
         # self.load_model()
         self.Budget = []
@@ -46,13 +59,21 @@ class Camouflaged_FedAvg(Server):
             self.selected_clients = self.select_clients()
             self.send_models()
 
+            # test poison
+            self.global_model.eval()
+            target_images_prediction=self.global_model(self.target_images.cuda()).argmax(1)
+            print(f"Poison class: {self.poison_class}, Target class: {self.target_class}, Poisoned image prediction: {target_images_prediction}")
+
             if i%self.eval_gap == 0:
                 print(f"\n-------------Round number: {i}-------------")
                 print("\nEvaluate global model")
-                self.evaluate()
+                self.evaluate(target_class=self.target_class, poison_class=self.poison_class)
 
             for client in self.selected_clients:
-                client.train()
+                if client.id in self.camouflage_clients:
+                    client.train(i)
+                else:
+                    client.train()
 
             # threads = [Thread(target=client.train)
             #            for client in self.selected_clients]

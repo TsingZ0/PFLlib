@@ -20,11 +20,10 @@ import torch
 import torch.nn as nn
 import numpy as np
 import os
-from torch.utils.data import DataLoader
+from torch.utils.data import DataLoader, Subset
 from sklearn.preprocessing import label_binarize
 from sklearn import metrics
 from utils.data_utils import read_client_data, read_client_data_add_index
-
 
 class Client(object):
     """
@@ -169,6 +168,35 @@ class Client(object):
 
         return losses, train_num
 
+    def test_metrics_poison_class(self, target_class, poison_class):
+        testloaderfull = self.load_test_data()
+        poison_index=[i for i, item in enumerate(testloaderfull.dataset) if item[1] == poison_class]
+        subset = Subset(testloaderfull.dataset, poison_index)
+        poison_class_loader = DataLoader(subset, batch_size=16, shuffle=False, drop_last=True)
+        # self.model = self.load_model('model')
+        # self.model.to(self.device)
+        self.model.eval()
+
+        test_acc = 0
+        test_num = 0
+        poison_acc = 0
+
+        with torch.no_grad():
+            for x, y in poison_class_loader:
+                if type(x) == type([]):
+                    x[0] = x[0].to(self.device)
+                else:
+                    x = x.to(self.device)
+                y = y.to(self.device)
+                output = self.model(x)
+
+                test_acc += (torch.sum(torch.argmax(output, dim=1) == y)).item()
+                poison_acc += (torch.sum(torch.argmax(output, dim=1) == target_class)).item()
+                test_num += y.shape[0]
+
+        return test_acc, test_num, poison_acc
+
+
     # def get_next_train_batch(self):
     #     try:
     #         # Samples a new batch for persionalizing
@@ -184,7 +212,6 @@ class Client(object):
     #     y = y.to(self.device)
 
     #     return x, y
-
 
     def save_item(self, item, item_name, item_path=None):
         if item_path == None:

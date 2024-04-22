@@ -20,8 +20,8 @@ import numpy as np
 import os
 
 
-def average_data(algorithm="", dataset="", goal="", times=10):
-    test_acc = get_all_results_for_one_algo(algorithm, dataset, goal, times)
+def average_data(algorithm="", dataset="", goal="", times=10, date="", model_str=""):
+    test_acc = get_all_results_for_one_algo(algorithm, dataset, goal, times, date=date, model_str=model_str)
 
     max_accurancy = []
     for i in range(times):
@@ -31,18 +31,18 @@ def average_data(algorithm="", dataset="", goal="", times=10):
     print("mean for best accurancy:", np.mean(max_accurancy))
 
 
-def get_all_results_for_one_algo(algorithm="", dataset="", goal="", times=10):
+def get_all_results_for_one_algo(algorithm="", dataset="", goal="", times=10, date="", model_str=""):
     test_acc = []
     algorithms_list = [algorithm] * times
     for i in range(times):
         file_name = dataset + "_" + algorithms_list[i] + "_" + goal + "_" + str(i)
-        test_acc.append(np.array(read_data_then_delete(file_name, delete=False)))
+        test_acc.append(np.array(read_data_then_delete(file_name, delete=False, date=date, algorithm=algorithm, model_str=model_str, dataset=dataset)))
 
     return test_acc
 
 
-def read_data_then_delete(file_name, delete=False):
-    file_path = "../results/" + file_name + ".h5"
+def read_data_then_delete(file_name, delete=False, date="", algorithm="", model_str="", dataset=""):
+    file_path = "../results/" + algorithm + '/' + date + '-' + model_str + '-' + dataset + '/' + file_name + ".h5"
 
     with h5py.File(file_path, 'r') as hf:
         rs_test_acc = np.array(hf.get('rs_test_acc'))

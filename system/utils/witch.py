@@ -7,7 +7,7 @@ from torch.utils.data import DataLoader, Subset
 
 class Witch:
 
-    def __init__(self, args, target_class, poison_class, poison_index, camou_index, loss_fun, setup=dict(device=torch.device('cuda'), dtype=torch.float)):
+    def __init__(self, args, target_class, poison_class, poison_index, camou_index, target_images, loss_fun, setup=dict(device=torch.device('cuda'), dtype=torch.float)):
         self.args, self.setup = args, setup
         self.loss_fun = torch.nn.CrossEntropyLoss()
         self.target_class = target_class
@@ -15,6 +15,7 @@ class Witch:
         self.poison_index = poison_index
         self.camou_index = camou_index
         self.loss_fun = loss_fun
+        self.target_images=target_images
 
     def initialize_delta(self, trainloader):
         if self.args.dataset == 'Cifar10':
@@ -65,30 +66,34 @@ class Witch:
         target_grad = 0
         target_gnorm = 0
         labels = labels.long()
-
-        loss = self.loss_fun(model(images.unsqueeze(0).cuda()), labels.unsqueeze(0).cuda())
+        model.eval()
+        loss = self.loss_fun(model(images.cuda()), labels.repeat(len(images)).cuda())
         gradients = torch.autograd.grad(loss, model.parameters(), only_inputs=True)
-
+        model.train()
         for grad in gradients:
             target_gnorm += grad.detach().pow(2).sum()
         target_gnorm = target_gnorm.sqrt()
         return gradients, target_gnorm
 
-    def brew_poison(self, model, trainloader):
+    def brew_poison(self, model, trainloader, last_poison_delta=None):
 
         poison_deltas = []
         adv_losses = []
-        (image, _, _)=trainloader.dataset[random.choice(self.poison_index)]
-        target_grad, target_grad_norm = self.gradient(model, image, torch.tensor(self.target_class))
+        # (image, _, _)=trainloader.dataset[random.choice(self.poison_index)]
+        target_grad, target_grad_norm = self.gradient(model, self.target_images, torch.tensor(self.target_class))
 
         if len(self.poison_index) > 0:
             init_lr = 0.1
             for trial in range(self.args.camouflage_restarts):
                 subset = Subset(trainloader.dataset, self.poison_index)
-                poisonloader=DataLoader(subset, batch_size=20, shuffle=False, drop_last=True)
-                poison_delta = self.initialize_delta(poisonloader)
+                poisonloader=DataLoader(subset, batch_size=self.args.batch_size, shuffle=False, drop_last=True)
+                if trial == 0 and last_poison_delta is not None:
+                    poison_delta = last_poison_delta
+                else:
+                    poison_delta = self.initialize_delta(poisonloader)
 
-                att_optimizer = torch.optim.Adam([poison_delta], lr=init_lr)
+                att_optimizer = torch.optim.SGD([poison_delta], lr=init_lr)
+                scheduler = torch.optim.lr_scheduler.CosineAnnealingLR(att_optimizer, T_max=self.args.camouflage_attackiter)
 
                 poison_delta.requires_grad_()
                 poison_bounds = torch.zeros_like(poison_delta)
@@ -134,6 +139,7 @@ class Witch:
 
                     att_optimizer.step()
                     att_optimizer.zero_grad()
+                    scheduler.step()
 
                     with torch.no_grad():
                         # Projection Step
@@ -149,26 +155,30 @@ class Witch:
                         poison_deltas.append(poison_delta)
 
             minimum_loss_trial = np.argmin([x.cpu() for x in adv_losses])
-            print("Trial #{} selected with target loss {}".format(minimum_loss_trial, adv_losses[minimum_loss_trial]))
+            print("Trial #{} selected with poison target loss {}".format(minimum_loss_trial, adv_losses[minimum_loss_trial]))
             return poison_deltas[minimum_loss_trial]
 
-    def brew_camou(self, model,trainloader):
+    def brew_camou(self, model,trainloader, last_camou_delta=None):
         camou_deltas = []
         adv_losses = []
         (image, target, _)=trainloader.dataset[random.choice(self.camou_index)]
         # std_tensor = torch.tensor(ingredient.data_std)[None, :, None, None]
         # mean_tensor = torch.tensor(ingredient.data_mean)[None, :, None, None]
 
-        target_grad, target_grad_norm = self.gradient(model, image, target)
+        target_grad, target_grad_norm = self.gradient(model, self.target_images, torch.tensor(self.poison_class))
 
         if len(self.camou_index) > 0:
             init_lr = 0.1
             for trial in range(self.args.camouflage_restarts):
                 subset=Subset(trainloader.dataset, self.camou_index)
-                camouloader=DataLoader(subset, batch_size=20, shuffle=False, drop_last=True)
-                camou_delta = self.initialize_delta(camouloader)
+                camouloader=DataLoader(subset, batch_size=self.args.batch_size, shuffle=False, drop_last=True)
+                if trial == 0 and last_camou_delta is not None:
+                    camou_delta = last_camou_delta
+                else:
+                    camou_delta = self.initialize_delta(camouloader)
 
                 att_optimizer = torch.optim.Adam([camou_delta], lr=init_lr)
+                scheduler = torch.optim.lr_scheduler.CosineAnnealingLR(att_optimizer, T_max=self.args.camouflage_attackiter)
 
                 camou_delta.requires_grad_()
                 camou_bounds = torch.zeros_like(camou_delta)
@@ -212,6 +222,7 @@ class Witch:
 
                     att_optimizer.step()
                     att_optimizer.zero_grad()
+                    scheduler.step()
 
                     with torch.no_grad():
                         # Projection Step
@@ -227,17 +238,17 @@ class Witch:
                         camou_deltas.append(camou_delta)
 
             minimum_loss_trial = np.argmin([x.cpu() for x in adv_losses])
-            print("Trial #{} selected with target loss {}".format(minimum_loss_trial, adv_losses[minimum_loss_trial]))
+            print("Trial #{} selected with camouflag target loss {}".format(minimum_loss_trial, adv_losses[minimum_loss_trial]))
             return camou_deltas[minimum_loss_trial]
 
-    def brew(self, model, trainloader, brewing_poison=True):
+    def brew(self, model, trainloader, brewing_poison=True, last_delta=None):
 
         # targets = torch.stack([data[1] for data in ingredient.targetset], dim=0).to(**self.setup)
         # intended_classes = torch.tensor([ingredient.poison_class]).to(**self.setup)
         # true_classes = torch.tensor([data[2] for data in ingredient.targetset]).to(**self.setup)
 
         if brewing_poison:
-            return self.brew_poison(model, trainloader)
+            return self.brew_poison(model, trainloader,last_poison_delta=last_delta)
         else:
-            return self.brew_camou(model, trainloader)
+            return self.brew_camou(model, trainloader,last_camou_delta=last_delta)
 
