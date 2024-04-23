@@ -3,13 +3,6 @@
   <component name="PublishConfigData" autoUpload="Always" serverName="one@172.31.226.19:22 password" remoteFilesAllowedToDisappearOnAutoupload="false" confirmBeforeUploading="false">
     <option name="confirmBeforeUploading" value="false" />
     <serverData>
-      <paths name="one@172.31.226.19:22 agent">
-        <serverdata>
-          <mappings>
-            <mapping local="$PROJECT_DIR$" web="/" />
-          </mappings>
-        </serverdata>
-      </paths>
       <paths name="one@172.31.226.19:22 password">
         <serverdata>
           <mappings>

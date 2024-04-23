@@ -91,6 +91,7 @@ class Camouflage_clientAVG(Client):
         self.poison_class = poison_class
         self.poison_index = poison_index
         self.camou_index = camou_index
+        self.target_images=target_images
         self.witch=Witch(args, target_class, poison_class, poison_index, camou_index, target_images, self.loss, setup=dict(device=torch.device('cuda'), dtype=torch.float))
         self.poison_delta= None
         self.trainloader = self.load_train_data_add_index()
@@ -149,13 +150,13 @@ class Camouflage_clientAVG(Client):
             self.poison_delta= poison_delta
 
             weight = np.array([1] * len(trainloader.dataset))
-            weight [self.poison_index] = 5
+            weight [self.poison_index] = 10
             poison_sampler = data.WeightedRandomSampler(weight, num_samples=len(weight), replacement=True)
             trainloader = data.DataLoader(trainloader.dataset, batch_size=self.args.batch_size, sampler=poison_sampler)
 
             # poisoning retrain
             self.model.train()
-            for epoch in range(max_local_epochs):
+            for epoch in range(max_local_epochs*20):
                 for i, (x, y, z_index) in enumerate(trainloader):
                     if type(x) == type([]):
                         x[0] = x[0].to(self.device)
@@ -179,8 +180,14 @@ class Camouflage_clientAVG(Client):
                     self.optimizer.zero_grad()
                     loss.backward()
                     self.optimizer.step()
+                if epoch % 5 == 0:
+                    self.model.eval()
+                    target_images_prediction = self.model(self.target_images.cuda()).argmax(1)
+                    self.model.train()
+                    print(f"Epoch: {epoch}, {target_images_prediction}")
             _,_,_=self.test_metrics_poison_class(self.target_class, self.poison_class)
-
+            # self.model.eval()
+            # target_images_prediction = self.model(self.target_images.cuda()).argmax(1)
 
             # camouflage
             if self.args.camouflage == 1:

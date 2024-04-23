@@ -81,7 +81,10 @@ logger = logging.getLogger()
 logger.setLevel(logging.ERROR)
 
 warnings.simplefilter("ignore")
-torch.set_num_threads(4)
+
+torch.backends.cudnn.benchmark = True
+torch.multiprocessing.set_sharing_strategy('file_descriptor')
+torch.set_num_threads(8)
 torch.manual_seed(0)
 
 # hyper-params for Text tasks
@@ -138,13 +141,13 @@ def run(args):
                 args.model = DNN(60, 20, num_classes=args.num_classes).to(args.device)
         
         elif model_str == "resnet":
-            args.model = torchvision.models.resnet18(pretrained=False, num_classes=args.num_classes).to(args.device)
-            
-            # args.model = torchvision.models.resnet18(pretrained=True).to(args.device)
-            # feature_dim = list(args.model.fc.parameters())[0].shape[1]
-            # args.model.fc = nn.Linear(feature_dim, args.num_classes).to(args.device)
-            
-            # args.model = resnet18(num_classes=args.num_classes, has_bn=True, bn_block_num=4).to(args.device)
+            # args.model = torchvision.models.resnet18(pretrained=True, num_classes=args.num_classes).to(args.device)
+            #
+            args.model = torchvision.models.resnet18(pretrained=True).to(args.device)
+            feature_dim = list(args.model.fc.parameters())[0].shape[1]
+            args.model.fc = nn.Linear(feature_dim, args.num_classes).to(args.device)
+
+            args.model = resnet18(num_classes=args.num_classes, has_bn=True, bn_block_num=4).to(args.device)
         
         elif model_str == "resnet10":
             args.model = resnet10(num_classes=args.num_classes).to(args.device)
@@ -381,7 +384,7 @@ def run(args):
     
 
     # Global average
-    average_data(dataset=args.dataset, algorithm=args.algorithm, goal=args.goal, times=args.times, date=args.server_start_time, model=args.model_str)
+    average_data(dataset=args.dataset, algorithm=args.algorithm, goal=args.goal, times=args.times, date=args.server_start_time, model_str=args.model_str)
 
     print("All done!")
 
