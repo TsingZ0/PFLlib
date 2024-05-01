@@ -23,7 +23,7 @@ from sklearn.model_selection import train_test_split
 
 batch_size = 10
 train_ratio = 0.75 # merge original training set and test set, then split it manually. 
-alpha = 0.1 # for Dirichlet distribution
+alpha = 0.1 # for Dirichlet distribution. 100 for exdir
 
 def check(config_path, train_path, test_path, num_clients, niid=False, 
         balance=True, partition=None):
@@ -130,7 +130,7 @@ def separate_data(data, num_clients, num_classes, niid=False, balance=False, par
         Some changes are as follows:
         n_nets -> num_clients, n_class -> num_classes
         '''
-        C, alpha = class_per_client, 100.0
+        C = class_per_client
         
         '''The first level: allocate labels to clients
         clientidx_map (dict, {label: clientidx}), e.g., C=2, num_clients=5, num_classes=10
