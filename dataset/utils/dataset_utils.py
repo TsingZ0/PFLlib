@@ -76,6 +76,8 @@ def separate_data(data, num_clients, num_classes, niid=False, balance=False, par
             for client in range(num_clients):
                 if class_num_per_client[client] > 0:
                     selected_clients.append(client)
+            if len(selected_clients) == 0:
+                break
             selected_clients = selected_clients[:int(np.ceil((num_clients/num_classes)*class_per_client))]
 
             num_all_samples = len(idx_for_each_class[i])
