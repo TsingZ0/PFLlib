@@ -61,6 +61,7 @@ from flcore.servers.servergpfl import GPFL
 from flcore.servers.serverntd import FedNTD
 from flcore.servers.servergh import FedGH
 from flcore.servers.serveravgDBE import FedAvgDBE
+from flcore.servers.servercac import FedCAC
 
 from flcore.trainmodel.models import *
 
@@ -355,6 +356,10 @@ def run(args):
             args.model.fc = nn.Identity()
             args.model = BaseHeadSplit(args.model, args.head)
             server = FedAvgDBE(args, i)
+
+        elif args.algorithm == 'FedCAC':
+            server = FedCAC(args, i)
+
             
         else:
             raise NotImplementedError
@@ -429,7 +434,7 @@ if __name__ == "__main__":
                         help="Whether to group and select clients at each round according to time cost")
     parser.add_argument('-tth', "--time_threthold", type=float, default=10000,
                         help="The threthold for droping slow clients")
-    # pFedMe / PerAvg / FedProx / FedAMP / FedPHP / GPFL
+    # pFedMe / PerAvg / FedProx / FedAMP / FedPHP / GPFL / FedCAC
     parser.add_argument('-bt', "--beta", type=float, default=0.0)
     parser.add_argument('-lam', "--lamda", type=float, default=1.0,
                         help="Regularization weight")
@@ -452,7 +457,7 @@ if __name__ == "__main__":
     parser.add_argument('-al', "--alpha", type=float, default=1.0)
     # Ditto / FedRep
     parser.add_argument('-pls', "--plocal_epochs", type=int, default=1)
-    # MOON
+    # MOON / FedCAC
     parser.add_argument('-tau', "--tau", type=float, default=1.0)
     # FedBABU
     parser.add_argument('-fte', "--fine_tuning_epochs", type=int, default=10)
