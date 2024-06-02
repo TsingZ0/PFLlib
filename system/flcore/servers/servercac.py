@@ -10,7 +10,6 @@ class FedCAC(Server):
     def __init__(self, args, times):
         super().__init__(args, times)
         args.beta = int(args.beta)
-        args.beta = int(args.beta)
         # select slow clients
         self.set_slow_clients()
         self.set_clients(clientCAC)
