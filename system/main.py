@@ -62,6 +62,7 @@ from flcore.servers.serverntd import FedNTD
 from flcore.servers.servergh import FedGH
 from flcore.servers.serveravgDBE import FedAvgDBE
 from flcore.servers.servercac import FedCAC
+from flcore.servers.serverda import PFL_DA
 
 from flcore.trainmodel.models import *
 
@@ -360,6 +361,11 @@ def run(args):
         elif args.algorithm == 'FedCAC':
             server = FedCAC(args, i)
 
+        elif args.algorithm == 'PFL-DA':
+            args.head = copy.deepcopy(args.model.fc)
+            args.model.fc = nn.Identity()
+            args.model = BaseHeadSplit(args.model, args.head)
+            server = PFL_DA(args, i)
             
         else:
             raise NotImplementedError
