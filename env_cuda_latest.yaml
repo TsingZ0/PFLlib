@@ -1,10 +1,10 @@
-name: fl
+name: pfllib
 channels:
   - pytorch
   - nvidia
   - defaults
 dependencies:
-  - pip=22
+  - pip
   - pandas
   - scikit-learn
   - scipy
