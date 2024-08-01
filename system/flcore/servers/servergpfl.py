@@ -28,7 +28,6 @@ class GPFL(Server):
     def __init__(self, args, times):
         super().__init__(args, times)
 
-
         self.feature_dim = list(args.model.head.parameters())[0].shape[1]
         args.GCE = GCE(in_features=self.feature_dim,
                             num_classes=args.num_classes,
