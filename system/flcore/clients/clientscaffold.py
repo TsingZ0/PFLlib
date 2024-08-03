@@ -83,11 +83,15 @@ class clientSCAFFOLD(Client):
         self.global_c = global_c
         self.global_model = model
 
-    def update_yc(self, max_local_epochs):
+    def update_yc(self, max_local_epochs=None):
+        if max_local_epochs is None:
+            max_local_epochs = self.local_epochs
         for ci, c, x, yi in zip(self.client_c, self.global_c, self.global_model.parameters(), self.model.parameters()):
             ci.data = ci - c + 1/self.num_batches/max_local_epochs/self.learning_rate * (x - yi)
 
-    def delta_yc(self, max_local_epochs):
+    def delta_yc(self, max_local_epochs=None):
+        if max_local_epochs is None:
+            max_local_epochs = self.local_epochs
         delta_y = []
         delta_c = []
         for c, x, yi in zip(self.global_c, self.global_model.parameters(), self.model.parameters()):
