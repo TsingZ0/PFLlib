@@ -129,8 +129,8 @@ class SCAFFOLD(Server):
         for i, w in enumerate(self.uploaded_weights):
             self.uploaded_weights[i] = w / tot_samples
 
-    def aggregate_parameters(self):        
-        # original version
+    def aggregate_parameters(self):
+        # # original version
         # for dy, dc in zip(self.delta_ys, self.delta_cs):
         #     for server_param, client_param in zip(self.global_model.parameters(), dy):
         #         server_param.data += client_param.data.clone() / self.num_join_clients * self.server_learning_rate
