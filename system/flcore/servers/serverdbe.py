@@ -16,12 +16,12 @@
 # 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 
 import time
-from flcore.clients.clientavgDBE import clientAvgDBE
+from flcore.clients.clientdbe import clientDBE
 from flcore.servers.serverbase import Server
 from threading import Thread
 
 
-class FedAvgDBE(Server):
+class FedDBE(Server):
     def __init__(self, args, times):
         super().__init__(args, times)
 
@@ -29,7 +29,7 @@ class FedAvgDBE(Server):
         self.set_slow_clients()
 
         # initialization period
-        self.set_clients(clientAvgDBE)
+        self.set_clients(clientDBE)
         self.selected_clients = self.clients
         for client in self.selected_clients:
             client.train() # no DBE

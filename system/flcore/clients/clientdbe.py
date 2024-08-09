@@ -25,7 +25,7 @@ from sklearn import metrics
 from torch.autograd import Variable
 
 
-class clientAvgDBE(Client):
+class clientDBE(Client):
     def __init__(self, args, id, train_samples, test_samples, **kwargs):
         super().__init__(args, id, train_samples, test_samples, **kwargs)
 

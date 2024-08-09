@@ -60,7 +60,7 @@ from flcore.servers.servercp import FedCP
 from flcore.servers.servergpfl import GPFL
 from flcore.servers.serverntd import FedNTD
 from flcore.servers.servergh import FedGH
-from flcore.servers.serveravgDBE import FedAvgDBE
+from flcore.servers.serverdbe import FedDBE
 from flcore.servers.servercac import FedCAC
 from flcore.servers.serverda import PFL_DA
 
@@ -352,11 +352,11 @@ def run(args):
             args.model = BaseHeadSplit(args.model, args.head)
             server = FedGH(args, i)
 
-        elif args.algorithm == "FedAvgDBE":
+        elif args.algorithm == "FedDBE":
             args.head = copy.deepcopy(args.model.fc)
             args.model.fc = nn.Identity()
             args.model = BaseHeadSplit(args.model, args.head)
-            server = FedAvgDBE(args, i)
+            server = FedDBE(args, i)
 
         elif args.algorithm == 'FedCAC':
             server = FedCAC(args, i)
@@ -484,7 +484,7 @@ if __name__ == "__main__":
     parser.add_argument('-mlr', "--mentee_learning_rate", type=float, default=0.005)
     parser.add_argument('-Ts', "--T_start", type=float, default=0.95)
     parser.add_argument('-Te', "--T_end", type=float, default=0.98)
-    # FedAvgDBE
+    # FedDBE
     parser.add_argument('-mo', "--momentum", type=float, default=0.1)
     parser.add_argument('-klw', "--kl_weight", type=float, default=0.0)
 
