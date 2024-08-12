@@ -41,6 +41,7 @@ class FedGen(Server):
         # self.load_model()
         self.Budget = []
 
+        self.learning_rate_decay = args.learning_rate_decay
         self.generative_model = Generative(
                                     args.noise_dim, 
                                     args.num_classes, 
@@ -177,7 +178,8 @@ class FedGen(Server):
             loss.backward()
             self.generative_optimizer.step()
         
-        self.generative_learning_rate_scheduler.step()
+        if self.learning_rate_decay:
+            self.generative_learning_rate_scheduler.step()
 
     # fine-tuning on new clients
     def fine_tuning_new_clients(self):
