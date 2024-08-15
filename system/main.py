@@ -82,10 +82,6 @@ logger.setLevel(logging.ERROR)
 warnings.simplefilter("ignore")
 torch.manual_seed(0)
 
-# hyper-params for Text tasks
-vocab_size = 98635   #98635 for AG_News and 399198 for Sogou_News
-max_len=200
-emb_dim=32
 
 def run(args):
 
@@ -166,24 +162,24 @@ def run(args):
             # args.model.fc = nn.Linear(feature_dim, args.num_classes).to(args.device)
             
         elif model_str == "lstm":
-            args.model = LSTMNet(hidden_dim=emb_dim, vocab_size=vocab_size, num_classes=args.num_classes).to(args.device)
+            args.model = LSTMNet(hidden_dim=args.feature_dim, vocab_size=args.vocab_size, num_classes=args.num_classes).to(args.device)
 
         elif model_str == "bilstm":
-            args.model = BiLSTM_TextClassification(input_size=vocab_size, hidden_size=emb_dim, 
+            args.model = BiLSTM_TextClassification(input_size=args.vocab_size, hidden_size=args.feature_dim, 
                                                    output_size=args.num_classes, num_layers=1, 
                                                    embedding_dropout=0, lstm_dropout=0, attention_dropout=0, 
-                                                   embedding_length=emb_dim).to(args.device)
+                                                   embedding_length=args.feature_dim).to(args.device)
 
         elif model_str == "fastText":
-            args.model = fastText(hidden_dim=emb_dim, vocab_size=vocab_size, num_classes=args.num_classes).to(args.device)
+            args.model = fastText(hidden_dim=args.feature_dim, vocab_size=args.vocab_size, num_classes=args.num_classes).to(args.device)
 
         elif model_str == "TextCNN":
-            args.model = TextCNN(hidden_dim=emb_dim, max_len=max_len, vocab_size=vocab_size, 
+            args.model = TextCNN(hidden_dim=args.feature_dim, max_len=args.max_len, vocab_size=args.vocab_size, 
                                  num_classes=args.num_classes).to(args.device)
 
         elif model_str == "Transformer":
-            args.model = TransformerModel(ntoken=vocab_size, d_model=emb_dim, nhead=8, nlayers=2, 
-                                          num_classes=args.num_classes, max_len=max_len).to(args.device)
+            args.model = TransformerModel(ntoken=args.vocab_size, d_model=args.feature_dim, nhead=8, nlayers=2, 
+                                          num_classes=args.num_classes, max_len=args.max_len).to(args.device)
         
         elif model_str == "AmazonMLP":
             args.model = AmazonMLP().to(args.device)
@@ -433,6 +429,10 @@ if __name__ == "__main__":
     parser.add_argument('-bnpc', "--batch_num_per_client", type=int, default=2)
     parser.add_argument('-nnc', "--num_new_clients", type=int, default=0)
     parser.add_argument('-ften', "--fine_tuning_epoch_new", type=int, default=0)
+    parser.add_argument('-fd', "--feature_dim", type=int, default=512)
+    parser.add_argument('-vs', "--vocab_size", type=int, default=98635, 
+                        help="Set this value before running text tasks. 80 for Shakespeare, 98635 for AG_News, and 399198 for Sogou_News")
+    parser.add_argument('-ml', "--max_len", type=int, default=200)
     # practical
     parser.add_argument('-cdr', "--client_drop_rate", type=float, default=0.0,
                         help="Rate for clients that train but drop out")

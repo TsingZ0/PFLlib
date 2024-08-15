@@ -10,7 +10,7 @@ import json
 
 ALL_LETTERS = "\n !\"&'(),-.0123456789:;>?ABCDEFGHIJKLMNOPQRSTUVWXYZ[]abcdefghijklmnopqrstuvwxyz}"
 NUM_LETTERS = len(ALL_LETTERS)
-print('num of letters:', NUM_LETTERS)
+print('num of letters (classes):', NUM_LETTERS)
 
 
 def letter_to_index(letter):

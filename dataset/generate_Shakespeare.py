@@ -7,12 +7,11 @@ from utils.language_utils import word_to_indices, letter_to_index
 
 random.seed(1)
 np.random.seed(1)
-# You need to download LEAF project first, see 
 data_path_train = "utils/LEAF/data/shakespeare/data/train/all_data_niid_2_keep_0_train_9.json"
 data_path_test = "utils/LEAF/data/shakespeare/data/test/all_data_niid_2_keep_0_test_9.json"
 dir_path = "Shakespeare/"
 
-# https://github.com/TalwalkarLab/leaf/blob/0d30b4d18c36551ee54e0076915b0c49c5dd9cd6/models/shakespeare/stacked_lstm.py#L40
+# https://github.com/TalwalkarLab/leaf/blob/master/models/shakespeare/stacked_lstm.py#L40
 def process_x(raw_x_batch):
     x_batch = [word_to_indices(word) for word in raw_x_batch]
     x_batch = np.array(x_batch)

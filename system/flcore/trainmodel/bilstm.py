@@ -71,7 +71,10 @@ class BiLSTM_TextClassification(nn.Module):
         return output_hidden
 
     def forward(self, x):
-        input_seq, seq_lens = x
+        if type(x) == type([]):
+            input_seq, seq_lens = x
+        else:
+            input_seq, seq_lens = x, [x.shape[1] for _ in range(x.shape[0])]
         batch_size = len(input_seq)
         # input_seq -> [batch_size, seq_len]
         input_seq = self.word_embeddings(input_seq)
