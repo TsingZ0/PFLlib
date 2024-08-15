@@ -7,7 +7,7 @@ Figure 1: An Example for FedAvg. You can create a scenario using `generate_DATA.
 
 ***We've created a user-friendly algorithm library and evaluation platform for those new to federated learning. Join us in expanding the FL community by contributing your algorithms, datasets, and metrics to this project.***
 
-- ***36 traditional FL ([tFL](#traditional-fl-tfl)) or personalized FL ([pFL](#personalized-fl-pfl)) algorithms, 3 scenarios, and 20 datasets**.*
+- ***37 traditional FL ([tFL](#traditional-fl-tfl)) or personalized FL ([pFL](#personalized-fl-pfl)) algorithms, 3 scenarios, and 20 datasets**.*
 
 - Some **experimental results** are avalible [here](#experimental-results). 
 
@@ -57,6 +57,7 @@ Thanks to [@Stonesjtu](https://github.com/Stonesjtu/pytorch_memlab/blob/d590c489
   ***Model-splitting-based tFL***
 
 - **MOON** — [Model-Contrastive Federated Learning](https://openaccess.thecvf.com/content/CVPR2021/html/Li_Model-Contrastive_Federated_Learning_CVPR_2021_paper.html) *CVPR 2021*
+- **FedLC** — [Federated Learning With Label Distribution Skew via Logits Calibration](https://proceedings.mlr.press/v162/zhang22p.html) *ICML 2022*
 
   ***Knowledge-distillation-based tFL***
 

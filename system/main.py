@@ -63,6 +63,7 @@ from flcore.servers.servergh import FedGH
 from flcore.servers.serverdbe import FedDBE
 from flcore.servers.servercac import FedCAC
 from flcore.servers.serverda import PFL_DA
+from flcore.servers.serverlc import FedLC
 
 from flcore.trainmodel.models import *
 
@@ -366,6 +367,12 @@ def run(args):
             args.model.fc = nn.Identity()
             args.model = BaseHeadSplit(args.model, args.head)
             server = PFL_DA(args, i)
+
+        elif args.algorithm == 'FedLC':
+            args.head = copy.deepcopy(args.model.fc)
+            args.model.fc = nn.Identity()
+            args.model = BaseHeadSplit(args.model, args.head)
+            server = FedLC(args, i)
             
         else:
             raise NotImplementedError
@@ -460,7 +467,7 @@ if __name__ == "__main__":
     parser.add_argument('-al', "--alpha", type=float, default=1.0)
     # Ditto / FedRep
     parser.add_argument('-pls', "--plocal_epochs", type=int, default=1)
-    # MOON / FedCAC
+    # MOON / FedCAC / FedLC
     parser.add_argument('-tau', "--tau", type=float, default=1.0)
     # FedBABU
     parser.add_argument('-fte', "--fine_tuning_epochs", type=int, default=10)
