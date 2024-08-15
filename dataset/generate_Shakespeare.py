@@ -60,18 +60,11 @@ def generate_dataset(dir_path):
         
     print("Saving to disk.\n")
 
-    # for idx, train_dict in enumerate(train_data):
-    #     with open(train_path + str(idx) + '.npz', 'wb') as f:
-    #         np.savez_compressed(f, data=train_dict)
-    # for idx, test_dict in enumerate(test_data):
-    #     with open(test_path + str(idx) + '.npz', 'wb') as f:
-    #         np.savez_compressed(f, data=test_dict)
-
     for idx, train_dict in enumerate(train_data):
-        with open(train_path + 'train' + str(idx) + '_.npz', 'wb') as f:
+        with open(train_path + str(idx) + '.npz', 'wb') as f:
             np.savez_compressed(f, data=train_dict)
     for idx, test_dict in enumerate(test_data):
-        with open(test_path + 'test' + str(idx) + '_.npz', 'wb') as f:
+        with open(test_path + str(idx) + '.npz', 'wb') as f:
             np.savez_compressed(f, data=test_dict)
 
     print("Finish generating dataset.\n")
