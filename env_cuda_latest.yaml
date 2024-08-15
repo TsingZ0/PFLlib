@@ -2,7 +2,6 @@ name: pfllib
 channels:
   - pytorch
   - nvidia
-  # Add pip mirror URLs here if a timeout occurs
   - defaults
 dependencies:
   - pip
@@ -14,7 +13,7 @@ dependencies:
   - seaborn
   - matplotlib
   - click
-  - pip:
+  - pip:  # manually install with mirror URLs if a timeout occurs
     - torch==2.0.1
     - torchaudio
     - torchtext
