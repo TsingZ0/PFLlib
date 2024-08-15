@@ -57,6 +57,7 @@ def generate_dataset(dir_path):
         train_data.append(train_data_[ind])
         test_data.append(test_data_[ind])
         
+    print("Number of clients:", len(train_data))
     print("Saving to disk.\n")
 
     for idx, train_dict in enumerate(train_data):
