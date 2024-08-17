@@ -156,7 +156,7 @@ class Camouflage_clientAVG(Client):
 
             # poisoning retrain
             self.model.train()
-            for epoch in range(max_local_epochs*20):
+            for epoch in range(max_local_epochs):
                 for i, (x, y, z_index) in enumerate(trainloader):
                     if type(x) == type([]):
                         x[0] = x[0].to(self.device)

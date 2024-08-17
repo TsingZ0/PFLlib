@@ -82,10 +82,10 @@ logger.setLevel(logging.ERROR)
 
 warnings.simplefilter("ignore")
 
-torch.backends.cudnn.benchmark = True
-torch.multiprocessing.set_sharing_strategy('file_descriptor')
-torch.set_num_threads(8)
-torch.manual_seed(0)
+# torch.backends.cudnn.benchmark = True
+# torch.multiprocessing.set_sharing_strategy('file_descriptor')
+# torch.set_num_threads(4)
+# torch.manual_seed(0)
 
 # hyper-params for Text tasks
 vocab_size = 98635   #98635 for AG_News and 399198 for Sogou_News
@@ -513,6 +513,9 @@ if __name__ == "__main__":
     # DefenseTypes
     parser.add_argument('-def', "--defense", type=str, default="NoDefense",
                         choices=["NoDefense", "Krum", "TrimmedMean", "Bulyan", "LIE"])
+    # AttackTypes
+    parser.add_argument('-atk', "--attack", type=str, default="NoAttack",
+                        choices=["NoAttack", "LIE", "Byzantine", "LabelFlipping", "Backdoor", "ModelPoisoning"])
 
 
     args = parser.parse_args()

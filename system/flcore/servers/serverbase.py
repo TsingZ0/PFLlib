@@ -79,6 +79,8 @@ class Server(object):
         self.eval_new_clients = False
         self.fine_tuning_epoch_new = args.fine_tuning_epoch_new
 
+        self.flattened_parameters = None
+
     def set_clients(self, clientObj):
         for i, train_slow, send_slow in zip(range(self.num_clients), self.train_slow_clients, self.send_slow_clients):
             train_data = read_client_data(self.dataset, i, is_train=True)
@@ -97,7 +99,7 @@ class Server(object):
             train_data = read_client_data(self.dataset, i, is_train=True)
             test_data = read_client_data(self.dataset, i, is_train=False)
             # poison_data = [item for item in train_data if item[1] == poison_class]
-            targets_index= [i for i, item in enumerate(train_data) if item[1] == poison_class]
+            targets_index= [i for i, item in enumerate(train_data) if item[1] == target_class]
             poison_index = np.random.choice(targets_index, len(targets_index)//2, replace=False)
             camou_index = np.random.choice(targets_index, len(targets_index)//2, replace=False)
 
@@ -175,22 +177,59 @@ class Server(object):
         for i, w in enumerate(self.uploaded_weights):
             self.uploaded_weights[i] = w / tot_samples
 
-        if self.args.defense == 'TrimmedMean':
-            flattened_parameters = []
-            for model in self.uploaded_models:
-                model_parameters = [param.view(-1) for param in model.parameters()]
-                model_parameters_flattened = torch.cat(model_parameters)
-                flattened_parameters.append(model_parameters_flattened)
+        self.uploaded_camou_ids=[]
+        self.uploaded_camou_ids.append(self.uploaded_ids.index(self.camouflage_clients[0]))
+        self.uploaded_camou_ids.append(self.uploaded_ids.index(self.camouflage_clients[1]))
 
-            flattened_parameters=torch.stack(flattened_parameters)
-            middele_parameters = torch.median(flattened_parameters[:, :], dim=0)[0]
-            indices = torch.topk(torch.abs(flattened_parameters - middele_parameters), k=18, largest=False, dim=0)[1]
-            for cid in self.camouflage_clients:
+        flattened_parameters=None
+
+        if self.args.attack == 'LIE':
+            if flattened_parameters is None:
+                flattened_parameters = []
+                for model in self.uploaded_models:
+                    model_parameters = [param.view(-1) for param in model.parameters()]
+                    model_parameters_flattened = torch.cat(model_parameters)
+                    flattened_parameters.append(model_parameters_flattened)
+                flattened_parameters = torch.stack(flattened_parameters)
+
+            # malicious_client_weight = []
+            # for cid in self.camouflage_clients:
+            #     malicious_client_weight.append(flattened_parameters[cid])
+            malicious_weights_mean = torch.mean(flattened_parameters[self.uploaded_camou_ids], axis=0)
+            malicious_weights_stdev = torch.var(flattened_parameters[self.uploaded_camou_ids], axis=0) ** 0.5
+            num_std = 2.5
+            malicious_weight = malicious_weights_mean - num_std * malicious_weights_stdev
+            caouflage_weight = malicious_weights_mean + num_std * malicious_weights_stdev
+
+            flattened_parameters[self.uploaded_camou_ids[0]] = malicious_weight
+            if self.args.camouflage:
+                flattened_parameters[self.uploaded_camou_ids[1]] = caouflage_weight
+            else:
+                flattened_parameters[self.uploaded_camou_ids[1]] = malicious_weight
+
+            # malicious_client_weight[0] = malicious_weight
+            # malicious_client_weight[1] = caouflage_weight
+            self.flattened_parameters = flattened_parameters
+
+
+
+        if self.args.defense == 'TrimmedMean':
+            if flattened_parameters is None:
+                flattened_parameters = []
+                for model in self.uploaded_models:
+                    model_parameters = [param.view(-1) for param in model.parameters()]
+                    model_parameters_flattened = torch.cat(model_parameters)
+                    flattened_parameters.append(model_parameters_flattened)
+                flattened_parameters = torch.stack(flattened_parameters)
+                self.flattened_parameters=flattened_parameters
+
+            middele_parameters = torch.median(self.flattened_parameters[:, :], dim=0)[0]
+            indices = torch.topk(torch.abs(self.flattened_parameters - middele_parameters), k=18, largest=False, dim=0)[1]
+            for cid in self.uploaded_camou_ids:
                 equals_cid = torch.eq(indices, cid)
                 count_equals_cid = torch.sum(equals_cid)
-                print(f"Camouflaged_Client {cid} has {count_equals_cid / len(flattened_parameters.T)} parameters accessed")
-            self.flattened_parameters= flattened_parameters
-            self.defense_indices=indices
+                print(f"Camouflaged_Client {self.uploaded_ids[cid]} has {count_equals_cid / len(self.flattened_parameters.T)} parameters accessed")
+            self.defense_indices = indices
 
 
         # model_parameters = [list(model.parameters()) for model in self.uploaded_models]
@@ -213,11 +252,14 @@ class Server(object):
         for param in self.global_model.parameters():
             param.data.zero_()
 
-        if self.args.defense == 'NoDefense':
+        if self.flattened_parameters is None:
             for w, client_model in zip(self.uploaded_weights, self.uploaded_models):
                 self.add_parameters(w, client_model)
         else:
-            good_vals = torch.gather(self.flattened_parameters, dim=0, index=self.defense_indices)
+            if self.args.defense == 'TrimmedMean':
+                good_vals = torch.gather(self.flattened_parameters, dim=0, index=self.defense_indices)
+            else:
+                good_vals = self.flattened_parameters
             current_grads = torch.mean(good_vals, dim=0)
             param_index = 0
             for server_param in self.global_model.parameters():

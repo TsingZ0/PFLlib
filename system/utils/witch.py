@@ -227,7 +227,7 @@ class Witch:
                             poison_images = inputs[batch_positions]
                             inputs[batch_positions] += delta_slice
 
-                        loss, c_correct = self.calculate_loss(inputs, labels, model, target_grad, target_grad_norm)
+                        loss, c_correct = self.calculate_loss(inputs, torch.full((len(labels),),self.poison_class).cuda(), model, target_grad, target_grad_norm)
 
                         # Update Step:
                         camou_delta.grad[camou_slices] = delta_slice.grad.detach().to(device=torch.device('cuda'))

@@ -30,4 +30,19 @@ nohup python -u main.py -lbs 32 -nc 20 -lr 0.01 -ls 10 -jr 1 -nb 10 -data Cifar1
 
 nohup python -u main.py -lbs 32 -nc 20 -lr 0.01 -ls 10 -jr 1 -nb 10 -data Cifar10 -m resnet -algo Camouflaged_FedAvg -gr 100 -did 0 -go resnet -cstart 10 -crestart 3 -camou 0 -cimages 10 -def TrimmedMean -cattackiter 100 -t 2 > ../results/Camouflaged_FedAvg/logs/$(date +%Y%m%d-%H%M%S)-Cifar10-Resnet18-PoisonOnly-10images-TrimmedMean-times2.txt 2>&1 &
 
+nohup python -u main.py -lbs 32 -nc 20 -jr 1 -nb 10 -data Cifar10 -m resnet -algo FedAvg -gr 2000 -did 3 -go resnet > ../results/FedAvg/logs/$(date +%Y%m%d-%H%M%S)-Cifar10-Resnet18.txt 2>&1 &
+
+
+nohup python -u main.py -lbs 32 -nc 20 -lr 0.01 -ls 5 -jr 1 -nb 10 -data Cifar10 -m resnet -algo Camouflaged_FedAvg -gr 300 -did 2 -go resnet -cstart 1000 -crestart 3 -camou 0 -cimages 5 -cattackiter 250 -ceps 8 -def TrimmedMean -atk LIE > ../results/Camouflaged_FedAvg/logs/$(date +%Y%m%d-%H%M%S)-Cifar10-Resnet18-PoisonOnly-LIE-TrimmedMean.txt 2>&1 &
+
+
+nohup python -u main.py -lbs 32 -nc 20 -lr 0.01 -ls 2 -jr 1 -nb 10 -data Cifar10 -m resnet -algo Camouflaged_FedAvg -gr 2000 -did 1 -go resnet -cstart 5000 -crestart 3 -camou 0 -cimages 5 -cattackiter 250 -ceps 8 -def NoDefense -atk LIE > ../results/Camouflaged_FedAvg/logs/$(date +%Y%m%d-%H%M%S)-Cifar10-Resnet18-PoisonOnly-LIE-NoDefense.txt 2>&1 &
+nohup python -u main.py -lbs 32 -nc 20 -lr 0.01 -ls 2 -jr 1 -nb 10 -data Cifar10 -m resnet -algo Camouflaged_FedAvg -gr 2000 -did 0 -go resnet -cstart 5000 -crestart 3 -camou 0 -cimages 5 -cattackiter 250 -ceps 8 -def TrimmedMean -atk LIE > ../results/Camouflaged_FedAvg/logs/$(date +%Y%m%d-%H%M%S)-Cifar10-Resnet18-PoisonOnly-LIE-TrimmedMean.txt 2>&1 &
+
+nohup python -u main.py -lbs 32 -nc 20 -lr 0.1 -ls 2 -jr 1 -nb 10 -data Cifar10 -m resnet -algo Camouflaged_FedAvg -gr 2000 -did 1 -go resnet -cstart 5000 -crestart 3 -camou 0 -cimages 5 -cattackiter 250 -ceps 8 -def NoDefense -atk LIE > ../results/Camouflaged_FedAvg/logs/$(date +%Y%m%d-%H%M%S)-Cifar10-Resnet18-PoisonOnly-LIE-NoDefense-lr0.1.txt 2>&1 &
+nohup python -u main.py -lbs 32 -nc 20 -lr 0.1 -ls 2 -jr 1 -nb 10 -data Cifar10 -m resnet -algo Camouflaged_FedAvg -gr 2000 -did 0 -go resnet -cstart 5000 -crestart 3 -camou 0 -cimages 5 -cattackiter 250 -ceps 8 -def TrimmedMean -atk LIE > ../results/Camouflaged_FedAvg/logs/$(date +%Y%m%d-%H%M%S)-Cifar10-Resnet18-PoisonOnly-LIE-TrimmedMean-lr0.1.txt 2>&1 &
+
+nohup python -u main.py -lbs 32 -nc 20 -lr 0.1 -ls 2 -jr 1 -nb 10 -data Cifar10 -m resnet -algo Camouflaged_FedAvg -gr 2000 -did 1 -go resnet -cstart 5000 -crestart 3 -camou 0 -cimages 5 -cattackiter 250 -ceps 8 -def NoDefense -atk NoAttack > ../results/Camouflaged_FedAvg/logs/$(date +%Y%m%d-%H%M%S)-Cifar10-Resnet18-PoisonOnly-NoAttack-NoDefense-lr0.1.txt 2>&1 &
+nohup python -u main.py -lbs 32 -nc 20 -lr 0.1 -ls 2 -jr 1 -nb 10 -data Cifar10 -m resnet -algo Camouflaged_FedAvg -gr 2000 -did 0 -go resnet -cstart 5000 -crestart 3 -camou 0 -cimages 5 -cattackiter 250 -ceps 8 -def TrimmedMean -atk NoAttack > ../results/Camouflaged_FedAvg/logs/$(date +%Y%m%d-%H%M%S)-Cifar10-Resnet18-PoisonOnly-NoAttack-TrimmedMean-lr0.1.txt 2>&1 &
+
 
