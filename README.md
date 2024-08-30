@@ -243,7 +243,7 @@ Client 2         Size of data: 1630      Labels:  [0 3 6 9]
 ## Environments
 Install [CUDA v11.6](https://developer.nvidia.com/cuda-11-6-0-download-archive). 
 
-Install [conda](https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh) and activate conda. 
+Install [conda latest](https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh) and activate conda. 
 
 ```bash
 conda env create -f env_cuda_latest.yaml # You may need to downgrade the torch using pip to match the CUDA version
