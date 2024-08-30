@@ -431,7 +431,7 @@ class LSTMNet(nn.Module):
         if type(x) == type([]):
             text, text_lengths = x
         else:
-            text, text_lengths = x, x.shape[1]
+            text, text_lengths = x, [x.shape[1] for _ in range(x.shape[0])]
         
         embedded = self.embedding(text)
         
