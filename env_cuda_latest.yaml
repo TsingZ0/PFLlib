@@ -4,7 +4,7 @@ channels:
   - nvidia
   - defaults
 dependencies:
-  - pip
+  - pip=22
   - pandas
   - scikit-learn
   - scipy
