@@ -241,7 +241,7 @@ Client 2         Size of data: 1630      Labels:  [0 3 6 9]
     1. HARCNN() in [Convolutional neural networks for human activity recognition using mobile sensors](https://eudl.eu/pdf/10.4108/icst.mobicase.2014.257786)
 
 ## Environments
-Install [CUDA](https://developer.nvidia.com/cuda-11-6-0-download-archive). 
+Install [CUDA v11.6](https://developer.nvidia.com/cuda-11-6-0-download-archive). 
 
 Install [conda](https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh) and activate conda. 
 
