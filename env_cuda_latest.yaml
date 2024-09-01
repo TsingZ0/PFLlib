@@ -2,6 +2,7 @@ name: pfllib
 channels:
   - pytorch
   - nvidia
+  - conda-forge
   - defaults
 dependencies:
   - pip=22
