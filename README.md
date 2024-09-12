@@ -7,7 +7,7 @@ Figure 1: An Example for FedAvg. You can create a scenario using `generate_DATA.
 
 ***We've created a user-friendly algorithm library and evaluation platform for those new to federated learning. Join us in expanding the FL community by contributing your algorithms, datasets, and metrics to this project.***
 
-- ***37 traditional FL ([tFL](#traditional-fl-tfl)) or personalized FL ([pFL](#personalized-fl-pfl)) algorithms, 3 scenarios, and 20 datasets**.*
+- ***37 traditional FL ([tFL](#traditional-fl-tfl)) and personalized FL ([pFL](#personalized-fl-pfl)) algorithms, 3 scenarios, and 20 datasets**.*
 
 - Some **experimental results** are avalible [here](#experimental-results). 
 
