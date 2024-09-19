@@ -430,8 +430,8 @@ if __name__ == "__main__":
     parser.add_argument('-nnc', "--num_new_clients", type=int, default=0)
     parser.add_argument('-ften', "--fine_tuning_epoch_new", type=int, default=0)
     parser.add_argument('-fd', "--feature_dim", type=int, default=512)
-    parser.add_argument('-vs', "--vocab_size", type=int, default=98635, 
-                        help="Set this value before running text tasks. 80 for Shakespeare, 98635 for AG_News, and 399198 for Sogou_News")
+    parser.add_argument('-vs', "--vocab_size", type=int, default=31234, 
+                        help="Set this for text tasks. 80 for Shakespeare and 31234 for AG_News.")
     parser.add_argument('-ml', "--max_len", type=int, default=200)
     # practical
     parser.add_argument('-cdr', "--client_drop_rate", type=float, default=0.0,

@@ -21,14 +21,14 @@ import sys
 import random
 import torchtext
 from utils.dataset_utils import check, separate_data, split_data, save_file
-from torchtext.data.utils import get_tokenizer
-from torchtext.vocab import build_vocab_from_iterator
+from utils.language_utils import tokenizer
 
 
 random.seed(1)
 np.random.seed(1)
 num_clients = 20
 max_len = 200
+min_freq = 5
 dir_path = "SogouNews/"
 
 
@@ -62,30 +62,11 @@ def generate_dataset(dir_path, num_clients, niid, balance, partition):
     num_classes = len(set(dataset_label))
     print(f'Number of classes: {num_classes}')
 
-    tokenizer = get_tokenizer('basic_english')
-    vocab = build_vocab_from_iterator(map(tokenizer, iter(dataset_text)), specials=["<unk>"])
-    vocab.set_default_index(vocab["<unk>"])
-
-    text_pipeline = lambda x: vocab(tokenizer(x))
+    vocab, text_list = tokenizer(dataset_text, max_len, min_freq)
     label_pipeline = lambda x: int(x) - 1
-
-    def text_transform(text, label, max_len=0):
-        label_list, text_list = [], []
-        for _text, _label in zip(text, label):
-            label_list.append(label_pipeline(_label))
-            text_ = text_pipeline(_text)
-            padding = [0 for i in range(max_len-len(text_))]
-            text_.extend(padding)
-            text_list.append(text_[:max_len])
-        return label_list, text_list
-
-    label_list, text_list = text_transform(dataset_text, dataset_label, max_len)
+    label_list = [label_pipeline(l) for l in dataset_label]
 
     text_lens = [len(text) for text in text_list]
-    # max_len = max(text_lens)
-
-    # label_list, text_list = text_transform(dataset_text, dataset_label, max_len)
-
     text_list = [(text, l) for text, l in zip(text_list, text_lens)]
 
     text_list = np.array(text_list)

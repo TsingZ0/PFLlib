@@ -3,6 +3,8 @@
 import re
 import numpy as np
 import json
+from torchtext.data.utils import get_tokenizer
+from torchtext.vocab import build_vocab_from_iterator
 
 
 # ------------------------
@@ -10,8 +12,6 @@ import json
 
 ALL_LETTERS = "\n !\"&'(),-.0123456789:;>?ABCDEFGHIJKLMNOPQRSTUVWXYZ[]abcdefghijklmnopqrstuvwxyz}"
 NUM_LETTERS = len(ALL_LETTERS)
-print('num of letters (classes):', NUM_LETTERS)
-
 
 def letter_to_index(letter):
     '''returns one-hot representation of given letter
@@ -43,6 +43,7 @@ def word_to_indices(word):
     Return:
         indices: int list with length len(word)
     '''
+    print('num of letters (classes):', NUM_LETTERS)
     indices = []
     for c in word:
         indices.append(ALL_LETTERS.find(c))
@@ -147,3 +148,22 @@ def val_to_vec(size, val):
     vec = [0 for _ in range(size)]
     vec[int(val)] = 1
     return vec
+
+def tokenizer(text, max_len, min_freq=1):
+    tokenizer = get_tokenizer('basic_english')
+    vocab = build_vocab_from_iterator(
+        map(tokenizer, iter(text)), 
+        min_freq = min_freq, 
+        specials = ['<pad>', '<sos>', '<eos>', '<unk>'],
+        special_first = True
+    )
+    vocab.set_default_index(vocab['<unk>'])
+    text_pipeline = lambda x: vocab(tokenizer(x))
+
+    text_list = []
+    for t in text:
+        tokens = text_pipeline(t)
+        padding = [0 for i in range(max_len - len(tokens))]
+        tokens.extend(padding)
+        text_list.append(tokens[:max_len])
+    return vocab, text_list
