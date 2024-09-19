@@ -46,7 +46,9 @@ class BiLSTM_TextClassification(nn.Module):
         self.lstm_layer = nn.LSTM(self.embedding_length, self.hidden_size, self.num_layers, dropout=lstm_dropout,
                                   bidirectional=True)
         self.lstm_dropout_layer = nn.Dropout(p=self.lstm_dropout)
-        self.output_layer = nn.Linear(self.hidden_size * 2, self.output_size)
+        
+        self.fc1 = nn.Linear(self.hidden_size * 2, self.hidden_size)
+        self.fc = nn.Linear(self.hidden_size, self.output_size)
 
     def attention_forward(self, lstm_output, state, seq_lens):
         # We implement Luong attention here, the attention range should be less or equal than original sequence length
@@ -99,7 +101,8 @@ class BiLSTM_TextClassification(nn.Module):
             output = self.attention_forward(output, state, seq_lens)
         else:
             output = state
-
-        logits = self.output_layer(output)
+            
+        feat = self.fc1(output)
+        logits = self.fc(feat)
 
         return logits
