@@ -81,7 +81,7 @@ class TransformerModel(nn.Module):
         x = self.pos_encoder(x)
 
         x = self.encoder(x, attn_mask)
-        x = x[:, 0]
+        x = x[:, 0] # [CLS] token
         output = self.fc(x)
 
         return output
