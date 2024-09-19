@@ -149,13 +149,13 @@ def val_to_vec(size, val):
     vec[int(val)] = 1
     return vec
 
-def tokenizer(text, max_len, min_freq=1):
+def tokenizer(text, max_len, max_tokens=32000):
     tokenizer = get_tokenizer('basic_english')
     vocab = build_vocab_from_iterator(
         map(tokenizer, iter(text)), 
-        min_freq = min_freq, 
         specials = ['<pad>', '<sos>', '<eos>', '<unk>'],
-        special_first = True
+        special_first = True, 
+        max_tokens = max_tokens 
     )
     vocab.set_default_index(vocab['<unk>'])
     text_pipeline = lambda x: vocab(tokenizer(x))

@@ -28,7 +28,7 @@ random.seed(1)
 np.random.seed(1)
 num_clients = 20
 max_len = 200
-min_freq = 5
+max_tokens = 32000
 dir_path = "SogouNews/"
 
 
@@ -62,7 +62,7 @@ def generate_dataset(dir_path, num_clients, niid, balance, partition):
     num_classes = len(set(dataset_label))
     print(f'Number of classes: {num_classes}')
 
-    vocab, text_list = tokenizer(dataset_text, max_len, min_freq)
+    vocab, text_list = tokenizer(dataset_text, max_len, max_tokens)
     label_pipeline = lambda x: int(x) - 1
     label_list = [label_pipeline(l) for l in dataset_label]
 
