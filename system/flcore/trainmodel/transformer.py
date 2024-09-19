@@ -55,8 +55,6 @@ class TransformerModel(nn.Module):
         self.embedding = nn.Embedding(ntoken, d_model)
         self.hidden_dim = d_model
         self.fc = nn.Linear(d_model, num_classes)
-        # remove this if using a pretrained tokenizer
-        self.class_token = nn.Parameter(torch.zeros(1, 1, d_model)) # the [CLS] token
 
         self.init_weights()
 
@@ -81,12 +79,6 @@ class TransformerModel(nn.Module):
         """
         x = self.embedding(src) * math.sqrt(self.hidden_dim)
         x = self.pos_encoder(x)
-
-        # Extend the class token to encompass the entire batch, following the ViT approach in PyTorch
-        # remove this if using a pretrained tokenizer
-        n = x.shape[0]
-        batch_class_token = self.class_token.expand(n, -1, -1) * math.sqrt(self.hidden_dim)
-        x = torch.cat([batch_class_token, x], dim=1)
 
         x = self.encoder(x, attn_mask)
         x = x[:, 0]

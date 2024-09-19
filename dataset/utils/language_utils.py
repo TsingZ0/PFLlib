@@ -153,7 +153,7 @@ def tokenizer(text, max_len, max_tokens=32000):
     tokenizer = get_tokenizer('basic_english')
     vocab = build_vocab_from_iterator(
         map(tokenizer, iter(text)), 
-        specials = ['<pad>', '<unk>', '<eos>'],
+        specials = ['<pad>', 'cls', '<unk>', '<eos>'],
         special_first = True, 
         max_tokens = max_tokens 
     )
@@ -162,7 +162,7 @@ def tokenizer(text, max_len, max_tokens=32000):
 
     text_list = []
     for t in text:
-        tokens = text_pipeline(t)
+        tokens = [vocab['<cls>']] + text_pipeline(t)
         padding = [0 for i in range(max_len - len(tokens))]
         tokens.extend(padding)
         text_list.append(tokens[:max_len])
