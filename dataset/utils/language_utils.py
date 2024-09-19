@@ -153,7 +153,7 @@ def tokenizer(text, max_len, max_tokens=32000):
     tokenizer = get_tokenizer('basic_english')
     vocab = build_vocab_from_iterator(
         map(tokenizer, iter(text)), 
-        specials = ['<pad>', '<sos>', '<eos>', '<unk>'],
+        specials = ['<pad>', '<unk>', '<eos>'],
         special_first = True, 
         max_tokens = max_tokens 
     )
