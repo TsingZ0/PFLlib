@@ -7,6 +7,17 @@ Figure 1: An Example for FedAvg. You can create a scenario using `generate_DATA.
 
 ***We've created a user-friendly algorithm library and evaluation platform for those new to federated learning. Join us in expanding the FL community by contributing your algorithms, datasets, and metrics to this project.***
 
+**If you find our repository useful, please cite the following paper:**
+
+```
+@article{zhang2023pfllib,
+  title={PFLlib: Personalized Federated Learning Algorithm Library},
+  author={Zhang, Jianqing and Liu, Yang and Hua, Yang and Wang, Hao and Song, Tao and Xue, Zhengui and Ma, Ruhui and Cao, Jian},
+  journal={arXiv preprint arXiv:2312.04992},
+  year={2023}
+}
+```
+
 - ***37 traditional FL ([tFL](#traditional-fl-tfl)) and personalized FL ([pFL](#personalized-fl-pfl)) algorithms, 3 scenarios, and 20 datasets.***
 
 - Some **experimental results** are avalible [here](#experimental-results). 
@@ -26,17 +37,6 @@ Figure 1: An Example for FedAvg. You can create a scenario using `generate_DATA.
 The origin of the **statistical heterogeneity** phenomenon is the personalization of users, who generate non-IID (not Independent and Identically Distributed) and unbalanced data. With statistical heterogeneity existing in the FL scenario, a myriad of approaches have been proposed to crack this hard nut. In contrast, the personalized FL (pFL) may take advantage of the statistically heterogeneous data to learn the personalized model for each user. 
 
 Thanks to [@Stonesjtu](https://github.com/Stonesjtu/pytorch_memlab/blob/d590c489236ee25d157ff60ecd18433e8f9acbe3/pytorch_memlab/mem_reporter.py#L185), this library can also record the **GPU memory usage** for the model. Following [FedCG](https://www.ijcai.org/proceedings/2022/0324.pdf), we also introduce the **[DLG (Deep Leakage from Gradients)](https://papers.nips.cc/paper_files/paper/2019/hash/60a6c4002cc7b29142def8871531281a-Abstract.html) attack** and **PSNR (Peak Signal-to-Noise Ratio) metric** to evaluate the privacy-preserving ability of tFL/pFL algorithms (please refer to `./system/flcore/servers/serveravg.py` for example). *Now we can train on some clients and evaluate performance on other new clients by setting `args.num_new_clients` in `./system/main.py`. Note that not all the tFL/pFL algorithms support this feature.*
-
-**Citation**
-
-```
-@article{zhang2023pfllib,
-  title={PFLlib: Personalized Federated Learning Algorithm Library},
-  author={Zhang, Jianqing and Liu, Yang and Hua, Yang and Wang, Hao and Song, Tao and Xue, Zhengui and Ma, Ruhui and Cao, Jian},
-  journal={arXiv preprint arXiv:2312.04992},
-  year={2023}
-}
-```
 
 
 ## Algorithms with code (updating)
