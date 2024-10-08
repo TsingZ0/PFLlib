@@ -2,9 +2,9 @@ import time
 import torch
 import copy
 
+
 from flcore.clients.clientcac import clientCAC
 from flcore.servers.serverbase import Server
-from utils.data_utils import read_client_data
 
 class FedCAC(Server):
     def __init__(self, args, times):
@@ -28,7 +28,7 @@ class FedCAC(Server):
             self.epoch = i
             s_t = time.time()
             self.selected_clients = self.select_clients()
-            self.send_models()
+            if i == 0: self.send_models()
 
             if i%self.eval_gap == 0:
                 print(f"\n-------------Round number: {i}-------------")
@@ -45,6 +45,7 @@ class FedCAC(Server):
 
             self.receive_models()
             self.aggregate_parameters()
+            self.send_models()
 
             self.Budget.append(time.time() - s_t)
             print('-'*25, 'time cost', '-'*25, self.Budget[-1])
@@ -74,32 +75,33 @@ class FedCAC(Server):
             Aggregating customized global models for clients to collaborate critical parameters.
         """
         assert type(self.args.beta) == int and self.args.beta >= 1
-        overlap_buffer = [[] for i in range(self.args.num_clients)]
+        num_clients = len(self.selected_clients)
+        overlap_buffer = [[] for i in range(num_clients)]
 
-        # calculate overlap rate between client i and client j
-        for i in range(self.args.num_clients):
-            for j in range(self.args.num_clients):
+        # calculate overlap rate between client i and client j in the selected clients
+        for i in range(num_clients):
+            for j in range(num_clients):
                 if i == j:
                     continue
                 overlap_rate = 1 - torch.sum(
-                    torch.abs(self.clients[i].critical_parameter.to(self.device) - self.clients[j].critical_parameter.to(self.args.device))
-                ) / float(torch.sum(self.clients[i].critical_parameter.to(self.args.device)).cpu() * 2)
+                    torch.abs(self.selected_clients[i].critical_parameter.to(self.device) - self.selected_clients[j].critical_parameter.to(self.args.device))
+                ) / float(torch.sum(self.selected_clients[i].critical_parameter.to(self.args.device)).cpu() * 2)
                 overlap_buffer[i].append(overlap_rate)
 
         # calculate the global threshold
         overlap_buffer_tensor = torch.tensor(overlap_buffer)
         overlap_sum = overlap_buffer_tensor.sum()
-        overlap_avg = overlap_sum / ((self.args.num_clients - 1) * self.args.num_clients)
+        overlap_avg = overlap_sum / ((num_clients - 1) * num_clients)
         overlap_max = overlap_buffer_tensor.max()
         threshold = overlap_avg + (self.epoch + 1) / self.args.beta * (overlap_max - overlap_avg)
 
         # calculate the customized global model for each client
-        for i in range(self.args.num_clients):
-            w_customized_global = copy.deepcopy(self.clients[i].model.state_dict())
+        for i in range(num_clients):
+            w_customized_global = copy.deepcopy(self.selected_clients[i].model.state_dict())
             collaboration_clients = [i]
             # find clients whose critical parameter locations are similar to client i
             index = 0
-            for j in range(self.args.num_clients):
+            for j in range(num_clients):
                 if i == j:
                     continue
                 if overlap_buffer[i][index] >= threshold:
@@ -110,10 +112,10 @@ class FedCAC(Server):
                 for client in collaboration_clients:
                     if client == i:
                         continue
-                    w_customized_global[key] += self.clients[client].model.state_dict()[key]
+                    w_customized_global[key] += self.selected_clients[client].model.state_dict()[key]
                 w_customized_global[key] = torch.div(w_customized_global[key], float(len(collaboration_clients)))
             # send the customized global model to client i
-            self.clients[i].customized_model.load_state_dict(w_customized_global)
+            self.selected_clients[i].customized_model.load_state_dict(w_customized_global)
 
     def send_models(self):
         if self.epoch != 0:
