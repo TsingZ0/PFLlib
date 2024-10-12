@@ -95,7 +95,7 @@ def run(args):
         start = time.time()
 
         # Generate args.model
-        if model_str == "mlr": # convex
+        if model_str == "MLR": # convex
             if "MNIST" in args.dataset:
                 args.model = Mclr_Logistic(1*28*28, num_classes=args.num_classes).to(args.device)
             elif "Cifar10" in args.dataset:
