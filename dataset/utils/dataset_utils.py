@@ -23,7 +23,7 @@ from sklearn.model_selection import train_test_split
 
 batch_size = 10
 train_ratio = 0.75 # merge original training set and test set, then split it manually. 
-alpha = 0.1 # for Dirichlet distribution. 100 for exdir
+
 
 def check(config_path, train_path, test_path, num_clients, niid=False, 
         balance=True, partition=None):
@@ -49,7 +49,7 @@ def check(config_path, train_path, test_path, num_clients, niid=False,
 
     return False
 
-def separate_data(data, num_clients, num_classes, niid=False, balance=False, partition=None, class_per_client=None):
+def separate_data(data, num_clients, num_classes, niid=False, balance=False, partition=None, alpha=2):
     X = [[] for _ in range(num_clients)]
     y = [[] for _ in range(num_clients)]
     statistic = [[] for _ in range(num_clients)]
@@ -62,7 +62,7 @@ def separate_data(data, num_clients, num_classes, niid=False, balance=False, par
 
     if not niid:
         partition = 'pat'
-        class_per_client = num_classes
+        alpha = num_classes
 
     if partition == 'pat':
         idxs = np.array(range(len(dataset_label)))
@@ -70,7 +70,7 @@ def separate_data(data, num_clients, num_classes, niid=False, balance=False, par
         for i in range(num_classes):
             idx_for_each_class.append(idxs[dataset_label == i])
 
-        class_num_per_client = [class_per_client for _ in range(num_clients)]
+        class_num_per_client = [alpha for _ in range(num_clients)]
         for i in range(num_classes):
             selected_clients = []
             for client in range(num_clients):
@@ -78,7 +78,7 @@ def separate_data(data, num_clients, num_classes, niid=False, balance=False, par
                     selected_clients.append(client)
             if len(selected_clients) == 0:
                 break
-            selected_clients = selected_clients[:int(np.ceil((num_clients/num_classes)*class_per_client))]
+            selected_clients = selected_clients[:int(np.ceil((num_clients/num_classes)*alpha))]
 
             num_all_samples = len(idx_for_each_class[i])
             num_selected_clients = len(selected_clients)
@@ -132,7 +132,7 @@ def separate_data(data, num_clients, num_classes, niid=False, balance=False, par
         Some changes are as follows:
         n_nets -> num_clients, n_class -> num_classes
         '''
-        C = class_per_client
+        C = alpha
         
         '''The first level: allocate labels to clients
         clientidx_map (dict, {label: clientidx}), e.g., C=2, num_clients=5, num_classes=10
@@ -245,7 +245,7 @@ def split_data(X, y):
     return train_data, test_data
 
 def save_file(config_path, train_path, test_path, train_data, test_data, num_clients, 
-                num_classes, statistic, niid=False, balance=True, partition=None):
+                num_classes, statistic, niid=False, balance=True, partition=None, alpha=None):
     config = {
         'num_clients': num_clients, 
         'num_classes': num_classes, 
