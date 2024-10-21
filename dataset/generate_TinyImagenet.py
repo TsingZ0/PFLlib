@@ -25,10 +25,7 @@ import torchvision.transforms as transforms
 from utils.dataset_utils import check, separate_data, split_data, save_file
 from torchvision.datasets import ImageFolder, DatasetFolder
 
-random.seed(1)
-np.random.seed(1)
-num_clients = 20
-dir_path = "TinyImagenet/"
+
 
 # https://github.com/QinbinLi/MOON/blob/6c7a4ed1b1a8c0724fa2976292a667a828e3ff5d/datasets.py#L148
 class ImageFolder_custom(DatasetFolder):
@@ -64,9 +61,15 @@ class ImageFolder_custom(DatasetFolder):
         else:
             return len(self.dataidxs)
 
+from args import args_parser
 
 # Allocate data to users
-def generate_dataset(dir_path, num_clients, niid, balance, partition):
+def generate_dataset(niid, balance, partition, args):
+    random.seed(args.seed)
+    np.random.seed(args.seed)
+    num_clients = args.num_users
+    dir_path = f"TinyImagenet_{args.partition}_{args.alpha if args.partition == 'dir' else args.class_per_client}_{args.balance}_{args.num_users}/"
+
     if not os.path.exists(dir_path):
         os.makedirs(dir_path)
         
@@ -79,17 +82,17 @@ def generate_dataset(dir_path, num_clients, niid, balance, partition):
         return
 
     # Get data
-    if not os.path.exists(f'{dir_path}/rawdata/'):
-        os.system(f'wget --directory-prefix {dir_path}/rawdata/ http://cs231n.stanford.edu/tiny-imagenet-200.zip')
-        os.system(f'unzip {dir_path}/rawdata/tiny-imagenet-200.zip -d {dir_path}/rawdata/')
+    if not os.path.exists(f'rawdata/TinyImagenet/'):
+        os.system(f'wget --directory-prefix rawdata/TinyImagenet/ http://cs231n.stanford.edu/tiny-imagenet-200.zip')
+        os.system(f'unzip rawdata/TinyImagenet/tiny-imagenet-200.zip -d {dir_path}/rawdata/')
     else:
         print('rawdata already exists.\n')
 
     transform = transforms.Compose(
         [transforms.ToTensor(), transforms.Normalize((0.5, 0.5, 0.5), (0.5, 0.5, 0.5))])
 
-    trainset = ImageFolder_custom(root=dir_path+'rawdata/tiny-imagenet-200/train/', transform=transform)
-    testset = ImageFolder_custom(root=dir_path+'rawdata/tiny-imagenet-200/val/', transform=transform)
+    trainset = ImageFolder_custom(root='rawdata/TinyImagenet/tiny-imagenet-200/train/', transform=transform)
+    testset = ImageFolder_custom(root='rawdata/TinyImagenet/tiny-imagenet-200/val/', transform=transform)
     trainloader = torch.utils.data.DataLoader(
         trainset, batch_size=len(trainset), shuffle=False)
     testloader = torch.utils.data.DataLoader(
@@ -118,16 +121,17 @@ def generate_dataset(dir_path, num_clients, niid, balance, partition):
     #     idx = dataset_label == i
     #     dataset.append(dataset_image[idx])
 
-    X, y, statistic = separate_data((dataset_image, dataset_label), num_clients, num_classes, 
-                                    niid, balance, partition, class_per_client=20)
+    X, y, statistic = separate_data((dataset_image, dataset_label), num_clients, num_classes,
+                                    niid, balance, partition, alpha=args.alpha, class_per_client=args.class_per_client)
     train_data, test_data = split_data(X, y)
     save_file(config_path, train_path, test_path, train_data, test_data, num_clients, num_classes, 
-        statistic, niid, balance, partition)
+        statistic, niid, balance, partition, args.alpha, class_per_client=args.class_per_client)
 
 
 if __name__ == "__main__":
-    niid = True if sys.argv[1] == "noniid" else False
-    balance = True if sys.argv[2] == "balance" else False
-    partition = sys.argv[3] if sys.argv[3] != "-" else None
+    args = args_parser()
+    niid = True if args.niid == "noniid" else False
+    balance = True if args.balance == "balance" else False
+    partition = args.partition if args.partition != "-" else None
 
-    generate_dataset(dir_path, num_clients, niid, balance, partition)
+    generate_dataset(niid, balance, partition, args)
