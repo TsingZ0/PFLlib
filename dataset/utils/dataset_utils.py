@@ -49,7 +49,7 @@ def check(config_path, train_path, test_path, num_clients, niid=False,
 
     return False
 
-def separate_data(data, num_clients, num_classes, niid=False, balance=False, partition=None, alpha=2):
+def separate_data(data, num_clients, num_classes, niid=False, balance=False, partition=None, alpha=0.1, class_per_client=2):
     X = [[] for _ in range(num_clients)]
     y = [[] for _ in range(num_clients)]
     statistic = [[] for _ in range(num_clients)]
@@ -62,7 +62,7 @@ def separate_data(data, num_clients, num_classes, niid=False, balance=False, par
 
     if not niid:
         partition = 'pat'
-        alpha = num_classes
+        class_per_client = num_classes
 
     if partition == 'pat':
         idxs = np.array(range(len(dataset_label)))
@@ -70,7 +70,7 @@ def separate_data(data, num_clients, num_classes, niid=False, balance=False, par
         for i in range(num_classes):
             idx_for_each_class.append(idxs[dataset_label == i])
 
-        class_num_per_client = [alpha for _ in range(num_clients)]
+        class_num_per_client = [class_per_client for _ in range(num_clients)]
         for i in range(num_classes):
             selected_clients = []
             for client in range(num_clients):
@@ -78,7 +78,7 @@ def separate_data(data, num_clients, num_classes, niid=False, balance=False, par
                     selected_clients.append(client)
             if len(selected_clients) == 0:
                 break
-            selected_clients = selected_clients[:int(np.ceil((num_clients/num_classes)*alpha))]
+            selected_clients = selected_clients[:int(np.ceil((num_clients/num_classes)*class_per_client))]
 
             num_all_samples = len(idx_for_each_class[i])
             num_selected_clients = len(selected_clients)
@@ -132,7 +132,7 @@ def separate_data(data, num_clients, num_classes, niid=False, balance=False, par
         Some changes are as follows:
         n_nets -> num_clients, n_class -> num_classes
         '''
-        C = alpha
+        C = class_per_client
         
         '''The first level: allocate labels to clients
         clientidx_map (dict, {label: clientidx}), e.g., C=2, num_clients=5, num_classes=10
@@ -245,17 +245,29 @@ def split_data(X, y):
     return train_data, test_data
 
 def save_file(config_path, train_path, test_path, train_data, test_data, num_clients, 
-                num_classes, statistic, niid=False, balance=True, partition=None, alpha=None):
-    config = {
-        'num_clients': num_clients, 
-        'num_classes': num_classes, 
-        'non_iid': niid, 
-        'balance': balance, 
-        'partition': partition, 
-        'Size of samples for labels in clients': statistic, 
-        'alpha': alpha, 
-        'batch_size': batch_size, 
-    }
+                num_classes, statistic, niid=False, balance=True, partition=None, alpha=None, class_per_client=None):
+    if partition == 'dir':
+        config = {
+            'num_clients': num_clients,
+            'num_classes': num_classes,
+            'non_iid': niid,
+            'balance': balance,
+            'partition': partition,
+            'Size of samples for labels in clients': statistic,
+            'alpha': alpha,
+            'batch_size': batch_size,
+        }
+    else:
+        config = {
+            'num_clients': num_clients,
+            'num_classes': num_classes,
+            'non_iid': niid,
+            'balance': balance,
+            'partition': partition,
+            'Size of samples for labels in clients': statistic,
+            'class_per_client': class_per_client,
+            'batch_size': batch_size,
+        }
 
     # gc.collect()
     print("Saving to disk.\n")

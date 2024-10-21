@@ -61,27 +61,14 @@ class ImageFolder_custom(DatasetFolder):
         else:
             return len(self.dataidxs)
 
-import argparse
-def args_parser():
-    parser = argparse.ArgumentParser()
-    parser.add_argument('--niid', type=str, default="noniid", help="non-iid distribution")
-    parser.add_argument('--balance', type=str, default="balance", help="balance data size per client")
-    parser.add_argument('--partition', type=str, default="pat", help="partition distribution, dir|pat｜exdir")
-    parser.add_argument('--num_users', type=int, default=20, help="number of users")
-    parser.add_argument('--alpha', type=float, default=2, help="the degree of imbalance. If partition is pat, alpha is the number of class per client")
-
-    parser.add_argument('--seed', type=int, default=1, help="random seed")
-
-    args = parser.parse_args()
-    args.alpha = args.alpha if args.partition == 'dir' else int(args.alpha)
-    return args
+from args import args_parser
 
 # Allocate data to users
 def generate_dataset(niid, balance, partition, args):
     random.seed(args.seed)
     np.random.seed(args.seed)
     num_clients = args.num_users
-    dir_path = f"TinyImagenet_{args.partition}_{args.alpha}_{args.balance}_{args.num_users}/"
+    dir_path = f"TinyImagenet_{args.partition}_{args.alpha if args.partition == 'dir' else args.class_per_client}_{args.balance}_{args.num_users}/"
 
     if not os.path.exists(dir_path):
         os.makedirs(dir_path)
@@ -135,10 +122,10 @@ def generate_dataset(niid, balance, partition, args):
     #     dataset.append(dataset_image[idx])
 
     X, y, statistic = separate_data((dataset_image, dataset_label), num_clients, num_classes,
-                                    niid, balance, partition, alpha=args.alpha)
+                                    niid, balance, partition, alpha=args.alpha, class_per_client=args.class_per_client)
     train_data, test_data = split_data(X, y)
     save_file(config_path, train_path, test_path, train_data, test_data, num_clients, num_classes, 
-        statistic, niid, balance, partition, args.alpha)
+        statistic, niid, balance, partition, args.alpha, class_per_client=args.class_per_client)
 
 
 if __name__ == "__main__":
