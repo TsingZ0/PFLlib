@@ -23,19 +23,17 @@ import torchtext
 from utils.dataset_utils import check, separate_data, split_data, save_file
 from utils.language_utils import tokenizer
 
-from args import args_parser
+
+random.seed(1)
+np.random.seed(1)
+num_clients = 20
+max_len = 200
+max_tokens = 32000
+dir_path = "AGNews/"
+
 
 # Allocate data to users
-def generate_dataset(niid, balance, partition, args):
-    random.seed(args.seed)
-    np.random.seed(args.seed)
-    num_clients = args.num_users
-    dir_path = f"AGNews_{args.partition}_{args.alpha if args.partition == 'dir' else args.class_per_client}_{args.balance}_{args.num_users}/"
-
-    max_len = args.max_len
-    max_tokens = args.max_tokens
-
-
+def generate_dataset(dir_path, num_clients, niid, balance, partition):
     if not os.path.exists(dir_path):
         os.makedirs(dir_path)
         
@@ -48,7 +46,7 @@ def generate_dataset(niid, balance, partition, args):
         return
 
     # Get AG_News data
-    trainset, testset = torchtext.datasets.AG_NEWS(root="rawdata/AGNews")
+    trainset, testset = torchtext.datasets.AG_NEWS(root=dir_path+"rawdata")
 
     trainlabel, traintext = list(zip(*trainset))
     testlabel, testtext = list(zip(*testset))
@@ -79,19 +77,17 @@ def generate_dataset(niid, balance, partition, args):
     #     idx = label_list == i
     #     dataset.append(text_list[idx])
 
-    X, y, statistic = separate_data((text_list, label_list), num_clients, num_classes,
-                                    niid, balance, partition, alpha=args.alpha, class_per_client=args.class_per_client)
+    X, y, statistic = separate_data((text_list, label_list), num_clients, num_classes, niid, balance, partition)
     train_data, test_data = split_data(X, y)
     save_file(config_path, train_path, test_path, train_data, test_data, num_clients, num_classes, 
-        statistic, niid, balance, partition, args.alpha, class_per_client=args.class_per_client)
+            statistic, niid, balance, partition)
 
     print("The size of vocabulary:", len(vocab))
 
 
 if __name__ == "__main__":
-    args = args_parser()
-    niid = True if args.niid == "noniid" else False
-    balance = True if args.balance == "balance" else False
-    partition = args.partition if args.partition != "-" else None
+    niid = True if sys.argv[1] == "noniid" else False
+    balance = True if sys.argv[2] == "balance" else False
+    partition = sys.argv[3] if sys.argv[3] != "-" else None
 
-    generate_dataset(niid, balance, partition, args)
+    generate_dataset(dir_path, num_clients, niid, balance, partition)

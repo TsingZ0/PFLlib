@@ -120,30 +120,18 @@ For the ***real-world (or IoT)*** scenario, we also introduce **3** naturally se
 
 *If you need another data set, just write another code to download it and then use the utils.*
 
-We provide hyperparameter controls to facilitate partitioning across various non-IID scenarios:
-
-- `--niid`: Set to 'noniid' for non-IID scenarios, otherwise for IID scenarios.
-- `--balance`: Set to 'balance' to ensure clients have the same amount of data.
-- `--partition`: Set to 'pat' / 'dir' / 'exdir' to control different non-IID scenarios.
-- `--num_users`: Specifies how many clients the data is partitioned across.
-- `--alpha`: Controls the degree of non-IID in the 'dir' scenario.
-- `--class_per_client`: Controls the number of labels per client in the 'pat' scenario. 
-- `--seed`: Random seed for data partitioning.
-- `--max_len`: Maximum length of text in the text dataset.
-- `--max_tokens`: Maximum number of tokens in the text dataset.
-
 ### Examples for **MNIST**
 - MNIST
     ```
     cd ./dataset
-    # python generate_MNIST.py --niid=iid --balance=unbalance # for iid and unbalanced scenario
-    # python generate_MNIST.py --niid=iid --balance=balance # for iid and balanced scenario
-    # python generate_MNIST.py --niid=noniid --balance=unbalance --partition=pat # for pathological noniid and unbalanced scenario
-    python generate_MNIST.py --niid=noniid --balance=unbalance --partition=dir # for practical noniid and unbalanced scenario
-    # python generate_MNIST.py --niid=noniid --partition=exdir # for Extended Dirichlet strategy 
+    # python generate_MNIST.py iid - - # for iid and unbalanced scenario
+    # python generate_MNIST.py iid balance - # for iid and balanced scenario
+    # python generate_MNIST.py noniid - pat # for pathological noniid and unbalanced scenario
+    python generate_MNIST.py noniid - dir # for practical noniid and unbalanced scenario
+    # python generate_MNIST.py noniid - exdir # for Extended Dirichlet strategy 
     ```
 
-The output of `python generate_MNIST.py --niid=noniid --balance=unbalance --partition=dir`
+The output of `python generate_MNIST.py noniid - dir`
 ```
 Number of classes: 10
 Client 0         Size of data: 2630      Labels:  [0 1 4 5 7 8 9]
