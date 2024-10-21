@@ -26,7 +26,7 @@ train_ratio = 0.75 # merge original training set and test set, then split it man
 
 
 def check(config_path, train_path, test_path, num_clients, niid=False, 
-        balance=True, partition=None):
+        balance=True, partition=None, alpha=None):
     # check existing dataset
     if os.path.exists(config_path):
         with open(config_path, 'r') as f:
