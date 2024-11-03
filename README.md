@@ -251,19 +251,19 @@ conda env create -f env_cuda_latest.yaml # You may need to downgrade the torch u
 
 ## How to start simulating (examples for FedAvg)
 
-- Create proper environments (see [Environments](#environments)).
-
 - Download [this project](https://github.com/TsingZ0/PFLlib) to an appropriate location using [git](https://git-scm.com/).
     ```bash
     git clone https://github.com/TsingZ0/PFLlib.git
     ```
+
+- Create proper environments (see [Environments](#environments)).
 
 - Build evaluation scenarios (see [Datasets and scenarios (updating)](#datasets-and-scenarios-updating)).
 
 - Run evaluation: 
     ```bash
     cd ./system
-    python main.py -data MNIST -m cnn -algo FedAvg -gr 2000 -did 0 # using the MNIST dataset, the FedAvg algorithm, and the 4-layer CNN model
+    python main.py -data MNIST -m CNN -algo FedAvg -gr 2000 -did 0 # using the MNIST dataset, the FedAvg algorithm, and the 4-layer CNN model
     ```
 
 **Note**: It is preferable to tune algorithm-specific hyper-parameters before using any algorithm on a new machine. 

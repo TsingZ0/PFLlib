@@ -5,6 +5,8 @@ channels:
   - conda-forge
   - defaults
 dependencies:
+  - python=3.11
+  - numpy<2
   - pip=22
   - pandas
   - scikit-learn
