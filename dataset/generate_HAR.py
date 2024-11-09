@@ -62,8 +62,7 @@ def generate_dataset(dir_path):
         print("-" * 50)
 
     train_data, test_data = split_data(X, y)
-    save_file(config_path, train_path, test_path, train_data, test_data, 
-              num_clients, num_classes, statistic, None, None, None)
+    save_file(config_path, train_path, test_path, train_data, test_data, num_clients, num_classes, statistic)
 
 
 def load_data_HAR(data_folder):
