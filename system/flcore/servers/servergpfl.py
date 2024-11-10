@@ -83,6 +83,9 @@ class GPFL(Server):
         print("\nAverage time cost per round.")
         print(sum(self.Budget[1:])/len(self.Budget[1:]))
 
+        self.save_results()
+        self.save_global_model()
+
 
     def receive_models(self):
         assert (len(self.selected_clients) > 0)
