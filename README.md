@@ -22,7 +22,7 @@ Figure 1: An Example for FedAvg. You can create a scenario using `generate_DATA.
 
 - ***37 traditional FL ([tFL](#traditional-fl-tfl)) and personalized FL ([pFL](#personalized-fl-pfl)) algorithms, 3 scenarios, and 20 datasets.***
 
-- Some **experimental results** are avalible [here](#experimental-results). 
+- Some **experimental results** are avalible in its [paper](https://arxiv.org/abs/2312.04992) and [here](#experimental-results). 
 
 - Refer to [this guide](#how-to-start-simulating-examples-for-fedavg) to learn how to use it.
 
