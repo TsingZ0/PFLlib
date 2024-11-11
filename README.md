@@ -1,13 +1,15 @@
 # PFLlib: Personalized Federated Learning Algorithm Library
 
+👏 **We will change the license to Apache-2.0 in the next release.**
+
 [![License: GPL v2](https://img.shields.io/badge/License-GPL_v2-blue.svg)](https://www.gnu.org/licenses/old-licenses/gpl-2.0.en.html) [![arXiv](https://img.shields.io/badge/arXiv-2312.04992-b31b1b.svg)](https://arxiv.org/abs/2312.04992)
 
 ![](./structure.png)
 Figure 1: An Example for FedAvg. You can create a scenario using `generate_DATA.py` and run an algorithm using `main.py`, `clientNAME.py`, and `serverNAME.py`. For a new algorithm, you only need to add new features in `clientNAME.py` and `serverNAME.py`.
 
-***We've created a user-friendly algorithm library and evaluation platform for those new to federated learning. Join us in expanding the FL community by contributing your algorithms, datasets, and metrics to this project.***
+🎯***We create a user-friendly algorithm library and evaluation platform for those new to federated learning. Join us in expanding the FL community by contributing your algorithms, datasets, and metrics to this project.***
 
-**If you find our repository useful, please cite the following paper:**
+🎯**If you find our repository useful, please cite the following paper:**
 
 ```
 @article{zhang2023pfllib,
