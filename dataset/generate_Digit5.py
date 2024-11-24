@@ -223,6 +223,7 @@ def generate_dataset(dir_path):
     # Get Digit5 data
     if not os.path.exists(root):
         os.makedirs(root)
+        # If 404, use this new link: https://drive.google.com/file/d/1sO2PisChNPVT0CnOvIgGJkxdEosCwMUb/view
         os.system(f'wget https://drive.google.com/u/0/uc?id=1PT6K-_wmsUEUCxoYzDy0mxF-15tvb2Eu&export=download -P {root}')
         os.system(f'unzip {root}/Digit5.zip -d {root}')
 
