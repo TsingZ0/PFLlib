@@ -1,4 +1,4 @@
-# PFLlib: Personalized Federated Learning Algorithm Library
+# PFLlib: Personalized Federated Learning Library
 
 👏 **We will change the license to Apache-2.0 in the next release.**
 
