@@ -29,10 +29,10 @@ class clientPHP(Client):
         self.mu = args.mu / args.global_rounds
         self.lamda = args.lamda
 
-        self.model_s = copy.deepcopy(self.model)
-        for param in self.model_s.parameters():
+        self.model_p = copy.deepcopy(self.model)
+        for param in self.model_p.parameters():
             param.requires_grad = False
-        # self.model_s.eval()
+        # self.model_p.eval()
 
     def train(self):
         trainloader = self.load_train_data()
@@ -57,10 +57,14 @@ class clientPHP(Client):
                     time.sleep(0.1 * np.abs(np.random.rand()))
                 output = self.model(x)
                 loss = self.loss(output, y) * (1 - self.lamda)
-                loss += MMD(self.model.base(x), self.model_s.base(x), 'rbf', self.device) * self.lamda
+                loss += MMD(self.model.base(x), self.model_p.base(x), 'rbf', self.device) * self.lamda
                 self.optimizer.zero_grad()
                 loss.backward()
                 self.optimizer.step()
+
+        mu = self.mu * self.round
+        for new_param, old_param in zip(self.model.parameters(), self.model_p.parameters()):
+            old_param.data = new_param * (1 - mu) + old_param * mu
 
         # self.model.cpu()
 
@@ -72,13 +76,9 @@ class clientPHP(Client):
 
 
     def set_parameters(self, model, R):
-        mu = self.mu * R
-
-        for new_param, old_param in zip(model.parameters(), self.model_s.parameters()):
-            old_param.data = new_param.data.clone()
-
+        self.round = R
         for new_param, old_param in zip(model.parameters(), self.model.parameters()):
-            old_param.data = new_param * (1 - mu) + old_param * mu
+            old_param.data = new_param.data.clone()
 
     def train_metrics(self):
         trainloader = self.load_train_data()
@@ -97,7 +97,7 @@ class clientPHP(Client):
                 y = y.to(self.device)
                 output = self.model(x)                
                 loss = self.loss(output, y) * (1 - self.lamda)
-                loss += MMD(self.model.base(x), self.model_s.base(x), 'rbf', self.device) * self.lamda
+                loss += MMD(self.model.base(x), self.model_p.base(x), 'rbf', self.device) * self.lamda
                 train_num += y.shape[0]
                 losses += loss.item() * y.shape[0]
 
