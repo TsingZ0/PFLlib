@@ -218,15 +218,15 @@ Client 2         Size of data: 1630      Labels:  [0 3 6 9]
 ## Models
 - for MNIST and Fashion-MNIST
 
-    1. Mclr_Logistic(1\*28\*28)
+    1. Mclr_Logistic(1\*28\*28) # non-convex
     2. LeNet()
-    3. DNN(1\*28\*28, 100) # non-convex
+    3. DNN(1\*28\*28, 100)
 
 - for Cifar10, Cifar100 and Tiny-ImageNet
 
-    1. Mclr_Logistic(3\*32\*32)
+    1. Mclr_Logistic(3\*32\*32) # non-convex
     2. FedAvgCNN()
-    3. DNN(3\*32\*32, 100) # non-convex
+    3. DNN(3\*32\*32, 100)
     4. ResNet18, AlexNet, MobileNet, GoogleNet, etc.
 
 - for AG_News and Sogou_News
