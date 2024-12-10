@@ -157,6 +157,10 @@ def generate_dataset(dir_path):
         for i in np.unique(y[client]):
             statistic[client].append((int(i), int(sum(y[client]==i))))
 
+    for client in range(num_clients):
+        print(f"Client {client}\t Size of data: {len(X[client])}\t Labels: ", np.unique(y[client]))
+        print(f"\t\t Samples of labels: ", [i for i in statistic[client]])
+        print("-" * 50)
 
     train_data, test_data = split_data(X, y)
     # modify the code in YOUR_ENV/lib/python3.8/site-packages/numpy/lib Line #678 from protocol=3 to protocol=4

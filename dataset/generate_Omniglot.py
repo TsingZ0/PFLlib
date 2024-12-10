@@ -25,6 +25,7 @@ from PIL import Image
 
 random.seed(1)
 np.random.seed(1)
+num_clients = 20
 dir_path = "Omniglot/"
 
 
@@ -74,9 +75,21 @@ def generate_dataset(dir_path):
                     label += 1
                     
     print(f'Number of labels: {label}')
+    
+    statistic = []
+    for i in range(num_clients):
+        statistic.append([])
+        y_arr = np.array(y[i])
+        for yc in sorted(np.unique(y_arr)):
+            statistic[-1].append((int(yc), int(sum(y_arr == yc))))
+
+    for i in range(num_clients):
+        print(f"Client {i}\t Size of data: {len(X[i])}\t Labels: ", np.unique(y[i]))
+        print(f"\t\t Samples of labels: ", [i for i in statistic[i]])
+        print("-" * 50)
 
     train_data, test_data = split_data(X, y)
-    save_file(config_path, train_path, test_path, train_data, test_data, 20, label, 
+    save_file(config_path, train_path, test_path, train_data, test_data, num_clients, label, 
         None, None, None, None)
 
 
