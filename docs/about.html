@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PFLlib About</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 0;
+            line-height: 1.6;
+            background-color: #f4f4f4;
+            color: #333333;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+        .navbar {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background-color: rgba(0, 0, 0, 0.7);
+            color: white;
+            padding: 1rem 2rem;
+            position: fixed;
+            width: 100%;
+            z-index: 1000;
+            transition: background-color 0.3s ease;
+            height: 2rem;
+        }
+        .navbar.scrolled {
+            background-color: rgba(0, 0, 0, 0.7);
+        }
+        .navbar-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            width: 100%;
+            max-width: 1200px;
+        }
+        .navbar h1 {
+            margin: 0;
+            color: white;
+        }
+        .navbar nav {
+            display: flex;
+            gap: 1rem;
+        }
+        .navbar a {
+            color: white;
+            text-decoration: none;
+            transition: color 0.3s ease;
+            padding: 0rem 1rem;
+        }
+        .navbar a:hover {
+            color: #6DA945;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 8rem auto 2rem; /* Adjusted margin for container */
+            padding: 0 2rem;
+            flex-grow: 1; /* Ensures container takes up remaining space */
+        }
+        h1, h2, h3 {
+            color: #333333;
+        }
+        section {
+            margin-bottom: 2rem;
+        }
+        footer {
+            background-color: #333;
+            color: white;
+            text-align: center;
+            padding: 1rem 0;
+            position: relative;
+            width: 100%;
+        }
+        html {
+            scroll-padding-top: 4.5rem; /* Adjust to the height of your navbar */
+        }
+        a {
+            text-decoration: none;
+            color: #6DA945;
+        }
+        @media (max-width: 768px) {
+            .container {
+                padding: 1rem;
+                margin-top: 6rem;
+            }
+            .navbar-container {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+            .navbar nav {
+                flex-direction: column;
+                gap: 0.5rem;
+                margin-top: 1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="navbar">
+        <div class="navbar-container">
+            <h1><a href="index.html">PFLlib</a></h1>
+            <nav>
+                <a href="index.html">Home</a>
+                <a href="docs.html">Documentation</a>
+                <a href="about.html">About</a>
+                <a href="https://github.com/TsingZ0/PFLlib" id="github-stars" class="github-stars">★ Star 1500</a>
+            </nav>
+        </div>
+    </div>
+    <div class="container">
+        <section id="about">
+            <h2>About PFLlib</h2>
+            <p>PFLlib is a powerful library designed for privacy-preserving federated learning. It allows multiple parties to collaboratively train machine learning models without sharing their raw data, ensuring both security and efficiency.</p>
+            <h3>Key Features</h3>
+            <ul>
+                <li><strong>Privacy-Preserving:</strong> Protects sensitive data while enabling collaborative learning.</li>
+                <li><strong>Scalable:</strong> Efficiently handles large-scale federated learning tasks.</li>
+                <li><strong>Easy-to-Use:</strong> Provides a straightforward API for seamless integration and usage.</li>
+            </ul>
+            <h3>Why Choose PFLlib?</h3>
+            <p>PFLlib is ideal for organizations looking to leverage federated learning techniques while maintaining strict data privacy standards. Its robust features make it suitable for various applications ranging from healthcare to finance.</p>
+        </section>
+    </div>
+    <footer>
+        <p>&copy; 2024 PFLlib. All rights reserved.</p>
+    </footer>
+    <script>
+        window.addEventListener('scroll', function() {
+            const navbar = document.querySelector('.navbar');
+            if (window.scrollY > 50) {
+                navbar.classList.add('scrolled');
+            } else {
+                navbar.classList.remove('scrolled');
+            }
+        });
+
+        async function fetchGitHubStars() {
+            try {
+                const response = await fetch('https://api.github.com/repos/TsingZ0/PFLlib');
+                if (!response.ok) throw new Error('Network response was not ok');
+                const data = await response.json();
+                document.getElementById('github-stars').textContent = `★ Star ${data.stargazers_count}`;
+            } catch (error) {
+                console.error('Failed to fetch GitHub stars:', error);
+                document.getElementById('github-stars').textContent = '★ Star 1500';
+            }
+        }
+        fetchGitHubStars();
+    </script>
+</body>
+</html>

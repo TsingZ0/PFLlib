@@ -1,0 +1,298 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PFLlib Docs</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 0;
+            line-height: 1.6;
+            background-color: #f4f4f4;
+            color: #333333;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+        .navbar {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background-color: rgba(0, 0, 0, 0.7);
+            color: white;
+            padding: 1rem 2rem;
+            position: fixed;
+            width: 100%;
+            z-index: 1000;
+            transition: background-color 0.3s ease;
+            height: 2rem;
+        }
+        .navbar.scrolled {
+            background-color: rgba(0, 0, 0, 0.7);
+        }
+        .navbar-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            width: 100%;
+            max-width: 1200px;
+        }
+        .navbar h1 {
+            margin: 0;
+            color: white;
+        }
+        .navbar nav {
+            display: flex;
+            gap: 1rem;
+        }
+        .navbar a {
+            color: white;
+            text-decoration: none;
+            transition: color 0.3s ease;
+            padding: 0rem 1rem;
+        }
+        .navbar a:hover {
+            color: #6DA945;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 8rem auto 2rem; /* Adjusted margin for container */
+            padding: 0 2rem;
+            flex-grow: 1; /* Ensures container takes up remaining space */
+            display: flex;
+        }
+        .sidebar {
+            width: 15rem;
+            padding-right: 2rem;
+            box-sizing: border-box;
+        }
+        .sidebar ul {
+            list-style-type: none;
+            padding: 0;
+        }
+        .sidebar li {
+            margin-bottom: 0.5rem;
+        }
+        .sidebar a {
+            color: #6DA945;
+            text-decoration: none;
+            font-weight: bold;
+            transition: color 0.3s ease;
+        }
+        .sidebar a:hover {
+            color: #2c6307;
+        }
+        .content {
+            width: 75%;
+            box-sizing: border-box;
+        }
+        h1, h2, h3 {
+            color: #333333;
+        }
+        section {
+            margin-bottom: 2rem;
+        }
+        pre {
+            background-color: #f9f9f9;
+            padding: 1rem;
+            border-radius: 5px;
+            overflow-x: auto;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+        code {
+            font-family: "Courier New", Courier, monospace;
+            background-color: #f5f5f5;
+            border-radius: 3px;
+            padding: 2px 4px;
+            color: #6DA945;
+            font-weight: bold;
+            font-weight: bold;
+        }
+        pre {
+            font-family: "Courier New", Courier, monospace;
+            background-color: #f5f5f5;
+        }
+        footer {
+            background-color: #333;
+            color: white;
+            text-align: center;
+            padding: 1rem 0;
+            position: relative;
+            width: 100%;
+        }
+        html {
+            scroll-padding-top: 4.5rem; /* Adjust to the height of your navbar */
+        }
+        a {
+            text-decoration: none;
+            color: #6DA945;
+        }
+        @media (max-width: 768px) {
+            .container {
+                flex-direction: column;
+                margin-top: 6rem;
+            }
+            .sidebar, .content {
+                width: 100%;
+            }
+            .navbar-container {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+            .navbar nav {
+                flex-direction: column;
+                gap: 0.5rem;
+                margin-top: 1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="navbar">
+        <div class="navbar-container">
+            <h1><a href="index.html">PFLlib</a></h1>
+            <nav>
+                <a href="index.html">Home</a>
+                <a href="docs.html">Documentation</a>
+                <a href="about.html">About</a>
+                <a href="https://github.com/TsingZ0/PFLlib" id="github-stars" class="github-stars">★ Star 1500</a>
+            </nav>
+        </div>
+    </div>
+    <div class="container">
+        <div class="sidebar">
+            <ul>
+                <li><a href="quickstart.html">Quick Start</a></li>
+                <li><a href="algo.html">FL Algorithms</a></li>
+                <li><a href="data.html">Datasets & Scenarios</a></li>
+                <li><a href="model.html">Models</a></li>
+                <li><a href="extend.html">How to Extend</a></li>
+                <li><a href="benchmark.html">Benchmark Results</a></li>
+                <li><a href="features.html">Other Features</a></li>
+            </ul>
+        </div>
+        <div class="content">
+            <section id="algorithm">
+                <h2>Algorithms With Code (Updating)</h2>
+                <p>We categorize FL algorithms into 8 tFL algorithms and 29 pFL algorithms based on their foundational techniques. The detailed classification is outlined below.</p>
+                <h3>Traditional FL (tFL)</h3>
+
+                <ul>
+                <li><strong><em>Basic tFL</em></strong></li>
+                <ul>
+                    <li><strong>FedAvg</strong> — <a href="http://proceedings.mlr.press/v54/mcmahan17a.html">Communication-Efficient Learning of Deep Networks from Decentralized Data</a> <em>AISTATS 2017</em></li>
+                </ul>
+                    <li><strong><em>Update-correction-based tFL</em></strong></li>
+                <ul>
+                    <li><strong>SCAFFOLD</strong> - <a href="http://proceedings.mlr.press/v119/karimireddy20a.html">SCAFFOLD: Stochastic Controlled Averaging for Federated Learning</a> <em>ICML 2020</em></li>
+                </ul>
+
+                <li><strong><em>Regularization-based tFL</em></strong></li>
+                <ul>
+                    <li><strong>FedProx</strong> — <a href="https://arxiv.org/abs/1812.06127">Federated Optimization in Heterogeneous Networks</a> <em>MLsys 2020</em></li>
+                    <li><strong>FedDyn</strong> — <a href="https://openreview.net/forum?id=B7v4QMR6Z9w">Federated Learning Based on Dynamic Regularization</a> <em>ICLR 2021</em></li>
+                </ul>
+
+                <li><strong><em>Model-splitting-based tFL</em></strong></li>
+                <ul>
+                    <li><strong>MOON</strong> — <a href="https://openaccess.thecvf.com/content/CVPR2021/html/Li_Model-Contrastive_Federated_Learning_CVPR_2021_paper.html">Model-Contrastive Federated Learning</a> <em>CVPR 2021</em></li>
+                    <li><strong>FedLC</strong> — <a href="https://proceedings.mlr.press/v162/zhang22p.html">Federated Learning With Label Distribution Skew via Logits Calibration</a> <em>ICML 2022</em></li>
+                </ul>
+
+                <li><strong><em>Knowledge-distillation-based tFL</em></strong></li>
+                <ul>
+                    <li><strong>FedGen</strong> — <a href="http://proceedings.mlr.press/v139/zhu21b.html">Data-Free Knowledge Distillation for Heterogeneous Federated Learning</a> <em>ICML 2021</em></li>
+                    <li><strong>FedNTD</strong> — <a href="https://proceedings.neurips.cc/paper_files/paper/2022/hash/fadec8f2e65f181d777507d1df69b92f-Abstract-Conference.html">Preservation of the Global Knowledge by Not-True Distillation in Federated Learning</a> <em>NeurIPS 2022</em></li>
+                </ul>
+                </ul>
+
+                <h3>Personalized FL (pFL)</h3>
+
+                <ul>
+                <li><strong><em>Meta-learning-based pFL</em></strong></li>
+                <ul>
+                    <li><strong>Per-FedAvg</strong> — <a href="https://proceedings.neurips.cc/paper/2020/hash/24389bfe4fe2eba8bf9aa9203a44cdad-Abstract.html">Personalized Federated Learning with Theoretical Guarantees: A Model-Agnostic Meta-Learning Approach</a> <em>NeurIPS 2020</em></li>
+                </ul>
+
+                <li><strong><em>Regularization-based pFL</em></strong></li>
+                <ul>
+                    <li><strong>pFedMe</strong> — <a href="https://papers.nips.cc/paper/2020/hash/f4f1f13c8289ac1b1ee0ff176b56fc60-Abstract.html">Personalized Federated Learning with Moreau Envelopes</a> <em>NeurIPS 2020</em></li>
+                    <li><strong>Ditto</strong> — <a href="https://proceedings.mlr.press/v139/li21h.html">Ditto: Fair and robust federated learning through personalization</a> <em>ICML 2021</em></li>
+                </ul>
+
+                <li><strong><em>Personalized-aggregation-based pFL</em></strong></li>
+                <ul>
+                    <li><strong>APFL</strong> — <a href="https://arxiv.org/abs/2003.13461">Adaptive Personalized Federated Learning</a> <em>2020</em></li>
+                    <li><strong>FedFomo</strong> — <a href="https://openreview.net/forum?id=ehJqJQk9cw">Personalized Federated Learning with First Order Model Optimization</a> <em>ICLR 2021</em></li>
+                    <li><strong>FedAMP</strong> — <a href="https://ojs.aaai.org/index.php/AAAI/article/view/16960">Personalized Cross-Silo Federated Learning on non-IID Data</a> <em>AAAI 2021</em></li>
+                    <li><strong>FedPHP</strong> — <a href="https://link.springer.com/chapter/10.1007/978-3-030-86486-6_36">FedPHP: Federated Personalization with Inherited Private Models</a> <em>ECML PKDD 2021</em></li>
+                    <li><strong>APPLE</strong> — <a href="https://www.ijcai.org/proceedings/2022/301">Adapt to Adaptation: Learning Personalization for Cross-Silo Federated Learning</a> <em>IJCAI 2022</em></li>
+                    <li><strong>FedALA</strong> — <a href="https://ojs.aaai.org/index.php/AAAI/article/view/26330">FedALA: Adaptive Local Aggregation for Personalized Federated Learning</a> <em>AAAI 2023</em></li>
+                </ul>
+
+                <li><strong><em>Model-splitting-based pFL</em></strong></li>
+                <ul>
+                    <li><strong>FedPer</strong> — <a href="https://arxiv.org/abs/1912.00818">Federated Learning with Personalization Layers</a> <em>2019</em></li>
+                    <li><strong>LG-FedAvg</strong> — <a href="https://arxiv.org/abs/2001.01523">Think Locally, Act Globally: Federated Learning with Local and Global Representations</a> <em>2020</em></li>
+                    <li><strong>FedRep</strong> — <a href="http://proceedings.mlr.press/v139/collins21a.html">Exploiting Shared Representations for Personalized Federated Learning</a> <em>ICML 2021</em></li>
+                    <li><strong>FedRoD</strong> — <a href="https://openreview.net/forum?id=I1hQbx10Kxn">On Bridging Generic and Personalized Federated Learning for Image Classification</a> <em>ICLR 2022</em></li>
+                    <li><strong>FedBABU</strong> — <a href="https://openreview.net/forum?id=HuaYQfggn5u">Fedbabu: Towards enhanced representation for federated image classification</a> <em>ICLR 2022</em></li>
+                    <li><strong>FedGC</strong> — <a href="https://ojs.aaai.org/index.php/AAAI/article/view/20095/19854">Federated Learning for Face Recognition with Gradient Correction</a> <em>AAAI 2022</em></li>
+                    <li><strong>FedCP</strong> — <a href="https://arxiv.org/pdf/2307.01217v2.pdf">FedCP: Separating Feature Information for Personalized Federated Learning via Conditional Policy</a> <em>KDD 2023</em></li>
+                    <li><strong>GPFL</strong> — <a href="https://arxiv.org/pdf/2308.10279v3.pdf">GPFL: Simultaneously Learning Generic and Personalized Feature Information for Personalized Federated Learning</a> <em>ICCV 2023</em></li>
+                    <li><strong>FedGH</strong> — <a href="https://dl.acm.org/doi/10.1145/3581783.3611781">FedGH: Heterogeneous Federated Learning with Generalized Global Header</a> <em>ACM MM 2023</em></li>
+                    <li><strong>FedDBE</strong> — <a href="https://openreview.net/forum?id=nO5i1XdUS0">Eliminating Domain Bias for Federated Learning in Representation Space</a> <em>NeurIPS 2023</em></li>
+                    <li><strong>FedCAC</strong> — <a href="https://arxiv.org/abs/2309.11103">Bold but Cautious: Unlocking the Potential of Personalized Federated Learning through Cautiously Aggressive Collaboration</a> <em>ICCV 2023</em></li>
+                    <li><strong>PFL-DA</strong> — <a href="https://www.tandfonline.com/doi/full/10.1080/00401706.2022.2157882">Personalized Federated Learning via Domain Adaptation with an Application to Distributed 3D Printing</a> <em>Technometrics 2023</em></li>
+                </ul>
+
+                <li><strong><em>Knowledge-distillation-based pFL (more in <a href="https://github.com/TsingZ0/HtFLlib">HtFLlib</a>)</em></strong></li>
+                <ul>
+                    <li><strong>FedDistill (FD)</strong> — <a href="https://arxiv.org/pdf/1811.11479.pdf">Communication-Efficient On-Device Machine Learning: Federated Distillation and Augmentation under Non-IID Private Data</a> <em>2018</em></li>
+                    <li><strong>FML</strong> — <a href="https://arxiv.org/abs/2006.16765">Federated Mutual Learning</a> <em>2020</em></li>
+                    <li><strong>FedKD</strong> — <a href="https://www.nature.com/articles/s41467-022-29763-x">Communication-efficient federated learning via knowledge distillation</a> <em>Nature Communications 2022</em></li>
+                    <li><strong>FedProto</strong> — <a href="https://ojs.aaai.org/index.php/AAAI/article/view/20819">FedProto: Federated Prototype Learning across Heterogeneous Clients</a> <em>AAAI 2022</em></li>
+                    <li><strong>FedPCL (w/o pre-trained models)</strong> — <a href="https://proceedings.neurips.cc/paper_files/paper/2022/file/7aa320d2b4b8f6400b18f6f77b6c1535-Paper-Conference.pdf">Federated learning from pre-trained models: A contrastive learning approach</a> <em>NeurIPS 2022</em></li>
+                    <li><strong>FedPAC</strong> — <a href="https://openreview.net/pdf?id=SXZr8aDKia">Personalized Federated Learning with Feature Alignment and Classifier Collaboration</a> <em>ICLR 2023</em></li>
+                </ul>
+
+                <li><strong><em>Other pFL</em></strong></li>
+                <ul>
+                    <li><strong>FedMTL (not MOCHA)</strong> — <a href="https://papers.nips.cc/paper/2017/hash/6211080fa89981f66b1a0c9d55c61d0f-Abstract.html">Federated multi-task learning</a> <em>NeurIPS 2017</em></li>
+                    <li><strong>FedBN</strong> — <a href="https://openreview.net/forum?id=6YEQUn0QICG">FedBN: Federated Learning on non-IID Features via Local Batch Normalization</a> <em>ICLR 2021</em></li>
+                </ul>
+                </ul>
+
+            </section>
+        </div>
+    </div>
+    <footer>
+        <p>&copy; 2024 PFLlib. All rights reserved.</p>
+    </footer>
+    <script>
+        window.addEventListener('scroll', function() {
+            const navbar = document.querySelector('.navbar');
+            if (window.scrollY > 50) {
+                navbar.classList.add('scrolled');
+            } else {
+                navbar.classList.remove('scrolled');
+            }
+        });
+
+        async function fetchGitHubStars() {
+            try {
+                const response = await fetch('https://api.github.com/repos/TsingZ0/PFLlib');
+                if (!response.ok) throw new Error('Network response was not ok');
+                const data = await response.json();
+                document.getElementById('github-stars').textContent = `★ Star ${data.stargazers_count}`;
+            } catch (error) {
+                console.error('Failed to fetch GitHub stars:', error);
+                document.getElementById('github-stars').textContent = '★ Star 1500';
+            }
+        }
+        fetchGitHubStars();
+    </script>
+</body>
+</html>

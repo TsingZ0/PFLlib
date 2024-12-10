@@ -1,0 +1,484 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PFLlib Docs</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 0;
+            line-height: 1.6;
+            background-color: #f4f4f4;
+            color: #333333;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+        .navbar {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background-color: rgba(0, 0, 0, 0.7);
+            color: white;
+            padding: 1rem 2rem;
+            position: fixed;
+            width: 100%;
+            z-index: 1000;
+            transition: background-color 0.3s ease;
+            height: 2rem;
+        }
+        .navbar.scrolled {
+            background-color: rgba(0, 0, 0, 0.7);
+        }
+        .navbar-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            width: 100%;
+            max-width: 1200px;
+        }
+        .navbar h1 {
+            margin: 0;
+            color: white;
+        }
+        .navbar nav {
+            display: flex;
+            gap: 1rem;
+        }
+        .navbar a {
+            color: white;
+            text-decoration: none;
+            transition: color 0.3s ease;
+            padding: 0rem 1rem;
+        }
+        .navbar a:hover {
+            color: #6DA945;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 8rem auto 2rem; /* Adjusted margin for container */
+            padding: 0 2rem;
+            flex-grow: 1; /* Ensures container takes up remaining space */
+            display: flex;
+        }
+        .sidebar {
+            width: 15rem;
+            padding-right: 2rem;
+            box-sizing: border-box;
+        }
+        .sidebar ul {
+            list-style-type: none;
+            padding: 0;
+        }
+        .sidebar li {
+            margin-bottom: 0.5rem;
+        }
+        .sidebar a {
+            color: #6DA945;
+            text-decoration: none;
+            font-weight: bold;
+            transition: color 0.3s ease;
+        }
+        .sidebar a:hover {
+            color: #2c6307;
+        }
+        .content {
+            width: 75%;
+            box-sizing: border-box;
+        }
+        h1, h2, h3 {
+            color: #333333;
+        }
+        section {
+            margin-bottom: 2rem;
+        }
+        pre {
+            background-color: #f9f9f9;
+            padding: 1rem;
+            border-radius: 5px;
+            overflow-x: auto;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+        code {
+            font-family: "Courier New", Courier, monospace;
+            background-color: #f5f5f5;
+            border-radius: 3px;
+            padding: 2px 4px;
+            color: #6DA945;
+            font-weight: bold;
+            font-weight: bold;
+        }
+        pre {
+            font-family: "Courier New", Courier, monospace;
+            background-color: #f5f5f5;
+        }
+        footer {
+            background-color: #333;
+            color: white;
+            text-align: center;
+            padding: 1rem 0;
+            position: relative;
+            width: 100%;
+        }
+        html {
+            scroll-padding-top: 4.5rem; /* Adjust to the height of your navbar */
+        }
+        a {
+            text-decoration: none;
+            color: #6DA945;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                flex-direction: column;
+                margin-top: 6rem;
+            }
+            .sidebar, .content {
+                width: 100%;
+            }
+            .navbar-container {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+            .navbar nav {
+                flex-direction: column;
+                gap: 0.5rem;
+                margin-top: 1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="navbar">
+        <div class="navbar-container">
+            <h1><a href="index.html">PFLlib</a></h1>
+            <nav>
+                <a href="index.html">Home</a>
+                <a href="docs.html">Documentation</a>
+                <a href="about.html">About</a>
+                <a href="https://github.com/TsingZ0/PFLlib" id="github-stars" class="github-stars">★ Star 1500</a>
+            </nav>
+        </div>
+    </div>
+    <div class="container">
+        <div class="sidebar">
+            <ul>
+                <li><a href="quickstart.html">Quick Start</a></li>
+                <li><a href="algo.html">FL Algorithms</a></li>
+                <li><a href="data.html">Datasets & Scenarios</a></li>
+                <li><a href="model.html">Models</a></li>
+                <li><a href="extend.html">How to Extend</a></li>
+                <li><a href="benchmark.html">Benchmark Results</a></li>
+                <li><a href="features.html">Other Features</a></li>
+            </ul>
+        </div>
+        <div class="content">
+            <section id="data">
+                <h2>Datasets and Scenarios (Updating)</h2>
+
+                <p>We support 3 types of scenarios with various datasets and move the common dataset splitting code into <code>./dataset/utils</code> for easy extension. If you need another dataset, just write another code to download it and then use the <a href="https://github.com/TsingZ0/PFLlib/tree/master/dataset/utils">utils</a>.</p>
+
+                <h3><em><strong>Label Skew</strong></em> Scenario</h3>
+
+                <p>For the <strong>label skew</strong> scenario, we introduce <strong>15</strong> famous datasets:</p>
+
+                <ul>
+                <li><strong>MNIST</strong> (see examples <a href="#exp-mnist">here</a>)</li>
+                <li><strong>EMNIST</strong></li>
+                <li><strong>Fashion-MNIST</strong></li>
+                <li><strong>Cifar10</strong></li>
+                <li><strong>Cifar100</strong></li>
+                <li><strong>AG News</strong></li>
+                <li><strong>Sogou News</strong></li>
+                <li><strong>Tiny-ImageNet</strong></li>
+                <li><strong>Country211</strong></li>
+                <li><strong>Flowers102</strong></li>
+                <li><strong>GTSRB</strong></li>
+                <li><strong>Shakespeare</strong></li>
+                <li><strong>Stanford Cars</strong></li>
+                <li><strong>COVIDx</strong> (chest X-ray images from hospitals for covid-19)</li>
+                </ul>
+
+                <p>The datasets can be easily split into <strong>IID</strong> and <strong>non-IID</strong> versions. In the <strong>non-IID</strong> scenario, we distinguish between two types of distribution:</p>
+
+                <ol>
+                <li><strong>Pathological non-IID</strong>: In this case, each client only holds a subset of the labels, for example, just 2 out of 10 labels from the MNIST dataset, even though the overall dataset contains all 10 labels. This leads to a highly skewed distribution of data across clients.</li>
+                <li><strong>Practical non-IID</strong>: Here, we model the data distribution using a Dirichlet distribution, which results in a more realistic and less extreme imbalance. For more details on this, refer to this <a href="https://proceedings.neurips.cc/paper/2020/hash/18df51b97ccd68128e994804f3eccc87-Abstract.html">paper</a>.</li>
+                </ol>
+
+                <p>Additionally, we offer a <code>balance</code> option, where data amount is evenly distributed across all clients.</p>
+
+                <h3><em><strong>Feature Shift</strong></em> Scenario</h3>
+
+                <p>For the <strong>feature shift</strong> scenario, we utilize <strong>3</strong> widely used datasets in Domain Adaptation:</p>
+                <ul>
+                <li><strong>Amazon Review</strong> (raw data can be fetched from <a href="https://drive.google.com/file/d/1QbXFENNyqor1IlCpRRFtOluI2_hMEd1W/view?usp=sharing">this link</a>, see examples <a href="#exp-AmazonReview">here</a>)</li>
+                <li><strong>Digit5</strong> (raw data available <a href="https://drive.google.com/file/d/1sO2PisChNPVT0CnOvIgGJkxdEosCwMUb/view">this link</a>)</strong>.</li>
+                <li><strong>DomainNet</strong></li>
+                </ul>
+
+                <h3><em><strong>Real-World</strong></em> Scenario</h3>
+
+                <p>For the <strong>real-world</strong> scenario, we introduce <strong>5</strong> naturally separated datasets:</p>
+                <ul>
+                <li><strong>Camelyon17</strong> (tumor tissue patches extracted from breast cancer metastases in lymph node sections, 5 hospitals, 2 labels)</li>
+                <li><strong>iWildCam</strong> (194 camera traps, 158 labels)</li>
+                <li><strong>Omniglot</strong> (20 clients, 50 labels)</li>
+                <li><strong>HAR (Human Activity Recognition)</strong> (30 clients, 6 labels, see examples <a href="#exp-har">here</a>)</li>
+                <li><strong>PAMAP2</strong> (9 clients, 12 labels)</li>
+                </ul>
+
+                <p>For more details on datasets and FL algorithms in <strong>IoT</strong>, please refer to <a href="https://github.com/TsingZ0/FL-IoT">FL-IoT</a>.</p>
+
+<h3 id="exp-mnist">Examples for <strong>MNIST</strong> in the <em><strong>label skew</strong></em> scenario</h3>
+
+<pre>
+# In ./dataset
+# python generate_MNIST.py iid - - # for iid and unbalanced scenario
+# python generate_MNIST.py iid balance - # for iid and balanced scenario
+# python generate_MNIST.py noniid - pat # for pathological noniid and unbalanced scenario
+python generate_MNIST.py noniid - dir # for practical noniid and unbalanced scenario
+# python generate_MNIST.py noniid - exdir # for Extended Dirichlet strategy</pre>
+
+                <p>The command line output of running <code>python generate_MNIST.py noniid - dir</code></p>
+
+                <pre>
+Number of classes: 10
+Client 0         Size of data: 2630      Labels:  [0 1 4 5 7 8 9]
+                Samples of labels:  [(0, 140), (1, 890), (4, 1), (5, 319), (7, 29), (8, 1067), (9, 184)]
+--------------------------------------------------
+Client 1         Size of data: 499       Labels:  [0 2 5 6 8 9]
+                Samples of labels:  [(0, 5), (2, 27), (5, 19), (6, 335), (8, 6), (9, 107)]
+--------------------------------------------------
+Client 2         Size of data: 1630      Labels:  [0 3 6 9]
+                Samples of labels:  [(0, 3), (3, 143), (6, 1461), (9, 23)]
+--------------------------------------------------
+Client 3         Size of data: 2541      Labels:  [0 4 7 8]
+                Samples of labels:  [(0, 155), (4, 1), (7, 2381), (8, 4)]
+--------------------------------------------------
+Client 4         Size of data: 1917      Labels:  [0 1 3 5 6 8 9]
+                Samples of labels:  [(0, 71), (1, 13), (3, 207), (5, 1129), (6, 6), (8, 40), (9, 451)]
+--------------------------------------------------
+Client 5         Size of data: 6189      Labels:  [1 3 4 8 9]
+                Samples of labels:  [(1, 38), (3, 1), (4, 39), (8, 25), (9, 6086)]
+--------------------------------------------------
+Client 6         Size of data: 1256      Labels:  [1 2 3 6 8 9]
+                Samples of labels:  [(1, 873), (2, 176), (3, 46), (6, 42), (8, 13), (9, 106)]
+--------------------------------------------------
+Client 7         Size of data: 1269      Labels:  [1 2 3 5 7 8]
+                Samples of labels:  [(1, 21), (2, 5), (3, 11), (5, 787), (7, 4), (8, 441)]
+--------------------------------------------------
+Client 8         Size of data: 3600      Labels:  [0 1]
+                Samples of labels:  [(0, 1), (1, 3599)]
+--------------------------------------------------
+Client 9         Size of data: 4006      Labels:  [0 1 2 4 6]
+                Samples of labels:  [(0, 633), (1, 1997), (2, 89), (4, 519), (6, 768)]
+--------------------------------------------------
+Client 10        Size of data: 3116      Labels:  [0 1 2 3 4 5]
+                Samples of labels:  [(0, 920), (1, 2), (2, 1450), (3, 513), (4, 134), (5, 97)]
+--------------------------------------------------
+Client 11        Size of data: 3772      Labels:  [2 3 5]
+                Samples of labels:  [(2, 159), (3, 3055), (5, 558)]
+--------------------------------------------------
+Client 12        Size of data: 3613      Labels:  [0 1 2 5]
+                Samples of labels:  [(0, 8), (1, 180), (2, 3277), (5, 148)]
+--------------------------------------------------
+Client 13        Size of data: 2134      Labels:  [1 2 4 5 7]
+                Samples of labels:  [(1, 237), (2, 343), (4, 6), (5, 453), (7, 1095)]
+--------------------------------------------------
+Client 14        Size of data: 5730      Labels:  [5 7]
+                Samples of labels:  [(5, 2719), (7, 3011)]
+--------------------------------------------------
+Client 15        Size of data: 5448      Labels:  [0 3 5 6 7 8]
+                Samples of labels:  [(0, 31), (3, 1785), (5, 16), (6, 4), (7, 756), (8, 2856)]
+--------------------------------------------------
+Client 16        Size of data: 3628      Labels:  [0]
+                Samples of labels:  [(0, 3628)]
+--------------------------------------------------
+Client 17        Size of data: 5653      Labels:  [1 2 3 4 5 7 8]
+                Samples of labels:  [(1, 26), (2, 1463), (3, 1379), (4, 335), (5, 60), (7, 17), (8, 2373)]
+--------------------------------------------------
+Client 18        Size of data: 5266      Labels:  [0 5 6]
+                Samples of labels:  [(0, 998), (5, 8), (6, 4260)]
+--------------------------------------------------
+Client 19        Size of data: 6103      Labels:  [0 1 2 3 4 9]
+                Samples of labels:  [(0, 310), (1, 1), (2, 1), (3, 1), (4, 5789), (9, 1)]
+--------------------------------------------------
+Total number of samples: 70000
+The number of train samples: [1972, 374, 1222, 1905, 1437, 4641, 942, 951, 2700, 3004, 2337, 2829, 2709, 1600, 4297, 4086, 2721, 4239, 3949, 4577]
+The number of test samples: [658, 125, 408, 636, 480, 1548, 314, 318, 900, 1002, 779, 943, 904, 534, 1433, 1362, 907, 1414, 1317, 1526]
+
+Saving to disk.
+
+Finish generating dataset.</pre>
+
+<h3 id="exp-AmazonReview.py">Examples for <strong>Amazon Review</strong> in the <em><strong>feature shift</strong></em> scenario</h3>
+
+<pre>
+# In ./dataset
+generate_AmazonReview.py</pre>
+
+<p>The command line output of running <code>generate_AmazonReview.py</code></p>
+
+<pre>
+Number of labels: [2, 2, 2, 2]
+Number of clients: 4
+Client 0         Size of data: 6465      Labels:  [0 1]
+                    Samples of labels:  [(0, 3201), (1, 3264)]
+--------------------------------------------------
+Client 1         Size of data: 5586      Labels:  [0 1]
+                    Samples of labels:  [(0, 2779), (1, 2807)]
+--------------------------------------------------
+Client 2         Size of data: 7681      Labels:  [0 1]
+                    Samples of labels:  [(0, 3824), (1, 3857)]
+--------------------------------------------------
+Client 3         Size of data: 7945      Labels:  [0 1]
+                    Samples of labels:  [(0, 3991), (1, 3954)]
+--------------------------------------------------
+Total number of samples: 27677
+The number of train samples: [4848, 4189, 5760, 5958]
+The number of test samples: [1617, 1397, 1921, 1987]
+
+Saving to disk.
+
+Finish generating dataset.</pre>
+
+<h3 id="exp-har">Examples for <strong>HAR</strong> in the <em><strong>real-world</strong></em> scenario</h3>
+
+<pre>
+# In ./dataset
+python generate_HAR.py</pre>
+
+<p>The command line output of running <code>python generate_HAR.py</code></p>
+
+<pre>
+Client 0         Size of data: 347       Labels:  [0 1 2 3 4 5]
+    Samples of labels:  [(0, 95), (1, 53), (2, 49), (3, 47), (4, 53), (5, 50)]
+--------------------------------------------------
+Client 1         Size of data: 302       Labels:  [0 1 2 3 4 5]
+    Samples of labels:  [(0, 59), (1, 48), (2, 47), (3, 46), (4, 54), (5, 48)]
+--------------------------------------------------
+Client 2         Size of data: 341       Labels:  [0 1 2 3 4 5]
+    Samples of labels:  [(0, 58), (1, 59), (2, 49), (3, 52), (4, 61), (5, 62)]
+--------------------------------------------------
+Client 3         Size of data: 317       Labels:  [0 1 2 3 4 5]
+    Samples of labels:  [(0, 60), (1, 52), (2, 45), (3, 50), (4, 56), (5, 54)]
+--------------------------------------------------
+Client 4         Size of data: 302       Labels:  [0 1 2 3 4 5]
+    Samples of labels:  [(0, 56), (1, 47), (2, 47), (3, 44), (4, 56), (5, 52)]
+--------------------------------------------------
+Client 5         Size of data: 325       Labels:  [0 1 2 3 4 5]
+    Samples of labels:  [(0, 57), (1, 51), (2, 48), (3, 55), (4, 57), (5, 57)]
+--------------------------------------------------
+Client 6         Size of data: 308       Labels:  [0 1 2 3 4 5]
+    Samples of labels:  [(0, 57), (1, 51), (2, 47), (3, 48), (4, 53), (5, 52)]
+--------------------------------------------------
+Client 7         Size of data: 281       Labels:  [0 1 2 3 4 5]
+    Samples of labels:  [(0, 48), (1, 41), (2, 38), (3, 46), (4, 54), (5, 54)]
+--------------------------------------------------
+Client 8         Size of data: 288       Labels:  [0 1 2 3 4 5]
+    Samples of labels:  [(0, 52), (1, 49), (2, 42), (3, 50), (4, 45), (5, 50)]
+--------------------------------------------------
+Client 9         Size of data: 294       Labels:  [0 1 2 3 4 5]
+    Samples of labels:  [(0, 53), (1, 47), (2, 38), (3, 54), (4, 44), (5, 58)]
+--------------------------------------------------
+Client 10        Size of data: 316       Labels:  [0 1 2 3 4 5]
+    Samples of labels:  [(0, 59), (1, 54), (2, 46), (3, 53), (4, 47), (5, 57)]
+--------------------------------------------------
+Client 11        Size of data: 320       Labels:  [0 1 2 3 4 5]
+    Samples of labels:  [(0, 50), (1, 52), (2, 46), (3, 51), (4, 61), (5, 60)]
+--------------------------------------------------
+Client 12        Size of data: 327       Labels:  [0 1 2 3 4 5]
+    Samples of labels:  [(0, 57), (1, 55), (2, 47), (3, 49), (4, 57), (5, 62)]
+--------------------------------------------------
+Client 13        Size of data: 323       Labels:  [0 1 2 3 4 5]
+    Samples of labels:  [(0, 59), (1, 54), (2, 45), (3, 54), (4, 60), (5, 51)]
+--------------------------------------------------
+Client 14        Size of data: 328       Labels:  [0 1 2 3 4 5]
+    Samples of labels:  [(0, 54), (1, 48), (2, 42), (3, 59), (4, 53), (5, 72)]
+--------------------------------------------------
+Client 15        Size of data: 366       Labels:  [0 1 2 3 4 5]
+    Samples of labels:  [(0, 51), (1, 51), (2, 47), (3, 69), (4, 78), (5, 70)]
+--------------------------------------------------
+Client 16        Size of data: 368       Labels:  [0 1 2 3 4 5]
+    Samples of labels:  [(0, 61), (1, 48), (2, 46), (3, 64), (4, 78), (5, 71)]
+--------------------------------------------------
+Client 17        Size of data: 364       Labels:  [0 1 2 3 4 5]
+    Samples of labels:  [(0, 56), (1, 58), (2, 55), (3, 57), (4, 73), (5, 65)]
+--------------------------------------------------
+Client 18        Size of data: 360       Labels:  [0 1 2 3 4 5]
+    Samples of labels:  [(0, 52), (1, 40), (2, 39), (3, 73), (4, 73), (5, 83)]
+--------------------------------------------------
+Client 19        Size of data: 354       Labels:  [0 1 2 3 4 5]
+    Samples of labels:  [(0, 51), (1, 51), (2, 45), (3, 66), (4, 73), (5, 68)]
+--------------------------------------------------
+Client 20        Size of data: 408       Labels:  [0 1 2 3 4 5]
+    Samples of labels:  [(0, 52), (1, 47), (2, 45), (3, 85), (4, 89), (5, 90)]
+--------------------------------------------------
+Client 21        Size of data: 321       Labels:  [0 1 2 3 4 5]
+    Samples of labels:  [(0, 46), (1, 42), (2, 36), (3, 62), (4, 63), (5, 72)]
+--------------------------------------------------
+Client 22        Size of data: 372       Labels:  [0 1 2 3 4 5]
+    Samples of labels:  [(0, 59), (1, 51), (2, 54), (3, 68), (4, 68), (5, 72)]
+--------------------------------------------------
+Client 23        Size of data: 381       Labels:  [0 1 2 3 4 5]
+    Samples of labels:  [(0, 58), (1, 59), (2, 55), (3, 68), (4, 69), (5, 72)]
+--------------------------------------------------
+Client 24        Size of data: 409       Labels:  [0 1 2 3 4 5]
+    Samples of labels:  [(0, 74), (1, 65), (2, 58), (3, 65), (4, 74), (5, 73)]
+--------------------------------------------------
+Client 25        Size of data: 392       Labels:  [0 1 2 3 4 5]
+    Samples of labels:  [(0, 59), (1, 55), (2, 50), (3, 78), (4, 74), (5, 76)]
+--------------------------------------------------
+Client 26        Size of data: 376       Labels:  [0 1 2 3 4 5]
+    Samples of labels:  [(0, 57), (1, 51), (2, 44), (3, 70), (4, 80), (5, 74)]
+--------------------------------------------------
+Client 27        Size of data: 382       Labels:  [0 1 2 3 4 5]
+    Samples of labels:  [(0, 54), (1, 51), (2, 46), (3, 72), (4, 79), (5, 80)]
+--------------------------------------------------
+Client 28        Size of data: 344       Labels:  [0 1 2 3 4 5]
+    Samples of labels:  [(0, 53), (1, 49), (2, 48), (3, 60), (4, 65), (5, 69)]
+--------------------------------------------------
+Client 29        Size of data: 383       Labels:  [0 1 2 3 4 5]
+    Samples of labels:  [(0, 65), (1, 65), (2, 62), (3, 62), (4, 59), (5, 70)]
+--------------------------------------------------
+Total number of samples: 10299
+The number of train samples: [260, 226, 255, 237, 226, 243, 231, 210, 216, 220, 237, 240, 245, 242, 246, 274, 276, 273, 270, 265, 306, 240, 279, 285, 306, 294, 282, 286, 258, 287]
+The number of test samples: [87, 76, 86, 80, 76, 82, 77, 71, 72, 74, 79, 80, 82, 81, 82, 92, 92, 91, 90, 89, 102, 81, 93, 96, 103, 98, 94, 96, 86, 96]
+
+Saving to disk.
+
+Finish generating dataset.</pre>
+            </section>
+        </div>
+    </div>
+    <footer>
+        <p>&copy; 2024 PFLlib. All rights reserved.</p>
+    </footer>
+    <script>
+        window.addEventListener('scroll', function() {
+            const navbar = document.querySelector('.navbar');
+            if (window.scrollY > 50) {
+                navbar.classList.add('scrolled');
+            } else {
+                navbar.classList.remove('scrolled');
+            }
+        });
+
+        async function fetchGitHubStars() {
+            try {
+                const response = await fetch('https://api.github.com/repos/TsingZ0/PFLlib');
+                if (!response.ok) throw new Error('Network response was not ok');
+                const data = await response.json();
+                document.getElementById('github-stars').textContent = `★ Star ${data.stargazers_count}`;
+            } catch (error) {
+                console.error('Failed to fetch GitHub stars:', error);
+                document.getElementById('github-stars').textContent = '★ Star 1500';
+            }
+        }
+        fetchGitHubStars();
+    </script>
+</body>
+</html>

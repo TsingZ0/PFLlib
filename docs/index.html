@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PFLlib</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 0;
+            line-height: 1.6;
+            background-color: #f9f9f9;
+            color: #333333;
+        }
+        .navbar {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background-color: transparent;
+            color: white;
+            padding: 1rem 2rem;
+            position: fixed;
+            width: 100%;
+            z-index: 1000;
+            transition: background-color 0.3s ease;
+            height: 2rem;
+        }
+        .navbar.scrolled {
+            background-color: rgba(0, 0, 0, 0.7);
+        }
+        .navbar-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            width: 100%;
+            max-width: 1200px;
+            overflow: auto;
+        }
+        .navbar h1 {
+            margin: 0;
+            color: white;
+        }
+        .navbar nav {
+            display: flex;
+            gap: 1rem;
+        }
+        .navbar a {
+            color: white;
+            text-decoration: none;
+            transition: color 0.3s ease;
+            padding: 0rem 1rem;
+        }
+        .navbar a:hover {
+            color: #6DA945;
+        }
+        .hero {
+            background-image: url('https://star-history.com/#TsingZ0/PFLlib&Date');
+            background-size: cover;
+            background-position: center;
+            height: calc(100vh - 4rem); /* Adjusted height for hero section */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: white;
+            text-align: center;
+            padding: 0 2rem;
+            position: relative;
+            overflow: hidden;
+        }
+        .hero::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(to bottom, rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0));
+            pointer-events: none;
+        }
+        .hero h1 {
+            color: #6DA945;
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            z-index: 1;
+        }
+        .hero p {
+            color: #6DA945;
+            font-size: 1.5rem;
+            margin-bottom: 2rem;
+            z-index: 1;
+        }
+        .hero button {
+            background-color: #6DA945;
+            color: white;
+            border: none;
+            padding: 1rem 2rem;
+            font-size: 1rem;
+            cursor: pointer;
+            border-radius: 5px;
+            transition: background-color 0.3s ease;
+            z-index: 1;
+        }
+        .hero button:hover {
+            background-color: #2c6307;
+        }
+        .features {
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            padding: 4rem 2rem;
+            background-color: #ffffff;
+            margin-top: 2rem; /* Added margin for spacing */
+        }
+        .feature-item {
+            text-align: center;
+            max-width: 33%;
+        }
+        .feature-item img {
+            width: 100px;
+            height: 100px;
+            object-fit: contain;
+            margin-bottom: 1rem;
+        }
+        .feature-item h2 {
+            font-size: 1.5rem;
+            margin-bottom: 0.5rem;
+            color: #6DA945;
+        }
+        .feature-item p {
+            font-size: 1rem;
+        }
+        footer {
+            background-color: #333;
+            color: white;
+            text-align: center;
+            padding: 1rem 0;
+            position: relative;
+            width: 100%;
+            margin-top: 2rem; /* Added margin for spacing */
+        }
+        a {
+            text-decoration: none;
+            color: #6DA945;
+        }
+        @media (max-width: 768px) {
+            .hero {
+                height: auto;
+                padding: 2rem 1rem;
+                margin-top: 6rem; /* Adjusted margin for mobile view */
+            }
+            .hero h1 {
+                font-size: 2rem;
+            }
+            .hero p {
+                font-size: 1rem;
+            }
+            .features {
+                flex-direction: column;
+                gap: 2rem;
+            }
+            .navbar-container {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+            .navbar nav {
+                flex-direction: column;
+                gap: 0.5rem;
+                margin-top: 1rem;
+            }
+            .feature-item {
+                flex: 1 1 calc(50% - 0.5rem); /* Two items per row on smaller screens */
+            }
+        }
+        @media (max-width: 480px) {
+            .feature-item {
+                flex: 1 1 100%; /* One item per row on very small screens */
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="navbar">
+        <div class="navbar-container">
+            <h1><a href="index.html" id="PFLlib">PFLlib</a></h1>
+            <nav>
+                <a href="index.html">Home</a>
+                <a href="docs.html">Documentation</a>
+                <a href="about.html">About</a>
+                <a href="https://github.com/TsingZ0/PFLlib" id="github-stars" class="github-stars">★ Star 1500</a>
+            </nav>
+        </div>
+    </div>
+    <div class="hero">
+        <div>
+            <h1>PFLlib is all you need</h1>
+            <p>A  <strong>beginner-friendly</strong> and comprehensive personalized federated learning <strong>library</strong>, <strong>benchmark</strong>, and <strong>evaluation platform</strong>. <br /> <strong>37</strong> traditional FL (tFL) or personalized FL (pFL) algorithms,  <strong>3</strong> scenarios, and <strong>23</strong> datasets.</p>
+            <button onclick="window.location.href='docs.html'">Get Started</button>
+        </div>
+    </div>
+    <div class="features">
+        <div class="feature-item">
+            <img src="imgs/privacy-preserving.svg" alt="Privacy-Preserving">
+            <h2>Privacy-Preserving</h2>
+            <p>Enable collaborative AI model training across multiple devices or organizations while ensuring data privacy.</p>
+        </div>
+        <div class="feature-item">
+            <img src="imgs/scalable.svg" alt="Scalable">
+            <h2>Scalable</h2>
+            <p>Designed to efficiently handle large-scale federated learning tasks with minimal GPU consumption.</p>
+        </div>
+        <div class="feature-item">
+            <img src="imgs/easy-to-use.svg" alt="Easy-to-Use">
+            <h2>Easy-to-Use</h2>
+            <p>Streamlined file structure, encapsulated function interface, with each FL algorithm requiring just two files.</p>
+        </div>
+    </div>
+    <footer>
+        <p>&copy; 2024 PFLlib. All rights reserved.</p>
+    </footer>
+    <script>
+        window.addEventListener('scroll', function() {
+            const navbar = document.querySelector('.navbar');
+            if (window.scrollY > 50) {
+                navbar.classList.add('scrolled');
+            } else {
+                navbar.classList.remove('scrolled');
+            }
+        });
+
+        async function fetchGitHubStars() {
+            try {
+                const response = await fetch('https://api.github.com/repos/TsingZ0/PFLlib');
+                if (!response.ok) throw new Error('Network response was not ok');
+                const data = await response.json();
+                document.getElementById('github-stars').textContent = `★ Star ${data.stargazers_count}`;
+            } catch (error) {
+                console.error('Failed to fetch GitHub stars:', error);
+                document.getElementById('github-stars').textContent = '★ Star 1500';
+            }
+        }
+        fetchGitHubStars();
+    </script>
+</body>
+</html>
+
+
+
