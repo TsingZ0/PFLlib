@@ -4,7 +4,7 @@
 
 👏 **We will change the license to Apache-2.0 in the next release.**
 
-🎉 <span style="color: red;">NEW!!!</span> Three new datasets have been added, two of which address ***real-world*** scenarios: (1) tumor tissue patches from breast cancer metastases in lymph node sections sourced from **different hospitals**, and (2) wildlife photos captured by **different camera traps**. The third dataset focuses on the ***label-skew*** scenario: chest X-ray images from **hospitals** for COVID-19. These datasets are also compatible with our [HtFLlib](https://github.com/TsingZ0/HtFLlib)
+🔥 Three new datasets have been added, two of which address ***real-world*** scenarios: (1) tumor tissue patches from breast cancer metastases in lymph node sections sourced from **different hospitals**, and (2) wildlife photos captured by **different camera traps**. The third dataset focuses on the ***label-skew*** scenario: chest X-ray images from **hospitals** for COVID-19. These datasets are also compatible with our [HtFLlib](https://github.com/TsingZ0/HtFLlib)
 
 [![arXiv](https://img.shields.io/badge/arXiv-2312.04992-b31b1b.svg)](https://arxiv.org/abs/2312.04992) [![License: GPL v2](https://img.shields.io/badge/License-GPL_v2-blue.svg)](https://www.gnu.org/licenses/old-licenses/gpl-2.0.en.html)
 
@@ -21,7 +21,7 @@ Figure 1: An Example for FedAvg. You can create a scenario using `generate_DATA.
   year={2023}
 }
 ```
-### Features
+### Key Features
 
 - **37 traditional FL ([tFL](#traditional-fl-tfl)) and personalized FL ([pFL](#personalized-fl-pfl)) algorithms, 3 scenarios, and 23 datasets.**
 
