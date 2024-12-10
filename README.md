@@ -315,12 +315,13 @@ conda env create -f env_cuda_latest.yaml # You may need to downgrade the torch u
 
 **Note**: It is preferable to tune algorithm-specific hyper-parameters before using any algorithm on a new machine. 
 
-## Practical situations
-If you need to simulate FL under practical situations, which includes **client dropout**, **slow trainers**, **slow senders**, and **network TTL**, you can set the following parameters to realize it.
+## Practical Situations
 
-- `-cdr`: The dropout rate for total clients. The selected clients will randomly drop at each training round.
-- `-tsr` and `-ssr`: The rates for slow trainers and slow senders among all clients. Once a client is selected as a "slow trainer"/"slow sender", for example, it will always train/send slower than the original one. 
-- `-tth`: The threshold for network TTL (ms). 
+To simulate Federated Learning (FL) under practical conditions, such as **client dropout**, **slow trainers**, **slow senders**, and **network TTL**, you can adjust the following parameters:
+
+- `-cdr`: Dropout rate for clients. Clients are randomly dropped at each training round based on this rate.
+- `-tsr` and `-ssr`: Slow trainer and slow sender rates, respectively. These parameters define the proportion of clients that will behave as slow trainers or slow senders. Once a client is selected as a "slow trainer" or "slow sender," it will consistently train/send slower than other clients.
+- `-tth`: Threshold for network TTL (Time-To-Live) in milliseconds.
 
 ## Easy to Extend
 
@@ -337,9 +338,18 @@ This library is designed to be easily extendable with new algorithms and dataset
 - **New Evaluation Platform or Library**: The evaluation framework is flexible, allowing users to build custom platforms or libraries for specific applications, such as [FL-IoT](https://github.com/TsingZ0/FL-IoT) and [HtFLlib](https://github.com/TsingZ0/HtFLlib).
 
 
-## Experimental results
+## Experimental Results
 
-If you are interested in **the experimental results (e.g., the accuracy) of the above algorithms**, you can find some results in our accepted FL papers (i.e., [FedALA](https://github.com/TsingZ0/FedALA), [FedCP](https://github.com/TsingZ0/FedCP), [GPFL](https://github.com/TsingZ0/GPFL), and [DBE](https://github.com/TsingZ0/DBE)) listed as follows that also use this library. *Please note that this developing project may not be able to reproduce the results on these papers, since some basic settings may change due to the requests of the community. For example, we previously set `shuffle=False` in clientbase.py* 
+If you're interested in **experimental results (e.g., accuracy)** for the algorithms mentioned above, you can find results in our accepted FL papers, which also utilize this library. These papers include:
+
+- [FedALA](https://github.com/TsingZ0/FedALA)
+- [FedCP](https://github.com/TsingZ0/FedCP)
+- [GPFL](https://github.com/TsingZ0/GPFL)
+- [DBE](https://github.com/TsingZ0/DBE)
+
+Please note that while these results were based on this library, **reproducing the exact results may be challenging** as some settings might have changed in response to community feedback. For example, in earlier versions, we set `shuffle=False` in `clientbase.py`.
+
+Here are the relevant papers for your reference:
 
 ```
 @inproceedings{zhang2023fedala,
