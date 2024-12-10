@@ -1,15 +1,15 @@
 # PFLlib: Personalized Federated Learning Library
 
+🎯***We create a beginner-friendly algorithm library and evaluation platform for those new to federated learning. Join us in expanding the FL community by contributing your algorithms, datasets, and metrics to this project.***
+
 👏 **We will change the license to Apache-2.0 in the next release.**
 
-🎉 Three new datasets have been added, two of which address ***real-world*** scenarios: (1) tumor tissue patches from breast cancer metastases in lymph node sections sourced from **different hospitals**, and (2) wildlife photos captured by **different camera traps**. The third dataset focuses on the ***label-skew*** scenario: chest X-ray images from **hospitals** for COVID-19. These datasets are also compatible with our [HtFLlib](https://github.com/TsingZ0/HtFLlib)
+🎉 <span style="color: red;">NEW!!!</span> Three new datasets have been added, two of which address ***real-world*** scenarios: (1) tumor tissue patches from breast cancer metastases in lymph node sections sourced from **different hospitals**, and (2) wildlife photos captured by **different camera traps**. The third dataset focuses on the ***label-skew*** scenario: chest X-ray images from **hospitals** for COVID-19. These datasets are also compatible with our [HtFLlib](https://github.com/TsingZ0/HtFLlib)
 
-[![License: GPL v2](https://img.shields.io/badge/License-GPL_v2-blue.svg)](https://www.gnu.org/licenses/old-licenses/gpl-2.0.en.html) [![arXiv](https://img.shields.io/badge/arXiv-2312.04992-b31b1b.svg)](https://arxiv.org/abs/2312.04992)
+[![arXiv](https://img.shields.io/badge/arXiv-2312.04992-b31b1b.svg)](https://arxiv.org/abs/2312.04992) [![License: GPL v2](https://img.shields.io/badge/License-GPL_v2-blue.svg)](https://www.gnu.org/licenses/old-licenses/gpl-2.0.en.html)
 
 ![](./structure.png)
 Figure 1: An Example for FedAvg. You can create a scenario using `generate_DATA.py` and run an algorithm using `main.py`, `clientNAME.py`, and `serverNAME.py`. For a new algorithm, you only need to add new features in `clientNAME.py` and `serverNAME.py`.
-
-🎯***We create a beginner-friendly algorithm library and evaluation platform for those new to federated learning. Join us in expanding the FL community by contributing your algorithms, datasets, and metrics to this project.***
 
 🎯**If you find our repository useful, please cite the following paper:**
 
@@ -21,14 +21,19 @@ Figure 1: An Example for FedAvg. You can create a scenario using `generate_DATA.
   year={2023}
 }
 ```
+### Features
 
-- ***37 traditional FL ([tFL](#traditional-fl-tfl)) and personalized FL ([pFL](#personalized-fl-pfl)) algorithms, 3 scenarios, and 23 datasets.***
+- **37 traditional FL ([tFL](#traditional-fl-tfl)) and personalized FL ([pFL](#personalized-fl-pfl)) algorithms, 3 scenarios, and 23 datasets.**
 
 - Some **experimental results** are avalible in its [paper](https://arxiv.org/abs/2312.04992) and [here](#experimental-results). 
 
 - Refer to [this guide](#how-to-start-simulating-examples-for-fedavg) to learn how to use it.
 
-- *The evaluation platform can simulate scenarios using the 4-layer CNN on Cifar100 for **500 clients** on **one NVIDIA GeForce RTX 3090 GPU card** with only **5.08GB GPU memory** cost.*
+- The evaluation platform can simulate scenarios using the 4-layer CNN on Cifar100 for **500 clients** on **one NVIDIA GeForce RTX 3090 GPU card** with only **5.08GB GPU memory** cost.
+
+- We provide [privacy evaluation](#privacy-evaluation) and [systematical research supprot](#systematical-research-supprot). 
+
+- You can now train on some clients and evaluate performance on new clients by setting `args.num_new_clients` in `./system/main.py`. Please note that not all tFL/pFL algorithms support this feature.
 
 - PFLlib primarily focuses on data (statistical) heterogeneity. For algorithms and an evaluation platform that address **both data and model heterogeneity**, please refer to our extended project **[Heterogeneous Federated Learning (HtFLlib)](https://github.com/TsingZ0/HtFLlib)**.
 
@@ -39,8 +44,6 @@ Figure 1: An Example for FedAvg. You can create a scenario using `generate_DATA.
 - When submitting pull requests, please provide sufficient *instructions* and *examples* in the comment box. 
 
 The origin of the **data heterogeneity** phenomenon is the characteristics of users, who generate non-IID (not Independent and Identically Distributed) and unbalanced data. With data heterogeneity existing in the FL scenario, a myriad of approaches have been proposed to crack this hard nut. In contrast, the personalized FL (pFL) may take advantage of the statistically heterogeneous data to learn the personalized model for each user. 
-
-Thanks to [@Stonesjtu](https://github.com/Stonesjtu/pytorch_memlab/blob/d590c489236ee25d157ff60ecd18433e8f9acbe3/pytorch_memlab/mem_reporter.py#L185), this library can also record the **GPU memory usage** for the model. Following [FedCG](https://www.ijcai.org/proceedings/2022/0324.pdf), we also introduce the **[DLG (Deep Leakage from Gradients)](https://papers.nips.cc/paper_files/paper/2019/hash/60a6c4002cc7b29142def8871531281a-Abstract.html) attack** and **PSNR (Peak Signal-to-Noise Ratio) metric** to evaluate the privacy-preserving ability of tFL/pFL algorithms (please refer to `./system/flcore/servers/serveravg.py` for example). *Now we can train on some clients and evaluate performance on other new clients by setting `args.num_new_clients` in `./system/main.py`. Note that not all the tFL/pFL algorithms support this feature.*
 
 
 ## Algorithms with code (updating)
@@ -315,21 +318,58 @@ conda env create -f env_cuda_latest.yaml # You may need to downgrade the torch u
 
 **Note**: It is preferable to tune algorithm-specific hyper-parameters before using any algorithm on a new machine. 
 
-## Practical Situations
-
-To simulate Federated Learning (FL) under practical conditions, such as **client dropout**, **slow trainers**, **slow senders**, and **network TTL**, you can adjust the following parameters:
-
-- `-cdr`: Dropout rate for clients. Clients are randomly dropped at each training round based on this rate.
-- `-tsr` and `-ssr`: Slow trainer and slow sender rates, respectively. These parameters define the proportion of clients that will behave as slow trainers or slow senders. Once a client is selected as a "slow trainer" or "slow sender," it will consistently train/send slower than other clients.
-- `-tth`: Threshold for network TTL (Time-To-Live) in milliseconds.
-
-## Easy to Extend
+## Easy to extend
 
 This library is designed to be easily extendable with new algorithms and datasets. Here’s how you can add them:
 
-- **New Dataset**: To add a new dataset, simply write the download code and use the [utils](https://github.com/TsingZ0/PFLlib/tree/master/dataset/utils) as shown in `./dataset/generate_MNIST.py` (you can consider it as a template).
+- **New Dataset**: To add a new dataset, simply create a `generate_DATA.py` file in `./dataset` and then write the download code and use the [utils](https://github.com/TsingZ0/PFLlib/tree/master/dataset/utils) as shown in `./dataset/generate_MNIST.py` (you can consider it as a template):
+  ```python
+  # `generate_DATA.py`
+  import necessary pkgs
+  from utils import necessary processing funcs
+
+  def generate_dataset(...):
+    # download dataset as usual
+    # pre-process dataset as usual
+    X, y, statistic = separate_data((dataset_content, dataset_label), ...)
+    train_data, test_data = split_data(X, y)
+    save_file(config_path, train_path, test_path, train_data, test_data, statistic, ...)
+
+  # call the generate_dataset func
+  ```
   
 - **New Algorithm**: To add a new algorithm, extend the base classes **Server** and **Client**, which are defined in `./system/flcore/servers/serverbase.py` and `./system/flcore/clients/clientbase.py`, respectively.
+  - Server
+    ```python
+    # serverNAME.py
+    import necessary pkgs
+    from flcore.clients.clientNAME import clientNAME
+    from flcore.servers.serverbase import Server
+
+    class NAME(Server):
+        def __init__(self, args, times):
+            super().__init__(args, times)
+
+            # select slow clients
+            self.set_slow_clients()
+            self.set_clients(clientAVG)
+        def train(self):
+            # server scheduling code of your algorithm
+    ```
+  - Client
+    ```python
+    # clientNAME.py
+    import necessary pkgs
+    from flcore.clients.clientbase import Client
+
+    class clientNAME(Client):
+        def __init__(self, args, id, train_samples, test_samples, **kwargs):
+            super().__init__(args, id, train_samples, test_samples, **kwargs)
+            # add specific initialization
+        
+        def train(self):
+            # client training code of your algorithm
+    ```
   
 - **New Model**: To add a new model, simply include it in `./system/flcore/trainmodel/models.py`.
   
@@ -337,6 +377,27 @@ This library is designed to be easily extendable with new algorithms and dataset
   
 - **New Evaluation Platform or Library**: The evaluation framework is flexible, allowing users to build custom platforms or libraries for specific applications, such as [FL-IoT](https://github.com/TsingZ0/FL-IoT) and [HtFLlib](https://github.com/TsingZ0/HtFLlib).
 
+
+## Privacy Evaluation
+
+You can use the following privacy evaluation methods to assess the privacy-preserving capabilities of tFL/pFL algorithms in PFLlib. Please refer to `./system/flcore/servers/serveravg.py` for an example. Note that most of these evaluations are not typically considered in the original papers. _We encourage you to add more attacks and metrics for privacy evaluation._ 
+
+### Currently supported attacks:
+- [DLG (Deep Leakage from Gradients)](https://papers.nips.cc/paper_files/paper/2019/hash/60a6c4002cc7b29142def8871531281a-Abstract.html) attack
+
+### Currently supported metrics:
+- **PSNR (Peak Signal-to-Noise Ratio)**: an objective metric for image evaluation, defined as the logarithm of the ratio of the squared maximum value of RGB image fluctuations to the Mean Squared Error (MSE) between two images. A lower PSNR score indicates better privacy-preserving capabilities.
+
+
+## Systematical research supprot
+
+To simulate Federated Learning (FL) under practical conditions, such as **client dropout**, **slow trainers**, **slow senders**, and **network TTL (Time-To-Live)**, you can adjust the following parameters:
+
+- `-cdr`: Dropout rate for clients. Clients are randomly dropped at each training round based on this rate.
+- `-tsr` and `-ssr`: Slow trainer and slow sender rates, respectively. These parameters define the proportion of clients that will behave as slow trainers or slow senders. Once a client is selected as a "slow trainer" or "slow sender," it will consistently train/send slower than other clients.
+- `-tth`: Threshold for network TTL in milliseconds.
+
+Thanks to [@Stonesjtu](https://github.com/Stonesjtu/pytorch_memlab/blob/d590c489236ee25d157ff60ecd18433e8f9acbe3/pytorch_memlab/mem_reporter.py#L185), this library can also record the **GPU memory usage** for the model. 
 
 ## Experimental Results
 
