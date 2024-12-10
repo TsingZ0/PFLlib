@@ -1,14 +1,37 @@
+"""
+Script for Processing the FEMNIST Dataset
+
+Visit the official dataset link here: 
+https://github.com/TalwalkarLab/leaf/tree/master/data/femnist
+
+Note:
+Ensure that you download and preprocess the FEMNIST dataset first. 
+
+Steps:
+   1.Clone the repository: 
+     git clone https://github.com/TalwalkarLab/leaf.git
+     
+   2. Navigate to the FEMNIST data directory:
+     cd leaf/data/femnist
+     
+   3. Preprocess the dataset:
+    (i.e.) ./preprocess.sh -s niid --sf 1.0 -k 0 -t sample
+    
+   4. Rename the data folder to 'FEMNIST' and move it to the same directory as this script.
+"""
+
 import numpy as np
+import os
+import sys
 import pandas as pd
 from PIL import Image
-import argparse
 import random
 import torch
 import torchvision.transforms as transforms
 from torch.utils.data import Dataset
 from utils.dataset_utils import check, separate_data, split_data, save_file
 
-import os
+
 ROOT_PATH = os.path.dirname(os.path.abspath(__file__)) 
 
 def relabel(c):
@@ -116,21 +139,19 @@ def generate_femnist(dataset, meta_path, save_path,  num_clients, num_classes, n
 
 if __name__ == "__main__":
     
-    parser = argparse.ArgumentParser()
-    parser.add_argument('--niid', type=bool, default=True)
-    parser.add_argument('--balance', type=bool, default=False)
-    parser.add_argument('--partition', type=bool, default=None)
-    parser.add_argument('--num_clients', type=int, default=100)
-    parser.add_argument('--dataset', type=str, default='FEMNIST')
-    parser.add_argument('--meta_file_name', type=str, default='images_by_writer.pkl')
-    parser.add_argument('--save_path', type=str, default='FEMNIST')
-    args = parser.parse_args()
+    niid = True if sys.argv[1] == "noniid" else False
+    balance = True if sys.argv[2] == "balance" else False
+    partition = sys.argv[3] if sys.argv[3] != "-" else None
+    num_clients = int(sys.argv[4]) if len(sys.argv) > 4 else 100
+    dataset = sys.argv[5] if len(sys.argv) > 5 else 'FEMNIST'
+    meta_file_name = sys.argv[6] if len(sys.argv) > 6 else 'images_by_writer.pkl'
+    save_path = sys.argv[7] if len(sys.argv) > 7 else 'FEMNIST'
+    num_classes = 62
     
     random.seed(1)
     np.random.seed(1)
-    num_classes = 62
-   
-    meta_path = os.path.join(args.dataset,'intermediate', args.meta_file_name)
-    save_path = os.path.join(ROOT_PATH, args.save_path)
     
-    generate_femnist(args.dataset, meta_path, save_path, args.num_clients, num_classes, args.niid, args.balance, args.partition)
+    meta_path = os.path.join(dataset,'intermediate', meta_file_name)
+    save_path = os.path.join(ROOT_PATH, save_path)
+    
+    generate_femnist(dataset, meta_path, save_path, num_clients, num_classes, niid, balance, partition)
