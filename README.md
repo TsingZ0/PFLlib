@@ -152,7 +152,10 @@ Additionally, we offer a `balance` option, where data amount is evenly distribut
 
 ### ***feature shift*** scenario
 
-For the ***feature shift*** scenario, we utilize **3** widely used datasets in Domain Adaptation: **Amazon Review** (raw data can be fetched from [this link](https://drive.google.com/file/d/1QbXFENNyqor1IlCpRRFtOluI2_hMEd1W/view?usp=sharing)), **Digit5** (raw data available [here](https://drive.google.com/file/d/1sO2PisChNPVT0CnOvIgGJkxdEosCwMUb/view)), and **DomainNet**.
+For the ***feature shift*** scenario, we utilize **3** widely used datasets in Domain Adaptation: 
+- **Amazon Review** (raw data can be fetched from [this link](https://drive.google.com/file/d/1QbXFENNyqor1IlCpRRFtOluI2_hMEd1W/view?usp=sharing))
+- **Digit5** (raw data available [here](https://drive.google.com/file/d/1sO2PisChNPVT0CnOvIgGJkxdEosCwMUb/view))
+- **DomainNet**
 
 ### ***real-world*** scenario
 
@@ -166,18 +169,16 @@ For the ***real-world*** scenario, we introduce **5** naturally separated datase
 For more details on datasets and FL algorithms in **IoT**, please refer to [FL-IoT](https://github.com/TsingZ0/FL-IoT).
 
 ### Examples for **MNIST** in the ***label skew*** scenario
+```
+cd ./dataset
+# python generate_MNIST.py iid - - # for iid and unbalanced scenario
+# python generate_MNIST.py iid balance - # for iid and balanced scenario
+# python generate_MNIST.py noniid - pat # for pathological noniid and unbalanced scenario
+python generate_MNIST.py noniid - dir # for practical noniid and unbalanced scenario
+# python generate_MNIST.py noniid - exdir # for Extended Dirichlet strategy 
+```
 
-- MNIST
-    ```
-    cd ./dataset
-    # python generate_MNIST.py iid - - # for iid and unbalanced scenario
-    # python generate_MNIST.py iid balance - # for iid and balanced scenario
-    # python generate_MNIST.py noniid - pat # for pathological noniid and unbalanced scenario
-    python generate_MNIST.py noniid - dir # for practical noniid and unbalanced scenario
-    # python generate_MNIST.py noniid - exdir # for Extended Dirichlet strategy 
-    ```
-
-The output of `python generate_MNIST.py noniid - dir`
+The command line output of running `python generate_MNIST.py noniid - dir`
 ```
 Number of classes: 10
 Client 0         Size of data: 2630      Labels:  [0 1 4 5 7 8 9]
