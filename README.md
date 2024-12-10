@@ -121,7 +121,7 @@ Thanks to [@Stonesjtu](https://github.com/Stonesjtu/pytorch_memlab/blob/d590c489
 
 ## Datasets and scenarios (updating)
 
-We support 3 types of scenarios with various datasets and move the common dataset splitting code into `./dataset/utils` for easy extension. If you need another data set, just write another code to download it and then use the u[utils](https://github.com/TsingZ0/PFLlib/tree/master/dataset/utils).
+We support 3 types of scenarios with various datasets and move the common dataset splitting code into `./dataset/utils` for easy extension. If you need another data set, just write another code to download it and then use the [utils](https://github.com/TsingZ0/PFLlib/tree/master/dataset/utils).
 
 ### ***label skew*** scenario
 
@@ -169,7 +169,7 @@ For the ***real-world*** scenario, we introduce **5** naturally separated datase
 For more details on datasets and FL algorithms in **IoT**, please refer to [FL-IoT](https://github.com/TsingZ0/FL-IoT).
 
 ### Examples for **MNIST** in the ***label skew*** scenario
-```
+```bash
 cd ./dataset
 # python generate_MNIST.py iid - - # for iid and unbalanced scenario
 # python generate_MNIST.py iid balance - # for iid and balanced scenario
@@ -179,7 +179,7 @@ python generate_MNIST.py noniid - dir # for practical noniid and unbalanced scen
 ```
 
 The command line output of running `python generate_MNIST.py noniid - dir`
-```
+```bash
 Number of classes: 10
 Client 0         Size of data: 2630      Labels:  [0 1 4 5 7 8 9]
                  Samples of labels:  [(0, 140), (1, 890), (4, 1), (5, 319), (7, 29), (8, 1067), (9, 184)]
@@ -322,18 +322,19 @@ If you need to simulate FL under practical situations, which includes **client d
 - `-tsr` and `-ssr`: The rates for slow trainers and slow senders among all clients. Once a client is selected as a "slow trainer"/"slow sender", for example, it will always train/send slower than the original one. 
 - `-tth`: The threshold for network TTL (ms). 
 
-## Easy to extend
-It is easy to add new algorithms and datasets to this library. 
+## Easy to Extend
 
-- To add a **new dataset** into this library, all you need to do is write the download code and use the utils which is similar to `./dataset/generate_MNIST.py` (you can also consider it as the template). 
+This library is designed to be easily extendable with new algorithms and datasets. Here’s how you can add them:
 
-- To add a **new algorithm**, you can utilize the class **Server** and class **Client**, which are wrote in `./system/flcore/servers/serverbase.py` and `./system/flcore/clients/clientbase.py`, respectively. 
-
-- To add a **new model**, just add it into `./system/flcore/trainmodel/models.py`.
-
-- If you have a **new optimizer** while training, please add it into `./system/flcore/optimizers/fedoptimizer.py`
-
-- The evaluation platform is also convenient for users to build a new platform for specific applications, such as our [FL-IoT](https://github.com/TsingZ0/FL-IoT) and [HtFLlib](https://github.com/TsingZ0/HtFLlib). 
+- **New Dataset**: To add a new dataset, simply write the download code and use the [utils](https://github.com/TsingZ0/PFLlib/tree/master/dataset/utils) as shown in `./dataset/generate_MNIST.py` (you can consider it as a template).
+  
+- **New Algorithm**: To add a new algorithm, extend the base classes **Server** and **Client**, which are defined in `./system/flcore/servers/serverbase.py` and `./system/flcore/clients/clientbase.py`, respectively.
+  
+- **New Model**: To add a new model, simply include it in `./system/flcore/trainmodel/models.py`.
+  
+- **New Optimizer**: If you need a new optimizer for training, add it to `./system/flcore/optimizers/fedoptimizer.py`.
+  
+- **New Evaluation Platform or Library**: The evaluation framework is flexible, allowing users to build custom platforms or libraries for specific applications, such as [FL-IoT](https://github.com/TsingZ0/FL-IoT) and [HtFLlib](https://github.com/TsingZ0/HtFLlib).
 
 
 ## Experimental results
