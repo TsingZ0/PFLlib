@@ -177,32 +177,7 @@
             <section id="intro">
                 <h2>Benchmark & Evaluation Platform</h2>
                 <p>To integrate all the algorithms, datasets, and scenarios, we standardize the experimental settings and create a <strong>unified evaluation platform</strong> for a fair comparison of these algorithms. Here, we present the benchmark results of <strong>20 algorithms</strong> across two widely-used <em><strong>label skew</strong></em> scenarios. This is just one example. You can obtain different results by resetting all the configurations in <code>main.py</code> in our PFLlib.</p>
-                <h3>Experimental Setup</h3>
-                <p>We set up the experiments following our pFL algorithm <a href="https://arxiv.org/pdf/2308.10279v3.pdf"><strong>GPFL</strong></a>, as it provides comprehensive evaluations. Here are the details:</p>
-                <h4>Datasets and Models</h4>
-                <ul>
-                    <li>For the CV tasks, we use three popular datasets: 
-                        <ul>
-                            <li>Fashion-MNIST (FMNIST) (<a href="https://github.com/TsingZ0/PFLlib/blob/master/dataset/generate_FashionMNIST.py"><code>generate_FashionMNIST.py</code></a>) | 4-layer CNN (<a href="https://github.com/TsingZ0/PFLlib/blob/master/system/flcore/trainmodel/models.py#L163">model code</a>)</li>
-                            <li>Cifar100 (<a href="https://github.com/TsingZ0/PFLlib/blob/master/dataset/generate_Cifar100.py"><code>generate_Cifar100.py</code></a>) | 4-layer CNN (<a href="https://github.com/TsingZ0/PFLlib/blob/master/system/flcore/trainmodel/models.py#L163">model code</a>)</li>
-                            <li>Tiny-ImageNet (<a href="https://github.com/TsingZ0/PFLlib/blob/master/dataset/generate_TinyImagenet.py"><code>generate_TinyImagenet.py</code></a>) | 4-layer CNN (<a href="https://github.com/TsingZ0/PFLlib/blob/master/system/flcore/trainmodel/models.py#L163">model code</a>) and ResNet-18 (<a href="https://pytorch.org/vision/main/models/generated/torchvision.models.resnet18.html">model code</a>)</li>
-                        </ul>
-                    </li>
-                    <li>For the NLP task, we use one popular dataset:
-                        <ul>
-                            <li>AG News (<a href="https://github.com/TsingZ0/PFLlib/blob/master/dataset/generate_AGNews.py"><code>generate_AGNews.py</code></a>) | fastText (<a href="https://github.com/TsingZ0/PFLlib/blob/master/system/flcore/trainmodel/models.py#L454">model code</a>)</li>
-                        </ul>
-                    </li>
-                </ul>
-                <p>We denote TINY as the 4-layer CNN on Tiny-ImageNet, and TINY* as the ResNet-18 on Tiny-ImageNet, respectively.</p>
-                <h4>Two Widely-Used <em><strong>Label Skew</strong></em> Scenarios</h4>
-                <ul>
-                    <li><strong>Pathological label skew:</strong> We sample data with label distribution of 2/10/20 for each client on FMNIST, Cifar100, and Tiny-ImageNet, drawn from a total of 10/100/200 categories. The data is disjoint, with varying numbers of samples across clients.</li>
-                    <li><strong>Practical label skew:</strong> Data is sampled from FMNIST, CIFAR-100, Tiny-ImageNet, and AG News using Dirichlet distribution, denoted by \(Dir(\beta)\). Specifically, we sample \(q_{c, i} \sim Dir(\beta)\) (with \(\beta = 0.1\) or \(\beta = 1\) by default for CV/NLP tasks) and allocate a \(q_{c, i}\) proportion of samples with label \(c\) to client \(i\).</li>
-                </ul>
-                <h4>Other Implementation Details</h4>
-                <p>Following pFedMe and FedRoD, we use 20 clients with a client joining ratio of \(\rho = 1\), with 75% of data for training and 25% for evaluation. We report the best global model performance for traditional FL and the best average performance across personalized models for pFL. The batch size is set to 10, and the number of local epochs is 1. We run 2000 iterations with three trials per method and report the mean and standard deviation.</p>
-                <h4 >Experimental Results</h4>
+                <h3>Leaderboard</h3>
                 <h4 style="width:100%; text-align:center;">The test accuracy (%) on the CV and NLP tasks in <em>label skew</em> settings.</h4>
                 <table border="1" cellpadding="5" cellspacing="0" style="width:100%; text-align:center; font-size: 0.8em;">
                 <thead>
@@ -445,6 +420,33 @@
                     </tr>
                 </tbody>
                 </table>
+                <h3>Experimental Setup</h3>
+                <p>We set up the experiments following our pFL algorithm <a href="https://arxiv.org/pdf/2308.10279v3.pdf"><strong>GPFL</strong></a>, as it provides comprehensive evaluations. Here are the details:</p>
+                <h4>Datasets and Models</h4>
+                <ul>
+                    <li>For the CV tasks, we use three popular datasets: 
+                        <ul>
+                            <li>Fashion-MNIST (FMNIST) (<a href="https://github.com/TsingZ0/PFLlib/blob/master/dataset/generate_FashionMNIST.py"><code>generate_FashionMNIST.py</code></a>) | 4-layer CNN (<a href="https://github.com/TsingZ0/PFLlib/blob/master/system/flcore/trainmodel/models.py#L163">model code</a>)</li>
+                            <li>Cifar100 (<a href="https://github.com/TsingZ0/PFLlib/blob/master/dataset/generate_Cifar100.py"><code>generate_Cifar100.py</code></a>) | 4-layer CNN (<a href="https://github.com/TsingZ0/PFLlib/blob/master/system/flcore/trainmodel/models.py#L163">model code</a>)</li>
+                            <li>Tiny-ImageNet (<a href="https://github.com/TsingZ0/PFLlib/blob/master/dataset/generate_TinyImagenet.py"><code>generate_TinyImagenet.py</code></a>) | 4-layer CNN (<a href="https://github.com/TsingZ0/PFLlib/blob/master/system/flcore/trainmodel/models.py#L163">model code</a>) and ResNet-18 (<a href="https://pytorch.org/vision/main/models/generated/torchvision.models.resnet18.html">model code</a>)</li>
+                        </ul>
+                    </li>
+                    <li>For the NLP task, we use one popular dataset:
+                        <ul>
+                            <li>AG News (<a href="https://github.com/TsingZ0/PFLlib/blob/master/dataset/generate_AGNews.py"><code>generate_AGNews.py</code></a>) | fastText (<a href="https://github.com/TsingZ0/PFLlib/blob/master/system/flcore/trainmodel/models.py#L454">model code</a>)</li>
+                        </ul>
+                    </li>
+                </ul>
+                <p>We denote TINY as the 4-layer CNN on Tiny-ImageNet, and TINY* as the ResNet-18 on Tiny-ImageNet, respectively.</p>
+                <h4>Two Widely-Used <em><strong>Label Skew</strong></em> Scenarios</h4>
+                <ul>
+                    <li><strong>Pathological label skew:</strong> We sample data with label distribution of 2/10/20 for each client on FMNIST, Cifar100, and Tiny-ImageNet, drawn from a total of 10/100/200 categories. The data is disjoint, with varying numbers of samples across clients.</li>
+                    <li><strong>Practical label skew:</strong> Data is sampled from FMNIST, CIFAR-100, Tiny-ImageNet, and AG News using Dirichlet distribution, denoted by \(Dir(\beta)\). Specifically, we sample \(q_{c, i} \sim Dir(\beta)\) (with \(\beta = 0.1\) or \(\beta = 1\) by default for CV/NLP tasks) and allocate a \(q_{c, i}\) proportion of samples with label \(c\) to client \(i\).</li>
+                </ul>
+                <h4>Other Implementation Details</h4>
+                <p>Following pFedMe and FedRoD, we use 20 clients with a client joining ratio of \(\rho = 1\), with 75% of data for training and 25% for evaluation. We report the best global model performance for traditional FL and the best average performance across personalized models for pFL. The batch size is set to 10, and the number of local epochs is 1. We run 2000 iterations with three trials per method and report the mean and standard deviation.</p>
+                
+                <h3>References</h3>
                 <p>If you're interested in <strong>experimental results (e.g., accuracy)</strong> for the algorithms mentioned above, you can find results in our accepted FL papers, which also utilize this library. These papers include:</p>
 
                 <ul>
