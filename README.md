@@ -132,6 +132,7 @@ For the ***label skew*** scenario, we introduce **15** famous datasets:
 
 - **MNIST**
 - **EMNIST**
+- **FEMNIST**
 - **Fashion-MNIST**
 - **Cifar10**
 - **Cifar100**
