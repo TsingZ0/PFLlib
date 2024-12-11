@@ -94,7 +94,7 @@ def get_writer_id(data, num_clients):
         return user_ids
     
 # Allocate data to users
-def generate_femnist(dataset, meta_path, save_path,  num_clients, num_classes, niid, balance, partition):
+def generate_dataset(dataset, meta_path, save_path,  num_clients, num_classes, niid, balance, partition):
     if not os.path.exists(save_path):
         os.makedirs(save_path)
         
@@ -154,4 +154,4 @@ if __name__ == "__main__":
     meta_path = os.path.join(dataset,'intermediate', meta_file_name)
     save_path = os.path.join(ROOT_PATH, save_path)
     
-    generate_femnist(dataset, meta_path, save_path, num_clients, num_classes, niid, balance, partition)
+    generate_dataset(dataset, meta_path, save_path, num_clients, num_classes, niid, balance, partition)
