@@ -23,9 +23,8 @@ import random
 import torchvision.transforms as transforms
 from sklearn.utils import resample
 from sklearn.utils import shuffle
-from utils.dataset_utils import check, separate_data, split_data, save_file
-from torch.utils.data import Dataset, DataLoader
-from PIL import Image
+from utils.dataset_utils import check, separate_data, split_data, save_file, ImageDataset
+from torch.utils.data import DataLoader
 
 
 random.seed(1)
@@ -33,49 +32,20 @@ np.random.seed(1)
 num_clients = 20
 img_size = 64
 num_classes = 2
-dir_path = "COVIDx/"
+dir_path = "COVIDx-0.1/"
 data_path = "COVIDx/"
 
 # first download rawdata from https://www.kaggle.com/datasets/andyczhao/covidx-cxr2/data
-class ImageDataset(Dataset):
-    def __init__(self, dataframe, image_folder, transform=None):
-        """
-        Args:
-            dataframe (pd.DataFrame): DataFrame containing file names
-            image_folder (str): Path to the folder containing the images
-            transform (callable, optional): Optional transform to be applied to the image
-        """
-        self.dataframe = dataframe
-        self.image_folder = image_folder
-        self.transform = transform
-
-    def __len__(self):
-        return len(self.dataframe)
-
-    def __getitem__(self, idx):
-        # Get the file name from the DataFrame
-        img_name = self.dataframe.iloc[idx]['file_name']
-        img_label = int(self.dataframe.iloc[idx]['class'] == 'positive')
-        img_path = os.path.join(self.image_folder, img_name)
-        
-        # Load the image using PIL
-        image = Image.open(img_path).convert('RGB')  # Ensure RGB if not grayscale
-        
-        if self.transform:
-            image = self.transform(image)
-        
-        return image, img_label
-
-
+# save and unzip in COVIDx/rawdata/
 # Allocate data to users
 def generate_dataset(dir_path, num_clients, niid, balance, partition):
     if not os.path.exists(dir_path):
         os.makedirs(dir_path)
         
     # Setup directory for train/test data
-    config_path = data_path + "config.json"
-    train_path = data_path + "train/"
-    test_path = data_path + "test/"
+    config_path = dir_path + "config.json"
+    train_path = dir_path + "train/"
+    test_path = dir_path + "test/"
 
     if check(config_path, train_path, test_path, num_clients, niid, balance, partition):
         return
@@ -86,23 +56,28 @@ def generate_dataset(dir_path, num_clients, niid, balance, partition):
         os.makedirs(test_path)
 
     # Get data
-    train_dir = dir_path + 'rawdata/train/'
-    val_dir = dir_path + 'rawdata/val/'
-    test_dir = dir_path + 'rawdata/test/'
+    if not os.path.exists(data_path):
+        raise FileExistsError
+    train_dir = data_path + 'rawdata/train/'
+    val_dir = data_path + 'rawdata/val/'
+    test_dir = data_path + 'rawdata/test/'
 
-    train_df = pd.read_csv(dir_path + 'rawdata/train.txt', sep=" ", header=None)
+    train_df = pd.read_csv(data_path + 'rawdata/train.txt', sep=" ", header=None)
     train_df.columns=['patient_id', 'file_name', 'class', 'data_source']
-    train_df.drop(columns=['patient_id', 'data_source'])
-    val_df = pd.read_csv(dir_path + 'rawdata/val.txt', sep=" ", header=None)
+    train_df['class'] = train_df['class'] == 'positive'
+    train_df['class'] = train_df['class'].astype(int)
+    val_df = pd.read_csv(data_path + 'rawdata/val.txt', sep=" ", header=None)
     val_df.columns=['patient_id', 'file_name', 'class', 'data_source']
-    val_df.drop(columns=['patient_id', 'data_source'])
-    test_df = pd.read_csv(dir_path + 'rawdata/test.txt', sep=" ", header=None)
+    val_df['class'] = val_df['class'] == 'positive'
+    val_df['class'] = val_df['class'].astype(int)
+    test_df = pd.read_csv(data_path + 'rawdata/test.txt', sep=" ", header=None)
     test_df.columns=['patient_id', 'file_name', 'class', 'data_source']
-    test_df.drop(columns=['patient_id', 'data_source'])
+    test_df['class'] = test_df['class'] == 'positive'
+    test_df['class'] = test_df['class'].astype(int)
 
     # keep balanced in total
-    negative  = train_df[train_df['class']=='negative']
-    positive = train_df[train_df['class']=='positive']
+    negative = train_df[train_df['class']==0]
+    positive = train_df[train_df['class']==1]
     df_majority_downsampled = resample(positive, replace=True, n_samples=min(len(negative), len(positive)))
     train_df = pd.concat([negative, df_majority_downsampled])
     train_df = shuffle(train_df)

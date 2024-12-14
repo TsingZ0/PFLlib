@@ -20,6 +20,9 @@ import ujson
 import numpy as np
 import gc
 from sklearn.model_selection import train_test_split
+from torch.utils.data import Dataset
+from PIL import Image
+
 
 batch_size = 10
 train_ratio = 0.75 # merge original training set and test set, then split it manually. 
@@ -270,3 +273,33 @@ def save_file(config_path, train_path, test_path, train_data, test_data, num_cli
         ujson.dump(config, f)
 
     print("Finish generating dataset.\n")
+
+
+class ImageDataset(Dataset):
+    def __init__(self, dataframe, image_folder, transform=None):
+        """
+        Args:
+            dataframe (pd.DataFrame): DataFrame containing file names
+            image_folder (str): Path to the folder containing the images
+            transform (callable, optional): Optional transform to be applied to the image
+        """
+        self.dataframe = dataframe
+        self.image_folder = image_folder
+        self.transform = transform
+
+    def __len__(self):
+        return len(self.dataframe)
+
+    def __getitem__(self, idx):
+        # Get the file name from the DataFrame
+        img_name = self.dataframe.iloc[idx]['file_name']
+        img_label = self.dataframe.iloc[idx]['class']
+        img_path = os.path.join(self.image_folder, img_name)
+        
+        # Load the image using PIL
+        image = Image.open(img_path).convert('RGB')  # Ensure RGB if not grayscale
+        
+        if self.transform:
+            image = self.transform(image)
+        
+        return image, img_label
