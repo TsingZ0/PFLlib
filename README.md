@@ -2,9 +2,11 @@
 
 🎯***We create a beginner-friendly algorithm library and evaluation platform for those new to federated learning. Join us in expanding the FL community by contributing your algorithms, datasets, and metrics to this project.***
 
+👏 **PFLlib now has its official website and domain name: http://www.pfllib.com/!!!**
+
 👏 **We will change the license to Apache-2.0 in the next release.**
 
-🔥 Three new datasets have been added, two of which address ***real-world*** scenarios: (1) tumor tissue patches from breast cancer metastases in lymph node sections sourced from **different hospitals**, and (2) wildlife photos captured by **different camera traps**. The third dataset focuses on the ***label-skew*** scenario: chest X-ray images from **hospitals** for COVID-19. These datasets are also compatible with our [HtFLlib](https://github.com/TsingZ0/HtFLlib)
+🔥 [**Four** new datasets](#datasets-and-scenarios-updating) have been added, two of which address ***real-world*** scenarios: (1) tumor tissue patches from breast cancer metastases in lymph node sections sourced from **different hospitals**, and (2) wildlife photos captured by **different camera traps**. The other two datasets focus on the ***label-skew*** scenario: chest X-ray images from **hospitals** for COVID-19 and endoscopic images from **hospitals** for gastrointestinal disease detection. These datasets are also compatible with our [HtFLlib](https://github.com/TsingZ0/HtFLlib)
 
 [![arXiv](https://img.shields.io/badge/arXiv-2312.04992-b31b1b.svg)](https://arxiv.org/abs/2312.04992) [![License: GPL v2](https://img.shields.io/badge/License-GPL_v2-blue.svg)](https://www.gnu.org/licenses/old-licenses/gpl-2.0.en.html)
 
@@ -23,7 +25,7 @@ Figure 1: An Example for FedAvg. You can create a scenario using `generate_DATA.
 ```
 ### Key Features
 
-- **37 traditional FL ([tFL](#traditional-fl-tfl)) and personalized FL ([pFL](#personalized-fl-pfl)) algorithms, 3 scenarios, and 23 datasets.**
+- **37 traditional FL ([tFL](#traditional-fl-tfl)) and personalized FL ([pFL](#personalized-fl-pfl)) algorithms, 3 scenarios, and 24 datasets.**
 
 - Some **experimental results** are avalible in its [paper](https://arxiv.org/abs/2312.04992) and [here](#experimental-results). 
 
@@ -128,7 +130,7 @@ We support 3 types of scenarios with various datasets and move the common datase
 
 ### ***label skew*** scenario
 
-For the ***label skew*** scenario, we introduce **15** famous datasets: 
+For the ***label skew*** scenario, we introduce **16** famous datasets: 
 
 - **MNIST**
 - **EMNIST**
@@ -144,7 +146,8 @@ For the ***label skew*** scenario, we introduce **15** famous datasets:
 - **GTSRB**
 - **Shakespeare**
 - **Stanford Cars**
-- **COVIDx** (chest X-ray images from hospitals for covid-19)
+- **COVIDx** (chest X-ray images for covid-19)
+- **kvasir** (endoscopic images for gastrointestinal disease detection)
 
 The datasets can be easily split into **IID** and **non-IID** versions. In the **non-IID** scenario, we distinguish between two types of distribution:
 
