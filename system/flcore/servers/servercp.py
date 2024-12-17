@@ -112,7 +112,7 @@ class FedCP(Server):
             self.Budget.append(time.time() - s_t)
             print('-'*50, self.Budget[-1])
 
-        print("\nBest global accuracy.")
+        print("\nBest accuracy.")
         print(max(self.rs_test_acc))
         print("\nAverage time cost per round.")
         print(sum(self.Budget[1:])/len(self.Budget[1:]))
