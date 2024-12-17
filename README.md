@@ -2,7 +2,7 @@
 
 🎯***We create a beginner-friendly algorithm library and evaluation platform for those new to federated learning. Join us in expanding the FL community by contributing your algorithms, datasets, and metrics to this project.***
 
-👏 **PFLlib now has its official website and domain name: http://www.pfllib.com/!!!**
+👏 **PFLlib now has its official website and domain name: https://www.pfllib.com/!!!**
 
 👏 **The **[Leaderboard](http://www.pfllib.com/benchmark.html)** is live! Our methods—[FedCP](https://github.com/TsingZ0/FedCP), [GPFL](https://github.com/TsingZ0/GPFL), and [FedDBE](https://github.com/TsingZ0/DBE)—lead the way. Notably, **FedDBE** stands out with robust performance across varying data heterogeneity levels.**
 
