@@ -1,6 +1,6 @@
 # PFLlib: Personalized Federated Learning Library
 
-🎯***We create a beginner-friendly algorithm library and evaluation platform for those new to federated learning. Join us in expanding the FL community by contributing your algorithms, datasets, and metrics to this project.***
+🎯***We create a beginner-friendly algorithm library and benchmark platform for those new to federated learning. Join us in expanding the FL community by contributing your algorithms, datasets, and metrics to this project.***
 
 👏 **PFLlib now has its official website and domain name: https://www.pfllib.com/!!!**
 
@@ -33,13 +33,13 @@ Figure 1: An Example for FedAvg. You can create a scenario using `generate_DATA.
 
 - Refer to [this guide](#how-to-start-simulating-examples-for-fedavg) to learn how to use it.
 
-- The evaluation platform can simulate scenarios using the 4-layer CNN on Cifar100 for **500 clients** on **one NVIDIA GeForce RTX 3090 GPU card** with only **5.08GB GPU memory** cost.
+- The benchmark platform can simulate scenarios using the 4-layer CNN on Cifar100 for **500 clients** on **one NVIDIA GeForce RTX 3090 GPU card** with only **5.08GB GPU memory** cost.
 
 - We provide [privacy evaluation](#privacy-evaluation) and [systematical research supprot](#systematical-research-supprot). 
 
 - You can now train on some clients and evaluate performance on new clients by setting `args.num_new_clients` in `./system/main.py`. Please note that not all tFL/pFL algorithms support this feature.
 
-- PFLlib primarily focuses on data (statistical) heterogeneity. For algorithms and an evaluation platform that address **both data and model heterogeneity**, please refer to our extended project **[Heterogeneous Federated Learning (HtFLlib)](https://github.com/TsingZ0/HtFLlib)**.
+- PFLlib primarily focuses on data (statistical) heterogeneity. For algorithms and a benchmark platform that address **both data and model heterogeneity**, please refer to our extended project **[Heterogeneous Federated Learning (HtFLlib)](https://github.com/TsingZ0/HtFLlib)**.
 
 - As we strive to meet diverse user demands, frequent updates to the project may alter default settings and scenario creation codes, affecting experimental results.
   
@@ -381,7 +381,7 @@ This library is designed to be easily extendable with new algorithms and dataset
   
 - **New Optimizer**: If you need a new optimizer for training, add it to `./system/flcore/optimizers/fedoptimizer.py`.
   
-- **New Evaluation Platform or Library**: The evaluation framework is flexible, allowing users to build custom platforms or libraries for specific applications, such as [FL-IoT](https://github.com/TsingZ0/FL-IoT) and [HtFLlib](https://github.com/TsingZ0/HtFLlib).
+- **New Benchmark Platform or Library**: Our framework is flexible, allowing users to build custom platforms or libraries for specific applications, such as [FL-IoT](https://github.com/TsingZ0/FL-IoT) and [HtFLlib](https://github.com/TsingZ0/HtFLlib).
 
 
 ## Privacy Evaluation
