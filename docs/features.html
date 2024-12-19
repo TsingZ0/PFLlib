@@ -175,7 +175,7 @@
         </div>
         <div class="content">
             <section id="features">
-                <h2>Privacy Evaluation</h2>
+                <h2 id="privacy-evaluation">Privacy Evaluation</h2>
                 <p>You can use the following privacy evaluation methods to assess the privacy-preserving capabilities of tFL/pFL algorithms in PFLlib. Please refer to <code>./system/flcore/servers/serveravg.py</code> for an example. Note that most of these evaluations are not typically considered in the original papers. <em>We encourage you to add more attacks and metrics for privacy evaluation.</em></p>
                 <h4>Currently supported attacks:</h4>
                 <ul>
@@ -186,7 +186,7 @@
                     <li><strong>PSNR (Peak Signal-to-Noise Ratio)</strong>: an objective metric for image evaluation, defined as the logarithm of the ratio of the squared maximum value of RGB image fluctuations to the Mean Squared Error (MSE) between two images. A lower PSNR score indicates better privacy-preserving capabilities.</li>
                 </ul>
 
-                <h2>Systematical research support</h2>
+                <h2 id="systematical-research-supprot">Systematical research support</h2>
                 <p>To simulate Federated Learning (FL) under practical conditions, such as <strong>client dropout</strong>, <strong>slow trainers</strong>, <strong>slow senders</strong>, and <strong>network TTL (Time-To-Live)</strong>, you can adjust the following parameters:</p>
                 <ul>
                 <li><code>-cdr</code>: Dropout rate for clients. Clients are randomly dropped at each training round based on this rate.</li>
