@@ -389,7 +389,7 @@ This library is designed to be easily extendable with new algorithms and dataset
 You can use the following privacy evaluation methods to assess the privacy-preserving capabilities of tFL/pFL algorithms in PFLlib. Please refer to `./system/flcore/servers/serveravg.py` for an example. Note that most of these evaluations are not typically considered in the original papers. _We encourage you to add more attacks and metrics for privacy evaluation._ 
 
 ### Currently supported attacks:
-- [DLG (Deep Leakage from Gradients)](https://papers.nips.cc/paper_files/paper/2019/hash/60a6c4002cc7b29142def8871531281a-Abstract.html) attack
+- [DLG (Deep Leakage from Gradients)](https://www.ijcai.org/proceedings/2022/0324.pdf) attack
 
 ### Currently supported metrics:
 - **PSNR (Peak Signal-to-Noise Ratio)**: an objective metric for image evaluation, defined as the logarithm of the ratio of the squared maximum value of RGB image fluctuations to the Mean Squared Error (MSE) between two images. A lower PSNR score indicates better privacy-preserving capabilities.
