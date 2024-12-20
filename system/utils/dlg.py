@@ -20,6 +20,7 @@ import matplotlib.pyplot as plt
 import torch
 import torch.nn.functional as F
 import numpy as np
+import math
 
 
 # https://github.com/jackfrued/Python-1/blob/master/analysis/compression_analysis/psnr.py
