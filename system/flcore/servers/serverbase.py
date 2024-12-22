@@ -275,20 +275,20 @@ class Server(object):
 
     def check_done(self, acc_lss, top_cnt=None, div_value=None):
         for acc_ls in acc_lss:
-            if top_cnt != None and div_value != None:
+            if top_cnt is not None and div_value is not None:
                 find_top = len(acc_ls) - torch.topk(torch.tensor(acc_ls), 1).indices[0] > top_cnt
                 find_div = len(acc_ls) > 1 and np.std(acc_ls[-top_cnt:]) < div_value
                 if find_top and find_div:
                     pass
                 else:
                     return False
-            elif top_cnt != None:
+            elif top_cnt is not None:
                 find_top = len(acc_ls) - torch.topk(torch.tensor(acc_ls), 1).indices[0] > top_cnt
                 if find_top:
                     pass
                 else:
                     return False
-            elif div_value != None:
+            elif div_value is not None:
                 find_div = len(acc_ls) > 1 and np.std(acc_ls[-top_cnt:]) < div_value
                 if find_div:
                     pass

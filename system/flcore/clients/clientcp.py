@@ -219,14 +219,14 @@ class Ensemble(nn.Module):
 
         gate_in = rep
 
-        if context != None:
+        if context is not None:
             context = F.normalize(context, p=2, dim=1)
             if type(x) == type([]):
                 self.context = torch.tile(context, (x[0].shape[0], 1))
             else:
                 self.context = torch.tile(context, (x.shape[0], 1))
 
-        if self.context != None:
+        if self.context is not None:
             gate_in = rep * self.context
 
         if self.flag == 0:

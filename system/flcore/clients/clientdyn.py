@@ -57,7 +57,7 @@ class clientDyn(Client):
                 output = self.model(x)
                 loss = self.loss(output, y)
 
-                if self.global_model_vector != None:
+                if self.global_model_vector is not None:
                     v1 = model_parameter_vector(self.model)
                     loss += self.alpha/2 * torch.norm(v1 - self.global_model_vector, 2)
                     loss -= torch.dot(v1, self.old_grad)
@@ -66,7 +66,7 @@ class clientDyn(Client):
                 loss.backward()
                 self.optimizer.step()
 
-        if self.global_model_vector != None:
+        if self.global_model_vector is not None:
             v1 = model_parameter_vector(self.model).detach()
             self.old_grad = self.old_grad - self.alpha * (v1 - self.global_model_vector)
 
@@ -103,7 +103,7 @@ class clientDyn(Client):
                 output = self.model(x)
                 loss = self.loss(output, y)
 
-                if self.global_model_vector != None:
+                if self.global_model_vector is not None:
                     v1 = model_parameter_vector(self.model)
                     loss += self.alpha/2 * torch.norm(v1 - self.global_model_vector, 2)
                     loss -= torch.dot(v1, self.old_grad)

@@ -101,7 +101,7 @@ class clientCAC(Client):
         return critical_parameter, global_mask, local_mask
 
     def set_parameters(self, model):
-        if self.local_mask != None:
+        if self.local_mask is not None:
             # self.model.to(self.device)
             # model.to(self.device)
             # self.customized_model.to(self.device)
