@@ -301,8 +301,10 @@ Install [CUDA](https://docs.nvidia.com/cuda/cuda-toolkit-release-notes/index.htm
 
 Install [conda latest](https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh) and activate conda. 
 
+For additional configurations, refer to the `prepare.sh` script.  
+
 ```bash
-conda env create -f env_cuda_latest.yaml # You may need to downgrade the torch using pip to match the CUDA version
+conda env create -f env_cuda_latest.yaml  # Downgrade torch via pip if needed to match the CUDA version
 ```
 
 ## How to start simulating (examples for FedAvg)
