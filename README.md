@@ -144,8 +144,8 @@ For the ***label skew*** scenario, we introduce **16** famous datasets:
 - **GTSRB**
 - **Shakespeare**
 - **Stanford Cars**
-- **COVIDx** (chest X-ray images for covid-19)
-- **kvasir** (endoscopic images for gastrointestinal disease detection)
+- **COVIDx**
+- **kvasir**
 
 The datasets can be easily split into **IID** and **non-IID** versions. In the **non-IID** scenario, we distinguish between two types of distribution:
 
@@ -165,7 +165,7 @@ For the ***feature shift*** scenario, we utilize **3** widely used datasets in D
 ### ***real-world*** scenario
 
 For the ***real-world*** scenario, we introduce **5** naturally separated datasets:  
-- **Camelyon17** (tumor tissue patches extracted from breast cancer metastases in lymph node sections, 5 hospitals, 2 labels)  
+- **Camelyon17** (5 hospitals, 2 labels)  
 - **iWildCam** (194 camera traps, 158 labels)  
 - **Omniglot** (20 clients, 50 labels)  
 - **HAR (Human Activity Recognition)** (30 clients, 6 labels)  
