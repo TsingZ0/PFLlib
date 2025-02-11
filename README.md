@@ -23,7 +23,7 @@ Figure 1: An Example for FedAvg. You can create a scenario using `generate_DATA.
 ```
 ### Key Features
 
-- **37 traditional FL ([tFL](#traditional-fl-tfl)) and personalized FL ([pFL](#personalized-fl-pfl)) algorithms, 3 scenarios, and 24 datasets.**
+- **38 traditional FL ([tFL](#traditional-fl-tfl)) and personalized FL ([pFL](#personalized-fl-pfl)) algorithms, 3 scenarios, and 24 datasets.**
 
 - Some **experimental results** are avalible in its [paper](https://arxiv.org/abs/2312.04992) and [here](#experimental-results). 
 
@@ -107,6 +107,7 @@ The origin of the **data heterogeneity** phenomenon is the characteristics of us
 - **FedDBE** — [Eliminating Domain Bias for Federated Learning in Representation Space](https://openreview.net/forum?id=nO5i1XdUS0) *NeurIPS 2023*
 - **FedCAC** — [Bold but Cautious: Unlocking the Potential of Personalized Federated Learning through Cautiously Aggressive Collaboration](https://arxiv.org/abs/2309.11103) *ICCV 2023*
 - **PFL-DA** — [Personalized Federated Learning via Domain Adaptation with an Application to Distributed 3D Printing](https://www.tandfonline.com/doi/full/10.1080/00401706.2022.2157882) *Technometrics 2023*
+- **FedAS** — [FedAS: Bridging Inconsistency in Personalized Federated Learning](https://openaccess.thecvf.com/content/CVPR2024/papers/Yang_FedAS_Bridging_Inconsistency_in_Personalized_Federated_Learning_CVPR_2024_paper.pdf) *CVPR 2024*
 
   ***Knowledge-distillation-based pFL (more in [HtFLlib](https://github.com/TsingZ0/HtFLlib))***
 
