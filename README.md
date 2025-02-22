@@ -2,11 +2,14 @@
 
 🎯***We create a beginner-friendly algorithm library and benchmark platform for those new to federated learning. Join us in expanding the FL community by contributing your algorithms, datasets, and metrics to this project.***
 
+👏 **PFLlib is using Apache License.**
+
 👏 **PFLlib now has its official website and domain name: https://www.pfllib.com/!!!**
 
 👏 **The **[Leaderboard](http://www.pfllib.com/benchmark.html)** is live! Our methods—[FedCP](https://github.com/TsingZ0/FedCP), [GPFL](https://github.com/TsingZ0/GPFL), and [FedDBE](https://github.com/TsingZ0/DBE)—lead the way. Notably, **FedDBE** stands out with robust performance across varying data heterogeneity levels.**
 
-[![arXiv](https://img.shields.io/badge/arXiv-2312.04992-b31b1b.svg)](https://arxiv.org/abs/2312.04992) [![License: GPL v2](https://img.shields.io/badge/License-GPL_v2-blue.svg)](https://www.gnu.org/licenses/old-licenses/gpl-2.0.en.html)
+[![arXiv](https://img.shields.io/badge/arXiv-2312.04992-b31b1b.svg)](https://arxiv.org/abs/2312.04992) ![Apache License 2.0](https://img.shields.io/badge/license-Apache%202.0-blue.svg)
+
 
 ![](./structure.png)
 Figure 1: An Example for FedAvg. You can create a scenario using `generate_DATA.py` and run an algorithm using `main.py`, `clientNAME.py`, and `serverNAME.py`. For a new algorithm, you only need to add new features in `clientNAME.py` and `serverNAME.py`.
