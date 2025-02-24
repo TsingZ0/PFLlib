@@ -17,6 +17,7 @@
 
 import numpy as np
 import os
+import shutil
 import sys
 import random
 import torch
@@ -64,6 +65,43 @@ class ImageFolder_custom(DatasetFolder):
         else:
             return len(self.dataidxs)
 
+def organize_val_folder(dir_path):
+    """
+    Parse val_annotations.txt and copy validation images into subfolders named after their class labels,
+    ensuring that ImageFolder correctly retrieves each image's class information.
+    Only images listed in val_annotations.txt are processed.
+    
+    Parameters:
+        dir_path: dataset root directory
+    """
+
+    # Set the validation directory path
+    val_dir = dir_path + "rawdata/tiny-imagenet-200/val/"
+    images_dir = os.path.join(val_dir, "images")
+    annotations_file = os.path.join(val_dir, "val_annotations.txt")
+
+    if not os.path.exists(annotations_file):
+        print("file val_annotations.txt not found:", annotations_file)
+        exit(1)
+
+    # Read and parse the file, create class subdirectories and move images
+    with open(annotations_file, "r") as f:
+        for line in f:
+            parts = line.strip().split("\t")
+            if len(parts) < 2:
+                continue
+            img_name, class_name = parts[0], parts[1]
+            class_dir = os.path.join(images_dir, class_name)
+            if not os.path.exists(class_dir):
+                os.makedirs(class_dir)
+            src = os.path.join(images_dir, img_name)
+            dst = os.path.join(class_dir, img_name)
+            if os.path.exists(src):
+                shutil.move(src, dst)
+            else:
+                print("Image not found:", src)
+
+    print("Validation set reorganization completed.")
 
 # Allocate data to users
 def generate_dataset(dir_path, num_clients, niid, balance, partition):
@@ -84,12 +122,14 @@ def generate_dataset(dir_path, num_clients, niid, balance, partition):
         os.system(f'unzip {dir_path}/rawdata/tiny-imagenet-200.zip -d {dir_path}/rawdata/')
     else:
         print('rawdata already exists.\n')
+    
+    organize_val_folder(dir_path)
 
     transform = transforms.Compose(
         [transforms.ToTensor(), transforms.Normalize((0.5, 0.5, 0.5), (0.5, 0.5, 0.5))])
 
     trainset = ImageFolder_custom(root=dir_path+'rawdata/tiny-imagenet-200/train/', transform=transform)
-    testset = ImageFolder_custom(root=dir_path+'rawdata/tiny-imagenet-200/val/', transform=transform)
+    testset = ImageFolder_custom(root=dir_path+'rawdata/tiny-imagenet-200/val/images', transform=transform)
     trainloader = torch.utils.data.DataLoader(
         trainset, batch_size=len(trainset), shuffle=False)
     testloader = torch.utils.data.DataLoader(
@@ -113,6 +153,9 @@ def generate_dataset(dir_path, num_clients, niid, balance, partition):
     num_classes = len(set(dataset_label))
     print(f'Number of classes: {num_classes}')
 
+    unique, counts = np.unique(testset.targets.cpu().detach().numpy(), return_counts=True)
+    print("Validation set sample counts for each class:", dict(zip(unique, counts)))
+    
     # dataset = []
     # for i in range(num_classes):
     #     idx = dataset_label == i
