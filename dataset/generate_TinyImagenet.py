@@ -89,24 +89,17 @@ def generate_dataset(dir_path, num_clients, niid, balance, partition):
         [transforms.ToTensor(), transforms.Normalize((0.5, 0.5, 0.5), (0.5, 0.5, 0.5))])
 
     trainset = ImageFolder_custom(root=dir_path+'rawdata/tiny-imagenet-200/train/', transform=transform)
-    testset = ImageFolder_custom(root=dir_path+'rawdata/tiny-imagenet-200/val/', transform=transform)
     trainloader = torch.utils.data.DataLoader(
         trainset, batch_size=len(trainset), shuffle=False)
-    testloader = torch.utils.data.DataLoader(
-        testset, batch_size=len(testset), shuffle=False)
 
     for _, train_data in enumerate(trainloader, 0):
         trainset.data, trainset.targets = train_data
-    for _, test_data in enumerate(testloader, 0):
-        testset.data, testset.targets = test_data
 
     dataset_image = []
     dataset_label = []
 
     dataset_image.extend(trainset.data.cpu().detach().numpy())
-    dataset_image.extend(testset.data.cpu().detach().numpy())
     dataset_label.extend(trainset.targets.cpu().detach().numpy())
-    dataset_label.extend(testset.targets.cpu().detach().numpy())
     dataset_image = np.array(dataset_image)
     dataset_label = np.array(dataset_label)
 
