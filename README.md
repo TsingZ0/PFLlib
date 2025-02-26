@@ -180,6 +180,8 @@ For more details on datasets and FL algorithms in **IoT**, please refer to [FL-I
 ### Examples for **MNIST** in the ***label skew*** scenario
 ```bash
 cd ./dataset
+# Please modify train_ratio and alpha in dataset\utils\dataset_utils.py
+
 # python generate_MNIST.py iid - - # for iid and unbalanced scenario
 # python generate_MNIST.py iid balance - # for iid and balanced scenario
 # python generate_MNIST.py noniid - pat # for pathological noniid and unbalanced scenario
