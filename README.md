@@ -18,7 +18,7 @@ Figure 1: An Example for FedAvg. You can create a scenario using `generate_DATA.
 
 ```
 @article{zhang2023pfllib,
-  title={PFLlib: Personalized Federated Learning Algorithm Library},
+  title={PFLlib: A Beginner-Friendly and Comprehensive Personalized Federated Learning Library and Benchmark},
   author={Zhang, Jianqing and Liu, Yang and Hua, Yang and Wang, Hao and Song, Tao and Xue, Zhengui and Ma, Ruhui and Cao, Jian},
   journal={arXiv preprint arXiv:2312.04992},
   year={2023}
