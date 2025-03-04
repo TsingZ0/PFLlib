@@ -30,7 +30,9 @@ Figure 1: An Example for FedAvg. You can create a scenario using `generate_DATA.
 
 - Some **experimental results** are avalible in its [paper](https://arxiv.org/abs/2312.04992) and [here](#experimental-results). 
 
-- Refer to [this guide](#how-to-start-simulating-examples-for-fedavg) to learn how to use it.
+- Refer to [examples](#how-to-start-simulating-examples-for-fedavg) to learn how to use it.
+
+- Refer to [easy to extend](#easy-to-extend) to learn how to add new data or algorithms.
 
 - The benchmark platform can simulate scenarios using the 4-layer CNN on Cifar100 for **500 clients** on **one NVIDIA GeForce RTX 3090 GPU card** with only **5.08GB GPU memory** cost.
 
