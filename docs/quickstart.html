@@ -197,7 +197,9 @@ python generate_MNIST.py noniid - dir # for practical noniid and unbalanced scen
                     <li>Finally, run the <code>main.py</code> with choosen configurations, FL algorithm, and hyperparameters:</li>
                     <pre>
 # In ./system
-python main.py -data MNIST -m CNN -algo FedAvg -gr 2000 -did 0 # using the MNIST dataset, the FedAvg algorithm, and the 4-layer CNN model</pre>
+python main.py -data MNIST -m CNN -algo FedAvg -gr 2000 -did 0 # using the MNIST dataset, the FedAvg algorithm, and the 4-layer CNN model
+python main.py -data MNIST -m CNN -algo FedAvg -gr 2000 -did 0,1,2,3 # running on multiple GPUs
+</pre>
                 </ol>
                 <strong>Note</strong> It is preferable to tune algorithm-specific hyper-parameters before using any algorithm on a new machine. 
             </section>
