@@ -22,7 +22,7 @@
             align-items: center;
             background-color: rgba(0, 0, 0, 0.7);
             color: white;
-            padding: 1rem 2rem;
+            padding: 1rem 0rem;
             position: fixed;
             width: 100%;
             z-index: 1000;
@@ -129,22 +129,56 @@
             text-decoration: none;
             color: #6DA945;
         }
+
+        .hamburger {
+            display: none;
+            background: none;
+            border: none;
+            cursor: pointer;
+            padding: 0.5rem;
+            position: absolute;
+            right: 1rem;
+        }
+
+        .hamburger span {
+            display: block;
+            width: 20px;
+            height: 3px;
+            background: white;
+            margin: 5px 0;
+            transition: 0.3s;
+        }
+
         @media (max-width: 768px) {
             .container {
+                max-width: 100%;
                 flex-direction: column;
                 margin-top: 6rem;
             }
             .sidebar, .content {
                 width: 100%;
             }
+
             .navbar-container {
-                flex-direction: column;
-                align-items: flex-start;
+                flex-direction: row;
+                flex-wrap: wrap;
             }
+
+            .hamburger {
+                display: block;
+            }
+
             .navbar nav {
+                display: none;
                 flex-direction: column;
-                gap: 0.5rem;
-                margin-top: 1rem;
+                width: 100%;
+                background: #333333;
+                padding: 1rem;
+                margin-top: 2rem;
+            }
+
+            .navbar nav.active {
+                display: flex;
             }
         }
     </style>
@@ -152,7 +186,12 @@
 <body>
     <div class="navbar">
         <div class="navbar-container">
-            <h1><a href="index.html"></a>PFLlib</a></h1>
+            <h1><a href="index.html">PFLlib</a></h1>
+            <button class="hamburger" aria-label="Menu">
+                <span></span>
+                <span></span>
+                <span></span>
+            </button>
             <nav>
                 <a href="index.html">Home</a>
                 <a href="docs.html">Documentation</a>
@@ -169,7 +208,7 @@
                 <li><a href="algo.html">FL Algorithms</a></li>
                 <li><a href="data.html">Datasets & Scenarios</a></li>
                 <li><a href="model.html">Models</a></li>
-                <li><a href="extend.html">How to Extend</a></li>
+                <li><a href="extend.html">Easy to Extend</a></li>
                 <li><a href="features.html">Other Features</a></li>
             </ul>
         </div>
@@ -223,6 +262,18 @@
             }
         }
         fetchGitHubStars();
+
+        document.querySelector('.hamburger').addEventListener('click', function() {
+            this.classList.toggle('active');
+            document.querySelector('.navbar nav').classList.toggle('active');
+        });
+
+        document.addEventListener('click', function(e) {
+            if (!e.target.closest('.navbar-container')) {
+                document.querySelector('.navbar nav').classList.remove('active');
+                document.querySelector('.hamburger').classList.remove('active');
+            }
+        });
     </script>
 </body>
 </html>

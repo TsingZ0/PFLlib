@@ -19,7 +19,7 @@
             align-items: center;
             background-color: transparent;
             color: white;
-            padding: 1rem 2rem;
+            padding: 1rem 0rem;
             position: fixed;
             width: 100%;
             z-index: 1000;
@@ -143,12 +143,27 @@
             text-decoration: none;
             color: #6DA945;
         }
+
+        .hamburger {
+            display: none;
+            background: none;
+            border: none;
+            cursor: pointer;
+            padding: 0.5rem;
+            position: absolute;
+            right: 1rem;
+        }
+
+        .hamburger span {
+            display: block;
+            width: 20px;
+            height: 3px;
+            background: white;
+            margin: 5px 0;
+            transition: 0.3s;
+        }
+
         @media (max-width: 768px) {
-            .hero {
-                height: auto;
-                padding: 2rem 1rem;
-                margin-top: 6rem; /* Adjusted margin for mobile view */
-            }
             .hero h1 {
                 font-size: 2rem;
             }
@@ -159,22 +174,27 @@
                 flex-direction: column;
                 gap: 2rem;
             }
+
             .navbar-container {
-                flex-direction: column;
-                align-items: flex-start;
+                flex-direction: row;
+                flex-wrap: wrap;
             }
+            
+            .hamburger {
+                display: block;
+            }
+
             .navbar nav {
+                display: none;
                 flex-direction: column;
-                gap: 0.5rem;
-                margin-top: 1rem;
+                width: 100%;
+                background: #333333;
+                padding: 1rem;
+                margin-top: 2rem;
             }
-            .feature-item {
-                flex: 1 1 calc(50% - 0.5rem); /* Two items per row on smaller screens */
-            }
-        }
-        @media (max-width: 480px) {
-            .feature-item {
-                flex: 1 1 100%; /* One item per row on very small screens */
+
+            .navbar nav.active {
+                display: flex;
             }
         }
     </style>
@@ -183,6 +203,11 @@
     <div class="navbar">
         <div class="navbar-container">
             <h1><a href="index.html" id="PFLlib">PFLlib</a></h1>
+            <button class="hamburger" aria-label="Menu">
+                <span></span>
+                <span></span>
+                <span></span>
+            </button>
             <nav>
                 <a href="index.html">Home</a>
                 <a href="docs.html">Documentation</a>
@@ -241,6 +266,18 @@
             }
         }
         fetchGitHubStars();
+
+        document.querySelector('.hamburger').addEventListener('click', function() {
+            this.classList.toggle('active');
+            document.querySelector('.navbar nav').classList.toggle('active');
+        });
+
+        document.addEventListener('click', function(e) {
+            if (!e.target.closest('.navbar-container')) {
+                document.querySelector('.navbar nav').classList.remove('active');
+                document.querySelector('.hamburger').classList.remove('active');
+            }
+        });
     </script>
 </body>
 </html>
