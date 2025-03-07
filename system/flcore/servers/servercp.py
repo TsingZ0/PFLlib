@@ -68,7 +68,7 @@ class FedCP(Server):
         else:
             acc.append(test_acc)
 
-        print("Averaged Test Accurancy: {:.4f}".format(test_acc))
+        print("Averaged Test Accuracy: {:.4f}".format(test_acc))
         print("Averaged Test AUC: {:.4f}".format(test_auc))
 
 
