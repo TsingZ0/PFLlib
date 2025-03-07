@@ -1,10 +1,6 @@
 # PFLlib: Personalized Federated Learning Library and Benchmark
 
-🎯***We create a beginner-friendly algorithm library and benchmark platform for those new to federated learning. Join us in expanding the FL community by contributing your algorithms, datasets, and metrics to this project.***
-
-👏 **PFLlib is using Apache License.**
-
-👏 **PFLlib now has its official website and domain name: https://www.pfllib.com/!!!**
+🎯***We built a beginner-friendly federated learning (FL) library and benchmark: **master FL in 2 hours—run it on your PC!** [Contribute](#easy-to-extend) your algorithms, datasets, and metrics to grow the FL community.***
 
 👏 **The **[Leaderboard](http://www.pfllib.com/benchmark.html)** is live! Our methods—[FedCP](https://github.com/TsingZ0/FedCP), [GPFL](https://github.com/TsingZ0/GPFL), and [FedDBE](https://github.com/TsingZ0/DBE)—lead the way. Notably, **FedDBE** stands out with robust performance across varying data heterogeneity levels.**
 
