@@ -1,4 +1,4 @@
-# PFLlib: Personalized Federated Learning Library
+# PFLlib: Personalized Federated Learning Library and Benchmark
 
 🎯***We create a beginner-friendly algorithm library and benchmark platform for those new to federated learning. Join us in expanding the FL community by contributing your algorithms, datasets, and metrics to this project.***
 
