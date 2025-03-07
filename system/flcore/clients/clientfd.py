@@ -7,7 +7,7 @@ from flcore.clients.clientbase import Client
 from collections import defaultdict
 
 
-class clientDistill(Client):
+class clientFD(Client):
     def __init__(self, args, id, train_samples, test_samples, **kwargs):
         super().__init__(args, id, train_samples, test_samples, **kwargs)
 

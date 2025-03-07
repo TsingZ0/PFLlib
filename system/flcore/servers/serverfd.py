@@ -1,17 +1,17 @@
 import time
-from flcore.clients.clientdistill import clientDistill
+from flcore.clients.clientfd import clientFD
 from flcore.servers.serverbase import Server
 from threading import Thread
 from collections import defaultdict
 
 
-class FedDistill(Server):
+class FD(Server):
     def __init__(self, args, times):
         super().__init__(args, times)
 
         # select slow clients
         self.set_slow_clients()
-        self.set_clients(clientDistill)
+        self.set_clients(clientFD)
 
         print(f"\nJoin ratio / total clients: {self.join_ratio} / {self.num_clients}")
         print("Finished creating server and clients.")

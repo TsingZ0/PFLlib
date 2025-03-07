@@ -31,7 +31,7 @@ from flcore.servers.serverbabu import FedBABU
 from flcore.servers.serverapple import APPLE
 from flcore.servers.servergen import FedGen
 from flcore.servers.serverscaffold import SCAFFOLD
-from flcore.servers.serverdistill import FedDistill
+from flcore.servers.serverfd import FD
 from flcore.servers.serverala import FedALA
 from flcore.servers.serverpac import FedPAC
 from flcore.servers.serverlg import LG_FedAvg
@@ -275,8 +275,8 @@ def run(args):
         elif args.algorithm == "SCAFFOLD":
             server = SCAFFOLD(args, i)
 
-        elif args.algorithm == "FedDistill":
-            server = FedDistill(args, i)
+        elif args.algorithm == "FD":
+            server = FD(args, i)
 
         elif args.algorithm == "FedALA":
             server = FedALA(args, i)
