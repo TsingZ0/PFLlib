@@ -104,20 +104,19 @@ class FedProto(Server):
         print("Std Test Accuracy: {:.4f}".format(np.std(accs)))
             
 
-# https://github.com/yuetan031/fedproto/blob/main/lib/utils.py#L221
 def proto_aggregation(local_protos_list):
-    agg_protos_label = defaultdict(list)
+    agg_protos = defaultdict(list)
     for local_protos in local_protos_list:
         for label in local_protos.keys():
-            agg_protos_label[label].append(local_protos[label])
+            agg_protos[label].append(local_protos[label])
 
-    for [label, proto_list] in agg_protos_label.items():
+    for [label, proto_list] in agg_protos.items():
         if len(proto_list) > 1:
             proto = 0 * proto_list[0].data
             for i in proto_list:
                 proto += i.data
-            agg_protos_label[label] = proto / len(proto_list)
+            agg_protos[label] = proto / len(proto_list)
         else:
-            agg_protos_label[label] = proto_list[0].data
+            agg_protos[label] = proto_list[0].data
 
-    return agg_protos_label
+    return agg_protos

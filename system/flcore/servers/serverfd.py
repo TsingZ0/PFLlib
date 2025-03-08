@@ -41,7 +41,7 @@ class FD(Server):
             # [t.join() for t in threads]
 
             self.receive_logits()
-            self.global_logits = logit_aggregation(self.uploaded_logits)
+            self.global_logits = proto_aggregation(self.uploaded_logits)
             self.send_logits()
 
             self.Budget.append(time.time() - s_t)
@@ -80,20 +80,19 @@ class FD(Server):
             self.uploaded_logits.append(client.logits)
 
 
-# https://github.com/yuetan031/fedlogit/blob/main/lib/utils.py#L221
-def logit_aggregation(local_logits_list):
-    agg_logits_label = defaultdict(list)
-    for local_logits in local_logits_list:
-        for label in local_logits.keys():
-            agg_logits_label[label].append(local_logits[label])
+def proto_aggregation(local_protos_list):
+    agg_protos = defaultdict(list)
+    for local_protos in local_protos_list:
+        for label in local_protos.keys():
+            agg_protos[label].append(local_protos[label])
 
-    for [label, logit_list] in agg_logits_label.items():
-        if len(logit_list) > 1:
-            logit = 0 * logit_list[0].data
-            for i in logit_list:
-                logit += i.data
-            agg_logits_label[label] = logit / len(logit_list)
+    for [label, proto_list] in agg_protos.items():
+        if len(proto_list) > 1:
+            proto = 0 * proto_list[0].data
+            for i in proto_list:
+                proto += i.data
+            agg_protos[label] = proto / len(proto_list)
         else:
-            agg_logits_label[label] = logit_list[0].data
+            agg_protos[label] = proto_list[0].data
 
-    return agg_logits_label
+    return agg_protos
