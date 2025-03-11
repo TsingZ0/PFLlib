@@ -114,6 +114,7 @@ class clientKD(Client):
         # self.model = self.load_model('model')
         # self.model.to(self.device)
         self.model.eval()
+        self.global_model.eval()
 
         train_num = 0
         losses = 0
