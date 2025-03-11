@@ -27,6 +27,7 @@ class clientFML(Client):
         trainloader = self.load_train_data()
         # self.model.to(self.device)
         self.model.train()
+        self.global_model.train()
 
         start_time = time.time()
 
