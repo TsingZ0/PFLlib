@@ -48,7 +48,7 @@ class TransformerModel(nn.Module):
         self.fc.weight.data.uniform_(-initrange, initrange)
 
     def forward(self, src: Tensor, attn_mask: Tensor = None) -> Tensor:
-        if type(x) == type([]):
+        if type(src) == type([]):
             src, _ = src
         """
         Args:
