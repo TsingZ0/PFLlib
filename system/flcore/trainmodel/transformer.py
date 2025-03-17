@@ -49,9 +49,7 @@ class TransformerModel(nn.Module):
 
     def forward(self, src: Tensor, attn_mask: Tensor = None) -> Tensor:
         if type(x) == type([]):
-            src, _ = x
-        else:
-            src = x
+            src, _ = src
         """
         Args:
             src: Tensor, shape [batch_size, seq_len]
