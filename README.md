@@ -7,7 +7,7 @@
 [![arXiv](https://img.shields.io/badge/arXiv-2312.04992-b31b1b.svg)](https://arxiv.org/abs/2312.04992) ![Apache License 2.0](https://img.shields.io/badge/license-Apache%202.0-blue.svg)
 
 
-![](./structure.png)
+![](docs/imgs/structure.png)
 Figure 1: An Example for FedAvg. You can create a scenario using `generate_DATA.py` and run an algorithm using `main.py`, `clientNAME.py`, and `serverNAME.py`. For a new algorithm, you only need to add new features in `clientNAME.py` and `serverNAME.py`.
 
 🎯**If you find our repository useful, please cite the corresponding paper:**
