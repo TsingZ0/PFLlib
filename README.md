@@ -1,4 +1,4 @@
-# <img src="docs/imgs/logo-green.png" alt="icon" width="30" height="30" style="vertical-align:sub;"/> PFLlib: Personalized Federated Learning Library and Benchmark
+# <img src="docs/imgs/logo-green.png" alt="icon" height="30" style="vertical-align:sub;"/> PFLlib: Personalized Federated Learning Library and Benchmark
 
 🎯*We built a beginner-friendly federated learning (FL) library and benchmark: **master FL in 2 hours—run it on your PC!** [Contribute](#easy-to-extend) your algorithms, datasets, and metrics to grow the FL community.*
 
