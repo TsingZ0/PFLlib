@@ -25,7 +25,7 @@ def read_client_data(dataset, idx, is_train=True, few_shot=0):
     else:
         data_list = process_image(data)
 
-    if few_shot > 0:
+    if is_train and few_shot > 0:
         shot_cnt_dict = defaultdict(int)
         data_list_new = []
         for data_item in data_list:
