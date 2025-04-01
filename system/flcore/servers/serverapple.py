@@ -133,8 +133,8 @@ class APPLE(Server):
     def set_new_clients(self, clientObj):
         self.args.num_clients = self.num_clients + self.num_new_clients
         for i in range(self.num_clients, self.num_clients + self.num_new_clients):
-            train_data = read_client_data(self.dataset, i, is_train=True)
-            test_data = read_client_data(self.dataset, i, is_train=False)
+            train_data = read_client_data(self.dataset, i, is_train=True, few_shot=self.few_shot)
+            test_data = read_client_data(self.dataset, i, is_train=False, few_shot=self.few_shot)
             client = clientObj(self.args, 
                             id=i, 
                             train_samples=len(train_data), 

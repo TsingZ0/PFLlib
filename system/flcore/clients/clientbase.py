@@ -29,6 +29,7 @@ class Client(object):
         self.batch_size = args.batch_size
         self.learning_rate = args.local_learning_rate
         self.local_epochs = args.local_epochs
+        self.few_shot = args.few_shot
 
         # check BatchNorm
         self.has_BatchNorm = False
@@ -54,13 +55,13 @@ class Client(object):
     def load_train_data(self, batch_size=None):
         if batch_size == None:
             batch_size = self.batch_size
-        train_data = read_client_data(self.dataset, self.id, is_train=True)
+        train_data = read_client_data(self.dataset, self.id, is_train=True, few_shot=self.few_shot)
         return DataLoader(train_data, batch_size, drop_last=True, shuffle=True)
 
     def load_test_data(self, batch_size=None):
         if batch_size == None:
             batch_size = self.batch_size
-        test_data = read_client_data(self.dataset, self.id, is_train=False)
+        test_data = read_client_data(self.dataset, self.id, is_train=False, few_shot=self.few_shot)
         return DataLoader(test_data, batch_size, drop_last=False, shuffle=True)
         
     def set_parameters(self, model):

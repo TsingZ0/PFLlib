@@ -426,6 +426,7 @@ if __name__ == "__main__":
     parser.add_argument('-vs', "--vocab_size", type=int, default=80, 
                         help="Set this for text tasks. 80 for Shakespeare. 32000 for AG_News and SogouNews.")
     parser.add_argument('-ml', "--max_len", type=int, default=200)
+    parser.add_argument('-fs', "--few_shot", type=int, default=0)
     # practical
     parser.add_argument('-cdr', "--client_drop_rate", type=float, default=0.0,
                         help="Rate for clients that train but drop out")

@@ -26,6 +26,7 @@ class Server(object):
         self.random_join_ratio = args.random_join_ratio
         self.num_join_clients = int(self.num_clients * self.join_ratio)
         self.current_num_join_clients = self.num_join_clients
+        self.few_shot = args.few_shot
         self.algorithm = args.algorithm
         self.time_select = args.time_select
         self.goal = args.goal
@@ -64,8 +65,8 @@ class Server(object):
 
     def set_clients(self, clientObj):
         for i, train_slow, send_slow in zip(range(self.num_clients), self.train_slow_clients, self.send_slow_clients):
-            train_data = read_client_data(self.dataset, i, is_train=True)
-            test_data = read_client_data(self.dataset, i, is_train=False)
+            train_data = read_client_data(self.dataset, i, is_train=True, few_shot=self.few_shot)
+            test_data = read_client_data(self.dataset, i, is_train=False, few_shot=self.few_shot)
             client = clientObj(self.args, 
                             id=i, 
                             train_samples=len(train_data), 
@@ -322,8 +323,8 @@ class Server(object):
 
     def set_new_clients(self, clientObj):
         for i in range(self.num_clients, self.num_clients + self.num_new_clients):
-            train_data = read_client_data(self.dataset, i, is_train=True)
-            test_data = read_client_data(self.dataset, i, is_train=False)
+            train_data = read_client_data(self.dataset, i, is_train=True, few_shot=self.few_shot)
+            test_data = read_client_data(self.dataset, i, is_train=False, few_shot=self.few_shot)
             client = clientObj(self.args, 
                             id=i, 
                             train_samples=len(train_data), 

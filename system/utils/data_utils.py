@@ -1,6 +1,7 @@
 import numpy as np
 import os
 import torch
+from collections import defaultdict
 
 
 def read_data(dataset, idx, is_train=True):
@@ -23,6 +24,16 @@ def read_client_data(dataset, idx, is_train=True, few_shot=0):
         data_list = process_Shakespeare(data)
     else:
         data_list = process_image(data)
+
+    if few_shot > 0:
+        shot_cnt_dict = defaultdict(int)
+        data_list_new = []
+        for data_item in data_list:
+            label = data_item[1].item()
+            if shot_cnt_dict[label] < few_shot:
+                data_list_new.append(data_item)
+                shot_cnt_dict[label] += 1
+        data_list = data_list_new
     return data_list
 
 def process_image(data):
@@ -44,3 +55,4 @@ def process_Shakespeare(data):
     X = torch.Tensor(data['x']).type(torch.int64)
     y = torch.Tensor(data['y']).type(torch.int64)
     return [(x, y) for x, y in zip(X, y)]
+
