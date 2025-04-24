@@ -4,7 +4,9 @@
 
 👏 The **[official website](http://www.pfllib.com)** and **[leaderboard](http://www.pfllib.com/benchmark.html)** is live! Our methods—[FedCP](https://github.com/TsingZ0/FedCP), [GPFL](https://github.com/TsingZ0/GPFL), and [FedDBE](https://github.com/TsingZ0/DBE)—lead the way. Notably, **FedDBE** stands out with robust performance across varying data heterogeneity levels.
 
-[![arXiv](https://img.shields.io/badge/arXiv-2312.04992-b31b1b.svg)](https://arxiv.org/abs/2312.04992) ![Apache License 2.0](https://img.shields.io/badge/license-Apache%202.0-blue.svg)
+[![JMLR](https://img.shields.io/badge/JMLR-Published-blue)](https://www.jmlr.org/papers/v26/23-1634.html)
+[![arXiv](https://img.shields.io/badge/arXiv-2312.04992-b31b1b.svg)](https://arxiv.org/abs/2312.04992)
+![Apache License 2.0](https://img.shields.io/badge/license-Apache%202.0-blue.svg)
 
 
 ![](docs/imgs/structure.png)
