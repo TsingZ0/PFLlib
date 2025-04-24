@@ -15,11 +15,14 @@ Figure 1: An Example for FedAvg. You can create a scenario using `generate_DATA.
 🎯**If you find our repository useful, please cite the corresponding paper:**
 
 ```
-@article{zhang2023pfllib,
+@article{zhang2025pfllib,
   title={PFLlib: A Beginner-Friendly and Comprehensive Personalized Federated Learning Library and Benchmark},
   author={Zhang, Jianqing and Liu, Yang and Hua, Yang and Wang, Hao and Song, Tao and Xue, Zhengui and Ma, Ruhui and Cao, Jian},
-  journal={arXiv preprint arXiv:2312.04992},
-  year={2023}
+  journal={Journal of Machine Learning Research},
+  volume={26},
+  number={50},
+  pages={1--10},
+  year={2025}
 }
 ```
 ### Key Features
