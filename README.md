@@ -24,6 +24,13 @@ Figure 1: An Example for FedAvg. You can create a scenario using `generate_DATA.
   pages={1--10},
   year={2025}
 }
+
+@inproceedings{Zhang2025htfllib,
+  author = {Jianqing Zhang, Xinghao Wu, Yanbing Zhou, Xiaoting Sun, Qiqi Cai, Yang Liu, Yang Hua, Zhenzhe Zheng, Jian Cao, Qiang Yang},
+  title = {HtFLlib: A Comprehensive Heterogeneous Federated Learning Library and Benchmark},
+  year = {2025},
+  booktitle = {Proceedings of the 29th ACM SIGKDD Conference on Knowledge Discovery and Data Mining}
+}
 ```
 ### Key Features
 
