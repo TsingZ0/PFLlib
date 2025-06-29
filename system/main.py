@@ -48,6 +48,7 @@ from flcore.servers.servercac import FedCAC
 from flcore.servers.serverda import PFL_DA
 from flcore.servers.serverlc import FedLC
 from flcore.servers.serveras import FedAS
+from flcore.servers.servercross import FedCross
 
 from flcore.trainmodel.models import *
 
@@ -361,6 +362,9 @@ def run(args):
             args.model = BaseHeadSplit(args.model, args.head)
             server = FedAS(args, i)
             
+        elif args.algorithm == "FedCross":
+            server = FedCross(args, i)
+
         else:
             raise NotImplementedError
 
@@ -457,7 +461,7 @@ if __name__ == "__main__":
     parser.add_argument('-alk', "--alphaK", type=float, default=1.0, 
                         help="lambda/sqrt(GLOABL-ITRATION) according to the paper")
     parser.add_argument('-sg', "--sigma", type=float, default=1.0)
-    # APFL
+    # APFL / FedCross
     parser.add_argument('-al', "--alpha", type=float, default=1.0)
     # Ditto / FedRep
     parser.add_argument('-pls', "--plocal_epochs", type=int, default=1)
@@ -488,6 +492,11 @@ if __name__ == "__main__":
     # FedDBE
     parser.add_argument('-mo', "--momentum", type=float, default=0.1)
     parser.add_argument('-klw', "--kl_weight", type=float, default=0.0)
+
+    # FedCross
+    parser.add_argument('-fsb', "--first_stage_bound", type=int, default=0)
+    parser.add_argument('-ca', "--fedcross_alpha", type=float, default=0.99)
+    parser.add_argument('-cmss', "--collaberative_model_select_strategy", type=int, default=1)
 
 
     args = parser.parse_args()
