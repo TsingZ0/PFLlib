@@ -34,7 +34,7 @@ Figure 1: An Example for FedAvg. You can create a scenario using `generate_DATA.
 ```
 ### Key Features
 
-- **38 traditional FL ([tFL](#traditional-fl-tfl)) and personalized FL ([pFL](#personalized-fl-pfl)) algorithms, 3 scenarios, and 24 datasets.**
+- **39 traditional FL ([tFL](#traditional-fl-tfl)) and personalized FL ([pFL](#personalized-fl-pfl)) algorithms, 3 scenarios, and 24 datasets.**
 
 - Some **experimental results** are avalible in its [paper](https://arxiv.org/abs/2312.04992) and [here](#experimental-results). 
 
@@ -85,6 +85,10 @@ The origin of the **data heterogeneity** phenomenon is the characteristics of us
 
 - **FedGen** — [Data-Free Knowledge Distillation for Heterogeneous Federated Learning](http://proceedings.mlr.press/v139/zhu21b.html) *ICML 2021*
 - **FedNTD** — [Preservation of the Global Knowledge by Not-True Distillation in Federated Learning](https://proceedings.neurips.cc/paper_files/paper/2022/hash/fadec8f2e65f181d777507d1df69b92f-Abstract-Conference.html) *NeurIPS 2022*
+
+  ***Heuristically-search-based tFL***
+  
+- **FedCross** - [FedCross: Towards Accurate Federated Learning via Multi-Model Cross-Aggregation](https://www.computer.org/csdl/proceedings-article/icde/2024/171500c137/1YOuaPcHF3q) *ICDE 2024*
 
 > ### Personalized FL (pFL)
 
