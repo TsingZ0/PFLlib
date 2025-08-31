@@ -1,7 +1,4 @@
-now_path=`pwd`
-
 # Install miniconda
-cd
 wget https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh
 sh Miniconda3-latest-Linux-x86_64.sh
 
@@ -15,6 +12,6 @@ echo export PIP_CACHE_DIR='$PWD'/tmp >> ~/.bashrc
 echo # export TMPDIR='$PWD'/tmp >> ~/.bashrc
 
 # Install python packages
-cd $now_path
 source ~/.bashrc
 conda env create -f env_cuda_latest.yaml
+conda activate pfllib
