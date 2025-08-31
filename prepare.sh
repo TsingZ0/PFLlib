@@ -12,7 +12,7 @@ echo alias d=\'du -hs * | sort -h\' >> ~/.bashrc
 echo alias del_pycache=\'find . -type d -name __pycache__ -prune -exec rm -rf {} \;\' >> ~/.bashrc
 
 echo export PIP_CACHE_DIR='$PWD'/tmp >> ~/.bashrc
-echo export TMPDIR='$PWD'/tmp >> ~/.bashrc
+echo # export TMPDIR='$PWD'/tmp >> ~/.bashrc
 
 # Install python packages
 cd $now_path
