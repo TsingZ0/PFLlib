@@ -36,6 +36,8 @@ Figure 1: An Example for FedAvg. You can create a scenario using `generate_DATA.
 
 - **39 traditional FL ([tFL](#traditional-fl-tfl)) and personalized FL ([pFL](#personalized-fl-pfl)) algorithms, 3 scenarios, and 24 datasets.**
 
+- Real-machine deployment: [HtFL-OnDevice](https://github.com/TsingZ0//HtFL-OnDevice).
+
 - Some **experimental results** are avalible in its [paper](https://arxiv.org/abs/2312.04992) and [here](#experimental-results). 
 
 - Refer to [examples](#how-to-start-simulating-examples-for-fedavg) to learn how to use it.
