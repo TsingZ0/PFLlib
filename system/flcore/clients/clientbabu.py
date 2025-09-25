@@ -64,7 +64,7 @@ class clientBABU(Client):
                 param.requires_grad = True
 
         if 'base' not in which_module:
-            for param in self.model.head.parameters():
+            for param in self.model.base.parameters():
                 param.requires_grad = False
             
 
