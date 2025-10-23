@@ -13,6 +13,7 @@ from flcore.servers.serveravg import FedAvg
 from flcore.servers.serverpFedMe import pFedMe
 from flcore.servers.serverperavg import PerAvg
 from flcore.servers.serverprox import FedProx
+from flcore.servers.serveradaprox import AdaProxFedProx
 from flcore.servers.serverfomo import FedFomo
 from flcore.servers.serveramp import FedAMP
 from flcore.servers.servermtl import FedMTL
@@ -203,6 +204,9 @@ def run(args):
 
         elif args.algorithm == "FedProx":
             server = FedProx(args, i)
+
+        elif args.algorithm == "AdaProxFedProx":
+            server = AdaProxFedProx(args, i)
 
         elif args.algorithm == "FedFomo":
             server = FedFomo(args, i)
@@ -497,6 +501,20 @@ if __name__ == "__main__":
     parser.add_argument('-fsb', "--first_stage_bound", type=int, default=0)
     parser.add_argument('-ca', "--fedcross_alpha", type=float, default=0.99)
     parser.add_argument('-cmss', "--collaberative_model_select_strategy", type=int, default=1)
+    
+    # AdaProxFedProx
+    parser.add_argument('-ag', "--alpha_gain", type=float, default=1.0,
+                        help="Adaptive mu gain (alpha) for AdaProx")
+    parser.add_argument('-gc', "--gap_clip", type=float, default=1.0,
+                        help="Clipping value for loss gap (tau) in AdaProx")
+    parser.add_argument('-mmax', "--mu_max", type=float, default=5.0,
+                        help="Maximum value for adaptive mu in AdaProx")
+    parser.add_argument('-minit', "--mu_init", type=float, default=0.0,
+                        help="Initial mu value during warmup in AdaProx")
+    parser.add_argument('-wr', "--warmup_rounds", type=int, default=5,
+                        help="Rounds before adaptive mu kicks in for AdaProx")
+    parser.add_argument('-eb', "--ema_beta", type=float, default=0.9,
+                        help="EMA beta for server's global loss tracker in AdaProx")
 
 
     args = parser.parse_args()
