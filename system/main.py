@@ -21,6 +21,7 @@ from flcore.servers.serverlocal import Local
 from flcore.servers.serverper import FedPer
 from flcore.servers.serverapfl import APFL
 from flcore.servers.serverditto import Ditto
+from flcore.servers.server_adaprox_ditto import ServerAdaProxDitto
 from flcore.servers.serverrep import FedRep
 from flcore.servers.serverphp import FedPHP
 from flcore.servers.serverbn import FedBN
@@ -225,6 +226,9 @@ def run(args):
 
         elif args.algorithm == "Ditto":
             server = Ditto(args, i)
+
+        elif args.algorithm == "AdaProxDitto":
+            server = ServerAdaProxDitto(args, i)
 
         elif args.algorithm == "FedRep":
             args.head = copy.deepcopy(args.model.fc)
@@ -515,6 +519,12 @@ if __name__ == "__main__":
                         help="Rounds before adaptive mu kicks in for AdaProx")
     parser.add_argument('-eb', "--ema_beta", type=float, default=0.9,
                         help="EMA beta for server's global loss tracker in AdaProx")
+    
+    # AdaProxDitto
+    parser.add_argument('-lmax', "--lam_max", type=float, default=5.0,
+                        help="Maximum value for adaptive lambda in AdaProxDitto")
+    parser.add_argument('-linit', "--lam_init", type=float, default=0.0,
+                        help="Initial lambda value during warmup in AdaProxDitto")
 
 
     args = parser.parse_args()
