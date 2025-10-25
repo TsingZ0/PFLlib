@@ -60,6 +60,9 @@ from flcore.trainmodel.alexnet import *
 from flcore.trainmodel.mobilenet_v2 import *
 from flcore.trainmodel.transformer import *
 
+# Optional clients for experiments
+from flcore.clients.clientadaprox_k_eval import clientAdaProxKEval
+
 from utils.result_utils import average_data
 from utils.mem_utils import MemReporter
 
@@ -208,6 +211,11 @@ def run(args):
 
         elif args.algorithm == "AdaProxFedProx":
             server = AdaProxFedProx(args, i)
+
+        elif args.algorithm == "AdaProxKEval":
+            server = AdaProxFedProx(args, i)
+            # Override the client class to use the k-batch evaluation variant
+            server.set_clients(clientAdaProxKEval)
 
         elif args.algorithm == "FedFomo":
             server = FedFomo(args, i)
@@ -519,6 +527,9 @@ if __name__ == "__main__":
                         help="Rounds before adaptive mu kicks in for AdaProx")
     parser.add_argument('-eb', "--ema_beta", type=float, default=0.9,
                         help="EMA beta for server's global loss tracker in AdaProx")
+    # How many batches clients should use when evaluating the global model loss
+    parser.add_argument('-keb', "--k_eval_batches", type=int, default=5,
+                        help="Number of batches to evaluate the global model loss on each client (used by AdaProx clients)")
     
     # AdaProxDitto
     parser.add_argument('-lmax', "--lam_max", type=float, default=5.0,

@@ -78,6 +78,29 @@ class AdaProxFedProx(Server):
                 
                 if i % self.eval_gap == 0:
                     print(f"[AdaProx] Mean client loss: {mean_loss:.4f}, EMA (lg): {self.lg:.4f}")
+                    # Log client mu values for debugging/analysis
+                    try:
+                        client_mus = []
+                        for c in self.selected_clients:
+                            # prefer adaptive_mu if present, fall back to mu
+                            mu_val = getattr(c, 'adaptive_mu', None)
+                            if mu_val is None:
+                                mu_val = getattr(c, 'mu', None)
+                            client_mus.append(mu_val if mu_val is not None else float('nan'))
+
+                        # summary stats
+                        mus_valid = [m for m in client_mus if not (m is None)]
+                        if len(mus_valid) > 0:
+                            mean_mu = sum(mus_valid) / len(mus_valid)
+                        else:
+                            mean_mu = float('nan')
+
+                        # Print per-client mu (short) and mean
+                        mus_str = ', '.join([f"{m:.4f}" if (m is not None) else "nan" for m in client_mus])
+                        print(f"[AdaProx] client mu values: [{mus_str}]")
+                        print(f"[AdaProx] mean client mu: {mean_mu:.4f}")
+                    except Exception as e:
+                        print(f"[AdaProx Warning] Error logging client mu values: {e}")
             
             except Exception as e:
                 print(f"[AdaProx Warning] Error computing EMA: {e}")

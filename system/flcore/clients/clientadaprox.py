@@ -12,8 +12,10 @@ class clientAdaProx(clientProx):
         self.alpha = getattr(args, 'alpha_gain', 1.0)
         self.tau = getattr(args, 'gap_clip', 1.0)
         self.mu_max = getattr(args, 'mu_max', 5.0)
-        self.warmup = getattr(args, 'warmup_rounds', 5)
-        self.mu_init = getattr(args, 'mu_init', 0.0)
+        # Use a short warmup so adaptive mu can activate in short tests
+        self.warmup = getattr(args, 'warmup_rounds', 2)
+        # Small non-zero default for proximal term so adaptive behavior is testable
+        self.mu_init = getattr(args, 'mu_init', 0.01)
         
         # State for adaptive mu (proximal penalty)
         self.adaptive_mu = self.mu_init
