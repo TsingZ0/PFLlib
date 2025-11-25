@@ -13,6 +13,7 @@ from flcore.servers.serveravg import FedAvg
 from flcore.servers.serverpFedMe import pFedMe
 from flcore.servers.serverperavg import PerAvg
 from flcore.servers.serverprox import FedProx
+from flcore.servers.serveradaprox import AdaProxFedProx
 from flcore.servers.serverfomo import FedFomo
 from flcore.servers.serveramp import FedAMP
 from flcore.servers.servermtl import FedMTL
@@ -20,6 +21,7 @@ from flcore.servers.serverlocal import Local
 from flcore.servers.serverper import FedPer
 from flcore.servers.serverapfl import APFL
 from flcore.servers.serverditto import Ditto
+from flcore.servers.server_adaprox_ditto import ServerAdaProxDitto
 from flcore.servers.serverrep import FedRep
 from flcore.servers.serverphp import FedPHP
 from flcore.servers.serverbn import FedBN
@@ -57,6 +59,9 @@ from flcore.trainmodel.resnet import *
 from flcore.trainmodel.alexnet import *
 from flcore.trainmodel.mobilenet_v2 import *
 from flcore.trainmodel.transformer import *
+
+# Optional clients for experiments
+from flcore.clients.clientadaprox_k_eval import clientAdaProxKEval
 
 from utils.result_utils import average_data
 from utils.mem_utils import MemReporter
@@ -204,6 +209,14 @@ def run(args):
         elif args.algorithm == "FedProx":
             server = FedProx(args, i)
 
+        elif args.algorithm == "AdaProxFedProx":
+            server = AdaProxFedProx(args, i)
+
+        elif args.algorithm == "AdaProxKEval":
+            server = AdaProxFedProx(args, i)
+            # Override the client class to use the k-batch evaluation variant
+            server.set_clients(clientAdaProxKEval)
+
         elif args.algorithm == "FedFomo":
             server = FedFomo(args, i)
 
@@ -221,6 +234,9 @@ def run(args):
 
         elif args.algorithm == "Ditto":
             server = Ditto(args, i)
+
+        elif args.algorithm == "AdaProxDitto":
+            server = ServerAdaProxDitto(args, i)
 
         elif args.algorithm == "FedRep":
             args.head = copy.deepcopy(args.model.fc)
@@ -497,6 +513,29 @@ if __name__ == "__main__":
     parser.add_argument('-fsb', "--first_stage_bound", type=int, default=0)
     parser.add_argument('-ca', "--fedcross_alpha", type=float, default=0.99)
     parser.add_argument('-cmss', "--collaberative_model_select_strategy", type=int, default=1)
+    
+    # AdaProxFedProx
+    parser.add_argument('-ag', "--alpha_gain", type=float, default=1.0,
+                        help="Adaptive mu gain (alpha) for AdaProx")
+    parser.add_argument('-gc', "--gap_clip", type=float, default=1.0,
+                        help="Clipping value for loss gap (tau) in AdaProx")
+    parser.add_argument('-mmax', "--mu_max", type=float, default=5.0,
+                        help="Maximum value for adaptive mu in AdaProx")
+    parser.add_argument('-minit', "--mu_init", type=float, default=0.0,
+                        help="Initial mu value during warmup in AdaProx")
+    parser.add_argument('-wr', "--warmup_rounds", type=int, default=5,
+                        help="Rounds before adaptive mu kicks in for AdaProx")
+    parser.add_argument('-eb', "--ema_beta", type=float, default=0.9,
+                        help="EMA beta for server's global loss tracker in AdaProx")
+    # How many batches clients should use when evaluating the global model loss
+    parser.add_argument('-keb', "--k_eval_batches", type=int, default=5,
+                        help="Number of batches to evaluate the global model loss on each client (used by AdaProx clients)")
+    
+    # AdaProxDitto
+    parser.add_argument('-lmax', "--lam_max", type=float, default=5.0,
+                        help="Maximum value for adaptive lambda in AdaProxDitto")
+    parser.add_argument('-linit', "--lam_init", type=float, default=0.0,
+                        help="Initial lambda value during warmup in AdaProxDitto")
 
 
     args = parser.parse_args()
