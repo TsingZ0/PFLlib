@@ -103,7 +103,7 @@ def generate_dataset(dataset, meta_path, save_path,  num_clients, num_classes, n
     train_path = os.path.join(save_path, 'train')
     test_path = os.path.join(save_path, 'test')
     
-    if check(config_path, train_path, test_path, num_clients, num_classes, niid, balance, partition):
+    if check(config_path, train_path, test_path, num_clients, niid, balance, partition):
         return
 
     # Get MNIST data
