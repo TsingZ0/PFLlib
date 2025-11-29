@@ -46,7 +46,7 @@ Figure 1: An Example for FedAvg. You can create a scenario using `generate_DATA.
 
 - The benchmark platform can simulate scenarios using the 4-layer CNN on Cifar100 for **500 clients** on **one NVIDIA GeForce RTX 3090 GPU card** with only **5.08GB GPU memory** cost.
 
-- We provide [privacy evaluation](#privacy-evaluation) and [systematical research supprot](#systematical-research-supprot). 
+- We provide [privacy evaluation](#privacy-evaluation) and [systematical research support](#systematical-research-support). 
 
 - You can now train on some clients and evaluate performance on new clients by setting `args.num_new_clients` in `./system/main.py`. Please note that not all tFL/pFL algorithms support this feature.
 
@@ -416,7 +416,7 @@ You can use the following privacy evaluation methods to assess the privacy-prese
 - **PSNR (Peak Signal-to-Noise Ratio)**: an objective metric for image evaluation, defined as the logarithm of the ratio of the squared maximum value of RGB image fluctuations to the Mean Squared Error (MSE) between two images. A lower PSNR score indicates better privacy-preserving capabilities.
 
 
-## Systematical research supprot
+## Systematical research support
 
 To simulate Federated Learning (FL) under practical conditions, such as **client dropout**, **slow trainers**, **slow senders**, and **network TTL (Time-To-Live)**, you can adjust the following parameters:
 
