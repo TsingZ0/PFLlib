@@ -47,7 +47,7 @@ class clientFD(Client):
                         y_c = yy.item()
                         if type(self.global_logits[y_c]) != type([]):
                             logit_new[i, :] = self.global_logits[y_c].data
-                    loss += self.loss(output, logit_new.softmax(dim=1)) * self.lamda
+                    loss += self.loss(output, logit_new) * self.lamda
 
                 for i, yy in enumerate(y):
                     y_c = yy.item()
@@ -95,7 +95,7 @@ class clientFD(Client):
                         y_c = yy.item()
                         if type(self.global_logits[y_c]) != type([]):
                             logit_new[i, :] = self.global_logits[y_c].data
-                    loss += self.loss(output, logit_new.softmax(dim=1)) * self.lamda
+                    loss += self.loss(output, logit_new) * self.lamda
                     
                 train_num += y.shape[0]
                 losses += loss.item() * y.shape[0]
