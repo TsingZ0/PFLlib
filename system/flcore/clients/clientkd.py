@@ -101,8 +101,11 @@ class clientKD(Client):
         # recover
         for k in global_param.keys():
             if len(global_param[k]) == 3:
-                # use np.matmul to support high-dimensional CNN param
-                global_param[k] = np.matmul(global_param[k][0] * global_param[k][1][..., None, :], global_param[k][2])
+                u, sigma, v = global_param[k]
+                recovered = np.matmul(u * sigma[..., None, :], v)
+                # reshape back to original dimensions for >2D params (e.g. Conv2d)
+                orig_shape = self.global_model.state_dict()[k].shape
+                global_param[k] = recovered.reshape(orig_shape)
         
         for name, old_param in self.global_model.named_parameters():
             if name in global_param:
@@ -150,15 +153,14 @@ class clientKD(Client):
             param_cpu = param.detach().cpu().numpy()
             # refer to https://github.com/wuch15/FedKD/blob/main/run.py#L187
             if param_cpu.shape[0]>1 and len(param_cpu.shape)>1 and 'embeddings' not in name:
+                orig_shape = param_cpu.shape
+                # flatten >2D params (e.g. Conv2d) to 2D for proper SVD
+                if len(orig_shape) > 2:
+                    param_cpu = param_cpu.reshape(orig_shape[0], -1)
                 u, sigma, v = np.linalg.svd(param_cpu, full_matrices=False)
-                # support high-dimensional CNN param
-                if len(u.shape)==4:
-                    u = np.transpose(u, (2, 3, 0, 1))
-                    sigma = np.transpose(sigma, (2, 0, 1))
-                    v = np.transpose(v, (2, 3, 0, 1))
                 threshold=0
                 if np.sum(np.square(sigma))==0:
-                    compressed_param_cpu=param_cpu
+                    compressed_param_cpu=param_cpu.reshape(orig_shape)
                 else:
                     for singular_value_num in range(len(sigma)):
                         if np.sum(np.square(sigma[:singular_value_num]))>self.energy*np.sum(np.square(sigma)):
@@ -167,11 +169,6 @@ class clientKD(Client):
                     u=u[:, :threshold]
                     sigma=sigma[:threshold]
                     v=v[:threshold, :]
-                    # support high-dimensional CNN param
-                    if len(u.shape)==4:
-                        u = np.transpose(u, (2, 3, 0, 1))
-                        sigma = np.transpose(sigma, (1, 2, 0))
-                        v = np.transpose(v, (2, 3, 0, 1))
                     compressed_param_cpu=[u,sigma,v]
             elif 'embeddings' not in name:
                 compressed_param_cpu=param_cpu
