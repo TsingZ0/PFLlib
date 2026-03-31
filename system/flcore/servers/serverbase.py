@@ -44,9 +44,13 @@ class Server(object):
         self.uploaded_ids = []
         self.uploaded_models = []
 
+        self.use_val = getattr(args, 'use_val', False)
+
         self.rs_test_acc = []
         self.rs_test_auc = []
         self.rs_train_loss = []
+        self.rs_val_acc = []
+        self.rs_val_auc = []
 
         self.times = times
         self.eval_gap = args.eval_gap
@@ -182,6 +186,9 @@ class Server(object):
                 hf.create_dataset('rs_test_acc', data=self.rs_test_acc)
                 hf.create_dataset('rs_test_auc', data=self.rs_test_auc)
                 hf.create_dataset('rs_train_loss', data=self.rs_train_loss)
+                if self.rs_val_acc:
+                    hf.create_dataset('rs_val_acc', data=self.rs_val_acc)
+                    hf.create_dataset('rs_val_auc', data=self.rs_val_auc)
 
     def save_item(self, item, item_name):
         if not os.path.exists(self.save_folder_name):
@@ -224,6 +231,20 @@ class Server(object):
 
         return ids, num_samples, losses
 
+    def val_metrics(self):
+        num_samples = []
+        tot_correct = []
+        tot_auc = []
+        for c in self.clients:
+            ct, ns, auc = c.val_metrics()
+            tot_correct.append(ct*1.0)
+            tot_auc.append(auc*ns)
+            num_samples.append(ns)
+
+        ids = [c.id for c in self.clients]
+
+        return ids, num_samples, tot_correct, tot_auc
+
     # evaluate selected clients
     def evaluate(self, acc=None, loss=None):
         stats = self.test_metrics()
@@ -234,12 +255,12 @@ class Server(object):
         train_loss = sum(stats_train[2])*1.0 / sum(stats_train[1])
         accs = [a / n for a, n in zip(stats[2], stats[1])]
         aucs = [a / n for a, n in zip(stats[3], stats[1])]
-        
+
         if acc == None:
             self.rs_test_acc.append(test_acc)
         else:
             acc.append(test_acc)
-        
+
         if loss == None:
             self.rs_train_loss.append(train_loss)
         else:
@@ -251,6 +272,15 @@ class Server(object):
         # self.print_(test_acc, train_acc, train_loss)
         print("Std Test Accuracy: {:.4f}".format(np.std(accs)))
         print("Std Test AUC: {:.4f}".format(np.std(aucs)))
+
+        if self.use_val:
+            stats_val = self.val_metrics()
+            val_acc = sum(stats_val[2])*1.0 / sum(stats_val[1])
+            val_auc = sum(stats_val[3])*1.0 / sum(stats_val[1])
+            self.rs_val_acc.append(val_acc)
+            self.rs_val_auc.append(val_auc)
+            print("Averaged Val Accuracy: {:.4f}".format(val_acc))
+            print("Averaged Val AUC: {:.4f}".format(val_auc))
 
     def print_(self, test_acc, test_auc, train_loss):
         print("Average Test Accuracy: {:.4f}".format(test_acc))
