@@ -3,7 +3,7 @@ import torch
 import torch.nn as nn
 import numpy as np
 import os
-from torch.utils.data import DataLoader
+from torch.utils.data import DataLoader, random_split
 from sklearn.preprocessing import label_binarize
 from sklearn import metrics
 from utils.data_utils import read_client_data
@@ -43,6 +43,10 @@ class Client(object):
         self.train_time_cost = {'num_rounds': 0, 'total_cost': 0.0}
         self.send_time_cost = {'num_rounds': 0, 'total_cost': 0.0}
 
+        self.use_val = getattr(args, 'use_val', False)
+        self.val_ratio = getattr(args, 'val_ratio', 0.2)
+        self.split_seed = getattr(args, 'split_seed', 0)
+
         self.loss = nn.CrossEntropyLoss()
         self.optimizer = torch.optim.SGD(self.model.parameters(), lr=self.learning_rate)
         self.learning_rate_scheduler = torch.optim.lr_scheduler.ExponentialLR(
@@ -56,7 +60,22 @@ class Client(object):
         if batch_size == None:
             batch_size = self.batch_size
         train_data = read_client_data(self.dataset, self.id, is_train=True, few_shot=self.few_shot)
+        if self.use_val:
+            val_size = max(1, int(len(train_data) * self.val_ratio))
+            train_size = len(train_data) - val_size
+            generator = torch.Generator().manual_seed(self.split_seed)
+            train_data, _ = random_split(train_data, [train_size, val_size], generator=generator)
         return DataLoader(train_data, batch_size, drop_last=True, shuffle=True)
+
+    def load_val_data(self, batch_size=None):
+        if batch_size == None:
+            batch_size = self.batch_size
+        full_data = read_client_data(self.dataset, self.id, is_train=True, few_shot=self.few_shot)
+        val_size = max(1, int(len(full_data) * self.val_ratio))
+        train_size = len(full_data) - val_size
+        generator = torch.Generator().manual_seed(self.split_seed)
+        _, val_data = random_split(full_data, [train_size, val_size], generator=generator)
+        return DataLoader(val_data, batch_size, drop_last=False, shuffle=False)
 
     def load_test_data(self, batch_size=None):
         if batch_size == None:
@@ -116,8 +135,45 @@ class Client(object):
         y_true = np.concatenate(y_true, axis=0)
 
         auc = metrics.roc_auc_score(y_true, y_prob, average='micro')
-        
+
         return test_acc, test_num, auc
+
+    def val_metrics(self):
+        valloaderfull = self.load_val_data()
+        self.model.eval()
+
+        val_acc = 0
+        val_num = 0
+        y_prob = []
+        y_true = []
+
+        with torch.no_grad():
+            for x, y in valloaderfull:
+                if type(x) == type([]):
+                    x[0] = x[0].to(self.device)
+                else:
+                    x = x.to(self.device)
+                y = y.to(self.device)
+                output = self.model(x)
+
+                val_acc += (torch.sum(torch.argmax(output, dim=1) == y)).item()
+                val_num += y.shape[0]
+
+                y_prob.append(output.detach().cpu().numpy())
+                nc = self.num_classes
+                if self.num_classes == 2:
+                    nc += 1
+                lb = label_binarize(y.detach().cpu().numpy(), classes=np.arange(nc))
+                if self.num_classes == 2:
+                    lb = lb[:, :2]
+                y_true.append(lb)
+
+        y_prob = np.concatenate(y_prob, axis=0)
+        y_true = np.concatenate(y_true, axis=0)
+
+        auc = metrics.roc_auc_score(y_true, y_prob, average='micro')
+
+        return val_acc, val_num, auc
 
     def train_metrics(self):
         trainloader = self.load_train_data()

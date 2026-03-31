@@ -43,7 +43,8 @@ class FedPHP(Server):
                 self.call_dlg(i)
             self.aggregate_parameters()
 
-            if self.auto_break and self.check_done(acc_lss=[self.rs_test_acc], top_cnt=self.top_cnt):
+            es_metric = self.rs_val_acc if self.use_val and self.rs_val_acc else self.rs_test_acc
+            if self.auto_break and self.check_done(acc_lss=[es_metric], top_cnt=self.top_cnt):
                 break
 
         print("\nBest accuracy.")

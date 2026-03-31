@@ -431,6 +431,13 @@ if __name__ == "__main__":
                         help="Set this for text tasks. 80 for Shakespeare. 32000 for AG_News and SogouNews.")
     parser.add_argument('-ml', "--max_len", type=int, default=200)
     parser.add_argument('-fs', "--few_shot", type=int, default=0)
+    # validation split
+    parser.add_argument('-uv', "--use_val", type=bool, default=False,
+                        help="Use a validation split from training data")
+    parser.add_argument('-vr', "--val_ratio", type=float, default=0.2,
+                        help="Ratio of training data to use for validation")
+    parser.add_argument('-ss', "--split_seed", type=int, default=0,
+                        help="Random seed for train/val split reproducibility")
     # practical
     parser.add_argument('-cdr', "--client_drop_rate", type=float, default=0.0,
                         help="Rate for clients that train but drop out")
