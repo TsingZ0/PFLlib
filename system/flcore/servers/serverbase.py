@@ -144,10 +144,52 @@ class Server(object):
             
         for w, client_model in zip(self.uploaded_weights, self.uploaded_models):
             self.add_parameters(w, client_model)
+        self._aggregate_model_buffers(
+            self.global_model, self.uploaded_models, self.uploaded_weights)
 
     def add_parameters(self, w, client_model):
         for server_param, client_param in zip(self.global_model.parameters(), client_model.parameters()):
             server_param.data += client_param.data.clone() * w
+
+    @staticmethod
+    def _aggregate_model_buffers(target_model, source_models, weights):
+        """Aggregate non-parameter state, including BatchNorm statistics.
+
+        BatchNorm running statistics are registered buffers rather than model
+        parameters.  Parameter-only FedAvg would therefore retain the buffers
+        copied from the first uploaded model.  Floating-point buffers are
+        sample-weight averaged; integer counters such as
+        ``num_batches_tracked`` retain the largest observed value.
+        """
+        if not source_models:
+            return
+        if len(source_models) != len(weights):
+            raise ValueError("Model-buffer aggregation requires one weight per source model")
+
+        target_buffers = dict(target_model.named_buffers())
+        if not target_buffers:
+            return
+        source_buffers = [dict(model.named_buffers()) for model in source_models]
+        expected_names = set(target_buffers)
+        if any(set(buffers) != expected_names for buffers in source_buffers):
+            raise ValueError("Uploaded models do not share the same registered buffers")
+
+        with torch.no_grad():
+            for name, target_buffer in target_buffers.items():
+                values = [buffers[name].detach() for buffers in source_buffers]
+                if target_buffer.is_floating_point() or target_buffer.is_complex():
+                    target_buffer.zero_()
+                    for weight, value in zip(weights, values):
+                        target_buffer.add_(value.to(
+                            device=target_buffer.device, dtype=target_buffer.dtype), alpha=float(weight))
+                elif name.endswith("num_batches_tracked"):
+                    target_buffer.copy_(torch.stack([
+                        value.to(device=target_buffer.device, dtype=target_buffer.dtype)
+                        for value in values
+                    ]).amax(dim=0))
+                else:
+                    target_buffer.copy_(values[0].to(
+                        device=target_buffer.device, dtype=target_buffer.dtype))
 
     def save_global_model(self):
         model_path = os.path.join("models", self.dataset)
