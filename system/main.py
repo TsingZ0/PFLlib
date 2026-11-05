@@ -49,6 +49,7 @@ from flcore.servers.serverda import PFL_DA
 from flcore.servers.serverlc import FedLC
 from flcore.servers.serveras import FedAS
 from flcore.servers.servercross import FedCross
+from flcore.servers.serverfedcalm import FedCALM
 
 from flcore.trainmodel.models import *
 
@@ -118,6 +119,8 @@ def run(args):
             
             # args.model = resnet18(num_classes=args.num_classes, has_bn=True, bn_block_num=4).to(args.device)
         
+        elif model_str == "ResNet4":
+            args.model = resnet4(num_classes=args.num_classes).to(args.device)
         elif model_str == "ResNet10":
             args.model = resnet10(num_classes=args.num_classes).to(args.device)
         
@@ -361,7 +364,13 @@ def run(args):
             args.model.fc = nn.Identity()
             args.model = BaseHeadSplit(args.model, args.head)
             server = FedAS(args, i)
-            
+
+        elif args.algorithm == "FedCALM":
+            args.head = copy.deepcopy(args.model.fc)
+            args.model.fc = nn.Identity()
+            args.model = BaseHeadSplit(args.model, args.head)
+            server = FedCALM(args, i)
+
         elif args.algorithm == "FedCross":
             server = FedCross(args, i)
 
@@ -498,6 +507,11 @@ if __name__ == "__main__":
     parser.add_argument('-ca', "--fedcross_alpha", type=float, default=0.99)
     parser.add_argument('-cmss', "--collaberative_model_select_strategy", type=int, default=1)
 
+    # FedCALM
+    parser.add_argument('-ceps', "--calm_eps", type=float, default=0.1)
+    parser.add_argument('-cC', "--calm_C", type=float, default=10.0)
+    parser.add_argument('-cmode', "--calm_mode", type=str, default="calm", choices=["calm", "proj", "wavg"])
+    parser.add_argument('-cclip', "--calm_clip", type=float, default=0.0)
 
     args = parser.parse_args()
 
